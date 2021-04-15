@@ -50,6 +50,13 @@ namespace cbl {
   typedef std::function<double(double, std::shared_ptr<void>, std::vector<double>)> distribution_func;
 
   /**
+   * @brief distribution function used for a n-dimensional
+   * distribution
+   * @return distribution function
+   */
+  typedef std::function<double(std::vector<double>, std::shared_ptr<void>)> nDim_distribution_func;
+
+  /**
    *  @brief The namespace of the functions and classes used to handle
    *  <B> random numbers </B>
    *  

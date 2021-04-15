@@ -76,18 +76,24 @@ void cbl::statistics::ModelParameters::m_set_parameter_type ()
 
   for (size_t i=0; i<m_nparameters; i++) {
     switch (m_parameter_type[i]) {
-      case statistics::ParameterType::_Base_:
-	m_nparameters_base +=1;
-	m_base_parameter.push_back(i);
-	break;
+    case statistics::ParameterType::_Base_:
+      m_nparameters_base +=1;
+      m_base_parameter.push_back(i);
+      break;
+	
+    case statistics::ParameterType::_Correlated_:
+      m_nparameters_correlated ++;
+      m_nparameters_base ++;
+      m_base_parameter.push_back(i);
+      break;
 
-      case statistics::ParameterType::_Derived_:
-	m_nparameters_derived += 1;
-	m_derived_parameter.push_back(i);
-	break;
+    case statistics::ParameterType::_Derived_:
+      m_nparameters_derived += 1;
+      m_derived_parameter.push_back(i);
+      break;
 
-      default:
-	ErrorCBL("no such kind of parameter!", "m_set_parameter_type", "ModelParameters.cpp");
+    default:
+      ErrorCBL("no such kind of parameter!", "m_set_parameter_type", "ModelParameters.cpp");
     }
   }
 }

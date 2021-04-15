@@ -249,9 +249,14 @@ namespace cbl {
 	 *  @param tcount 1 &rarr; activate the CPU time counter; 0
 	 *  &rarr; no time counter
 	 *
+	 *  @param fact factor used to compute the cell size of the
+	 *  chain mesh: it is multiplied by the maximum distance
+	 *  considered for the couples and can be setted by the user
+	 *  to optimize the count of the couples
+	 *
 	 *  
 	 */
-	void count_allTriplets (const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false);
+	void count_allTriplets (const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1);
             
 	/**
 	 * @brief method to count the number of triplets
@@ -314,9 +319,14 @@ namespace cbl {
 	 *  @param tcount 1 &rarr; activate the CPU time counter; 0
 	 *  &rarr; no time counter
 	 *
+	 *  @param fact factor used to compute the cell size of the
+	 *  chain mesh: it is multiplied by the maximum distance
+	 *  considered for the couples and can be setted by the user
+	 *  to optimize the count of the couples
+	 *
 	 *  
 	 */
-	void count_allTriplets_region (const std::vector<std::vector<double>> weight, const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false);
+	void count_allTriplets_region (const std::vector<std::vector<double>> weight, const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1);
 
 	/**
 	 *  @name Internal input/output member functions (customized in all the derived classes)
@@ -605,13 +615,18 @@ namespace cbl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param fact factor used to compute the cell size of the
+	 * chain mesh: it is multiplied by the maximum distance
+	 * considered for the couples and can be setted by the user
+	 * to optimize the count of the couples
+	 *
 	 * @param seed the seed for random number generation
 	 *
 	 * @return none, or an error message if the derived object
 	 * does not have this member
 	 */
-	virtual void measure (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
-	{ (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
+	virtual void measure (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1, const int seed=3213)
+	{ (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)fact; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -646,13 +661,18 @@ namespace cbl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param fact factor used to compute the cell size of the
+	 * chain mesh: it is multiplied by the maximum distance
+	 * considered for the couples and can be setted by the user
+	 * to optimize the count of the couples
+	 *
 	 * @param seed the seed for random number generation
 	 *
 	 * @return none, or an error message if the derived object
 	 * does not have this member
 	 */
-	virtual void measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
-	{ (void)weight; (void)doJK; (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
+	virtual void measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1, const int seed=3213)
+	{ (void)weight; (void)doJK; (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)fact; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -686,13 +706,18 @@ namespace cbl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param fact factor used to compute the cell size of the
+	 * chain mesh: it is multiplied by the maximum distance
+	 * considered for the couples and can be setted by the user
+	 * to optimize the count of the couples
+	 *
 	 * @param seed the seed for random number generation
 	 *
 	 * @return none, or an error message if the derived object
 	 * does not have this member
 	 */
-	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
-	{ (void)errorType; (void)dir_output_triplets; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
+	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1, const int seed=3213)
+	{ (void)errorType; (void)dir_output_triplets; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)fact; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -725,13 +750,18 @@ namespace cbl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param fact factor used to compute the cell size of the
+	 * chain mesh: it is multiplied by the maximum distance
+	 * considered for the couples and can be setted by the user
+	 * to optimize the count of the couples
+	 *
 	 * @param seed the seed for random number generation
 	 *
 	 * @return none, or an error message if the derived object
 	 * does not have this member
 	 */
-	virtual void measure (const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
-	{ (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h!"); }
+	virtual void measure (const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1, const int seed=3213)
+	{ (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)fact; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h!"); }
                 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -769,13 +799,18 @@ namespace cbl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param fact factor used to compute the cell size of the
+	 * chain mesh: it is multiplied by the maximum distance
+	 * considered for the couples and can be setted by the user
+	 * to optimize the count of the couples
+	 *
 	 * @param seed the seed for random number generation
 	 *
 	 * @return none, or an error message if the derived object
 	 * does not have this member
 	 */
-	virtual void measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
-	{ (void)weight; (void)doJK; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
+	virtual void measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1, const int seed=3213)
+	{ (void)weight; (void)doJK; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)fact; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 
 	/**
 	 * @brief method to measure the three-point correlation function
@@ -812,13 +847,18 @@ namespace cbl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param fact factor used to compute the cell size of the
+	 * chain mesh: it is multiplied by the maximum distance
+	 * considered for the couples and can be setted by the user
+	 * to optimize the count of the couples
+	 *
 	 * @param seed the seed for random number generation
 	 *
 	 * @return none, or an error message if the derived object
 	 * does not have this member
 	 */
-	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213)
-	{ (void)errorType; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
+	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const int nResamplings=100, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1, const int seed=3213)
+	{ (void)errorType; (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)nResamplings; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)fact; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 
 	
 	/**
@@ -841,6 +881,11 @@ namespace cbl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param fact factor used to compute the cell size of the
+	 * chain mesh: it is multiplied by the maximum distance
+	 * considered for the couples and can be setted by the user
+	 * to optimize the count of the couples
+	 *
 	 * @param seed the seed for random number generation
 	 *
 	 * @return none, or an error message if the derived object
@@ -849,8 +894,8 @@ namespace cbl {
 	 * @warning no error have been implemented so far, any choice
 	 * will be ignored
 	 */
-	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_triplets, const bool tcount, const int seed)
-	{ (void)errorType; (void)dir_output_triplets; (void)dir_input_triplets; (void)nResamplings; (void)count_triplets; (void)tcount; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
+	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_triplets, const bool tcount, const double fact, const int seed=3213)
+	{ (void)errorType; (void)dir_output_triplets; (void)dir_input_triplets; (void)nResamplings; (void)count_triplets; (void)tcount; (void)fact; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h"); }
 	
 	
 	///@}

@@ -238,6 +238,12 @@
  *  objects
  */
 /**
+ *  @example lognormal.cpp
+ *
+ *  This example shows how to construct a log-normal density field
+ *  catalogue
+ */
+/**
  * @example 2pt_monopole.cpp 
  *
  * This example shows how to measure the monopole of the two-point

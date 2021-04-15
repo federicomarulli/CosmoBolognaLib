@@ -53,6 +53,7 @@ void cbl::data::CovarianceMatrix::m_set_default ()
   m_correlation.resize(0, 0);
   m_variance.resize(0);
   m_std.resize(0);
+  m_determinant = cbl::par::defaultDouble;
   
 }
 
@@ -70,6 +71,7 @@ void cbl::data::CovarianceMatrix::m_set (const vector<double> covariance, const 
 
   m_matrix = cbl::wrapper::eigen::SquareMatrixToEigen(covariance);
   m_precision = m_matrix.inverse();
+  m_determinant = m_matrix.determinant();
   
   m_variance = m_matrix.diagonal();
   m_std = m_variance.cwiseSqrt();

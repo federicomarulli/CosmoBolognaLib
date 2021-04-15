@@ -81,13 +81,13 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::set_parame
 // ============================================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const double fact, const int seed) 
 {
   (void)seed;
   
   // -------- count the data-data-data, random-random-random, data-data-random and data-random-random triplets, or read them from file -------- 
   
-  count_allTriplets(dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+  count_allTriplets(dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount, fact);
   
 
   // ----------- compute the three-point correlation function ----------- 
@@ -122,13 +122,13 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (c
 // ============================================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const double fact, const int seed) 
 {
   (void)seed;
   
   // -------- count the data-data-data, random-random-random, data-data-random and data-random-random triplets, or read them from file -------- 
   
-  count_allTriplets_region (weight, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+  count_allTriplets_region (weight, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount, fact);
   
 
   // ----------- compute the three-point correlation function ----------- 
@@ -200,14 +200,14 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (c
 // ============================================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const cbl::measure::ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (const cbl::measure::ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const double fact, const int seed) 
 {  
 
   switch(errorType) {
     
   case cbl::measure::ErrorType::_None_:
     {
-      measure(dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+      measure(dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount, fact);
       break;
     }
     
@@ -219,7 +219,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (c
       for (int i=0; i<nRegions; i++)
 	weight[i][i] = 0;
 
-      measure(weight, true, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+      measure(weight, true, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount, fact);
       break;
     }
 
@@ -236,7 +236,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_connected::measure (c
 	for (int j=0; j<val*nRegions; j++)
 	  weight[i][ran()] ++;
 
-      measure(weight, false, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+      measure(weight, false, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount, fact);
       break;
     }
 

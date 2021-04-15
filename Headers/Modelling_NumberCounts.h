@@ -217,6 +217,122 @@ namespace cbl {
 	 *  
 	 */
 	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const std::string selection_function_file=par::defaultString, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const int z_step=50, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
+	
+	/**
+	 *  @brief set the data used to construct a model of
+	 *  number counts as a function of a mass proxy, here 
+	 *  expressed as \f$\lambda\f$, with the following
+	 *  functional form:
+	 *  
+	 *  \f$ \langle N(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j})\rangle 
+	 *  = w(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j})\,\,\Omega 
+	 *  \int_{0}^{\infty} {\rm d} z_{\rm tr}\,\,
+	 *  \frac{{\rm d} V}{{\rm d} z_{\rm tr}{\rm d}\Omega}\int_{0}^{\infty} 
+	 *  {\rm d} M_{\rm tr} \,\,\frac{{\rm d} n(M_{\rm tr},z_{\rm tr})}{{\rm d} M_{\rm tr}}\,\, 
+	 *  \int_{0}^{\infty}{\rm d}\lambda_{\rm tr}\,\,
+	 *  P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\,
+	 *  \int_{\Delta z_{\text{ob},j}}{\rm d} z_{\rm ob} 
+	 *  \,\,P(z_{\rm ob}|z_{\rm tr})\,
+	 *  \int_{\Delta\lambda_{\text{ob},i}}{\rm d} \lambda_{\rm ob} 
+	 *  \,\,P(\lambda_{\rm ob}|\lambda_{\rm tr}), \f$
+	 *
+	 *  where \f$ w(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j}) \f$ is
+	 *  the weight derived from the selection function (see e.g. Lesci et al. 2021),
+	 *  and \f$\Omega\f$ is the survey effective area.
+	 *
+	 *  The distirbution \f$P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\f$ is expressed as:
+	 *
+	 *  \f$P(\lambda_{\rm tr}|M_{\rm tr},z_{\rm tr})= 
+	 *  P(M_{\rm tr}|\lambda_{\rm tr},z_{\rm tr})\,
+	 *  P(\lambda_{\rm tr}|z_{\rm tr})\,/\,P( M_{\rm tr}|z_{\rm tr}),\f$
+	 *
+	 *  where \f$P(M_{\rm tr}|\lambda_{\rm tr},z_{\rm tr})\f$ is
+	 *  a log-normal whose mean is given by the mass-mass proxy
+	 *  relation, i.e. 
+	 *
+	 *  \f$\log M = \alpha + \beta 
+	 *  \log (\lambda/\lambda_{\rm piv}) + \gamma \log (f(z)),\f$
+	 *
+	 *  and whose mean is given by the intrinsic scatter, \f$ \sigma_{\rm intr} \f$, expressed as:
+	 *
+	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{\lambda} 
+	 *  \log (\lambda/\lambda_{\rm piv})^{e_{\lambda}} + \sigma_z \log (f(z))^{e_z}.\f$
+	 *
+	 *  The distribution \f$ P(\lambda_{\rm tr}|z_{\rm tr}) \f$ is derived
+	 *  from mock catalogues, and it has the functional form of a power-law
+	 *  with an exponential cut-off, i.e.:
+	 *  \f$ P(\lambda_{\rm tr}|z_{\rm tr}) = a \, \lambda_{\rm tr}^{-b} \, e^{-c\lambda_{\rm tr}} \f$.
+	 *
+	 *  Furthermore, \f$P( M_{\rm tr}|z_{\rm tr}) = \int_{0}^{\infty}
+	 *  {\rm d} \lambda_{\rm tr}\, 
+	 *  P(M_{\rm tr}|\lambda_{\rm tr},z_{\rm tr})\,P(\lambda_{\rm tr}|z_{\rm tr}).\f$
+	 *
+	 *  Finally, \f$P(z_{\rm ob}|z_{\rm tr})\f$ and \f$P(\lambda_{\rm ob}|\lambda_{\rm tr})\f$
+	 *  are Gaussian distributions.
+	 *  
+	 *  @param cosmology the cosmological model
+	 *
+	 *  @param cluster object of the class Cluster
+	 *
+	 *  @param SF_weights the counts weights derived from the selection
+	 *  function (see e.g. Lesci et al. 2021)
+	 *
+	 *  @param z_error the absolute error on the redshifts, defining
+	 *  the width of \f$ P(z_{\rm ob}|z_{\rm tr}) \f$
+	 *
+	 *  @param proxy_relative_error the relative error on the mass proxies, defining
+	 *  the width of \f$ P(\lambda_{\rm ob}|\lambda_{\rm tr}) \f$
+	 *
+	 *  @param z_pivot the redshift pivot in the scaling relation
+	 *
+	 *  @param proxy_pivot the mass proxy pivot in the scaling relation
+	 *
+	 *  @param mass_pivot the mass pivot; for example, if the scaling relation
+	 *  is written as \f$ \log [M/(10^{14}M_\odot /h)] = 
+	 *  \alpha+\beta \log(\lambda/\lambda_{piv})+\gamma\log f(z) \f$,
+	 *  then mass_pivot = 1.e14
+	 *
+	 *  @param scalrel_z_evo functional form of the redshift evolution
+	 *  function in the scaling relation: "E_z" \f$\rightarrow\f$ 
+	 *  \f$ f(z)=E(z)/E(z_{piv}) \f$, "direct" \f$\rightarrow\f$ 
+	 *  \f$ f(z)=(1+z)/(1+z_{piv}) \f$
+	 *
+	 *  @param log_base the base of the logarithm used in the 
+	 *  mass-mass proxy scaling relation
+	 *
+	 *  @param method_Pk method used to compute the power spectrum
+	 *  (i.e. the Boltzmann solver); valid choices for method_Pk
+	 *  are: CAMB [http://camb.info/], CLASS
+	 *  [http://class-code.net/], MPTbreeze-v1
+	 *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+	 *
+	 *  @param store_output if true the output files created by
+	 *  the Boltzmann solver are stored; if false the output files
+	 *  are removed
+	 *
+	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
+	 *  &rarr; normalize the power spectrum
+	 *
+	 *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+	 *  mean interior density relative to the background
+	 *
+	 *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
+	 *  virial overdensity
+	 *
+	 *  @param model_MF author(s) who proposed the mass function
+	 *
+	 *  @param z_min minimum redshift
+	 * 
+	 *  @param z_max maximum redshift
+	 *
+	 *  @param area_degrees the area in degrees
+	 *
+	 *  @param prec the precision
+	 *
+	 *  
+	 */
+	void set_data_model (const cbl::cosmology::Cosmology cosmology, const cbl::catalogue::Cluster cluster, const std::vector<double> SF_weights, const double z_error, const double proxy_relative_error, const double z_pivot, const double proxy_pivot, const double mass_pivot, const std::string scalrel_z_evo, const double log_base, const std::string method_Pk, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
 
 	///@}
 		

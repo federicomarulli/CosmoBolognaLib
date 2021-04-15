@@ -43,7 +43,7 @@ using namespace cbl;
 
 // ===========================================================================================
 
-void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_data_model (const cosmology::Cosmology cosmology, const catalogue::Cluster cluster, const std::vector<double> redshift, const double redshift_pivot, const std::string z_function, const double proxy_or_mass_pivot, const double log_base)
+void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_data_model (const cosmology::Cosmology cosmology, const catalogue::Cluster cluster, const std::vector<double> redshift, const double redshift_pivot, const double proxy_or_mass_pivot, const double log_base)
 {
   m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model.cosmology->set_unit(true); // Force cosmological units
@@ -51,7 +51,6 @@ void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_data_mode
   
   m_data_model.redshift = redshift;
   m_data_model.redshift_pivot = redshift_pivot;
-  m_data_model.z_function = z_function;
   
   m_data_model.proxy_or_mass_pivot = proxy_or_mass_pivot;
   m_data_model.log_base = log_base;
@@ -60,11 +59,51 @@ void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_data_mode
 
 // ===========================================================================================
 
-void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_model_MassObservableRelation_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior)
+void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_model_MassObservableRelation_cosmology (const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior)
+{
+  const size_t nParams = 8;
+
+  vector<statistics::ParameterType> Par_type (nParams, statistics::ParameterType::_Base_);
+  vector<string> Par_string (nParams);
+  std::vector<statistics::PriorDistribution> param_prior (nParams);
+
+  // Set the names and priors for the mass-observable relation parameters
+  Par_string[0] = "alpha";
+  param_prior[0] = alpha_prior;
+  Par_string[1] = "beta";
+  param_prior[1] = beta_prior;
+  Par_string[2] = "gamma";
+  param_prior[2] = gamma_prior;
+  Par_string[3] = "scatter0";
+  param_prior[3] = scatter0_prior;
+  Par_string[4] = "scatterM";
+  param_prior[4] = scatterM_prior;
+  Par_string[5] = "scatterM_exponent";
+  param_prior[5] = scatterM_exponent_prior;
+  Par_string[6] = "scatterz";
+  param_prior[6] = scatterz_prior;
+  Par_string[7] = "scatterz_exponent";
+  param_prior[7] = scatterz_exponent_prior;
+
+  // input data used to construct the model
+  auto inputs = make_shared<STR_MOrelation_data_model>(m_data_model);
+
+  // set prior
+  m_set_prior(param_prior);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_direct_z, nParams, Par_type, Par_string, inputs));
+}
+
+
+
+// ===========================================================================================
+
+void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_model_MassObservableRelation_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior)
 {
   m_data_model.Cpar = cosmo_param;
 
-  const size_t nParams = cosmo_param.size()+3; // The total number of parameters is given by the cosmological ones + 3
+  const size_t nParams = cosmo_param.size()+8; // The total number of parameters is given by the cosmological ones + 8
 
   vector<statistics::ParameterType> Par_type (nParams, statistics::ParameterType::_Base_);
   vector<string> Par_string (nParams);
@@ -83,6 +122,16 @@ void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_model_Mas
   param_prior[cosmo_param.size()+1] = beta_prior;
   Par_string[cosmo_param.size()+2] = "gamma";
   param_prior[cosmo_param.size()+2] = gamma_prior;
+  Par_string[cosmo_param.size()+3] = "scatter0";
+  param_prior[cosmo_param.size()+3] = scatter0_prior;
+  Par_string[cosmo_param.size()+4] = "scatterM";
+  param_prior[cosmo_param.size()+4] = scatterM_prior;
+  Par_string[cosmo_param.size()+5] = "scatterM_exponent";
+  param_prior[cosmo_param.size()+5] = scatterM_exponent_prior;
+  Par_string[cosmo_param.size()+6] = "scatterz";
+  param_prior[cosmo_param.size()+6] = scatterz_prior;
+  Par_string[cosmo_param.size()+7] = "scatterz_exponent";
+  param_prior[cosmo_param.size()+7] = scatterz_exponent_prior;
 
   // input data used to construct the model
   auto inputs = make_shared<STR_MOrelation_data_model>(m_data_model);
@@ -91,12 +140,7 @@ void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_model_Mas
   m_set_prior(param_prior);
 
   // construct the model
-  if (m_data_model.z_function == "E_z")
-    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_E_z, nParams, Par_type, Par_string, inputs));
-  else if (m_data_model.z_function == "direct")
-    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_direct_z, nParams, Par_type, Par_string, inputs));
-  else
-    cbl::ErrorCBL("No such a possibility for f(z)!","set_model_MassObservableRelation_cosmology","Modelling_MassObservableRelation.cpp");
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_E_z, nParams, Par_type, Par_string, inputs));
 }
 
 
@@ -129,6 +173,11 @@ std::vector<double> cbl::modelling::massobsrel::model_E_z (const std::vector<dou
   cluster.set_alpha_scaling_rel(parameter[pp->Cpar.size()]);
   cluster.set_beta_scaling_rel(parameter[pp->Cpar.size()+1]);
   cluster.set_gamma_scaling_rel(parameter[pp->Cpar.size()+2]);
+  cluster.set_scatter0_scaling_rel(parameter[pp->Cpar.size()+3]);
+  cluster.set_scatterM_scaling_rel(parameter[pp->Cpar.size()+4]);
+  cluster.set_scatterM_exponent_scaling_rel(parameter[pp->Cpar.size()+5]);
+  cluster.set_scatterz_scaling_rel(parameter[pp->Cpar.size()+6]);
+  cluster.set_scatterz_exponent_scaling_rel(parameter[pp->Cpar.size()+7]);
 
   std::vector<double> res(proxy_or_mass.size());
   for (size_t j=0; j<proxy_or_mass.size(); j++) {
@@ -152,9 +201,14 @@ std::vector<double> cbl::modelling::massobsrel::model_direct_z (const std::vecto
   cbl::catalogue::Cluster cluster = *pp->cluster;
   
   // set the cluster parameters
-  cluster.set_alpha_scaling_rel(parameter[pp->Cpar.size()]);
-  cluster.set_beta_scaling_rel(parameter[pp->Cpar.size()+1]);
-  cluster.set_gamma_scaling_rel(parameter[pp->Cpar.size()+2]);
+  cluster.set_alpha_scaling_rel(parameter[0]);
+  cluster.set_beta_scaling_rel(parameter[1]);
+  cluster.set_gamma_scaling_rel(parameter[2]);
+  cluster.set_scatter0_scaling_rel(parameter[3]);
+  cluster.set_scatterM_scaling_rel(parameter[4]);
+  cluster.set_scatterM_exponent_scaling_rel(parameter[5]);
+  cluster.set_scatterz_scaling_rel(parameter[6]);
+  cluster.set_scatterz_exponent_scaling_rel(parameter[7]);
 
   std::vector<double> res(proxy_or_mass.size());
   for (size_t j=0; j<proxy_or_mass.size(); j++) {
@@ -165,4 +219,3 @@ std::vector<double> cbl::modelling::massobsrel::model_direct_z (const std::vecto
 
   return res;
 }
-

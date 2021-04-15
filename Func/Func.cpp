@@ -19,7 +19,7 @@
  *******************************************************************/
 
 /**
- *  @file CosmoBolognaLib/Func/Func.cpp
+ *  \@file CosmoBolognaLib/Func/Func.cpp
  *
  *  @brief Useful generic functions
  *
@@ -61,6 +61,31 @@ double cbl::distribution_probability (double xx, std::shared_ptr<void> pp, std::
   return pars->func->operator()(xx);
 }
 
+
+// ============================================================================
+
+double cbl::chainMeshInterpolate (std::vector<double> xx, std::shared_ptr<void> pars)
+{
+  shared_ptr<cbl::glob::STR_chainMeshInterpolate> Pars = static_pointer_cast<cbl::glob::STR_chainMeshInterpolate>(pars);
+  cbl::chainmesh::ChainMesh chMesh = Pars->ChainMesh;
+  int distNum = Pars->DistNum;
+  return chMesh.interpolate(xx,distNum);
+}
+
+// ============================================================================
+
+
+double cbl::multivariateGaussian (std::vector<double> xx, std::shared_ptr<void> pars)
+{
+  shared_ptr<cbl::glob::STR_multivariateGaussian> Pars = static_pointer_cast<cbl::glob::STR_multivariateGaussian>(pars);
+  Eigen::VectorXd MeanVec = Pars->MeanVec;
+  Eigen::MatrixXd CovMat = Pars->CovMat;
+  Eigen::VectorXd XX = cbl::wrapper::eigen::VectorToEigen(xx);
+  double n = XX.rows();
+  double quadform = (XX-MeanVec).transpose()*CovMat.inverse()*(XX-MeanVec);
+  double norm = pow(pow(2.*par::pi,-n)*CovMat.determinant(),-0.5);
+  return norm*exp(-0.5*quadform);
+}
 
 // ============================================================================
 

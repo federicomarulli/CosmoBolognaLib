@@ -43,7 +43,7 @@ int main () {
     cbl::Erase_columns(Mat, columns); 
     std::cout << std::endl << " matrix Mat without the columns 0 and 1: " << std::endl;
     cbl::Print(Mat);
-    
+
   }
 
   catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }

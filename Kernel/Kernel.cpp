@@ -19,7 +19,7 @@
  *******************************************************************/
 
 /**
- *  @file CosmoBolognaLib/Kernel/Kernel.cpp
+ *  \@file CosmoBolognaLib/Kernel/Kernel.cpp
  *
  *  @brief Useful generic functions
  *

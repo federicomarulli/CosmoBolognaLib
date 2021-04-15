@@ -52,18 +52,17 @@ double cbl::cosmology::Cosmology::linear_growth_rate (const double redshift, con
   double ff = (m_Omega_radiation==0.) ? 1. : (a_in/m_Omega_radiation*m_Omega_matter)/(a_in/m_Omega_radiation*m_Omega_matter+2./3.); // Dodelson eq. (7.59)
 
   auto func = [&] (const double y, double &dyda, const double ln_aa)
-      {
-	const double zz = 1./exp(ln_aa)-1.;
-	const double OmM = OmegaM(zz);
-	dyda = -y*y-y*(1.-0.5*(OmM+OmegaR(zz)+(1.+3.*w0()+3.*wa()*zz/(1.+zz))*OmegaDE(zz)))+1.5*OmM; 
-      };
+	      {
+		const double zz = 1./exp(ln_aa)-1.;
+		const double OmM = OmegaM(zz);
+		dyda = -y*y-y*(1.-0.5*(OmM+OmegaR(zz)+(1.+3.*w0()+3.*wa()*zz/(1.+zz))*OmegaDE(zz)))+1.5*OmM; 
+	      };
   
   boost::numeric::odeint::integrate_adaptive( make_controlled(1e-8, 1e-8, stepper_type() ),
 					      func, ff, log(a_in), log(1./(1.+redshift)), prec);
     
   return ff;
-  
-  }
+}
 
 
 // =====================================================================================
@@ -147,7 +146,7 @@ double cbl::cosmology::Cosmology::error_beta_measured (const double Volume, cons
 double cbl::cosmology::Cosmology::quadrupole (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output, const std::string output_root, const double Delta, const double kk, const std::string interpType, const int norm, const double k_min, const double k_max, const double prec, const std::string input_file, const bool is_parameter_file) 
 {
   double Beta = beta(Mass_min, Mass_max, redshift, model_bias, model_MF, method_SS, store_output, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
-  return (4./3.*Beta+4./7.*Beta*Beta)/(1.+2./3*Beta+1./5.*Beta*Beta);
+  return (4./3.*Beta+4./7.*Beta*Beta)/(1.+2./3.*Beta+1./5.*Beta*Beta);
 }
 
 
@@ -157,7 +156,7 @@ double cbl::cosmology::Cosmology::quadrupole (const double Mass_min, const doubl
 double cbl::cosmology::Cosmology::quadrupole (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output, const std::string output_root, const double Delta, const double kk, const std::string interpType, const int norm, const double k_min, const double k_max, const double prec, const std::string input_file, const bool is_parameter_file) 
 {
   double Beta = beta(MM, MF, redshift, model_bias, method_SS, store_output, output_root, Delta, kk, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
-  return (4./3.*Beta+4./7.*Beta*Beta)/(1.+2./3*Beta+1./5.*Beta*Beta);
+  return (4./3.*Beta+4./7.*Beta*Beta)/(1.+2./3.*Beta+1./5.*Beta*Beta);
 }
 
 
@@ -216,4 +215,24 @@ double cbl::cosmology::Cosmology::Pk_ThetaTheta_fitting_function (const double k
   else WarningMsgCBL("the current implementation is not correct with author = " + author, "Pk_ThetaTheta_fitting_function", "RSD.cpp");
 
   return Pktt;
+}
+
+
+// =====================================================================================
+
+
+double cbl::cosmology::Cosmology::sigma_v (const double redshift, const std::string method_Pk, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const int bin_k, const double prec, const std::string file_par, const bool unit1)
+{
+  const vector<double> kk = logarithmic_bin_vector(bin_k, k_min, k_max);
+  const vector<double> Pk = Pk_DM(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
+
+  auto interp_Pk = glob::FuncGrid(kk, Pk, "Spline");
+  
+  auto integrand = [&] (const double log_q)
+		   {
+		     const double qq = exp(log_q);
+		     return qq*interp_Pk(qq);
+		   };
+
+  return sqrt(1./(6.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_cquad(integrand, log(k_min), log(k_max), 1.e-5, 0., 10000));
 }

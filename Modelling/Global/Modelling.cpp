@@ -141,6 +141,28 @@ void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType
 // ============================================================================================
 
 
+void cbl::modelling::Modelling::set_likelihood (const cbl::statistics::Likelihood_function log_likelihood_function)
+{
+  if (m_model==NULL)
+    ErrorCBL("undefined model!", "set_likelihood", "Modelling.cpp");
+
+  if (m_fit_range) {
+    if (m_data_fit==NULL)
+      ErrorCBL("undefined fit range!", "set_likelihood", "Modelling.cpp");
+    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data_fit, m_model, log_likelihood_function, NULL));
+  }
+  
+  else  {
+    if (m_data==NULL)
+      ErrorCBL("Error in set_likelihood of Modelling.cpp. Undefined dataset!", "set_likelihood", "Modelling.cpp");
+    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, log_likelihood_function, NULL));
+  }
+}
+
+
+// ============================================================================================
+
+
 void cbl::modelling::Modelling::maximize_likelihood (const vector<double> start, const vector<vector<double>> parameter_ranges, const unsigned int max_iter, const double tol, const double epsilon)
 {
   m_likelihood->maximize(start, parameter_ranges, max_iter, tol, epsilon);

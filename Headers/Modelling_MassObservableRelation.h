@@ -85,9 +85,6 @@ namespace cbl {
 	
 	/// logarithmic base
 	double log_base;
-	
-	/// string defining the redshift evolution functional form
-	std::string z_function;
 
 	/**
 	 *  @brief default constructor
@@ -163,8 +160,18 @@ namespace cbl {
 	///@{
 
 	/**
-	 *  @brief set the data used to construct generic models of
-	 *  number counts
+	 *  @brief Set the data used to construct the scaling relation,
+	 *  written as:
+	 * 
+	 *  \f$\log M = \alpha + \beta 
+	 *  \log (\lambda/\lambda_{\rm piv}) + \gamma \log (f(z)),\f$
+	 *
+	 *  or
+	 *
+	 *  \f$\log \lambda = \alpha + \beta 
+	 *  \log (M/M_{\rm piv}) + \gamma \log (f(z)),\f$
+	 *
+	 *  where \f$\lambda\f$ is the mass proxy.
 	 *  
 	 *  @param cosmology the cosmological model
 	 *
@@ -174,19 +181,29 @@ namespace cbl {
 	 *
 	 *  @param redshift_pivot redshift pivot value
 	 *
-	 *  @param z_function functional form of the redshift evolution
-	 *  function: "E_z" \f$\rightarrow\f$ \f$ f(z)=E(z)/E(z_{piv}) \f$, 
-	 *  "direct" \f$\rightarrow\f$ \f$ f(z)=(1+z)/(1+z_{piv}) \f$
-	 *
 	 *  @param proxy_or_mass_pivot proxy or mass pivot value
 	 *
 	 *  @param log_base base of the mass and proxy logarithms
 	 *  
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology, const cbl::catalogue::Cluster cluster, const std::vector<double> redshift, const double redshift_pivot, const std::string z_function, const double proxy_or_mass_pivot, const double log_base);
+	void set_data_model (const cbl::cosmology::Cosmology cosmology, const cbl::catalogue::Cluster cluster, const std::vector<double> redshift, const double redshift_pivot, const double proxy_or_mass_pivot, const double log_base);
 
 	/**
-	 *  @brief set the scaling relation and cosmological parameters
+	 *  @brief Set the scaling relation and cosmological parameters,
+	 *  where the scaling relation is written, e.g., as:
+	 *
+	 *  \f$\log M = \alpha + \beta 
+	 *  \log (\lambda/\lambda_{\rm piv}) + \gamma \log (f(z)),\f$
+	 *
+	 *  with the redshift evolution function \f$ f(z)=E(z)/E(z_{piv}) \f$.
+	 *
+	 *  WARNING: the only way to have a dependency on the intrinsic scatter
+	 *  parameters is to define a user-defined likelihood, whose covariance
+	 *  depends on the intrinsic scatter. In particular the intrinsic
+	 *  scatter, \f$\sigma_{\rm intr}\f$, is expressed as
+	 *
+	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{\lambda} 
+	 *  \log (\lambda/\lambda_{\rm piv})^{e_{\lambda}} + \sigma_z \log (f(z))^{e_z}.\f$
 	 *
 	 *  @param cosmo_param vector of enums containing cosmological
 	 *  parameters
@@ -200,8 +217,64 @@ namespace cbl {
 	 *
 	 *  @param gamma_prior prior on the redshift evolution factor of the scaling relation
 	 *
+	 *  @param scatter0_prior prior on the 
+	 *  constant term of the intrinsic scatter, \f$ \sigma_0 \f$
+	 *
+	 *  @param scatterM_prior prior on the factor in the
+	 *  proxy-dependent term of the intrinsic scatter, \f$ \sigma_{\lambda} \f$
+	 *
+	 *  @param scatterM_exponent_prior prior on the exponent in the
+	 *  proxy-dependent term of the intrinsic scatter, \f$ e_{\lambda} \f$
+	 *
+	 *  @param scatterz_prior prior on the factor in the
+	 *  redshift-dependent term of the intrinsic scatter, \f$ \sigma_z \f$
+	 *
+	 *  @param scatterz_exponent_prior prior on the exponent in the
+	 *  redshift-dependent term of the intrinsic scatter, \f$ e_z \f$
+	 *
 	 */
-	void set_model_MassObservableRelation_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior);
+	void set_model_MassObservableRelation_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior);
+	
+	/**
+	 *  @brief Set the scaling relation parameters,
+	 *  where the scaling relation is written, e.g., as:
+	 *
+	 *  \f$\log M = \alpha + \beta 
+	 *  \log (\lambda/\lambda_{\rm piv}) + \gamma \log (f(z)),\f$
+	 *
+	 *  with the redshift evolution function \f$ f(z)=(1+z)/(1+z_{piv}) \f$.
+	 *
+	 *  WARNING: the only way to have a dependency on the intrinsic scatter
+	 *  parameters is to define a user-defined likelihood, whose covariance
+	 *  depends on the intrinsic scatter. In particular the intrinsic
+	 *  scatter, \f$\sigma_{\rm intr}\f$, is expressed as
+	 *
+	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{\lambda} 
+	 *  \log (\lambda/\lambda_{\rm piv})^{e_{\lambda}} + \sigma_z \log (f(z))^{e_z}.\f$
+	 *
+	 *  @param alpha_prior prior on the scaling relation normalization
+	 *
+	 *  @param beta_prior prior on the scaling relation slope
+	 *
+	 *  @param gamma_prior prior on the redshift evolution factor of the scaling relation
+	 *
+	 *  @param scatter0_prior prior on the 
+	 *  constant term of the intrinsic scatter, \f$ \sigma_0 \f$
+	 *
+	 *  @param scatterM_prior prior on the factor in the
+	 *  proxy-dependent term of the intrinsic scatter, \f$ \sigma_{\lambda} \f$
+	 *
+	 *  @param scatterM_exponent_prior prior on the exponent in the
+	 *  proxy-dependent term of the intrinsic scatter, \f$ e_{\lambda} \f$
+	 *
+	 *  @param scatterz_prior prior on the factor in the
+	 *  redshift-dependent term of the intrinsic scatter, \f$ \sigma_z \f$
+	 *
+	 *  @param scatterz_exponent_prior prior on the exponent in the
+	 *  redshift-dependent term of the intrinsic scatter, \f$ e_z \f$
+	 *
+	 */
+	void set_model_MassObservableRelation_cosmology (const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior);
 
 	///@}
      };
@@ -221,11 +294,12 @@ namespace cbl {
        * \f$\log M = \alpha+\beta \log\frac{\lambda}{\lambda_{piv}}+\gamma\log f(z) \f$,
        *
        * where \f$\lambda_{piv}\f$ and \f$z_{piv}\f$ are, respectively, the mass proxy and the redshift pivots. 
-       * The functional form of the redshift evolution function, \f$ f(z) \f$, is defined by the parameter z_function in set_data_model:
+       * The functional form of the redshift evolution function, \f$ f(z) \f$, depends on the 
+       * set_model_MassObservableRelation_cosmology used. It can have the following functional forms:
        *
-       * \f$ f(z) = \frac{E(z)}{E(z_{piv})} \equiv \frac{H(z)/H0}{H(z_{piv})/H0} \,\,\,\,\,\,\,\,\text{if z_function = "E_z",} \f$
+       * \f$ f(z) = \frac{E(z)}{E(z_{piv})} \equiv \frac{H(z)/H0}{H(z_{piv})/H0}\f$
        *
-       * \f$ f(z) = \frac{1+z}{1+z_{piv}} \,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\,\text{if z_function = "direct",} \f$
+       * \f$ f(z) = \frac{1+z}{1+z_{piv}}\f$
        *
        */
       double scaling_relation(cbl::catalogue::Cluster cluster, const double div_proxy_or_mass, const double f_z);
@@ -260,7 +334,8 @@ namespace cbl {
        * the mass proxy in each bin
        *
        */
-      std::vector<double> model_direct_z (const std::vector<double> proxy_or_mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter);    
+      std::vector<double> model_direct_z (const std::vector<double> proxy_or_mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+      
     }
   }
 }

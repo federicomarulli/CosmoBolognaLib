@@ -35,6 +35,7 @@
 #ifndef __CATALOGUE__
 #define __CATALOGUE__ 
 
+#include "Cosmology.h"
 #include "Field3D.h"
 #include "ChainMesh.h"
 #include "Object.h"

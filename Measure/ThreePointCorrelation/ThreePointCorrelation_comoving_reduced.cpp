@@ -52,13 +52,13 @@ using namespace threept;
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const double fact, const int seed) 
 {   
   (void)seed;
   
   // ----------- compute the connected three-point correlation function -----------
   
-  ThreePointCorrelation_comoving_connected::measure(dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+  ThreePointCorrelation_comoving_connected::measure(dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount, fact);
   m_scale = ThreePointCorrelation_comoving_connected::m_scale;
   
   
@@ -71,7 +71,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (con
   double binSize = 0.05;
   double shift = 0.5;
   twopt::TwoPointCorrelation1D_monopole TwoP {data, random, BinType::_logarithmic_, rMin, rMax, binSize, shift};
-  TwoP.measure(ErrorType::_Poisson_,dir_output_triplets, {}, par::defaultString,0, 1, 1, 1, tcount);
+  TwoP.measure(ErrorType::_Poisson_, dir_output_triplets, {}, par::defaultString, 0, 1, 1, 1, tcount, cbl::measure::twopt::Estimator::_LandySzalay_, fact);
 
   vector<double> log_r(TwoP.dd()->nbins()), log_xi(TwoP.dd()->nbins());
   for (int i=0; i<TwoP.dd()->nbins(); i++) {
@@ -121,13 +121,13 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (con
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const std::vector<std::vector<double>> weight, const bool doJK, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const double fact, const int seed) 
 {
   (void)seed;
 
   // ----------- compute the connected three-point correlation function -----------
   
-  ThreePointCorrelation_comoving_connected::measure(weight, doJK, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+  ThreePointCorrelation_comoving_connected::measure(weight, doJK, dir_output_triplets, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount, fact);
   m_scale = ThreePointCorrelation_comoving_connected::m_scale;
   
   
@@ -140,7 +140,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (con
   double binSize = 0.05;
   double shift = 0.5;
   twopt::TwoPointCorrelation1D_monopole TwoP {data, random, BinType::_logarithmic_, rMin, rMax, binSize, shift};
-  TwoP.measure(ErrorType::_Poisson_,dir_output_triplets, {}, par::defaultString,0, 1, 1, 1, tcount);
+  TwoP.measure(ErrorType::_Poisson_,dir_output_triplets, {}, par::defaultString, 0, 1, 1, 1, tcount, cbl::measure::twopt::Estimator::_LandySzalay_, fact);
 
   vector<double> log_r(TwoP.dd()->nbins()), log_xi(TwoP.dd()->nbins());
   for (int i=0; i<TwoP.dd()->nbins(); i++) {
@@ -231,14 +231,14 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (con
 
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const cbl::measure::ErrorType errorType, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (const cbl::measure::ErrorType errorType, const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const double fact, const int seed) 
 {  
 
   switch (errorType) {
     
     case cbl::measure::ErrorType::_None_:
       {
-	measure(dir_output_triplets, dir_output_2pt, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+	measure(dir_output_triplets, dir_output_2pt, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount, fact);
 	break;
       }
     
@@ -250,7 +250,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (con
 	for (int i=0; i<nRegions; i++)
 	  weight[i][i] = 0;
 
-	measure(weight, true, dir_output_triplets, dir_output_2pt, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+	measure(weight, true, dir_output_triplets, dir_output_2pt, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount, fact);
 	break;
       }
 
@@ -267,7 +267,7 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_reduced::measure (con
 	  for (int j=0; j<val*nRegions; j++)
 	    weight[i][ran()] ++;
 
-	measure(weight, false, dir_output_triplets, dir_output_2pt, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount);
+	measure(weight, false, dir_output_triplets, dir_output_2pt, dir_input_triplets, count_ddd, count_rrr, count_ddr, count_drr, tcount, fact);
 	break;
       }
 

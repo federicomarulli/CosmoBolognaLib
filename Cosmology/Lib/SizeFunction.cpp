@@ -216,7 +216,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Nvoids (const double
 
   for (int i=0; i<num_bins; i++) {
 
-    RV[i] = r_bins[i]+0.5*(r_bins[i+1]-r_bins[i]);
+    RV[i] = pow(10., log10(r_bins[i])+0.5*(log10(r_bins[i+1]/r_bins[i])));
     RL[i] = RV[i]/NLcorr;
     sigmaR[i] = sqrt(sigma2R(RL[i], method_Pk, 0., true, output_root, interpType, k_max, input_file, is_parameter_file));
     sigmaRz[i] = sigmaR[i]*fact;

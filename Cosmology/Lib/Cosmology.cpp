@@ -1360,7 +1360,7 @@ double cbl::cosmology::Cosmology::D_C_LCDM (const double redshift) const
   double aa = 1./(1.+redshift);
   double phi1 = acos((1.+f_m*aa)/(1.+f_p*aa));
   
-  return CC*(F_phi0-m_elf_dz(phi1))*2997.9199;
+  return CC*(F_phi0-m_elf_dz(phi1))*2997.9199*m_t_H*100.;
 }  
 
 

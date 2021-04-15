@@ -23,6 +23,7 @@
 %shared_ptr(cbl::statistics::Sampler);
 %shared_ptr(cbl::statistics::Posterior);
 %shared_ptr(cbl::statistics::CombinedPosterior);
+%shared_ptr(cbl::statistics::SuperSampleCovariance);
 
 %{
 #include "PriorDistribution.h"
@@ -40,6 +41,7 @@
 #include "Sampler.h"
 #include "Posterior.h"
 #include "CombinedPosterior.h"
+#include "SuperSampleCovariance.h"
 
 %}
 
@@ -58,6 +60,7 @@
 %include "Sampler.h"
 %include "Posterior.h"
 %include "CombinedPosterior.h"
+%include "SuperSampleCovariance.h"
 
 %template(ParameterTypeVector) std::vector<cbl::statistics::ParameterType>;
 %template(PriorDistributionVector) std::vector<cbl::statistics::PriorDistribution>;

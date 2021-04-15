@@ -289,6 +289,212 @@ double cbl::modelling::numbercounts::number_counts (const double redshift_min, c
 
 // ===========================================================================================
 
+
+double cbl::modelling::numbercounts::counts_proxy_Ez (const double redshift_min, const double redshift_max, const double proxy_min, const double proxy_max, cbl::cosmology::Cosmology cosmology, cbl::catalogue::Cluster cluster, const double Area, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const double proxy_relative_error, const double z_error, const double proxy_pivot, const double z_pivot, const double mass_pivot, const double log_base, const double weight)
+{  
+  double fact = (cosmology.unit()) ? 1 : cosmology.hh();
+  std::shared_ptr<void> pp;
+
+  // Declare the normalized mass and the redshift, used as constants in integrand_P_M__z (which is called in integrand)
+  double normM=0; double the_redsh=0;
+
+  // P(M|z) integrand
+  auto integrand_P_M__z = [&cosmology,&cluster,&log_base,&proxy_pivot,&z_pivot,&the_redsh,&normM,&pp] (const double x)
+    {
+      double log_lambda = log(x/proxy_pivot)/log(log_base);
+      double log_f_z = log(cosmology.HH(the_redsh)/cosmology.HH(z_pivot))/log(log_base);
+      
+      double mean = cluster.alpha_scaling_rel() + cluster.beta_scaling_rel()*log_lambda + cluster.gamma_scaling_rel()*log_f_z;
+      double sigma = cluster.scatter0_scaling_rel() + cluster.scatterM_scaling_rel()*log_lambda + cluster.scatterz_scaling_rel()*log_f_z;
+      double P_M__lambda_z = (cbl::gaussian(normM, pp, {mean,sigma}));      
+      double P_lambda__z = cluster.Plambda_a() * pow(x,-cluster.Plambda_b()) * exp(-cluster.Plambda_c()*x);
+      
+      return P_M__lambda_z * P_lambda__z;
+    };
+
+  // Total integrand
+  auto integrand = [&cosmology,&cluster,&proxy_relative_error,&z_error,&log_base,&proxy_pivot,&z_pivot,&mass_pivot,&proxy_min,&proxy_max,&redshift_min,&redshift_max,&integrand_P_M__z,&normM,&the_redsh,&interp_sigmaM,&interp_DlnsigmaM,&store_output,&fact,&model_MF,&Delta,&Area,&isDelta_vir,&pp] (const std::vector<double> x)
+    {
+      double Mass = pow(log_base,x[0])*mass_pivot;
+      normM = x[0];
+      the_redsh = x[1];
+
+      // Compute P(M|lambda,z)
+      double log_lambda = log(x[2]/proxy_pivot)/log(log_base);
+      double log_f_z = log(cosmology.HH(x[1])/cosmology.HH(z_pivot))/log(log_base);
+      
+      double mean = cluster.alpha_scaling_rel() + cluster.beta_scaling_rel()*log_lambda + cluster.gamma_scaling_rel()*log_f_z;
+      double sigma = cluster.scatter0_scaling_rel() + cluster.scatterM_scaling_rel()*pow(log_lambda, cluster.scatterM_exponent_scaling_rel()) + cluster.scatterz_scaling_rel()*pow(log_f_z, cluster.scatterz_exponent_scaling_rel());
+      double P_M__lambda_z = (cbl::gaussian(normM, pp, {mean,sigma}));
+
+      // Compute P(lambda|z)
+      double P_lambda__z = cluster.Plambda_a() * pow(x[2],-cluster.Plambda_b()) * exp(-cluster.Plambda_c()*x[2]);
+
+      // Compute P(M|z)
+      double P_M__z=0;
+      if (P_M__lambda_z*P_lambda__z > 0){      
+	P_M__z=cbl::wrapper::gsl::GSL_integrate_cquad(integrand_P_M__z,0.001,200);
+      } else{
+	P_M__z = 1;}
+
+      // Compute the integrals of P(z|z) and P(lambda|lambda)
+      double mean_Pz = x[1] - cluster.zbias() * (1+x[1]);
+      double int_P_z = 0.5 * ( erf( (redshift_max - mean_Pz) / (sqrt(2)*z_error) ) - erf( (redshift_min - mean_Pz) / (sqrt(2)*z_error) ) );
+      double int_P_lambda = 0.5 * ( erf( (proxy_max - x[2]) / (sqrt(2)*proxy_relative_error*proxy_max) ) - erf( (proxy_min - x[2]) / (sqrt(2)*proxy_relative_error*proxy_min) ) );
+      
+      return cosmology.mass_function(Mass, interp_sigmaM(Mass*fact), interp_DlnsigmaM(Mass*fact), x[1], model_MF, store_output, cbl::par::defaultString, (isDelta_vir) ? cosmology.Delta_vir(Delta, x[1]) : Delta)*Area*cosmology.dV_dZdOmega(x[1], true) * pow(log_base,normM) * (P_M__lambda_z*P_lambda__z/P_M__z) * int_P_z * int_P_lambda;
+    };
+  
+  // -------------------------------------------------------------
+
+  // Find the minimum and maximum masses, given the parameters of the scaling relation
+  double log_lambda_min = log(proxy_min/proxy_pivot)/log(log_base);
+  double log_lambda_max = log(proxy_max/proxy_pivot)/log(log_base);
+  double log_f_z_min = log(cosmology.HH(redshift_min)/cosmology.HH(z_pivot))/log(log_base);
+  double log_f_z_max = log(cosmology.HH(redshift_max)/cosmology.HH(z_pivot))/log(log_base);
+
+  double M1 = cluster.alpha_scaling_rel() + cluster.beta_scaling_rel()*log_lambda_min + cluster.gamma_scaling_rel()*log_f_z_min;
+  double M2 = cluster.alpha_scaling_rel() + cluster.beta_scaling_rel()*log_lambda_max + cluster.gamma_scaling_rel()*log_f_z_min;
+  double M3 = cluster.alpha_scaling_rel() + cluster.beta_scaling_rel()*log_lambda_min + cluster.gamma_scaling_rel()*log_f_z_max;
+  double M4 = cluster.alpha_scaling_rel() + cluster.beta_scaling_rel()*log_lambda_max + cluster.gamma_scaling_rel()*log_f_z_max;
+
+  double min1 = std::min(M1, M2);
+  double min2 = std::min(min1, M3);
+  double minM = std::min(min2, M4);
+  double max1 = std::max(M1, M2);
+  double max2 = std::max(max1, M3);
+  double maxM = std::max(max2, M4);
+
+  // Find the maximum value of the intrinsic scatter
+  double s1 = cluster.scatter0_scaling_rel() + cluster.scatterM_scaling_rel()*pow(log_lambda_min, cluster.scatterM_exponent_scaling_rel()) + cluster.scatterz_scaling_rel()*pow(log_f_z_min, cluster.scatterz_exponent_scaling_rel());
+  double s2 = cluster.scatter0_scaling_rel() + cluster.scatterM_scaling_rel()*pow(log_lambda_max, cluster.scatterM_exponent_scaling_rel()) + cluster.scatterz_scaling_rel()*pow(log_f_z_min, cluster.scatterz_exponent_scaling_rel());
+  double s3 = cluster.scatter0_scaling_rel() + cluster.scatterM_scaling_rel()*pow(log_lambda_min, cluster.scatterM_exponent_scaling_rel()) + cluster.scatterz_scaling_rel()*pow(log_f_z_max, cluster.scatterz_exponent_scaling_rel());
+  double s4 = cluster.scatter0_scaling_rel() + cluster.scatterM_scaling_rel()*pow(log_lambda_max, cluster.scatterM_exponent_scaling_rel()) + cluster.scatterz_scaling_rel()*pow(log_f_z_max, cluster.scatterz_exponent_scaling_rel());
+
+  double maxs1 = std::max(s1, s2);
+  double maxs2 = std::max(maxs1, s3);
+  double max_intrinsic_scatter = std::max(maxs2, s4);
+
+  // Define the integral limits
+  int integral_dimension=3;
+  std::vector<std::vector<double>> integration_limits(integral_dimension);
+  integration_limits[0] = {minM-3.5*max_intrinsic_scatter, maxM+3.5*max_intrinsic_scatter};
+  integration_limits[1] = {std::max(redshift_min - 3.5*z_error, 0.), redshift_max + 3.5*z_error};
+  integration_limits[2] = {proxy_min - 3.5*proxy_relative_error*proxy_min, proxy_max + 3.5*proxy_relative_error*proxy_max};
+
+  // Compute the integral
+  cbl::wrapper::cuba::CUBAwrapper CW (integrand, integral_dimension);
+  double nc = CW.IntegrateVegas(integration_limits,false);
+  
+  return nc * mass_pivot * log(log_base) * weight;  
+}
+
+
+// ===========================================================================================
+
+
+double cbl::modelling::numbercounts::counts_proxy_zDirect (const double redshift_min, const double redshift_max, const double proxy_min, const double proxy_max, cbl::cosmology::Cosmology cosmology, cbl::catalogue::Cluster cluster, const double Area, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const double proxy_relative_error, const double z_error, const double proxy_pivot, const double z_pivot, const double mass_pivot, const double log_base, const double weight)
+{  
+  double fact = (cosmology.unit()) ? 1 : cosmology.hh();
+  std::shared_ptr<void> pp;
+
+  // Declare the normalized mass and the redshift, used as constants in integrand_P_M__z (which is called in integrand)
+  double normM=0; double the_redsh=0;
+
+  // P(M|z) integrand
+  auto integrand_P_M__z = [&cosmology,&cluster,&log_base,&proxy_pivot,&z_pivot,&the_redsh,&normM,&pp] (const double x)
+    {
+      double log_lambda = log(x/proxy_pivot)/log(log_base);
+      double log_f_z = log((1+the_redsh)/(1+z_pivot))/log(log_base);
+      
+      double mean = cluster.alpha_scaling_rel() + cluster.beta_scaling_rel()*log_lambda + cluster.gamma_scaling_rel()*log_f_z;
+      double sigma = cluster.scatter0_scaling_rel() + cluster.scatterM_scaling_rel()*log_lambda + cluster.scatterz_scaling_rel()*log_f_z;
+      double P_M__lambda_z = (cbl::gaussian(normM, pp, {mean,sigma}));      
+      double P_lambda__z = cluster.Plambda_a() * pow(x,-cluster.Plambda_b()) * exp(-cluster.Plambda_c()*x);
+      
+      return P_M__lambda_z * P_lambda__z;
+    };
+
+  // Total integrand
+  auto integrand = [&cosmology,&cluster,&proxy_relative_error,&z_error,&log_base,&proxy_pivot,&z_pivot,&mass_pivot,&proxy_min,&proxy_max,&redshift_min,&redshift_max,&integrand_P_M__z,&normM,&the_redsh,&interp_sigmaM,&interp_DlnsigmaM,&store_output,&fact,&model_MF,&Delta,&Area,&isDelta_vir,&pp] (const std::vector<double> x)
+    {
+      double Mass = pow(log_base,x[0])*mass_pivot;
+      normM = x[0];
+      the_redsh = x[1];
+
+      // Compute P(M|lambda,z)
+      double log_lambda = log(x[2]/proxy_pivot)/log(log_base);
+      double log_f_z = log((1+x[1])/(1+z_pivot))/log(log_base);
+      
+      double mean = cluster.alpha_scaling_rel() + cluster.beta_scaling_rel()*log_lambda + cluster.gamma_scaling_rel()*log_f_z;
+      double sigma = cluster.scatter0_scaling_rel() + cluster.scatterM_scaling_rel()*pow(log_lambda, cluster.scatterM_exponent_scaling_rel()) + cluster.scatterz_scaling_rel()*pow(log_f_z, cluster.scatterz_exponent_scaling_rel());
+      double P_M__lambda_z = (cbl::gaussian(normM, pp, {mean,sigma}));
+
+      // Compute P(lambda|z)
+      double P_lambda__z = cluster.Plambda_a() * pow(x[2],-cluster.Plambda_b()) * exp(-cluster.Plambda_c()*x[2]);
+
+      // Compute P(M|z)
+      double P_M__z=0;
+      if (P_M__lambda_z*P_lambda__z > 0){      
+	P_M__z=cbl::wrapper::gsl::GSL_integrate_cquad(integrand_P_M__z,0.001,200);
+      } else{
+	P_M__z = 1;}
+
+      // Compute the integrals of P(z|z) and P(lambda|lambda)
+      double mean_Pz = x[1] - cluster.zbias() * (1+x[1]);
+      double int_P_z = 0.5 * ( erf( (redshift_max - mean_Pz) / (sqrt(2)*z_error) ) - erf( (redshift_min - mean_Pz) / (sqrt(2)*z_error) ) );
+      double int_P_lambda = 0.5 * ( erf( (proxy_max - x[2]) / (sqrt(2)*proxy_relative_error*proxy_max) ) - erf( (proxy_min - x[2]) / (sqrt(2)*proxy_relative_error*proxy_min) ) );
+      
+      return cosmology.mass_function(Mass, interp_sigmaM(Mass*fact), interp_DlnsigmaM(Mass*fact), x[1], model_MF, store_output, cbl::par::defaultString, (isDelta_vir) ? cosmology.Delta_vir(Delta, x[1]) : Delta)*Area*cosmology.dV_dZdOmega(x[1], true) * pow(log_base,normM) * (P_M__lambda_z*P_lambda__z/P_M__z) * int_P_z * int_P_lambda;
+    };
+  
+  // -------------------------------------------------------------
+
+  // Find the minimum and maximum masses, given the parameters of the scaling relation
+  double log_lambda_min = log(proxy_min/proxy_pivot)/log(log_base);
+  double log_lambda_max = log(proxy_max/proxy_pivot)/log(log_base);
+  double log_f_z_min = log((1+redshift_min)/(1+z_pivot))/log(log_base);
+  double log_f_z_max = log((1+redshift_max)/(1+z_pivot))/log(log_base);
+
+  double M1 = cluster.alpha_scaling_rel() + cluster.beta_scaling_rel()*log_lambda_min + cluster.gamma_scaling_rel()*log_f_z_min;
+  double M2 = cluster.alpha_scaling_rel() + cluster.beta_scaling_rel()*log_lambda_max + cluster.gamma_scaling_rel()*log_f_z_min;
+  double M3 = cluster.alpha_scaling_rel() + cluster.beta_scaling_rel()*log_lambda_min + cluster.gamma_scaling_rel()*log_f_z_max;
+  double M4 = cluster.alpha_scaling_rel() + cluster.beta_scaling_rel()*log_lambda_max + cluster.gamma_scaling_rel()*log_f_z_max;
+
+  double min1 = std::min(M1, M2);
+  double min2 = std::min(min1, M3);
+  double minM = std::min(min2, M4);
+  double max1 = std::max(M1, M2);
+  double max2 = std::max(max1, M3);
+  double maxM = std::max(max2, M4);
+
+  // Find the maximum value of the intrinsic scatter
+  double s1 = cluster.scatter0_scaling_rel() + cluster.scatterM_scaling_rel()*pow(log_lambda_min, cluster.scatterM_exponent_scaling_rel()) + cluster.scatterz_scaling_rel()*pow(log_f_z_min, cluster.scatterz_exponent_scaling_rel());
+  double s2 = cluster.scatter0_scaling_rel() + cluster.scatterM_scaling_rel()*pow(log_lambda_max, cluster.scatterM_exponent_scaling_rel()) + cluster.scatterz_scaling_rel()*pow(log_f_z_min, cluster.scatterz_exponent_scaling_rel());
+  double s3 = cluster.scatter0_scaling_rel() + cluster.scatterM_scaling_rel()*pow(log_lambda_min, cluster.scatterM_exponent_scaling_rel()) + cluster.scatterz_scaling_rel()*pow(log_f_z_max, cluster.scatterz_exponent_scaling_rel());
+  double s4 = cluster.scatter0_scaling_rel() + cluster.scatterM_scaling_rel()*pow(log_lambda_max, cluster.scatterM_exponent_scaling_rel()) + cluster.scatterz_scaling_rel()*pow(log_f_z_max, cluster.scatterz_exponent_scaling_rel());
+
+  double maxs1 = std::max(s1, s2);
+  double maxs2 = std::max(maxs1, s3);
+  double max_intrinsic_scatter = std::max(maxs2, s4);
+
+  // Define the integral limits
+  int integral_dimension=3;
+  std::vector<std::vector<double>> integration_limits(integral_dimension);
+  integration_limits[0] = {minM-3.5*max_intrinsic_scatter, maxM+3.5*max_intrinsic_scatter};
+  integration_limits[1] = {std::max(redshift_min - 3.5*z_error, 0.), redshift_max + 3.5*z_error};
+  integration_limits[2] = {proxy_min - 3.5*proxy_relative_error*proxy_min, proxy_max + 3.5*proxy_relative_error*proxy_max};
+
+  // Compute the integral
+  cbl::wrapper::cuba::CUBAwrapper CW (integrand, integral_dimension);
+  double nc = CW.IntegrateVegas(integration_limits,false);
+  
+  return nc * mass_pivot * log(log_base) * weight;  
+}
+
+
+// ===========================================================================================
+
 std::vector<double> cbl::modelling::numbercounts::size_function (cbl::cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const double k_Pk_ratio, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
 {
   

@@ -110,9 +110,14 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
+	 *  @param fact factor used to compute the cell size of the
+	 *  chain mesh: it is multiplied by the maximum distance
+	 *  considered for the couples and can be setted by the user
+	 *  to optimize the count of the couples
+	 *
 	 *  
 	 */
-	void measurePoisson (const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_) override;
+	void measurePoisson (const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const double fact=0.1) override;
 
 	/**
 	 *  @brief measure the filtered two-point correlation function
@@ -146,9 +151,14 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
+	 *  @param fact factor used to compute the cell size of the
+	 *  chain mesh: it is multiplied by the maximum distance
+	 *  considered for the couples and can be setted by the user
+	 *  to optimize the count of the couples
+	 *
 	 *  
 	 */
-	void measureJackknife (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_) override;
+	void measureJackknife (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const double fact=0.1) override;
 
 	/**
 	 *  @brief measure the filtered two-point correlation function
@@ -185,11 +195,16 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
+	 *  @param fact factor used to compute the cell size of the
+	 *  chain mesh: it is multiplied by the maximum distance
+	 *  considered for the couples and can be setted by the user
+	 *  to optimize the count of the couples
+	 *
 	 *  @param seed the seed for random number generation
 	 *
 	 *  
 	 */
-	void measureBootstrap (const int nMocks, const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213) override;
+	void measureBootstrap (const int nMocks, const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const double fact=0.1, const int seed=3213) override;
 
       public:
     
@@ -380,11 +395,16 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
+	 *  @param fact factor used to compute the cell size of the
+	 *  chain mesh: it is multiplied by the maximum distance
+	 *  considered for the couples and can be setted by the user
+	 *  to optimize the count of the couples
+	 *
 	 *  @param seed the seed for random number generation
 	 *
 	 *  
 	 */
-	void measure (const ErrorType errorType = ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213) override;
+	void measure (const ErrorType errorType = ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const double fact=0.1, const int seed=3213) override;
     
 	///@}
 

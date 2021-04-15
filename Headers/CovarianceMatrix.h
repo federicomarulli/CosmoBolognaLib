@@ -78,6 +78,9 @@ namespace cbl {
 
       /// standard deviation
       Eigen::VectorXd m_std;
+      
+      /// determinant
+      double m_determinant;
 
       /// The hartlap factor, only set when
       // the covariance is measured from multiple dataset
@@ -254,6 +257,13 @@ namespace cbl {
        *  @return the std::vector containing the precision matrix
        */
       std::vector<std::vector<double>> precision () const; 
+      
+      /**
+       *  @brief get the determinant
+       *
+       *  @return the determinant
+       */
+      double determinant () const {return m_determinant;}; 
 
       /**
        *  @brief get the value of the precision matrix at index i,j

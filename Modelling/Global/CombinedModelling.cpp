@@ -27,9 +27,9 @@
  *  This file contains the implementation of the methods of the class
  *  CombinedModelling
  *
- *  @author Giorgio Lesci (and Federico Marulli)
+ *  @author Giorgio Lesci, Sofia Contarini (and Federico Marulli)
  *
- *  @author giorgio.lesci2@unibo.it (and federico.marulli3@unibo.it)
+ *  @author giorgio.lesci2@unibo.it, sofia.contarini3@unibo.it (and federico.marulli3@unibo.it)
  */
 
 
@@ -43,26 +43,40 @@ using namespace cbl;
 // ============================================================================================
 
 
-cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::shared_ptr<modelling::Modelling>> modelling)
+cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::shared_ptr<modelling::Modelling>> modelling, std::vector<std::string> repeated_par)
 {
-  m_Nmodellings = modelling.size();
-  m_modelling = modelling;
-  m_set_combined_posterior();
+  std::vector<std::shared_ptr<statistics::Posterior>> posteriors(modelling.size());
+  for (size_t i=0; i<modelling.size(); i++) {
+    modelling[i]->m_set_posterior(321);
+    auto posterior_ptr = modelling[i]->posterior();
+    posteriors[i] = std::move(posterior_ptr);
+  }  
+  m_combined_posterior = make_shared<statistics::CombinedPosterior>(statistics::CombinedPosterior(posteriors, repeated_par));
 }
 
 
 // ============================================================================================
 
 
-void cbl::modelling::CombinedModelling::m_set_combined_posterior ()
+cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::vector<std::shared_ptr<modelling::Modelling>>> modelling, std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, std::vector<std::shared_ptr<modelling::Modelling>> independent_modelling, std::vector<std::string> repeated_par)
 {
-  std::vector<std::shared_ptr<statistics::Posterior>> posteriors;
-  for (int i=0; i<m_Nmodellings; i++){
-    m_modelling[i]->m_set_posterior(321);
-    auto posterior_ptr = m_modelling[i]->posterior();
-    posteriors.push_back(std::move(posterior_ptr));
+  std::vector<std::vector<std::shared_ptr<statistics::Posterior>>> posteriors(modelling.size());
+  for (size_t i=0; i<modelling.size(); i++) {
+    posteriors[i].resize(modelling[i].size());
+    for (size_t j=0; j<modelling[i].size(); j++) {
+      modelling[i][j]->m_set_posterior(321);
+      auto posterior_ptr = modelling[i][j]->posterior();
+      posteriors[i][j] = std::move(posterior_ptr);
+    }
+  }
+
+  std::vector<std::shared_ptr<statistics::Posterior>> independent_posteriors(independent_modelling.size());
+  for (size_t i=0; i<independent_modelling.size(); i++) {
+    independent_modelling[i]->m_set_posterior(321);
+    auto posterior_ptr = independent_modelling[i]->posterior();
+    independent_posteriors[i] = std::move(posterior_ptr);
   }  
-  m_combined_posterior = make_shared<statistics::CombinedPosterior>(statistics::CombinedPosterior(posteriors));
+  m_combined_posterior = make_shared<statistics::CombinedPosterior>(statistics::CombinedPosterior(posteriors, covariance, independent_posteriors, repeated_par));
 }
 
 
@@ -101,4 +115,13 @@ void cbl::modelling::CombinedModelling::sample_combined_posterior (const int cha
 void cbl::modelling::CombinedModelling::write_combined_results (const std::string output_dir, const std::string root_file, const int start, const int thin, const int nbins, const bool fits, const bool compute_mode, const int ns)
 {
   m_combined_posterior->write_results(output_dir, root_file, start, thin, nbins, fits, compute_mode, ns);
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::CombinedModelling::write_model_from_combined_chain (const std::string output_dir, const std::string output_file, const int start, const int thin)
+{
+  m_combined_posterior->write_model_from_chain(output_dir, output_file, start, thin);
 }

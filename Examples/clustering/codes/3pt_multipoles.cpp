@@ -60,7 +60,7 @@ int main () {
 
     const auto ThreeP = cbl::measure::threept::ThreePointCorrelation::Create(catalogue, random_catalogue, rMin, rMax, binSize, nOrders);
 
-    ThreeP->measure(cbl::measure::ErrorType::_None_, dir_triplets, {}, 0, true, false, 666);
+    ThreeP->measure(cbl::measure::ErrorType::_None_, dir_triplets, {}, 0, true, false, 0.1);
   
     ThreeP->write(dir_output, file_output);
 

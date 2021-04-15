@@ -1614,7 +1614,6 @@ void cbl::catalogue::Catalogue::write_comoving_coordinates (const std::string ou
   for (size_t i=0; i<nObjects(); ++i) 
     fout << xx(i) << "   " << yy(i) << "   " << zz(i) << endl;
 
-  coutCBL << "I wrote the file: " << outputFile << endl;
   fout.clear(); fout.close();
 }
 
@@ -1636,7 +1635,6 @@ void cbl::catalogue::Catalogue::write_obs_coordinates (const std::string outputF
   for (size_t i=0; i<nObjects(); ++i) 
     fout << ra(i) << "   " << dec(i) << "   " << redshift(i) << endl;
   
-  coutCBL << "I wrote the file: " << outputFile << endl;
   fout.clear(); fout.close();
 }
 
@@ -1677,7 +1675,6 @@ void cbl::catalogue::Catalogue::write_data (const std::string outputFile, const 
     
   }
 
-  coutCBL << "I wrote the file: " << outputFile << endl;
   fout.clear(); fout.close();
 }
 

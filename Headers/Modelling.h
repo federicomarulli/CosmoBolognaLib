@@ -265,6 +265,26 @@ namespace cbl {
        *  estimated with resampling methods
        */
       void set_likelihood (const statistics::LikelihoodType likelihood_type, const std::vector<size_t> x_index={0, 2}, const int w_index=-1, const double prec=1.e-10, const int Nres=-1);
+      
+      /**
+       *  @brief set the likelihood function, given a user-defined
+       *  log-likelihood function
+       *
+       *  if the input parameter Nres is larger than 0, the inverted
+       *  covariance matrix is corrected as follows (Hartlap, Simon
+       *  and Schneider 2006):
+       *
+       *  \f[ \hat{C}^{-1} =
+       *  \left(1-\frac{n_b+1}{N_{res}-1}\right)C^{-1} \f]
+       *
+       *  where \f$n_b\f$ is the number of bins and \f$N_{res}\f$ is
+       *  the number of resamplings
+       *
+       *  @param log_likelihood_function the user-defined
+       *  loglikelihood function (natural logarithm)
+       *
+       */
+      void set_likelihood (const cbl::statistics::Likelihood_function log_likelihood_function);
 
       ///@}
       

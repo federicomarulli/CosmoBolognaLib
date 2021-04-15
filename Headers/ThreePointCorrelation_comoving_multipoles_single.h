@@ -221,12 +221,17 @@ namespace cbl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
+	 * @param fact factor used to compute the cell size of the
+	 * chain mesh: it is multiplied by the maximum distance
+	 * considered for the couples and can be setted by the user
+	 * to optimize the count of the couples
+	 *
 	 * @param seed the seed for random number generation
 	 *
 	 * @warning no error have been implemented so far, any choice will
 	 * be ignored
 	 */
-	void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_triplets, const bool tcount, const int seed) override;
+	void measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_triplets, const bool tcount, const double fact=0.1, const int seed=3213) override;
 
 	/**
 	 *  @name Input/Output member functions (customized in all the derived classes)

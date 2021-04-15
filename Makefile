@@ -205,13 +205,13 @@ Dir_WRAP = Wrappers/
 Dir_FUNCGRID = FuncGrid/
 Dir_FFT = FFT/
 Dir_RAN = RandomNumbers/
+Dir_CM = ChainMesh/
 Dir_FUNC = Func/
 Dir_DATA = Data/
 Dir_FIELD = Field/
 Dir_HIST = Histogram/
 Dir_DISTR = Distribution/
 Dir_COSM = Cosmology/Lib/
-Dir_CM = ChainMesh/
 Dir_STAT = Statistics/
 Dir_CAT = Catalogue/
 Dir_LN = LogNormal/
@@ -234,13 +234,13 @@ dir_WRAP = $(addprefix $(PWD)/,$(Dir_WRAP))
 dir_FUNCGRID = $(addprefix $(PWD)/,$(Dir_FUNCGRID))
 dir_FFT = $(addprefix $(PWD)/,$(Dir_FFT))
 dir_RAN = $(addprefix $(PWD)/,$(Dir_RAN))
+dir_CM = $(addprefix $(PWD)/,$(Dir_CM))
 dir_FUNC = $(addprefix $(PWD)/,$(Dir_FUNC))
 dir_DATA = $(addprefix $(PWD)/,$(Dir_DATA))
 dir_FIELD = $(addprefix $(PWD)/,$(Dir_FIELD))
 dir_HIST = $(addprefix $(PWD)/,$(Dir_HIST))
 dir_DISTR = $(addprefix $(PWD)/,$(Dir_DISTR))
 dir_COSM = $(addprefix $(PWD)/,$(Dir_COSM))
-dir_CM = $(addprefix $(PWD)/,$(Dir_CM))
 dir_STAT = $(addprefix $(PWD)/,$(Dir_STAT))
 dir_CAT = $(addprefix $(PWD)/,$(Dir_CAT))
 dir_LN = $(addprefix $(PWD)/,$(Dir_LN))
@@ -286,6 +286,8 @@ OBJ_FFT = $(OBJ_FFTLOG) $(dir_FFT)FFTlog.o
 
 OBJ_RAN = $(dir_RAN)RandomNumbers.o
 
+OBJ_CM = $(dir_CM)ChainMesh.o
+
 OBJ_FUNC = $(dir_FUNC)Func.o $(dir_FUNC)FuncXi.o $(dir_FUNC)FuncMultipoles.o $(dir_FUNC)LegendrePolynomials.o $(dir_FUNC)SphericalHarmonics_Coefficients.o
 
 OBJ_DATA = $(dir_DATA)Data.o $(dir_DATA)Data1D.o $(dir_DATA)Data1D_collection.o $(dir_DATA)Data2D.o $(dir_DATA)Data1D_extra.o $(dir_DATA)Data2D_extra.o $(dir_DATA)CovarianceMatrix.o $(dir_DATA)TaperedCovarianceMatrix.o $(dir_DATA)Table.o
@@ -294,19 +296,17 @@ OBJ_FIELD = $(dir_FIELD)Field3D.o
 
 OBJ_HIST = $(dir_HIST)Histogram.o
 
-OBJ_DISTR = $(dir_DISTR)Distribution.o
+OBJ_DISTR = $(dir_DISTR)Distribution.o $(dir_DISTR)CombinedDistribution.o 
 
 OBJ_COSM = $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)PkXiNonLinear.o $(dir_COSM)MassFunction.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)DensityProfile.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)SizeFunction.o  $(dir_COSM)3PCF.o $(OBJ_RECfast)
 
-OBJ_CM = $(dir_CM)ChainMesh.o
-
-OBJ_STAT =  $(dir_STAT)Prior.o $(dir_STAT)ModelParameters.o $(dir_STAT)LikelihoodParameters.o $(dir_STAT)PosteriorParameters.o $(dir_STAT)Model.o $(dir_STAT)Model1D.o $(dir_STAT)Model2D.o $(dir_STAT)LikelihoodFunction.o $(dir_STAT)Likelihood.o $(dir_STAT)Chi2.o $(dir_STAT)Sampler.o $(dir_STAT)Posterior.o $(dir_STAT)CombinedPosterior.o
+OBJ_STAT =  $(dir_STAT)Prior.o $(dir_STAT)ModelParameters.o $(dir_STAT)LikelihoodParameters.o $(dir_STAT)PosteriorParameters.o $(dir_STAT)Model.o $(dir_STAT)Model1D.o $(dir_STAT)Model2D.o $(dir_STAT)LikelihoodFunction.o $(dir_STAT)Likelihood.o $(dir_STAT)Chi2.o $(dir_STAT)Sampler.o $(dir_STAT)Posterior.o $(dir_STAT)SuperSampleCovariance.o $(dir_STAT)CombinedPosterior.o
 
 OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $(dir_CAT)ChainMesh_Catalogue.o $(dir_CAT)RandomCatalogueVIPERS.o $(dir_CAT)VoidCatalogue.o $(dir_CAT)GadgetCatalogue.o $(dir_CAT)FITSCatalogue.o
 
 OBJ_LN = $(dir_LN)LogNormal.o $(dir_LN)LogNormalFull.o
 
-OBJ_NC = $(dir_NC)NumberCounts.o $(dir_NC)NumberCounts1D.o $(dir_NC)NumberCounts2D.o $(dir_NC)NumberCounts1D_Redshift.o $(dir_NC)NumberCounts1D_Mass.o $(dir_NC)NumberCounts2D_RedshiftMass.o $(dir_NC)NumberCounts1D_Size.o
+OBJ_NC = $(dir_NC)NumberCounts.o $(dir_NC)NumberCounts1D.o $(dir_NC)NumberCounts2D.o $(dir_NC)NumberCounts1D_Redshift.o $(dir_NC)NumberCounts1D_Mass.o $(dir_NC)NumberCounts1D_MassProxy.o $(dir_NC)NumberCounts2D_RedshiftMass.o $(dir_NC)NumberCounts1D_Size.o
 
 OBJ_STACKPROFILE = $(dir_STACKPROFILE)StackedDensityProfile.o
 
@@ -322,7 +322,7 @@ OBJ_MODEL_MASSOBSERVABLEREL =  $(dir_MODEL_MASSOBSERVABLEREL)Modelling_MassObser
 
 OBJ_MODEL_DENSITYPROFILE =  $(dir_MODEL_DENSITYPROFILE)Modelling_DensityProfile.o
 
-OBJ_MODEL_NC =  $(dir_MODEL_NC)Modelling_NumberCounts.o $(dir_MODEL_NC)ModelFunction_NumberCounts.o $(dir_MODEL_NC)Modelling_NumberCounts1D.o $(dir_MODEL_NC)Modelling_NumberCounts2D.o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Redshift.o $(dir_MODEL_NC)Modelling_NumberCounts1D_Redshift.o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Mass.o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Size.o $(dir_MODEL_NC)Modelling_NumberCounts1D_Mass.o $(dir_MODEL_NC)ModelFunction_NumberCounts2D_RedshiftMass.o $(dir_MODEL_NC)Modelling_NumberCounts2D_RedshiftMass.o $(dir_MODEL_NC)Modelling_NumberCounts1D_Size.o
+OBJ_MODEL_NC =  $(dir_MODEL_NC)Modelling_NumberCounts.o $(dir_MODEL_NC)ModelFunction_NumberCounts.o $(dir_MODEL_NC)Modelling_NumberCounts1D.o $(dir_MODEL_NC)Modelling_NumberCounts2D.o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Redshift.o $(dir_MODEL_NC)Modelling_NumberCounts1D_Redshift.o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Mass.o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_MassProxy.o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Size.o $(dir_MODEL_NC)Modelling_NumberCounts1D_Mass.o $(dir_MODEL_NC)Modelling_NumberCounts1D_MassProxy.o $(dir_MODEL_NC)ModelFunction_NumberCounts2D_RedshiftMass.o $(dir_MODEL_NC)Modelling_NumberCounts2D_RedshiftMass.o $(dir_MODEL_NC)Modelling_NumberCounts1D_Size.o
 
 OBJ_MODEL_TWOP = $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation1D.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation1D.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation1D_angular.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation1D_angular.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation1D_monopole.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation1D_monopole.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation2D.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation2D.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation2D_cartesian.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation2D_cartesian.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation2D_polar.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation2D_polar.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation_projected.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation_projected.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation_deprojected.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation_deprojected.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation_multipoles.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation_multipoles.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation_wedges.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation_wedges.o $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation1D_filtered.o $(dir_MODEL_TWOP)ModelFunction_TwoPointCorrelation1D_filtered.o
 
@@ -376,6 +376,8 @@ ALL:
 	make -j3 libFFT
 	$(call colorecho, "\n"Compiling the library: libRAN... "\n")
 	make -j3 libRAN
+	$(call colorecho, "\n"Compiling the library: libCM... "\n")
+	make -j3 libCM
 	$(call colorecho, "\n"Compiling the library: libFUNC... "\n")
 	make -j3 libFUNC
 	$(call colorecho, "\n"Compiling the library: libDATA... "\n")
@@ -388,8 +390,6 @@ ALL:
 	make -j3 libDISTR
 	$(call colorecho, "\n"Compiling the library: libCOSM... "\n")
 	make -j3 libCOSM
-	$(call colorecho, "\n"Compiling the library: libCM... "\n")
-	make -j3 libCM
 	$(call colorecho, "\n"Compiling the library: libSTAT... "\n")
 	make -j3 libSTAT
 	$(call colorecho, "\n"Compiling the library: libCAT... "\n")
@@ -441,74 +441,74 @@ libFFT: $(OBJ_FFT) $(PWD)/Makefile
 libRAN: $(OBJ_RAN) $(PWD)/Makefile
 	$(CXX) $(FLAGS_LINK) -o $(PWD)/libRAN.$(ES) $(OBJ_RAN) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT
 
+libCM: $(OBJ_CM) $(PWD)/Makefile
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCM.$(ES) $(OBJ_CM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN
+
 libFUNC: $(OBJ_FUNC) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libFUNC.$(ES) $(OBJ_FUNC) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libFUNC.$(ES) $(OBJ_FUNC) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM
 
 libDATA: $(OBJ_DATA) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libDATA.$(ES) $(OBJ_DATA) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libDATA.$(ES) $(OBJ_DATA) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC
 
 libFIELD: $(OBJ_FIELD) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libFIELD.$(ES) $(OBJ_FIELD) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libFIELD.$(ES) $(OBJ_FIELD) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA
 
 libHIST: $(OBJ_HIST) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libHIST.$(ES) $(OBJ_HIST) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libHIST.$(ES) $(OBJ_HIST) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD
 
 libDISTR: $(OBJ_DISTR) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libDISTR.$(ES) $(OBJ_DISTR) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libDISTR.$(ES) $(OBJ_DISTR) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST
 
 libCOSM: $(OBJ_COSM) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCOSM.$(ES) $(OBJ_COSM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR
-
-libCM: $(OBJ_CM) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCM.$(ES) $(OBJ_CM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCOSM.$(ES) $(OBJ_COSM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR
 
 libSTAT: $(OBJ_STAT) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libSTAT.$(ES) $(OBJ_STAT) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lCM
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libSTAT.$(ES) $(OBJ_STAT) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM
 
 libCAT: $(OBJ_CAT) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCAT.$(ES) $(OBJ_CAT) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCAT.$(ES) $(OBJ_CAT) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM
 
 libLN: $(OBJ_LN) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libLN.$(ES) $(OBJ_LN) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libLN.$(ES) $(OBJ_LN) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT
 
 libNC: $(OBJ_NC) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libNC.$(ES) $(OBJ_NC) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libNC.$(ES) $(OBJ_NC) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN
 
 libSTACKPROFILE: $(OBJ_STACKPROFILE) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libSTACKPROFILE.$(ES) $(OBJ_STACKPROFILE) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libSTACKPROFILE.$(ES) $(OBJ_STACKPROFILE) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC
 
 libTWOP: $(OBJ_TWOP) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libTWOP.$(ES) $(OBJ_TWOP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libTWOP.$(ES) $(OBJ_TWOP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE
 
 libTHREEP: $(OBJ_THREEP) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libTHREEP.$(ES) $(OBJ_THREEP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libTHREEP.$(ES) $(OBJ_THREEP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP
 
 libMODEL_GLOB: $(OBJ_MODEL_GLOB) $(PWD)/Makefile
 	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_GLOB.$(ES) $(OBJ_MODEL_GLOB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP
 
 libMODEL_COSM: $(OBJ_MODEL_COSM) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_COSM.$(ES) $(OBJ_MODEL_COSM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_COSM.$(ES) $(OBJ_MODEL_COSM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB
 
 libMODEL_DENSITYPROFILE: $(OBJ_MODEL_DENSITYPROFILE) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_DENSITYPROFILE.$(ES) $(OBJ_MODEL_DENSITYPROFILE) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM 
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_DENSITYPROFILE.$(ES) $(OBJ_MODEL_DENSITYPROFILE) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM
 
 libMODEL_MASSOBSERVABLEREL: $(OBJ_MODEL_MASSOBSERVABLEREL) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_MASSOBSERVABLEREL.$(ES) $(OBJ_MODEL_MASSOBSERVABLEREL) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_MASSOBSERVABLEREL.$(ES) $(OBJ_MODEL_MASSOBSERVABLEREL) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE
 
 libMODEL_NC: $(OBJ_MODEL_NC) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_NC.$(ES) $(OBJ_MODEL_NC) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_MASSOBSERVABLEREL -lMODEL_DENSITYPROFILE
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_NC.$(ES) $(OBJ_MODEL_NC) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE
 
 libMODEL_TWOP: $(OBJ_MODEL_TWOP) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_TWOP.$(ES) $(OBJ_MODEL_TWOP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_MASSOBSERVABLEREL -lMODEL_DENSITYPROFILE -lMODEL_NC
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_TWOP.$(ES) $(OBJ_MODEL_TWOP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC
 
 libMODEL_THREEP: $(OBJ_MODEL_THREEP) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_THREEP.$(ES) $(OBJ_MODEL_THREEP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_MASSOBSERVABLEREL -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_THREEP.$(ES) $(OBJ_MODEL_THREEP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lCM -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP
 
 libGLOB: $(OBJ_GLOB) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libGLOB.$(ES) $(OBJ_GLOB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_MASSOBSERVABLEREL -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libGLOB.$(ES) $(OBJ_GLOB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP
 
 libPARF: $(OBJ_PARF) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libPARF.$(ES) $(OBJ_PARF) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_MASSOBSERVABLEREL -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP -lGLOB
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libPARF.$(ES) $(OBJ_PARF) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP -lGLOB
 
 libCBL: $(OBJ_CBL) $(PWD)/Makefile
 	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCBL.$(ES) $(OBJ_CBL) $(CUBA_LIB) $(FLAGS_CCFITS) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
@@ -580,6 +580,8 @@ allExamples:
 	cd $(PWD)/Examples/statistics/codes ; make sampler CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: catalogue.cpp ... "\n")
 	cd $(PWD)/Examples/catalogue ; make catalogue CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
+	$(call colorecho, "\n"Compiling the example code: lognormal.cpp ... "\n")
+	cd $(PWD)/Examples/lognormal/codes ; make lognormal CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: numberCounts.cpp ... "\n")
 	cd $(PWD)/Examples/numberCounts/codes ; make numberCounts CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: numberCounts_errors.cpp ... "\n")
@@ -652,7 +654,7 @@ cleanExamples:
 	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/cosmicVoids/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/parameterFile ; make clean && cd ../..
-	rm -rf $(PWD)/Examples/cosmology/results* $(PWD)/Examples/histogram/*.dat $(PWD)/Examples/statistics/output/* $(PWD)/Examples/numberCounts/output/* $(PWD)/Examples/clustering/output/* $(PWD)/Examples/cosmicVoids/output/*
+	rm -rf $(PWD)/Examples/cosmology/results* $(PWD)/Examples/histogram/*.dat $(PWD)/Examples/statistics/output/* $(PWD)/Examples/lognormal/output/* $(PWD)/Examples/numberCounts/output/* $(PWD)/Examples/clustering/output/* $(PWD)/Examples/cosmicVoids/output/*
 
 
 cleanpy:
@@ -798,6 +800,7 @@ $(dir_DATA)TaperedCovarianceMatrix.o: $(dir_DATA)TaperedCovarianceMatrix.cpp $(H
 $(dir_DATA)Table.o: $(dir_DATA)Table.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_DATA)Table.cpp -o $(dir_DATA)Table.o
 
+
 ####################################################################
 
 
@@ -822,8 +825,18 @@ $(dir_RAN)RandomNumbers.o: $(dir_RAN)RandomNumbers.cpp $(HH) $(PWD)/Makefile
 ####################################################################
 
 
+$(dir_CM)ChainMesh.o: $(dir_CM)ChainMesh.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CM)ChainMesh.cpp -o $(dir_CM)ChainMesh.o
+
+
+####################################################################
+
+
 $(dir_DISTR)Distribution.o: $(dir_DISTR)Distribution.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_DISTR)Distribution.cpp -o $(dir_DISTR)Distribution.o
+
+$(dir_DISTR)CombinedDistribution.o: $(dir_DISTR)CombinedDistribution.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_DISTR)CombinedDistribution.cpp -o $(dir_DISTR)CombinedDistribution.o
 
 
 ####################################################################
@@ -878,13 +891,6 @@ $(dir_COSM)3PCF.o: $(dir_COSM)3PCF.cpp $(HH) $(PWD)/Makefile
 ####################################################################
 
 
-$(dir_CM)ChainMesh.o: $(dir_CM)ChainMesh.cpp $(HH) $(PWD)/Makefile
-	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CM)ChainMesh.cpp -o $(dir_CM)ChainMesh.o
-
-
-####################################################################
-
-
 $(dir_STAT)Prior.o: $(dir_STAT)Prior.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Prior.cpp -o $(dir_STAT)Prior.o
 
@@ -920,6 +926,9 @@ $(dir_STAT)Sampler.o: $(dir_STAT)Sampler.cpp $(HH) $(PWD)/Makefile
 
 $(dir_STAT)Posterior.o: $(dir_STAT)Posterior.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Posterior.cpp -o $(dir_STAT)Posterior.o
+
+$(dir_STAT)SuperSampleCovariance.o: $(dir_STAT)SuperSampleCovariance.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)SuperSampleCovariance.cpp -o $(dir_STAT)SuperSampleCovariance.o
 
 $(dir_STAT)CombinedPosterior.o: $(dir_STAT)CombinedPosterior.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)CombinedPosterior.cpp -o $(dir_STAT)CombinedPosterior.o
@@ -980,6 +989,9 @@ $(dir_NC)NumberCounts1D_Redshift.o: $(dir_NC)NumberCounts1D_Redshift.cpp $(HH) $
 
 $(dir_NC)NumberCounts1D_Mass.o: $(dir_NC)NumberCounts1D_Mass.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_NC)NumberCounts1D_Mass.cpp -o $(dir_NC)NumberCounts1D_Mass.o
+
+$(dir_NC)NumberCounts1D_MassProxy.o: $(dir_NC)NumberCounts1D_MassProxy.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_NC)NumberCounts1D_MassProxy.cpp -o $(dir_NC)NumberCounts1D_MassProxy.o
 
 $(dir_NC)NumberCounts2D_RedshiftMass.o: $(dir_NC)NumberCounts2D_RedshiftMass.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_NC)NumberCounts2D_RedshiftMass.cpp -o $(dir_NC)NumberCounts2D_RedshiftMass.o
@@ -1166,6 +1178,12 @@ $(dir_MODEL_NC)Modelling_NumberCounts1D_Mass.o: $(dir_MODEL_NC)Modelling_NumberC
 
 $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Mass.o: $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Mass.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Mass.cpp -o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Mass.o
+
+$(dir_MODEL_NC)Modelling_NumberCounts1D_MassProxy.o: $(dir_MODEL_NC)Modelling_NumberCounts1D_MassProxy.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)Modelling_NumberCounts1D_MassProxy.cpp -o $(dir_MODEL_NC)Modelling_NumberCounts1D_MassProxy.o
+
+$(dir_MODEL_NC)ModelFunction_NumberCounts1D_MassProxy.o: $(dir_MODEL_NC)ModelFunction_NumberCounts1D_MassProxy.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)ModelFunction_NumberCounts1D_MassProxy.cpp -o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_MassProxy.o
 
 $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Size.o: $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Size.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Size.cpp -o $(dir_MODEL_NC)ModelFunction_NumberCounts1D_Size.o

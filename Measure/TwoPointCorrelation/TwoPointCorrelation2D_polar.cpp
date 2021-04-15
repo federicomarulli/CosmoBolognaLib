@@ -217,17 +217,17 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::write (const std::string 
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_polar::measure (const ErrorType errorType, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, int nMocks, bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation2D_polar::measure (const ErrorType errorType, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, int nMocks, bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const double fact, const int seed)
 {
   switch (errorType) {
   case (ErrorType::_Poisson_) :
-    measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
+    measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator, fact);
     break;
   case (ErrorType::_Jackknife_) :
-    measureJackknife(dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator);
+    measureJackknife(dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, fact);
     break;
   case (ErrorType::_Bootstrap_) :
-    measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, seed);
+    measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, fact, seed);
     break;
   default:
     ErrorCBL("unknown type of error!", "measure", "TwoPointCorrelation2D_polar.cpp");
@@ -238,11 +238,11 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measure (const ErrorType 
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_polar::measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation2D_polar::measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const double fact)
 { 
   // ----------- count the data-data, random-random and data-random pairs, or read them from file ----------- 
   
-  count_allPairs(m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
+  count_allPairs(m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator, fact);
 
   
   // ----------- compute the monopole of the two-point correlation function ----------- 
@@ -260,7 +260,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measurePoisson (const std
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const double fact)
 {
   if (dir_output_resample!=par::defaultString && dir_output_resample!="") { 
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -273,7 +273,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureJackknife (const s
   vector< vector<double > > xi_SubSamples, covariance;
 
   vector<shared_ptr<Pair> > dd_regions, rr_regions, dr_regions;
-  count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
+  count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator, fact);
 
   vector<shared_ptr<Data> > data_SS = (estimator==Estimator::_natural_) ? XiJackknife(dd_regions, rr_regions) : XiJackknife(dd_regions, rr_regions, dr_regions);
 
@@ -305,7 +305,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureJackknife (const s
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const double fact, const int seed)
 {
   if (nMocks<=0)
     ErrorCBL("the number of mocks must be >0!", "measureBootstrap", "TwoPointCorrelation2D_polar.cpp");
@@ -318,7 +318,7 @@ void cbl::measure::twopt::TwoPointCorrelation2D_polar::measureBootstrap (const i
   vector< vector<double > > xi_SubSamples, covariance;
 
   vector<shared_ptr<Pair> > dd_regions, rr_regions, dr_regions;
-  count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
+  count_allPairs_region(dd_regions, rr_regions, dr_regions, m_twoPType, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator, fact);
 
   vector<shared_ptr<Data> > data_SS = (estimator==Estimator::_natural_) ? XiBootstrap(nMocks, dd_regions, rr_regions, seed) : XiBootstrap(nMocks, dd_regions, rr_regions, dr_regions, seed);
 

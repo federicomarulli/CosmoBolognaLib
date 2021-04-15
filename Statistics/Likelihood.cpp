@@ -154,6 +154,17 @@ cbl::statistics::Likelihood::Likelihood (const std::shared_ptr<data::Data> data,
 // ============================================================================================
 
 
+cbl::statistics::Likelihood::Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const Likelihood_function log_likelihood_function, const std::shared_ptr<ModelParameters> model_parameters)
+{
+  set_data(data);
+  set_model(model, model_parameters);
+  set_log_function(log_likelihood_function);
+}
+
+
+// ============================================================================================
+
+
 double cbl::statistics::Likelihood::operator () (std::vector<double> &pp) const
 {
   return exp(this->log(pp));
@@ -261,7 +272,7 @@ void cbl::statistics::Likelihood::set_function (const LikelihoodType likelihood_
       
       case (LikelihoodType::_Gaussian_Error_):	
 	for (int i=0; i<m_data->ndata(); i++) {
-	  if (isinf(pow(1./m_data->error(i), 2)))
+	  if (std::isinf(pow(1./m_data->error(i), 2)))
 	    ErrorCBL("error("+conv(i, par::fINT)+") is too small, and 1/error("+conv(i, par::fINT)+")^2 = inf!", "set_function", "Likelihood.cpp");
 	  else
 	    continue;
@@ -292,7 +303,7 @@ void cbl::statistics::Likelihood::set_function (const LikelihoodType likelihood_
       case (LikelihoodType::_Gaussian_Error_):
 	for (int i=0; i<m_data->xsize(); i++) {
 	  for (int j=0; j<m_data->ysize(); j++) {
-	    if (isinf(pow(1./m_data->error(i, j), 2)))				
+	    if (std::isinf(pow(1./m_data->error(i, j), 2)))				
 	      ErrorCBL("error("+conv(i, par::fINT)+", "+conv(j, par::fINT)+") is too small, and 1/error("+conv(i, par::fINT)+", "+conv(j, par::fINT)+")^2 = inf!", "set_function", "Likelihood.cpp");
 	    else
 	      continue;

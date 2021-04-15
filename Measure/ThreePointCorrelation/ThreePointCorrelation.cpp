@@ -184,9 +184,9 @@ void cbl::measure::threept::ThreePointCorrelation::count_triplets (const std::sh
 
       time_t end_temp; time (&end_temp); double diff_temp = difftime(end_temp, start);
       if (tcount && tid==0) { coutCBL <<"\r..."<<float(i)*fact_count<<"% completed  ("<<diff_temp/60<<" minutes)\r"; cout.flush(); }
-      if (i==int(nObj*0.25)) coutCBL <<".....25% completed"<<endl;
-      if (i==int(nObj*0.5)) coutCBL <<".....50% completed"<<endl;
-      if (i==int(nObj*0.75)) coutCBL <<".....75% completed"<<endl;
+      if (i==int(nObj*0.25)) coutCBL <<".....25% completed   "<<endl;
+      if (i==int(nObj*0.5)) coutCBL <<".....50% completed   "<<endl;
+      if (i==int(nObj*0.75)) coutCBL <<".....75% completed   "<<endl;
     }
     
 #pragma omp critical
@@ -210,15 +210,15 @@ void cbl::measure::threept::ThreePointCorrelation::count_triplets (const std::sh
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation::count_allTriplets (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
+void cbl::measure::threept::ThreePointCorrelation::count_allTriplets (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const double fact)
 {
   // ----- double chain-mesh -----
   
   double rMAX1 = m_ddd->r12()+m_ddd->r12_binSize();
   double rMAX2 = m_ddd->r13()+m_ddd->r13_binSize();
 
-  double cell_size1 = max(5., rMAX1*0.1);
-  double cell_size2 = max(5., rMAX2*0.1);
+  double cell_size1 = max(5., rMAX1*fact);
+  double cell_size2 = max(5., rMAX2*fact);
 
   ChainMesh_Catalogue ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2;
 
@@ -396,9 +396,9 @@ void cbl::measure::threept::ThreePointCorrelation::count_triplets_region (const 
 	}
       time_t end_temp; time (&end_temp); double diff_temp = difftime(end_temp, start);
       if (tcount && tid==0) { coutCBL <<"\r..."<<float(i)*fact_count<<"% completed  ("<<diff_temp/60<<" minutes)\r"; cout.flush(); }
-      if (i==int(nObj*0.25)) coutCBL <<".....25% completed"<<endl;
-      if (i==int(nObj*0.5)) coutCBL <<".....50% completed"<<endl;
-      if (i==int(nObj*0.75)) coutCBL <<".....75% completed"<<endl;
+      if (i==int(nObj*0.25)) coutCBL <<".....25% completed   "<<endl;
+      if (i==int(nObj*0.5)) coutCBL <<".....50% completed   "<<endl;
+      if (i==int(nObj*0.75)) coutCBL <<".....75% completed   "<<endl;
     }
     
 #pragma omp critical
@@ -426,15 +426,15 @@ void cbl::measure::threept::ThreePointCorrelation::count_triplets_region (const 
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation::count_allTriplets_region (const std::vector<std::vector<double>> weight, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount)
+void cbl::measure::threept::ThreePointCorrelation::count_allTriplets_region (const std::vector<std::vector<double>> weight, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const double fact)
 {
   // ----- double chain-mesh -----
 
   double rMAX1 = m_ddd->r12()+m_ddd->r12_binSize();
   double rMAX2 = m_ddd->r13()+m_ddd->r13_binSize();
 
-  double cell_size1 = max(5., rMAX1*0.1);
-  double cell_size2 = max(5., rMAX2*0.1);
+  double cell_size1 = max(5., rMAX1*fact);
+  double cell_size2 = max(5., rMAX2*fact);
 
   ChainMesh_Catalogue ChainMesh_data_rMAX1, ChainMesh_data_rMAX2, ChainMesh_random_rMAX1, ChainMesh_random_rMAX2;
 

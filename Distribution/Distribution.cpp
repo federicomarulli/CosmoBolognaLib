@@ -232,7 +232,6 @@ void cbl::glob::Distribution::set_uniform_distribution (const double xmin, const
 
 void cbl::glob::Distribution::set_gaussian_distribution (const double mean, const double sigma, const int seed)
 {
-
   m_distributionType = glob::DistributionType::_Gaussian_;
 
   m_distribution_func_pars.erase(m_distribution_func_pars.begin(), m_distribution_func_pars.end());
@@ -240,9 +239,12 @@ void cbl::glob::Distribution::set_gaussian_distribution (const double mean, cons
   m_distribution_func_pars.push_back(sigma);
 
   m_distribution_random = make_shared<NormalRandomNumbers> (NormalRandomNumbers(mean, sigma, seed, m_xmin, m_xmax));
-  m_func = &gaussian<double>; 
+  m_func = &gaussian<double>;
+  m_mean = mean;
+  m_sigma = sigma;
+  m_seed = seed;
 
-  m_distribution_normalization = 0.5*(erf((m_xmax-mean)/sigma)-erf((m_xmin-mean)/sigma));
+  m_distribution_normalization = 0.5*(erf((m_xmax-mean)/sigma/sqrt(2.))-erf((m_xmin-mean)/sigma/sqrt(2.)));
   m_log_distribution_normalization = log(m_distribution_normalization);
 }
 

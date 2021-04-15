@@ -31,8 +31,7 @@
  *  @authors federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
  */
 
-#include "Cosmology.h"
-
+#include "Kernel.h"
 
 #ifndef __CHAINMESH__
 #define __CHAINMESH__
@@ -101,6 +100,9 @@ namespace cbl {
       /// the total number of non-empty cells
       std::vector<long> m_NonEmpty_Cells;
 
+      /// multiplicative factor to compute the projected number of cells 
+      std::vector<long> m_multCell;
+
       /// the vector containing the sample points for the n-dim interpolation
       std::vector<std::vector<double>> m_points;
 
@@ -116,13 +118,16 @@ namespace cbl {
       /// the maximum radius for the search of close points in the chain mesh
       double m_rMAX;
 
+      /// the minimum radius for the search of close points in the chain mesh
+      double m_rMIN;
+
     public:
 
       /**
        *  @brief default constructor
        *
        */
-      ChainMesh () {}
+      ChainMesh () = default;
 
       /**
        *  @brief constructor
@@ -135,7 +140,7 @@ namespace cbl {
       /**
        *  @brief default destructor
        */
-      ~ChainMesh () {}
+      ~ChainMesh () = default;
 
       /**
        *  @brief function that set parameters for the chain-mesh
@@ -188,10 +193,11 @@ namespace cbl {
        * @brief create the chain mesh
        * @param data the vector containing the coordinate of the object
        * @param rMax the maximum radius, to set the interal variable m_search_region
-       * @param nMIN minimum number of cells
+       * @param rMin the minimum radius, to set the interal variable m_search_region
        * @param nMAX maximum number of cells
+       * @param nMIN minimum number of cells
        */
-      void create_chain_mesh (const std::vector<std::vector<double> > data, const double rMax, const long nMIN=10, const long nMAX=300);
+      void create_chain_mesh (const std::vector<std::vector<double> > data, const double rMax, const double rMin=-1., const long nMAX=300, const long nMIN=10);
 
       /**
        * @brief create the chain mesh
@@ -205,7 +211,7 @@ namespace cbl {
        * @param r_max the maximum radius
        * @param r_min the minimum radius
        */
-      void get_searching_region (const double r_max, const double r_min = -1);
+      void get_searching_region (const double r_max, const double r_min=-1.);
 
       /**
        * @brief get the indeces of the objects close to a cell
@@ -217,48 +223,71 @@ namespace cbl {
 
       /**
        * @brief get the indeces of the objects close to an object
-       * @param center coordinates of an object
+       * @param center coordinates of an object 
        * @param ii the minimum index given in output
        * @return vector containing the index of the objects inside the cell
        */
       std::vector<long> close_objects (std::vector<double> center, long ii=-1) const;
 
       /**
-       * @brief function that set a normalised (square/cubic) grid from a sample of points, used for the n-dim interpolation.
-       * @param points sample points
+       * @brief function to set a normalized (square/cubic) grid from
+       * a sample of points, used for the N-dim interpolation
+       *
+       * @param points sample points 
+       *
        * @param values the data on the sample points
-       * @param rMAX the maximum radius, to set the internal variable m_search_region
+       *
+       * @param rMAX the maximum radius, to set the internal variable
+       * m_search_region
        */
       void normalize (std::vector<std::vector<double>> points, std::vector<double> values, const double rMAX);
 
       /**
-       * @brief N-dim interpolation of a set of N coordinates on a normalised grid (see normalize)
-       * @param points the input coordinatesthat has to be interpolated
-       * @param distNum the number of closest points on which the average will be done
+       * @brief N-dim interpolation of a set of N coordinates on a
+       * normalised grid (see normalize)
+       *
+       * @param xi the input coordinates that has to be
+       * interpolated
+       *
+       * @param distNum the number of closest points on which the
+       * average will be done
+       *
        * @return the interpolated value at the input coordinates
        */
       double interpolate (std::vector<double> xi, const int distNum);
 
       /**
        * @brief N-dim interpolation
+       *
        * @param points sample points
+       *
        * @param values sample values
+       *
        * @param xi the coordinates to be interpolated
-       * @param distNum the number of closest points on which the average will be done
-       * @param rMAX the maximum radius, to set the interal variable m_search_region
+       *
+       * @param distNum the number of closest points on which the
+       * average will be done
+       *
+       * @param rMAX the maximum radius, to set the interal variable
+       * m_search_region
+       *
        * @return values interolated at the input coordinates
        */
       std::vector<double> interpolate (std::vector<std::vector<double>> points, std::vector<double> values, std::vector<std::vector<double>> xi, const int distNum, const double rMAX);
 
       /**
        * @brief get the index of the object inside a cell
+       *
        * @param cell_index the cell index
-       * @return vector containing the index of the objects inside the cell
+       *
+       * @return vector containing the index of the objects inside the
+       * cell
        */
       std::vector<long> get_list (const long cell_index) const;
 
     };
 
+    
     /**
      *  @class ChainMesh1D ChainMesh.h "Headers/ChainMesh.h"
      *
@@ -274,33 +303,34 @@ namespace cbl {
        *  @brief default constructor
        *
        */
-      ChainMesh1D () {}
+      ChainMesh1D () = default;
 
       /**
        *  @brief default destructor
        */
-      ~ChainMesh1D () {}
+      ~ChainMesh1D () = default;
 
       /**
        *  @brief function that set parameters for the chain-mesh
        *  @param cell_size double storing the cell size
        *  @param xx the vector with the variable used for the chain-mesh
        *  @param rMAX the maximum separation
-       *  @param nMIN the allowed minimum number of chain-mesh cells in each dimension
+       *  @param rMIN the minimum separation
        *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension
+       *  @param nMIN the allowed minimum number of chain-mesh cells in each dimension
        */
-      void set_par (const double cell_size, const std::vector<double> xx, const double rMAX, const long nMIN=0, const long nMAX=300);
+      void set_par (const double cell_size, const std::vector<double> xx, const double rMAX, const double rMIN=-1., const long nMAX=300, const long nMIN=0);
 
       /**
        *  @brief constructor
        *  @param cell_size double storing the cell size
        *  @param xx the vector with the variable used for the chain-mesh
        *  @param rMAX the maximum separation
-       *  @param nMIN the allowed minimum number of chain-mesh cells in each dimension
+       *  @param rMIN the minimum separation
        *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension
-       *
+       *  @param nMIN the allowed minimum number of chain-mesh cells in each dimension
        */
-      ChainMesh1D (const double cell_size, const std::vector<double> xx, const double rMAX, const long nMIN=0, const long nMAX=300);
+      ChainMesh1D (const double cell_size, const std::vector<double> xx, const double rMAX, const double rMIN=-1., const long nMAX=300, const long nMIN=0);
     };
 
     /**
@@ -318,12 +348,12 @@ namespace cbl {
        *  @brief default constructor
        *  1D
        */
-      ChainMesh2D () {}
+      ChainMesh2D () = default;
 
       /**
        *  @brief default destructor
        */
-      ~ChainMesh2D () {}
+      ~ChainMesh2D () = default;
 
       /**
        *  @brief function that set parameters for the chain-mesh
@@ -331,10 +361,11 @@ namespace cbl {
        *  @param xx the vector with the first variable used for the chain-mesh
        *  @param yy the vector with the second variable used for the chain-mesh
        *  @param rMAX the maximum separation
-       *  @param nMIN the allowed minimum number of chain-mesh cells in each dimension
+       *  @param rMIN the minimum separation
        *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension
+       *  @param nMIN the allowed minimum number of chain-mesh cells in each dimension
        */
-      void set_par (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const double rMAX, const long nMIN=0, const long nMAX=300);
+      void set_par (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const double rMAX, const double rMIN=-1., const long nMAX=300, const long nMIN=0);
 
       /**
        *  @brief constructor
@@ -342,11 +373,11 @@ namespace cbl {
        *  @param xx the vector with the first variable used for the chain-mesh
        *  @param yy the vector with the second variable used for the chain-mesh
        *  @param rMAX the maximum separation
-       *  @param nMIN the allowed minimum number of chain-mesh cells in each dimension
+       *  @param rMIN the minimum separation
        *  @param nMAX the allowed maximum number of chain-mesh cells in each dimension
-       *
+       *  @param nMIN the allowed minimum number of chain-mesh cells in each dimension
        */
-      ChainMesh2D (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const double rMAX, const long nMIN=0, const long nMAX=300);
+      ChainMesh2D (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const double rMAX, const double rMIN=-1., const long nMAX=300, const long nMIN=0);
     };
 
     /**
@@ -365,12 +396,12 @@ namespace cbl {
        *  @brief default constructor
        *
        */
-      ChainMesh3D () {}
+      ChainMesh3D () = default;
 
       /**
        *  @brief default destructor
        */
-      ~ChainMesh3D () {}
+      ~ChainMesh3D () = default;
 
       /**
        *  @brief function that set parameters for the chain-mesh
@@ -379,12 +410,13 @@ namespace cbl {
        *  @param yy the vector with the second variable used for the chain-mesh
        *  @param zz the vector with the third variable used for the chain-mesh
        *  @param rMAX the maximum separation
-       *  @param nMIN the allowed minimum number of chain-mesh cells
-       *  in each dimension
+       *  @param rMIN the minimum separation
        *  @param nMAX the allowed maximum number of chain-mesh cells
        *  in each dimension
+       *  @param nMIN the allowed minimum number of chain-mesh cells
+       *  in each dimension
        */
-      void set_par (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const double rMAX, const long nMIN=0, const long nMAX=300);
+      void set_par (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const double rMAX, const double rMIN=-1., const long nMAX=300, const long nMIN=0);
 
       /**
        *  @brief constructor
@@ -393,13 +425,13 @@ namespace cbl {
        *  @param yy the vector with the second variable used for the chain-mesh
        *  @param zz the vector with the third variable used for the chain-mesh
        *  @param rMAX the maximum separation
-       *  @param nMIN the allowed minimum number of chain-mesh cells
-       *  in each dimension
+       *  @param rMIN the minimum separation
        *  @param nMAX the allowed maximum number of chain-mesh cells
        *  in each dimension
-       *
+       *  @param nMIN the allowed minimum number of chain-mesh cells
+       *  in each dimension
        */
-      ChainMesh3D (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const double rMAX, const long nMIN=0, const long nMAX=300);
+      ChainMesh3D (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const double rMAX, const double rMIN=-1., const long nMAX=300, const long nMIN=0);
     };
 
   }

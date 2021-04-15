@@ -69,6 +69,9 @@ namespace cbl {
       /// the parameter prior distributions
       std::vector<std::shared_ptr<PriorDistribution>> m_parameter_prior;
 
+      /// the correlated parameter prior distributions
+      std::vector<std::shared_ptr<PriorDistribution>> m_correlated_parameter_prior;
+
       /// the parameter posterior distributions
       std::vector<std::shared_ptr<PosteriorDistribution>> m_posterior_distribution;
 	
@@ -77,12 +80,15 @@ namespace cbl {
 	
       /// the function parameter covariance matrix
       std::vector<std::vector<double>> m_parameter_covariance;
-	
+      
       /// the lenght of the chain
       size_t m_chain_size;
 
       /// the number of parallel walkers
       size_t m_chain_nwalkers;
+
+      /// the lenght of each set of multidimensional prior
+      std::vector<size_t> m_multipriors;
 
       /// content of the chain
       std::vector<std::vector<double>> m_chain_value;

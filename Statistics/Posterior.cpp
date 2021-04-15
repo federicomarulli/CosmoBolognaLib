@@ -227,15 +227,12 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
   function<double(vector<double> &)> post = [this] (vector<double> &pp) { return -this->log(pp); };
 
 
-  // extra check on epsilon
-  
-  function<bool(vector<double> &)> checkWrong = [&] (vector<double> &pp)
-						{
-						  bool ch = true;
-						  if (post(pp)<-par::defaultDouble)
-						    ch = false;
-						  return ch;
-						};
+  // extra check on epsilon  
+  function<bool(vector<double> &)> checkWrong = [&] (vector<double> &pp) {
+    bool ch = true;
+    if (post(pp)<-par::defaultDouble) ch = false;
+    return ch;
+  };
 
   vector<double> par = starting_par;
   if (checkWrong(par))
@@ -262,7 +259,6 @@ void cbl::statistics::Posterior::maximize (const std::vector<double> start, cons
   }
   else
     ErrorCBL("the maximization ended with parameter values out of the priors: check your inputs or change the epsilon value!", "maximize", "Posterior.cpp");
-
 }
 
 

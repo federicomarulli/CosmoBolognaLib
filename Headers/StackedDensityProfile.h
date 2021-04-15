@@ -77,6 +77,12 @@ namespace cbl {
 	 */
 	///@{
 
+	
+	/**
+	 *  @brief set the multiplicative shear calibration, m
+	 *
+	 */
+	void m_set_multiplicative_calib();	
 
 	/**
 	 *  @brief set the colour and photo-z selection, along with the
@@ -122,6 +128,14 @@ namespace cbl {
 	 *
 	 */
 	void m_set_logicSelection(const std::string sel);
+	
+	
+	/**
+	 *  @brief check if all the necessary variables in the
+	 *  galaxy and cluster catalogues are set
+	 *
+	 */
+	void m_check_catalogue_variables();
 	
 	/**
 	 *  @brief resize the private member arrays
@@ -243,6 +257,12 @@ namespace cbl {
 	
 	/// pixel size (in deg)
 	double m_pix_size;
+	
+	/// the multiplicative calibration bias mean and standard deviation in the z bins
+	std::vector<std::vector<double>> m_m_calib;
+	
+	/// the redshift edges within which the multiplicative calibration bias is evaluated
+	std::vector<std::vector<double>> m_m_calib_zEdges;
 	
 	/// number of regions for the resampling
 	double m_n_resampling;
@@ -464,6 +484,15 @@ namespace cbl {
 	   *
 	   *  @param pix_size pixel size in deg
 	   *
+	   *  @param multiplicative_calibration_stats a vector of vectors containing
+	   *  mean and standard deviation of the multiplicative shear calibration
+	   *  parameter, usually denoted as m, in all the redshift bins where it is evaluated. 
+	   *  If not provided, the galaxy-by-galaxy values of m are used
+	   *
+	   *  @param multiplicative_calibration_zEdges vector of vectors containing
+	   *  the lower and upper edge of the redshift bins for each estimate of the 
+	   *  multiplicative shear calibration parameter, m
+	   *
 	   *  @param n_resampling number of resampling regions for the bootstrap
 	   *  procedure used to evaluate the uncertainty on \f$\Delta\Sigma(r)\f$
 	   *
@@ -473,7 +502,7 @@ namespace cbl {
 	   *
 	   *  Cluster stacked density profile
 	   */
-	StackedDensityProfile (cosmology::Cosmology cosm, const catalogue::Catalogue gal_cat, const catalogue::Catalogue clu_cat, const std::string colour_sel, const std::string zphot_sel, std::vector<double> zphot_sel_pars, const std::string logic_sel, std::vector<double> z_binEdges, std::vector<std::vector<double>> proxy_binEdges, const double rad_min, const double rad_max, const int nRad, const bool log_rad, const double SN_min, const double pix_size, const int n_resampling=10000, const double rad_alpha=1., const double obs_gamma=1.);
+	StackedDensityProfile (cosmology::Cosmology cosm, const catalogue::Catalogue gal_cat, const catalogue::Catalogue clu_cat, const std::string colour_sel, const std::string zphot_sel, std::vector<double> zphot_sel_pars, const std::string logic_sel, std::vector<double> z_binEdges, std::vector<std::vector<double>> proxy_binEdges, const double rad_min, const double rad_max, const int nRad, const bool log_rad, const double SN_min, const double pix_size, const std::vector<std::vector<double>> multiplicative_calibration_stats={}, const std::vector<std::vector<double>> multiplicative_calibration_zEdges={}, const int n_resampling=10000, const double rad_alpha=1., const double obs_gamma=1.);
 	///@}
 	
 	/**

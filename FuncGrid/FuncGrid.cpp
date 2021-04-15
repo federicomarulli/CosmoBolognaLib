@@ -194,6 +194,17 @@ double cbl::glob::FuncGrid::integrate_qag (const double a, const double b, const
 // =====================================================================================
 
 
+double cbl::glob::FuncGrid::integrate_cquad (const double a, const double b, const double rel_err, const double abs_err, const int neval)
+{
+  function<double(double)> f = bind(&FuncGrid::operator(), this, std::placeholders::_1);
+
+  return wrapper::gsl::GSL_integrate_cquad(f, a, b, rel_err, abs_err, neval);
+}
+
+
+// =====================================================================================
+
+
 double cbl::glob::FuncGrid::integrate_qaws (const double a, const double b, const double alpha, const double beta, const int mu, const int nu, const double rel_err, const double abs_err, const int limit_size)
 {
   function<double(double)> f = bind(&FuncGrid::operator(), this, std::placeholders::_1);

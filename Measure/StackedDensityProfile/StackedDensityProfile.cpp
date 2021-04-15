@@ -35,9 +35,50 @@
 #include "StackedDensityProfile.h"
 #include "CCfits/CCfits"
 #include "Data1D_extra.h"
+#include<time.h>
 
 using namespace cbl;
 using namespace measure::stackprofile;
+
+
+// ============================================================================
+
+void cbl::measure::stackprofile::StackedDensityProfile::m_set_multiplicative_calib ()
+{
+  if (m_m_calib.size() > 0) {
+
+    if (m_m_calib.size() != m_m_calib_zEdges.size())
+      cbl::ErrorCBL("multiplicative_calibration_stats and multiplicative_calibration_zEdges must have the same size!","m_set_multiplicative_calib","StackedDensityProfile.cpp");
+    
+    for (size_t i=0; i<m_m_calib.size(); i++) {
+      if (m_m_calib[i].size() != 2)
+	cbl::ErrorCBL("All the vectors in multiplicative_calibration_stats must have size = 2","m_set_multiplicative_calib","StackedDensityProfile.cpp");
+      if (m_m_calib_zEdges[i].size() != 2)
+	cbl::ErrorCBL("All the vectors in multiplicative_calibration_zEdges must have size = 2","m_set_multiplicative_calib","StackedDensityProfile.cpp");
+    }
+
+    coutCBL<<"I'm setting the m parameter for each galaxy by extracting values from Gaussian distributions..."<<std::endl;
+    std::vector<double> m_values((int)(m_galData->nObjects()));
+    for (size_t j=0; j<m_galData->nObjects(); j++) {
+      for (size_t k=0; k<m_m_calib_zEdges.size(); k++) {
+	if (m_galData->redshift(j) >= m_m_calib_zEdges[k][0] && m_galData->redshift(j) <= m_m_calib_zEdges[k][1]) {
+	  
+	  srand(time(0));
+	  cbl::random::NormalRandomNumbers random(m_m_calib[k][0], m_m_calib[k][1], rand());
+	  m_values[j] = random();
+	    
+	}
+      }
+    }
+    
+    m_galData->set_var(cbl::catalogue::Var::_LensingCalib_, m_values);
+    
+  } else {
+    if (m_galData->isSetVar(cbl::catalogue::Var::_LensingCalib_) != true)
+      cbl::ErrorCBL("You must set the galaxy catalogue variable LensingCalib","m_set_multiplicative_calib","StackedDensityProfile.cpp");
+  }
+}
+  
 
 // ============================================================================
 
@@ -102,7 +143,10 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_set_selections ()
     cbl::ErrorCBL("The chosen colour selection is not valid!","StackedDensityProfile","StackedDensityProfile.cpp");
   }
   if (m_zphot_sel=="Odds"){
-    m_photzSel = &cbl::measure::stackprofile::StackedDensityProfile::m_zphotSelection_ODDS;
+    if (m_galData->isSetVar(cbl::catalogue::Var::_ODDS_) != true)
+      cbl::ErrorCBL("You must set the ODDS galaxy catalogue variable!","m_set_selections","StackedDensityProfile.cpp");
+    else
+      m_photzSel = &cbl::measure::stackprofile::StackedDensityProfile::m_zphotSelection_ODDS;
   }else if (m_zphot_sel=="noOdds"){
     m_photzSel = &cbl::measure::stackprofile::StackedDensityProfile::m_zphotSelection_noODDS;
   }else{
@@ -110,6 +154,18 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_set_selections ()
   }    
   m_set_logicSelection(m_logic_sel);
 }
+
+
+// ============================================================================
+
+void cbl::measure::stackprofile::StackedDensityProfile::m_check_catalogue_variables ()
+{
+  if (m_galData->isSetVar(cbl::catalogue::Var::_RA_) != true || m_galData->isSetVar(cbl::catalogue::Var::_Dec_) != true || m_galData->isSetVar(cbl::catalogue::Var::_Redshift_) != true || m_galData->isSetVar(cbl::catalogue::Var::_Shear1_) != true || m_galData->isSetVar(cbl::catalogue::Var::_Shear2_) != true || m_galData->isSetVar(cbl::catalogue::Var::_RedshiftMin_) != true || m_galData->isSetVar(cbl::catalogue::Var::_RedshiftMax_) != true || m_galData->isSetVar(cbl::catalogue::Var::_LensingWeight_) != true)
+    cbl::ErrorCBL("You must set the following galaxy catalogue variables: RA, Dec, redshift, redshift_min, redshift_max, shear1, shear2, lensing_weight","m_check_catalogue_variables","StackedDensityProfile.cpp");
+  if (m_cluData->isSetVar(cbl::catalogue::Var::_RA_) !=true || m_cluData->isSetVar(cbl::catalogue::Var::_Dec_) !=true || m_cluData->isSetVar(cbl::catalogue::Var::_Redshift_) !=true || m_cluData->isSetVar(cbl::catalogue::Var::_SN_) !=true || m_cluData->isSetVar(cbl::catalogue::Var::_MassProxy_) !=true)
+    cbl::ErrorCBL("You must set the following cluster catalogue variables: RA, Dec, redshift, S/N, Mass Proxy","m_check_catalogue_variables","StackedDensityProfile.cpp");
+}
+
 
 // ============================================================================
 
@@ -355,8 +411,11 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_profile (const int clu
 
 void cbl::measure::stackprofile::StackedDensityProfile::m_stacker ()
 {
+
+  m_set_multiplicative_calib();
+  
   std::cout<<std::endl; coutCBL<<"Performing the stacking..."<<std::endl;
-  cbl::WarningMsgCBL("If you do not set \'radians\' as the coordinate units in the galaxy and cluster catalogues, the code is much slower! Set \'radians\'.","m_stacker","StackedDensityProfile.cpp");
+  cbl::WarningMsgCBL("If you do not set \'radians\' as the coordinate units in the galaxy and cluster catalogues, the code is much slower! If not already done, set \'radians\'.","m_stacker","StackedDensityProfile.cpp");
   
   // This is the inverse of Fac_eta_ToInv_Sigma_Cr in Mauro Sereno's code
   m_sigma_fac = 1.6628e+12; // c^2/(4piG) in Msun/pc
@@ -508,6 +567,13 @@ bool cbl::measure::stackprofile::StackedDensityProfile::m_check_file (const std:
 
   m_inputs_to_str.emplace_back(cbl::conv(m_galData->nObjects(),cbl::par::fINT));
   m_inputs_to_str.emplace_back(cbl::conv(m_cluData->nObjects(),cbl::par::fINT));
+
+  for (size_t i=0; i<m_m_calib.size(); i++) {
+    m_inputs_to_str.emplace_back(cbl::conv(m_m_calib[i][0],cbl::par::fDP5));
+    m_inputs_to_str.emplace_back(cbl::conv(m_m_calib[i][1],cbl::par::fDP5));
+    m_inputs_to_str.emplace_back(cbl::conv(m_m_calib_zEdges[i][0],cbl::par::fDP5));
+    m_inputs_to_str.emplace_back(cbl::conv(m_m_calib_zEdges[i][1],cbl::par::fDP5));
+  }
   
   m_inputs_to_str.emplace_back(m_colour_sel);
   m_inputs_to_str.emplace_back(m_zphot_sel);
@@ -521,7 +587,8 @@ bool cbl::measure::stackprofile::StackedDensityProfile::m_check_file (const std:
   for (size_t i=0; i<m_proxy_binEdges.size(); i++){
     for (size_t j=0; j<m_proxy_binEdges[i].size(); j++){
       m_inputs_to_str.emplace_back(cbl::conv(m_proxy_binEdges[i][j],cbl::par::fDP5));
-    }}
+    }
+  }
   for (size_t j=0; j<m_rad_arr.size(); j++){
     m_inputs_to_str.emplace_back(cbl::conv(m_rad_arr[j],cbl::par::fDP5));
   }
@@ -661,7 +728,7 @@ void cbl::measure::stackprofile::StackedDensityProfile::write (const std::string
 
 // ============================================================================
 
-cbl::measure::stackprofile::StackedDensityProfile::StackedDensityProfile (cosmology::Cosmology cosm, const catalogue::Catalogue gal_cat, const catalogue::Catalogue clu_cat, const std::string colour_sel, const std::string zphot_sel, std::vector<double> zphot_sel_pars, const std::string logic_sel, std::vector<double> z_binEdges, std::vector<std::vector<double>> proxy_binEdges, const double rad_min, const double rad_max, const int nRad, const bool log_rad, const double SN_min, const double pix_size, const int n_resampling, const double rad_alpha, const double obs_gamma)
+cbl::measure::stackprofile::StackedDensityProfile::StackedDensityProfile (cosmology::Cosmology cosm, const catalogue::Catalogue gal_cat, const catalogue::Catalogue clu_cat, const std::string colour_sel, const std::string zphot_sel, std::vector<double> zphot_sel_pars, const std::string logic_sel, std::vector<double> z_binEdges, std::vector<std::vector<double>> proxy_binEdges, const double rad_min, const double rad_max, const int nRad, const bool log_rad, const double SN_min, const double pix_size, const std::vector<std::vector<double>> multiplicative_calibration_stats, const std::vector<std::vector<double>> multiplicative_calibration_zEdges, const int n_resampling, const double rad_alpha, const double obs_gamma)
 {
   // WARNING: if you change the arguments of this constructor, you must edit m_check_file !!!
 
@@ -673,6 +740,8 @@ cbl::measure::stackprofile::StackedDensityProfile::StackedDensityProfile (cosmol
   m_obs_gamma = obs_gamma;
   m_SN_min = SN_min;
   m_pix_size = pix_size;
+  m_m_calib = multiplicative_calibration_stats;
+  m_m_calib_zEdges = multiplicative_calibration_zEdges;
   m_n_resampling = n_resampling;
   m_z_binEdges = z_binEdges;
   m_proxy_binEdges = proxy_binEdges;
@@ -680,6 +749,8 @@ cbl::measure::stackprofile::StackedDensityProfile::StackedDensityProfile (cosmol
   m_zphot_sel = zphot_sel;
   m_zphot_sel_pars = zphot_sel_pars;
   m_logic_sel = logic_sel;
+
+  m_check_catalogue_variables();
   m_resize(rad_min,rad_max,nRad,log_rad);
   m_set_selections();
 }

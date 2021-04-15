@@ -185,6 +185,21 @@ namespace cbl {
        *  
        */
       Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const LikelihoodType likelihood_type, const std::vector<size_t> x_index={0,2}, const int w_index=-1, const std::shared_ptr<ModelParameters> model_parameters=NULL, const double prec=1.e-10, const int Nres=-1);
+      
+      /**
+       *  @brief constructor
+       *  
+       *  @param data pointers to the data container
+       *  
+       *  @param model pointers to the model 
+       *
+       *  @param log_likelihood_function user-defined
+       *  log-likelihood function (natural logarithm)
+       *
+       *  @param model_parameters parameters of the likelihood
+       *  
+       */
+      Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const Likelihood_function log_likelihood_function, const std::shared_ptr<ModelParameters> model_parameters=NULL);
 
       /**
        *  @brief default destructor

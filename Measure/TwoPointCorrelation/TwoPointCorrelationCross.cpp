@@ -48,7 +48,7 @@ using namespace twopt;
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPType type, const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_d1d2, const bool count_rr, const bool count_d1r, const bool count_d2r, const bool tcount, const Estimator estimator)  
+void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPType type, const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_d1d2, const bool count_rr, const bool count_d1r, const bool count_d2r, const bool tcount, const Estimator estimator, const double fact)  
 {
   // ----------- compute polar coordinates, if necessary ----------- 
  
@@ -81,40 +81,49 @@ void cbl::measure::twopt::TwoPointCorrelationCross::count_allPairs (const TwoPTy
   // ----------- create the chain-mesh ----------- 
 
   double rMAX;
+  double rMIN;
 
-  if (type==TwoPType::_monopole_ || type==TwoPType::_filtered_ || type==TwoPType::_multipoles_direct_)
+  if (type==TwoPType::_monopole_ || type==TwoPType::_filtered_ || type==TwoPType::_multipoles_direct_) {
     rMAX = m_d1d2->sMax();
+    rMIN = m_d1d2->sMin();
+  }
 
   else if (type==TwoPType::_angular_) {
     double xx, yy, zz;
     cartesian_coord(radians(m_d1d2->sMax(), m_d1d2->angularUnits()), radians(m_d1d2->sMax(), m_d1d2->angularUnits()), 1., xx, yy, zz);
-    rMAX = max(xx, zz);
+    rMAX = sqrt(xx*xx+zz*zz);
+    cartesian_coord(radians(m_d1d2->sMin(), m_d1d2->angularUnits()), radians(m_d1d2->sMin(), m_d1d2->angularUnits()), 1., xx, yy, zz);
+    rMIN = sqrt(xx*xx+zz*zz);
   }
 
-  else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_wedges_) 
+  else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_wedges_) {
     rMAX = m_d1d2->sMax_D1();
+    rMIN = m_d1d2->sMin_D1();
+  }
   
-  else if (type==TwoPType::_2D_Cartesian_ || type==TwoPType::_projected_ || type==TwoPType::_deprojected_)
+  else if (type==TwoPType::_2D_Cartesian_ || type==TwoPType::_projected_ || type==TwoPType::_deprojected_) {
     rMAX = max(m_d1d2->sMax_D1(), m_d1d2->sMax_D2())*sqrt(2.);
-
+    rMIN = max(m_d1d2->sMin_D1(), m_d1d2->sMin_D2())*sqrt(2.);
+  }
+  
   else
     ErrorCBL("the chosen two-point correlation function type is uknown!", "count_allPairs", "TwoPointCorrelationCross.cpp");
   
-  double cell_size = rMAX*0.1; // to be optimized!!!
+  double cell_size = fact*rMAX; // to be optimized!!!
   
   ChainMesh_Catalogue ChM_data1data2, ChM_random_dil, ChM_data1random, ChM_data2random;
   
   if (count_d1d2)
-    ChM_data1data2.set_par(cell_size, m_data2, rMAX);
+    ChM_data1data2.set_par(cell_size, m_data2, rMAX, rMIN);
 
   if (count_rr)
-    ChM_random_dil.set_par(cell_size, random_dil, rMAX);    
+    ChM_random_dil.set_par(cell_size, random_dil, rMAX, rMIN);    
 
   if (count_d1r)
-    ChM_data1random.set_par(cell_size, m_random, rMAX);
+    ChM_data1random.set_par(cell_size, m_random, rMAX, rMIN);
   
   if (count_d2r)
-    ChM_data2random.set_par(cell_size, m_random, rMAX);
+    ChM_data2random.set_par(cell_size, m_random, rMAX, rMIN);
   
   
   // ----------- count the number of pairs or read them from file -----------

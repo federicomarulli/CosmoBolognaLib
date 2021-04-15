@@ -52,6 +52,9 @@ namespace cbl {
 
         /// derived parameter
         _Derived_,
+
+       /// correlated parameters
+        _Correlated_,
     };
 
     /**
@@ -59,7 +62,7 @@ namespace cbl {
      *
      * @return a vector containing the ParameterType names
      */
-    inline std::vector<std::string> ParameterTypeNames () { return {"Base", "Derived"}; }
+    inline std::vector<std::string> ParameterTypeNames () { return {"Base", "Derived", "Correlated"}; }
 
     /**
      * @brief cast an enum of type ParameterType from its index
@@ -121,11 +124,15 @@ namespace cbl {
       /// number of derived parameters
       size_t m_nparameters_derived = 0;
 
+      /// number of correlated parameters
+      size_t m_nparameters_correlated = 0;
+
       /// indexes of base parameters
       std::vector<unsigned int> m_base_parameter;
 
       /// indexes of the derived parameters
       std::vector<unsigned int> m_derived_parameter;
+
 
       /**
        * @brief private member to set the parameter

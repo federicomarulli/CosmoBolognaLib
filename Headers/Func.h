@@ -35,7 +35,8 @@
 #define __FUNC__
 
 #include "RandomNumbers.h"
-
+#include "EigenWrapper.h"
+#include "ChainMesh.h"
 
 // ============================================================================================
 
@@ -987,11 +988,29 @@ namespace cbl {
   double distribution_probability (double xx, std::shared_ptr<void> pp, std::vector<double> par);
 
   /**
+   *  @brief a multidimension interpolator
+   *  @param xx the coordinates of the points to interpolate
+   *  @param pars vector containing an object ChainMesh and the
+   *  maximum number of points used to interpolate 
+   *  @return the interpolated value
+   */
+  double chainMeshInterpolate (std::vector<double> xx, std::shared_ptr<void> pars);
+  
+  /**
+   *  @brief the multivariate Gaussian function 
+   *  @param xx the variable x
+   *  @param pars vector of vectors containing the elements (vectors):
+   *  pars[0]=mean, pars[1]=&sigma 
+   *  @return the pdf of the multivariate Gaussian
+   */
+  double multivariateGaussian (std::vector<double> xx, std::shared_ptr<void> pars);
+    
+  /**
    *  @brief the Gaussian function
    *  @param xx the variable x
    *  @param pp a void pointer
    *  @param par a std::vector containing the coefficients: par[0]=mean,
-   *  par[1]=&sigma;
+   *  par[1]=&sigma, pars[2]=normalization
    *  @return the Gaussian function
    *  @warning pp is not used, it is necessary only for GSL operations
    */
@@ -2890,6 +2909,18 @@ namespace cbl {
     struct STR_distribution_probability
     {
       std::shared_ptr<cbl::glob::FuncGrid> func;
+    };
+
+    struct STR_chainMeshInterpolate
+    {
+      cbl::chainmesh::ChainMesh ChainMesh;
+      int DistNum;
+    };
+    
+    struct STR_multivariateGaussian
+    {
+      Eigen::VectorXd MeanVec;
+      Eigen::MatrixXd CovMat;
     };
 
     struct STR_sigma2_integrand

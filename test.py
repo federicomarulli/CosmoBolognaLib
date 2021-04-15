@@ -125,6 +125,8 @@ check("statistics/codes", "sampler", "C++")
 
 check("catalogue", "catalogue", "C++") 
 
+check("lognormal/codes", "lognormal", "C++") 
+
 check("numberCounts/codes", "numberCounts", "C++")
 check("numberCounts/codes", "numberCounts_errors", "C++")
 

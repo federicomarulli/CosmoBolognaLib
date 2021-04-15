@@ -7,7 +7,7 @@
 # to ensure compatibility in Python versions 2.x and 3.x
 from __future__ import print_function
 
-# import Python modules for scientific computing 
+# import Python modules for scientific computing
 import os
 import numpy as np
 import pandas as pd
@@ -15,8 +15,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
-# import the CosmoBolognaLib modules 
-import CosmoBolognaLib as cbl 
+# import the CosmoBolognaLib modules
+import CosmoBolognaLib as cbl
 
 # import the wrapper that returns an object of type Model1D
 from modelpy import getModel1D
@@ -31,7 +31,7 @@ except ImportError:
 
 
 
-# set the input/output file/directories 
+# set the input/output file/directories
 dir_input = "../input/"
 dir_output = "../output/"
 file_data1 = "data1.dat"
@@ -45,33 +45,33 @@ def go (data, model, nwalkers, chain_size, results_name, model_name):
     likelihood = cbl.Likelihood(data, model, cbl.LikelihoodType__Gaussian_Error_)
 
     # set the model parameter
-    valA, valB, valC = 1., 2., 1. 
+    valA, valC, valD = 1., 1., 2.
 
     # limits for A and B
-    minA, maxA = -10., 10.
-    minB, maxB = -10., 10.
+    minC, maxD = -10., 10.
+    minD, maxC = -10., 10.
 
-    # construct the priors 
-    prior_A = cbl.PriorDistribution(cbl.DistributionType__Uniform_, minA, maxA)
-    prior_B = cbl.PriorDistribution(cbl.DistributionType__Uniform_, minB, maxB)
-    prior_C = cbl.PriorDistribution(cbl.DistributionType__Constant_, valC)
-    prior_distributions = cbl.PriorDistributionPtrVector([prior_A, prior_B, prior_C])  
+    # construct the priors
+    prior_A = cbl.PriorDistribution(cbl.DistributionType__Constant_, valA)
+    prior_C = cbl.PriorDistribution(cbl.DistributionType__Uniform_, minC, maxC)
+    prior_D = cbl.PriorDistribution(cbl.DistributionType__Uniform_, minD, maxD)
+    prior_distributions = cbl.PriorDistributionPtrVector([prior_A, prior_C, prior_D])
 
     # construct the posterior
     posterior = cbl.Posterior(prior_distributions, likelihood, 696)
 
     # sample the posterior (starting the MCMC chain from the maximum of the posterior to speed up the chain convergence)
-    posterior.initialize_chains(chain_size, nwalkers, 1.e-5, [valA, valB])
+    posterior.initialize_chains(chain_size, nwalkers, 1.e-5, [valC, valD])
     posterior.sample_stretch_move(2)
 
     # show the median MCMC values of the four parameters on screen
     print ("\n")
     for i in range(posterior.parameters().nparameters()):
         print("Posterior median of %s = %g\n"%(posterior.parameters().name(i), posterior.parameters().bestfit_value(i)))
-    
+
     # store the chain ouputs
     posterior.write_results("../output/", results_name)
-    
+
     return posterior
 
 
@@ -94,7 +94,7 @@ def plot_contours (posterior, burn_in, thin, figure, axes, color, label):
     corner.corner(notFixedChains, \
                   weights=np.array(weights),\
                   labels=notFixedNames,\
-                  truths=(1, 2., 4.), truth_color='black', \
+                  truths=(4., 1., 2.), truth_color='black', \
                   plot_datapoints=False, show_titles=True, smooth=True, plot_density=False, levels=(1-np.exp(-0.5), 1-np.exp(-2), 1-np.exp(-4.5)),\
                   color=color, fill_contours=True, hist_kwargs={"density" : True, "color":color}, fig=figure)
 
@@ -130,17 +130,17 @@ chain_size = 500
 burn_in = 0
 thin = 1
 
-# set the stuff used to construct the model: here an object of class cosmology, just as an example 
+# set the stuff used to construct the model: here an object of class cosmology, just as an example
 cosmology = cbl.Cosmology()
 
-# construct the dataset by reading an input file 
+# construct the dataset by reading an input file
 data1 = cbl.Data1D(dir_input+file_data1)
 
 # set the model to construct the likelihood
 model1 = getModel1D(cosmology, 0)
 posterior1 = go(data1, model1, nwalkers, chain_size, "model1", "model1.dat")
 
-# construct the dataset by reading an input file 
+# construct the dataset by reading an input file
 data2 = cbl.Data1D(dir_input+file_data2)
 
 # set the model to construct the likelihood

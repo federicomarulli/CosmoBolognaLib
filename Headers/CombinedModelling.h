@@ -26,9 +26,9 @@
  *  This file defines the interface of the class CombinedModelling, used for
  *  jointly modelling any kind of measurements
  *
- *  @author Giorgio Lesci (and Federico Marulli)
+ *  @author Giorgio Lesci, Sofia Contarini (and Federico Marulli)
  *
- *  @author giorgio.lesci2@unibo.it (and federico.marulli3@unibo.it)
+ *  @author giorgio.lesci2@unibo.it, sofia.contarini3@unibo.it (and federico.marulli3@unibo.it)
  */
 
 #ifndef __COMBMODELLING__
@@ -54,35 +54,20 @@ namespace cbl {
   namespace modelling {
 
     /**
-     *  @class Modelling Modelling.h "Headers/Modelling.h"
+     *  @class CombinedModelling CombinedModelling.h "Headers/CombinedModelling.h"
      *
-     *  @brief The class Modelling
+     *  @brief The class CombinedModelling
      *
-     *  This file defines the interface of the base class Modelling,
-     *  used for modelling any kind of measurements
+     *  This file defines the interface of the base class CombinedModelling,
+     *  used for combining any kind of modelling
      *
      */
     class CombinedModelling : public Modelling {
 
     protected:
 
-      /// number of modelling objects in input
-      int m_Nmodellings;
-      
-      /// number of set parameters
-      int m_nPar;
-      
-      /// vector of pointers to the input Modelling objects
-      std::vector<std::shared_ptr<modelling::Modelling>> m_modelling;
-
       /// combined posterior
       std::shared_ptr<statistics::CombinedPosterior> m_combined_posterior;
-
-      /**
-       *  @brief set the internal variable m_combined_posterior
-       *
-       */
-      void m_set_combined_posterior ();
 
     public:
 
@@ -97,11 +82,61 @@ namespace cbl {
       CombinedModelling () = default;
       
       /**
-       *  @brief constuctor
+       *  @brief Constuctor used to combine statistically independent probes
        *
-       *  @param modelling vector of pointers to the single Modelling objects 
+       *  @param modelling vector of pointers to the single Modelling objects
+       *
+       *  @param repeated_par parameters shared by different probes, for which
+       *  the user wants different posteriors for each probe. For example, if
+       *  the probes A and B depend on the same parameter \f$p\f$, whose identification
+       *  string is "par", then "par" must be given in input if the user desires to have
+       *  different posteriors of \f$p\f$ for the two probes A and B. Every probe depending
+       *  on \f$p\f$ will provide a different posterior on \f$p\f$. This is useful
+       *  in the case of astrophysical parameters, e.g. the parameters describing
+       *  galaxy cluster profiles. 
        */
-      CombinedModelling (std::vector<std::shared_ptr<modelling::Modelling>> modelling);
+      CombinedModelling (std::vector<std::shared_ptr<modelling::Modelling>> modelling, std::vector<std::string> repeated_par={});
+      
+      /**
+       *  @brief Constructor used to set the modelling of
+       *  statistically dependent probes. For each vector of Modelling
+       *  objects in the \f$modelling\f$ argument, a CovarianceMatrix
+       *  object must be defined. The probes in each vector within
+       *  \f$modelling\f$ are described by a Gaussian likelihood.
+       *  The final likelihood is given by the sum of the logarithms
+       *  of each Gaussian likelihood, where each Gaussian likelihood
+       *  describes a set of dependent probes.
+       *
+       *  If additional independent probes are provided through \f$independent\_modelling\f$,
+       *  then the relative likelihood functions are the ones defined by the user for
+       *  each of those Modelling objects. The logarithms of these likelihoods
+       *  are added to the previous Gaussian log-likelihoods.
+       *
+       *  @param modelling vector of vectors of pointers 
+       *  to Modelling objects. In each vector a set of dependent
+       *  probes is contained, with a covariance matrix
+       *  defined by the corresponding CovarianceMatrix object
+       *  given as input in the second argument of this constructor
+       *
+       *  @param covariance objects defining the covariance
+       *  matrices for the Modelling objects given in input through
+       *  the modelling argument. 
+       *  
+       *  @param independent_modelling set of Modelling objects
+       *  independent from each other and from all the others Modelling
+       *  objects.
+       *
+       *  @param repeated_par parameters shared by different probes, for which
+       *  the user wants different posteriors for each probe. For example, if
+       *  the probes A and B depend on the same parameter \f$p\f$, whose identification
+       *  string is "par", then "par" must be given in input if the user desires to have
+       *  different posteriors of \f$p\f$ for the two probes A and B. Every probe depending
+       *  on \f$p\f$ will provide a different posterior on \f$p\f$. This is useful
+       *  in the case of astrophysical parameters, e.g. the parameters describing
+       *  galaxy cluster profiles.
+       *
+       */
+      CombinedModelling (std::vector<std::vector<std::shared_ptr<modelling::Modelling>>> modelling, const std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, std::vector<std::shared_ptr<modelling::Modelling>> independent_modelling={}, std::vector<std::string> repeated_par={});
 
       /**
        *  @brief default destructor 
@@ -266,6 +301,20 @@ namespace cbl {
        *  matrix
        */
       void write_combined_results (const std::string output_dir, const std::string root_file, const int start=0, const int thin=1, const int nbins=50, const bool fits=false, const bool compute_mode=false, const int ns=-1);
+      
+      /**
+       * @brief write the model computing 16th, 50th and
+       * 84th percentiles from the MCMC
+       *
+       * @param output_dir the output directory
+       *
+       * @param output_file the output file
+       *
+       * @param start the minimum chain position to be written
+       *
+       * @param thin the step used for dilution on screen
+       */
+      void write_model_from_combined_chain (const std::string output_dir, const std::string output_file, const int start, const int thin);
       
       ///@}
       

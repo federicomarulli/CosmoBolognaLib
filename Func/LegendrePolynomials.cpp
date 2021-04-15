@@ -19,7 +19,7 @@
  ********************************************************************/
 
 /**
- *  @file CosmoBolognaLib/Func/LegendrePolynomials.cpp
+ *  \@file CosmoBolognaLib/Func/LegendrePolynomials.cpp
  *
  *  @brief Methods of the class
  *  LegendrePolynomials used to compute the Legendre Polynomials and their

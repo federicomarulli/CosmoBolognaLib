@@ -87,6 +87,33 @@ namespace cbl {
       /// z evolution factor of the mass-observable scaling relation
       double m_gamma_scaling_rel;
       
+      /// constant term of the intrinsic scatter of the mass-observable scaling relation
+      double m_scatter0_scaling_rel;
+      
+      /// multiplicative factor in the mass/mass proxy dependent term in the intrinsic scatter of the mass-observable scaling relation
+      double m_scatterM_scaling_rel;
+      
+      /// exponent in the mass/mass proxy dependent term in the intrinsic scatter of the mass-observable scaling relation
+      double m_scatterM_exponent_scaling_rel;
+      
+      /// multiplicative factor in the redshift dependent term in the intrinsic scatter of the mass-observable scaling relation
+      double m_scatterz_scaling_rel;
+      
+      /// exponent in the redshift dependent term in the intrinsic scatter of the mass-observable scaling relation
+      double m_scatterz_exponent_scaling_rel;
+      
+      /// cluster redshift bias
+      double m_zbias;
+      
+      /// \f$ a \f$ term in the function describing the cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+      double m_Plambda_a;
+      
+      /// \f$ b \f$ term in the function describing the cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+      double m_Plambda_b;
+      
+      /// \f$ c \f$ term in the function describing the cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+      double m_Plambda_c;
+      
       /// 
       
     public:
@@ -101,7 +128,7 @@ namespace cbl {
        *  
        */
       Cluster ()
-	: Object(), m_mass(par::defaultDouble), m_logM(par::defaultDouble), m_mass_proxy(par::defaultDouble), m_mass_proxy_error(par::defaultDouble), m_bias(par::defaultDouble), m_concentration(par::defaultDouble), m_f_off(par::defaultDouble), m_sigma_off(par::defaultDouble), m_alpha_scaling_rel(par::defaultDouble), m_beta_scaling_rel(par::defaultDouble), m_gamma_scaling_rel(par::defaultDouble) {}
+	: Object(), m_mass(par::defaultDouble), m_logM(par::defaultDouble), m_mass_proxy(par::defaultDouble), m_mass_proxy_error(par::defaultDouble), m_bias(par::defaultDouble), m_concentration(par::defaultDouble), m_f_off(par::defaultDouble), m_sigma_off(par::defaultDouble), m_alpha_scaling_rel(par::defaultDouble), m_beta_scaling_rel(par::defaultDouble), m_gamma_scaling_rel(par::defaultDouble), m_scatter0_scaling_rel(par::defaultDouble), m_scatterM_scaling_rel(par::defaultDouble), m_scatterM_exponent_scaling_rel(par::defaultDouble), m_scatterz_scaling_rel(par::defaultDouble), m_scatterz_exponent_scaling_rel(par::defaultDouble), m_zbias(par::defaultDouble), m_Plambda_a(par::defaultDouble), m_Plambda_b(par::defaultDouble), m_Plambda_c(par::defaultDouble) {}
 
       /**
        *  @brief constructor that uses comoving coordinates
@@ -150,10 +177,36 @@ namespace cbl {
        *  @param beta_scaling_rel slope of the mass-observable scaling relation
        *
        *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
+       *
+       *  @param scatter0_scaling_rel constant term of the intrinsic scatter 
+       *  of the mass-observable scaling relation
+       *
+       *  @param scatterM_scaling_rel multiplicative factor in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterM_exponent_scaling_rel exponent in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_scaling_rel multiplicative factor in the redshift
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_exponent_scaling_rel exponent in the redshift 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param zbias cluster redshift bias
+       *
+       *  @param Plambda_a \f$ a \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_b \f$ b \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_c \f$ c \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
        *  
        */
-      Cluster (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
-	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
+      Cluster (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble, const double scatter0_scaling_rel=par::defaultDouble, const double scatterM_scaling_rel=par::defaultDouble, const double scatterM_exponent_scaling_rel=par::defaultDouble, const double scatterz_scaling_rel=par::defaultDouble, const double scatterz_exponent_scaling_rel=par::defaultDouble, const double zbias=par::defaultDouble, const double Plambda_a=par::defaultDouble, const double Plambda_b=par::defaultDouble, const double Plambda_c=par::defaultDouble) 
+      : Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel), m_scatter0_scaling_rel(scatter0_scaling_rel), m_scatterM_scaling_rel(scatterM_scaling_rel), m_scatterM_exponent_scaling_rel(scatterM_exponent_scaling_rel), m_scatterz_scaling_rel(scatterz_scaling_rel), m_scatterz_exponent_scaling_rel(scatterz_exponent_scaling_rel), m_zbias(zbias), m_Plambda_a(Plambda_a), m_Plambda_b(Plambda_b), m_Plambda_c(Plambda_c) {}
 
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -211,10 +264,36 @@ namespace cbl {
        *
        *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
        *
+       *  @param scatter0_scaling_rel constant term of the intrinsic scatter 
+       *  of the mass-observable scaling relation
+       *
+       *  @param scatterM_scaling_rel multiplicative factor in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterM_exponent_scaling_rel exponent in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_scaling_rel multiplicative factor in the redshift
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_exponent_scaling_rel exponent in the redshift 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param zbias cluster redshift bias
+       *
+       *  @param Plambda_a \f$ a \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_b \f$ b \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_c \f$ c \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
        *  
        */
-      Cluster (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
+      Cluster (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble, const double scatter0_scaling_rel=par::defaultDouble, const double scatterM_scaling_rel=par::defaultDouble, const double scatterM_exponent_scaling_rel=par::defaultDouble, const double scatterz_scaling_rel=par::defaultDouble, const double scatterz_exponent_scaling_rel=par::defaultDouble, const double zbias=par::defaultDouble, const double Plambda_a=par::defaultDouble, const double Plambda_b=par::defaultDouble, const double Plambda_c=par::defaultDouble) 
+      : Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel), m_scatter0_scaling_rel(scatter0_scaling_rel), m_scatterM_scaling_rel(scatterM_scaling_rel), m_scatterM_exponent_scaling_rel(scatterM_exponent_scaling_rel), m_scatterz_scaling_rel(scatterz_scaling_rel), m_scatterz_exponent_scaling_rel(scatterz_exponent_scaling_rel), m_zbias(zbias), m_Plambda_a(Plambda_a), m_Plambda_b(Plambda_b), m_Plambda_c(Plambda_c) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -264,10 +343,36 @@ namespace cbl {
        *
        *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
        *
+       *  @param scatter0_scaling_rel constant term of the intrinsic scatter 
+       *  of the mass-observable scaling relation
+       *
+       *  @param scatterM_scaling_rel multiplicative factor in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterM_exponent_scaling_rel exponent in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_scaling_rel multiplicative factor in the redshift
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_exponent_scaling_rel exponent in the redshift 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param zbias cluster redshift bias
+       *
+       *  @param Plambda_a \f$ a \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_b \f$ b \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_c \f$ c \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
        *  
        */
-      Cluster (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
-	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
+      Cluster (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble, const double scatter0_scaling_rel=par::defaultDouble, const double scatterM_scaling_rel=par::defaultDouble, const double scatterM_exponent_scaling_rel=par::defaultDouble, const double scatterz_scaling_rel=par::defaultDouble, const double scatterz_exponent_scaling_rel=par::defaultDouble, const double zbias=par::defaultDouble, const double Plambda_a=par::defaultDouble, const double Plambda_b=par::defaultDouble, const double Plambda_c=par::defaultDouble) 
+      : Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel), m_scatter0_scaling_rel(scatter0_scaling_rel), m_scatterM_scaling_rel(scatterM_scaling_rel), m_scatterM_exponent_scaling_rel(scatterM_exponent_scaling_rel), m_scatterz_scaling_rel(scatterz_scaling_rel), m_scatterz_exponent_scaling_rel(scatterz_exponent_scaling_rel), m_zbias(zbias), m_Plambda_a(Plambda_a), m_Plambda_b(Plambda_b), m_Plambda_c(Plambda_c) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -320,10 +425,36 @@ namespace cbl {
        *
        *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
        *
+       *  @param scatter0_scaling_rel constant term of the intrinsic scatter 
+       *  of the mass-observable scaling relation
+       *
+       *  @param scatterM_scaling_rel multiplicative factor in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterM_exponent_scaling_rel exponent in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_scaling_rel multiplicative factor in the redshift
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_exponent_scaling_rel exponent in the redshift 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param zbias cluster redshift bias
+       *
+       *  @param Plambda_a \f$ a \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_b \f$ b \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_c \f$ c \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
        *  
        */
-      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
-	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
+      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble, const double scatter0_scaling_rel=par::defaultDouble, const double scatterM_scaling_rel=par::defaultDouble, const double scatterM_exponent_scaling_rel=par::defaultDouble, const double scatterz_scaling_rel=par::defaultDouble, const double scatterz_exponent_scaling_rel=par::defaultDouble, const double zbias=par::defaultDouble, const double Plambda_a=par::defaultDouble, const double Plambda_b=par::defaultDouble, const double Plambda_c=par::defaultDouble) 
+      : Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel), m_scatter0_scaling_rel(scatter0_scaling_rel), m_scatterM_scaling_rel(scatterM_scaling_rel), m_scatterM_exponent_scaling_rel(scatterM_exponent_scaling_rel), m_scatterz_scaling_rel(scatterz_scaling_rel), m_scatterz_exponent_scaling_rel(scatterz_exponent_scaling_rel), m_zbias(zbias), m_Plambda_a(Plambda_a), m_Plambda_b(Plambda_b), m_Plambda_c(Plambda_c) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -378,10 +509,36 @@ namespace cbl {
        *
        *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
        *
+       *  @param scatter0_scaling_rel constant term of the intrinsic scatter 
+       *  of the mass-observable scaling relation
+       *
+       *  @param scatterM_scaling_rel multiplicative factor in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterM_exponent_scaling_rel exponent in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_scaling_rel multiplicative factor in the redshift
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_exponent_scaling_rel exponent in the redshift 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param zbias cluster redshift bias
+       *
+       *  @param Plambda_a \f$ a \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_b \f$ b \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_c \f$ c \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
        *  
        */
-      Cluster (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
-	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
+      Cluster (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble, const double scatter0_scaling_rel=par::defaultDouble, const double scatterM_scaling_rel=par::defaultDouble, const double scatterM_exponent_scaling_rel=par::defaultDouble, const double scatterz_scaling_rel=par::defaultDouble, const double scatterz_exponent_scaling_rel=par::defaultDouble, const double zbias=par::defaultDouble, const double Plambda_a=par::defaultDouble, const double Plambda_b=par::defaultDouble, const double Plambda_c=par::defaultDouble) 
+      : Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel), m_scatter0_scaling_rel(scatter0_scaling_rel), m_scatterM_scaling_rel(scatterM_scaling_rel), m_scatterM_exponent_scaling_rel(scatterM_exponent_scaling_rel), m_scatterz_scaling_rel(scatterz_scaling_rel), m_scatterz_exponent_scaling_rel(scatterz_exponent_scaling_rel), m_zbias(zbias), m_Plambda_a(Plambda_a), m_Plambda_b(Plambda_b), m_Plambda_c(Plambda_c) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -437,10 +594,36 @@ namespace cbl {
        *
        *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
        *
+       *  @param scatter0_scaling_rel constant term of the intrinsic scatter 
+       *  of the mass-observable scaling relation
+       *
+       *  @param scatterM_scaling_rel multiplicative factor in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterM_exponent_scaling_rel exponent in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_scaling_rel multiplicative factor in the redshift
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_exponent_scaling_rel exponent in the redshift 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param zbias cluster redshift bias
+       *
+       *  @param Plambda_a \f$ a \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_b \f$ b \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_c \f$ c \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
        *  
        */
-      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
-	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
+      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble, const double scatter0_scaling_rel=par::defaultDouble, const double scatterM_scaling_rel=par::defaultDouble, const double scatterM_exponent_scaling_rel=par::defaultDouble, const double scatterz_scaling_rel=par::defaultDouble, const double scatterz_exponent_scaling_rel=par::defaultDouble, const double zbias=par::defaultDouble, const double Plambda_a=par::defaultDouble, const double Plambda_b=par::defaultDouble, const double Plambda_c=par::defaultDouble) 
+      : Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel), m_scatter0_scaling_rel(scatter0_scaling_rel), m_scatterM_scaling_rel(scatterM_scaling_rel), m_scatterM_exponent_scaling_rel(scatterM_exponent_scaling_rel), m_scatterz_scaling_rel(scatterz_scaling_rel), m_scatterz_exponent_scaling_rel(scatterz_exponent_scaling_rel), m_zbias(zbias), m_Plambda_a(Plambda_a), m_Plambda_b(Plambda_b), m_Plambda_c(Plambda_c) {}
 
       /**
        *  @brief constructor that uses both comoving and observed
@@ -500,10 +683,36 @@ namespace cbl {
        *
        *  @param gamma_scaling_rel z evolution factor of the mass-observable scaling relation
        *
+       *  @param scatter0_scaling_rel constant term of the intrinsic scatter 
+       *  of the mass-observable scaling relation
+       *
+       *  @param scatterM_scaling_rel multiplicative factor in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterM_exponent_scaling_rel exponent in the mass/mass proxy 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_scaling_rel multiplicative factor in the redshift
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param scatterz_exponent_scaling_rel exponent in the redshift 
+       *  dependent term in the intrinsic scatter of the mass-observable scaling relation
+       *
+       *  @param zbias cluster redshift bias
+       *
+       *  @param Plambda_a \f$ a \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_b \f$ b \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
+       *  @param Plambda_c \f$ c \f$ term in the function describing the cluster abundance, 
+       *  i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, where \f$\lambda\f$ is a mass proxy
+       *
        *  
        */
-      Cluster (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble) 
-	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel) {}
+      Cluster (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double mass_proxy=par::defaultDouble, const double mass_proxy_error=par::defaultDouble, const double bias=par::defaultDouble, const double logM=par::defaultDouble, const double conc=par::defaultDouble, const double f_off=par::defaultDouble, const double sigma_off=par::defaultDouble, const double alpha_scaling_rel=par::defaultDouble, const double beta_scaling_rel=par::defaultDouble, const double gamma_scaling_rel=par::defaultDouble, const double scatter0_scaling_rel=par::defaultDouble, const double scatterM_scaling_rel=par::defaultDouble, const double scatterM_exponent_scaling_rel=par::defaultDouble, const double scatterz_scaling_rel=par::defaultDouble, const double scatterz_exponent_scaling_rel=par::defaultDouble, const double zbias=par::defaultDouble, const double Plambda_a=par::defaultDouble, const double Plambda_b=par::defaultDouble, const double Plambda_c=par::defaultDouble) 
+      : Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_logM(logM), m_mass_proxy(mass_proxy), m_mass_proxy_error(mass_proxy_error), m_bias(bias), m_concentration(conc), m_f_off(f_off), m_sigma_off(sigma_off), m_alpha_scaling_rel(alpha_scaling_rel), m_beta_scaling_rel(beta_scaling_rel), m_gamma_scaling_rel(gamma_scaling_rel), m_scatter0_scaling_rel(scatter0_scaling_rel), m_scatterM_scaling_rel(scatterM_scaling_rel), m_scatterM_exponent_scaling_rel(scatterM_exponent_scaling_rel), m_scatterz_scaling_rel(scatterz_scaling_rel), m_scatterz_exponent_scaling_rel(scatterz_exponent_scaling_rel), m_zbias(zbias), m_Plambda_a(Plambda_a), m_Plambda_b(Plambda_b), m_Plambda_c(Plambda_c) {}
       
       /**
        *  @brief default destructor
@@ -594,6 +803,69 @@ namespace cbl {
        */
       double gamma_scaling_rel () const override
       { return m_gamma_scaling_rel; }
+
+      /**
+       *  @brief get the private member \e m_scatter0_scaling_rel
+       *  @return scatter0
+       */
+      double scatter0_scaling_rel () const override
+      { return m_scatter0_scaling_rel; }
+
+      /**
+       *  @brief get the private member \e m_scatterM_scaling_rel
+       *  @return scatterM
+       */
+      double scatterM_scaling_rel () const override
+      { return m_scatterM_scaling_rel; }
+
+      /**
+       *  @brief get the private member \e m_scatterM_exponent_scaling_rel
+       *  @return scatterM_exponent
+       */
+      double scatterM_exponent_scaling_rel () const override
+      { return m_scatterM_exponent_scaling_rel; }
+
+      /**
+       *  @brief get the private member \e m_scatterz_scaling_rel
+       *  @return scatterz
+       */
+      double scatterz_scaling_rel () const override
+      { return m_scatterz_scaling_rel; }
+
+      /**
+       *  @brief get the private member \e m_scatterz_exponent_scaling_rel
+       *  @return scatterz_exponent
+       */
+      double scatterz_exponent_scaling_rel () const override
+      { return m_scatterz_exponent_scaling_rel; }
+
+      /**
+       *  @brief get the private member \e m_zbias
+       *  @return zbias
+       */
+      double zbias () const override
+      { return m_zbias; }
+
+      /**
+       *  @brief get the private member \e m_Plambda_a
+       *  @return Plambda_a
+       */
+      double Plambda_a () const override
+      { return m_Plambda_a; }
+
+      /**
+       *  @brief get the private member \e m_Plambda_b
+       *  @return Plambda_b
+       */
+      double Plambda_b () const override
+      { return m_Plambda_b; }
+
+      /**
+       *  @brief get the private member \e m_Plambda_c
+       *  @return Plambda_c
+       */
+      double Plambda_c () const override
+      { return m_Plambda_c; }
       
 
       ///@}
@@ -680,6 +952,69 @@ namespace cbl {
        */
       void set_gamma_scaling_rel (const double gamma=par::defaultDouble) override
       { m_gamma_scaling_rel = gamma; }
+
+      /**
+       *  @brief set the private member \e m_scatter0_scaling_rel
+       *  @param scatter0 scatter0
+       */
+      void set_scatter0_scaling_rel (const double scatter0=par::defaultDouble) override
+      { m_scatter0_scaling_rel = scatter0; }
+
+      /**
+       *  @brief set the private member \e m_scatterM_scaling_rel
+       *  @param scatterM scatterM
+       */
+      void set_scatterM_scaling_rel (const double scatterM=par::defaultDouble) override
+      { m_scatterM_scaling_rel = scatterM; }
+
+      /**
+       *  @brief set the private member \e m_scatterM_exponent_scaling_rel
+       *  @param scatterM_exponent scatterM_exponent
+       */
+      void set_scatterM_exponent_scaling_rel (const double scatterM_exponent=par::defaultDouble) override
+      { m_scatterM_exponent_scaling_rel = scatterM_exponent; }
+
+      /**
+       *  @brief set the private member \e m_scatterz_scaling_rel
+       *  @param scatterz scatterz
+       */
+      void set_scatterz_scaling_rel (const double scatterz=par::defaultDouble) override
+      { m_scatterz_scaling_rel = scatterz; }
+
+      /**
+       *  @brief set the private member \e m_scatterz_exponent_scaling_rel
+       *  @param scatterz_exponent scatterz_exponent
+       */
+      void set_scatterz_exponent_scaling_rel (const double scatterz_exponent=par::defaultDouble) override
+      { m_scatterz_exponent_scaling_rel = scatterz_exponent; }
+
+      /**
+       *  @brief set the private member \e m_zbias
+       *  @param zbias zbias
+       */
+      void set_zbias (const double zbias=par::defaultDouble) override
+      { m_zbias = zbias; }
+
+      /**
+       *  @brief set the private member \e m_Plambda_a
+       *  @param Plambda_a Plambda_a
+       */
+      void set_Plambda_a (const double Plambda_a=par::defaultDouble) override
+      { m_Plambda_a = Plambda_a; }
+
+      /**
+       *  @brief set the private member \e m_Plambda_b
+       *  @param Plambda_b Plambda_b
+       */
+      void set_Plambda_b (const double Plambda_b=par::defaultDouble) override
+      { m_Plambda_b = Plambda_b; }
+
+      /**
+       *  @brief set the private member \e m_Plambda_c
+       *  @param Plambda_c Plambda_c
+       */
+      void set_Plambda_c (const double Plambda_c=par::defaultDouble) override
+      { m_Plambda_c = Plambda_c; }
 
       ///@}
 

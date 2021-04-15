@@ -19,7 +19,7 @@
  ********************************************************************/
 
 /**
- *  @file CosmoBolognaLib/Measure/ThreePointCorrelation/ThreePointCorrelation_comoving_multipoles_single.cpp
+ *  \@file CosmoBolognaLib/Measure/ThreePointCorrelation/ThreePointCorrelation_comoving_multipoles_single.cpp
  *
  *  @brief Methods of the class
  *  ThreePointCorrelation_comoving_multipoles_single used to compute the 
@@ -286,13 +286,14 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_single::se
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_single::measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_triplets, const bool tcount, const int seed)
+void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_single::measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_triplets, const bool tcount, const double fact, const int seed)
 {
   coutCBL << "I'm computing the three-point correlation multipoles..." << endl;
 
   (void)errorType; 
   (void)nResamplings;
   (void)tcount;
+  (void)fact;
   (void)seed;
 
   if (count_triplets) { // count triplets

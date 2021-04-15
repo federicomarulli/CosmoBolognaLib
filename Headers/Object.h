@@ -959,6 +959,80 @@ namespace cbl {
        */
       virtual double gamma_scaling_rel () const
       { return cbl::ErrorCBL("", "gamma_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_scatter0_scaling_rel
+       *  @return constant term of the intrinsic scatter of 
+       *  the mass-observable cluster scaling relation
+       */
+      virtual double scatter0_scaling_rel () const
+      { return cbl::ErrorCBL("", "scatter0_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_scatterM_scaling_rel
+       *  @return multiplicative factor in the mass/mass proxy dependent 
+       *  term in the intrinsic scatter of the mass-observable scaling relation
+       */
+      virtual double scatterM_scaling_rel () const
+      { return cbl::ErrorCBL("", "scatterM_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_scatterM_exponent_scaling_rel
+       *  @return exponent in the mass/mass proxy dependent 
+       *  term in the intrinsic scatter of the mass-observable scaling relation
+       */
+      virtual double scatterM_exponent_scaling_rel () const
+      { return cbl::ErrorCBL("", "scatterM_exponent_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_scatterz_scaling_rel
+       *  @return multiplicative factor in the redshift dependent
+       *  term in the intrinsic scatter of the mass-observable scaling relation
+       */
+      virtual double scatterz_scaling_rel () const
+      { return cbl::ErrorCBL("", "scatterz_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_scatterz_exponent_scaling_rel
+       *  @return exponent in the redshift dependent 
+       *  term in the intrinsic scatter of the mass-observable scaling relation
+       */
+      virtual double scatterz_exponent_scaling_rel () const
+      { return cbl::ErrorCBL("", "scatterz_exponent_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_zbias
+       *  @return the cluster redshift bias
+       */
+      virtual double zbias () const
+      { return cbl::ErrorCBL("", "zbias", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_Plambda_a
+       *  @return \f$ a \f$ term in the function describing the 
+       *  cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, 
+       *  where \f$\lambda\f$ is a mass proxy
+       */
+      virtual double Plambda_a () const
+      { return cbl::ErrorCBL("", "Plambda_a", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_Plambda_b
+       *  @return \f$ b \f$ term in the function describing the 
+       *  cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, 
+       *  where \f$\lambda\f$ is a mass proxy
+       */
+      virtual double Plambda_b () const
+      { return cbl::ErrorCBL("", "Plambda_b", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_Plambda_c
+       *  @return \f$ c \f$ term in the function describing the 
+       *  cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, 
+       *  where \f$\lambda\f$ is a mass proxy
+       */
+      virtual double Plambda_c () const
+      { return cbl::ErrorCBL("", "Plambda_c", "Object.h"); }
     
       /**
        *  @brief get the member \e m_magnitude
@@ -1532,6 +1606,87 @@ namespace cbl {
        */
       virtual void set_gamma_scaling_rel (const double gamma_scaling_rel)
       { (void)gamma_scaling_rel; cbl::ErrorCBL("", "set_gamma_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_scatter0_scaling_rel
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_scatter0_scaling_rel (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_scatter0_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_scatterM_scaling_rel
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_scatterM_scaling_rel (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_scatterM_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_scatterM_exponent_scaling_rel
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_scatterM_exponent_scaling_rel (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_scatterM_exponent_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_scatterz_scaling_rel
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_scatterz_scaling_rel (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_scatterz_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_scatterz_exponent_scaling_rel
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_scatterz_exponent_scaling_rel (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_scatterz_exponent_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_zbias
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_zbias (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_zbias", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_Plambda_a
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_Plambda_a (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_Plambda_a", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_Plambda_b
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_Plambda_b (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_Plambda_b", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_Plambda_c
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_Plambda_c (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_Plambda_c", "Object.h"); }
     
       /**
        *  @brief set the member \e m_magnitude

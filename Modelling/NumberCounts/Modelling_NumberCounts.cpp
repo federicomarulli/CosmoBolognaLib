@@ -103,6 +103,63 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
 // ===========================================================================================
 
 
+void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const cosmology::Cosmology cosmology, const catalogue::Cluster cluster, const std::vector<double> SF_weights, const double z_error, const double proxy_relative_error, const double z_pivot, const double proxy_pivot, const double mass_pivot, const std::string scalrel_z_evo, const double log_base, const std::string method_Pk, const bool store_output, const int norm, const double Delta, const bool isDelta_vir, const std::string model_MF, const double z_min, const double z_max, const double area_degrees, const double prec)
+{
+  m_data_model.isSnapshot = false;
+
+  if (m_fit_range==false) ErrorCBL("You must set the fit range (through set_fit_range) first!","set_data_model","Modelling_NumberCounts.cpp");
+  m_data_model.edges_x = m_data->edges_xx();
+  m_data_model.edges_y = m_data->edges_yy();
+
+  m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  m_data_model.cluster = make_shared<catalogue::Cluster>(cluster);
+
+  if (SF_weights.size() == (m_data->edges_xx()).size()-1)
+    m_data_model.SF_weights = SF_weights;
+  else
+    ErrorCBL("The weights vector must have the same size of the x vector!","set_data_model","Modelling_NumberCounts.cpp");
+  m_data_model.z_error = z_error;
+  m_data_model.proxy_relative_error = proxy_relative_error;
+  m_data_model.z_pivot = z_pivot;
+  m_data_model.proxy_pivot = proxy_pivot;
+  m_data_model.mass_pivot = mass_pivot;
+  m_data_model.scalrel_z_evo = scalrel_z_evo;
+  m_data_model.log_base = log_base;
+  
+  m_data_model.method_Pk = method_Pk;
+  m_data_model.k_min = 1.e-4;
+  m_data_model.k_max = 100.;
+  m_data_model.step = 500;
+  m_data_model.kk = logarithmic_bin_vector(500, 1.e-4, 100.);
+  m_data_model.norm = norm;
+  
+  m_data_model.store_output = store_output;
+  m_data_model.output_root = "test";
+  m_data_model.file_par = par::defaultString;
+
+  m_data_model.isDelta_Vir = isDelta_vir;
+  m_data_model.Delta = Delta;
+  m_data_model.model_MF = model_MF;
+
+  m_data_model.Mass_vector = logarithmic_bin_vector(200, 1.e10, 1.e16);
+
+  m_data_model.z_min = z_min;
+  m_data_model.z_max = z_max;
+
+  m_data_model.prec = prec;
+
+  m_data_model.area_rad = area_degrees*pow(par::pi/180., 2);
+  if (m_data_model.z_min>0)
+    m_data_model.Volume = cosmology.Volume(z_min, z_max, area_degrees);
+
+  m_data_model.is_sigma8_free = false;
+}
+
+
+
+// ===========================================================================================
+
+
 void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model_SF, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const double k_Pk_ratio, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file)
 {
   m_data_model_SF.cosmology = make_shared<cosmology::Cosmology>(cosmology);

@@ -52,7 +52,7 @@ nbins = 15      # number of bins
 ThreeP = cbl.ThreePointCorrelation_comoving_reduced(catalogue, random_catalogue, cbl.TripletType__comoving_theta_, side_s, side_u, perc, nbins)
 
 # measure the two-point correlation function 
-ThreeP.measure(cbl.ErrorType__Jackknife_,dir_triplets, dir_output)
+ThreeP.measure(cbl.ErrorType__Jackknife_, dir_triplets, dir_output)
 
 # store the output data 
 file_zeta = "zeta_JK.dat"

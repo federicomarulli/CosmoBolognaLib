@@ -33,6 +33,7 @@
 
 #include "ChainMesh.h"
 
+
 using namespace std;
 
 using namespace cbl;
@@ -129,7 +130,7 @@ void cbl::chainmesh::ChainMesh::index_to_inds (const long index, const vector<lo
 // ============================================================================
 
 
-void cbl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<double> > data, const double rMAX, const long nMIN, const long nMAX)
+void cbl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<double> > data, const double rMAX, const double rMIN, const long nMAX, const long nMIN)
 {
   // setting stuff, generalized for n(=nDim) dimensions
 
@@ -139,6 +140,7 @@ void cbl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<double> >
 
   m_nCell_tot = pow(nMAX,3)+1;
   m_nCell_NonEmpty = 0;
+  m_multCell.erase(m_multCell.begin(), m_multCell.end()); m_multCell.resize(m_nDim, 1);
 
   double fact = 1.;
 
@@ -157,6 +159,9 @@ void cbl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<double> >
       m_nCell_tot *= m_nCell[i];
       m_cell_to_index[i] = m_Delta[i]/m_nCell[i];
     }
+    for (int i=1; i<m_nDim; i++)
+      m_multCell[m_nDim-1-i] = m_nCell[i-1]*m_multCell[i-1];
+    
     fact *= 1.1;
 
     m_Label.erase(m_Label.begin(), m_Label.end());
@@ -175,7 +180,7 @@ void cbl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<double> >
     m_Label[indx_tot] = i;
   }
 
-  get_searching_region(rMAX);
+  get_searching_region(rMAX, rMIN);
   m_NonEmpty_Cells = different_elements (m_NonEmpty_Cells);
   m_nCell_NonEmpty = (long)m_NonEmpty_Cells.size();
 
@@ -217,42 +222,45 @@ void cbl::chainmesh::ChainMesh::create_chain_mesh_m2 (const vector<vector<double
 
 void cbl::chainmesh::ChainMesh::get_searching_region (const double r_max, const double r_min)
 {
-   int n_max = nint(r_max/m_cell_size);
-   n_max = (n_max*m_cell_size<r_max) ? n_max+1 : n_max;
+  m_rMAX = r_max;
+  m_rMIN = r_min;
+  
+  int n_max = nint(r_max/m_cell_size);
+  n_max = (n_max*m_cell_size<r_max) ? n_max+1 : n_max;
 
-   int n_min = nint(r_min/m_cell_size)-2; // exclusive
-   vector<long> n_incl(m_nDim);
+  int n_min = nint(r_min/m_cell_size)-2; // exclusive
+  vector<long> n_incl(m_nDim);
 
-   for (int i=0; i<m_nDim; i++)
-     n_incl[i] = 2*n_max+1;
+  for (int i=0; i<m_nDim; i++)
+    n_incl[i] = 2*n_max+1;
 
-   long sz_region = pow(2*n_max+1, m_nDim);
+  long sz_region = pow(2*n_max+1, m_nDim);
 
-   m_search_region.erase(m_search_region.begin(),m_search_region.end());
-   m_search_region.resize(sz_region,0);
+  m_search_region.erase(m_search_region.begin(),m_search_region.end());
+  m_search_region.resize(sz_region,0);
 
-   for (long i=0; i<sz_region; i++) {
-     vector<long> indx(m_nDim);
-     index_to_inds(i,n_incl,indx);
-     for (int i=0; i<m_nDim; i++) indx[i]-=n_max;
-     m_search_region[i] = inds_to_index(indx);
-   }
+  for (long i=0; i<sz_region; i++) {
+    vector<long> indx(m_nDim);
+    index_to_inds(i,n_incl,indx);
+    for (int i=0; i<m_nDim; i++) indx[i]-=n_max;
+    m_search_region[i] = inds_to_index(indx);
+  }
 
-   if (r_min >0 && n_min>0) {
-     vector<long> n_excl(m_nDim);
-     for (int i=0; i<m_nDim; i++)
-       n_excl[i] = 2*n_min+1;
+  if (r_min>0 && n_min>0) {
+    vector<long> n_excl(m_nDim);
+    for (int i=0; i<m_nDim; i++)
+      n_excl[i] = 2*n_min+1;
 
-     long sz_excl_region = pow(2*n_min+1,m_nDim);
+    long sz_excl_region = pow(2*n_min+1,m_nDim);
 
-     for (long i=0; i<sz_excl_region; i++) {
-       vector<long> indx(m_nDim);
-       index_to_inds(i, n_excl, indx);
-       for (int i=0; i<m_nDim; i++) indx[i] -= n_min;
-       long veto = inds_to_index(indx);
-       m_search_region.erase(remove(m_search_region.begin(), m_search_region.end(), veto), m_search_region.end());
-     }
-   }
+    for (long i=0; i<sz_excl_region; i++) {
+      vector<long> indx(m_nDim);
+      index_to_inds(i, n_excl, indx);
+      for (int i=0; i<m_nDim; i++) indx[i] -= n_min;
+      long veto = inds_to_index(indx);
+      m_search_region.erase(remove(m_search_region.begin(), m_search_region.end(), veto), m_search_region.end());
+    }
+  }
 }
 
 
@@ -266,30 +274,80 @@ vector<long> cbl::chainmesh::ChainMesh::close_objects_cell (const int cell_index
 
   vector<long> list;
 
-   for (size_t i=0; i<m_search_region.size(); i++) {
+  for (size_t i=0; i<m_search_region.size(); i++) {
 
-     long k = min(max(m_search_region[i]+cell_index, (long)0), m_nCell_tot-1);
+    long k = min(max(m_search_region[i]+cell_index, (long)0), m_nCell_tot-1);
 
-     if (k!=ii) {
-       long j = m_Label[k];
-       while (j>-1) {
-	 list.push_back(j);
-	 j = m_List[j];
-       }
-     }
-   }
+    if (k!=ii) {
+      long j = m_Label[k];
+      while (j>-1) {
+	list.push_back(j);
+	j = m_List[j];
+      }
+    }
+  }
 
-   return list;
+  return list;
 }
 
 
 // ============================================================================
 
 
+vector<long> cbl::chainmesh::ChainMesh::close_objects (const vector<double> center, const long ii) const
+{
+  vector<long> list;
+
+  if (long(center.size())!=m_nDim) ErrorCBL("point must have same dimensions of the chain-mesh", "close_objects", "ChainMesh.cpp");
+
+  long center_indx = pos_to_index(center);
+
+  for (unsigned long i=0; i<m_search_region.size(); i++) {
+
+    long k = min(max(m_search_region[i]+center_indx, (long)0), m_nCell_tot-1);
+    long j = m_Label[k];
+    
+    // NEW PART  -> consider only the cells inside the searching radius (+ those intersected)
+    if (m_cell_size>=m_rMAX/m_nDim) {
+      vector<int> indx(m_nDim, 0);
+
+      for (int ii=0; ii<m_nDim; ii++) {
+	indx[ii] = floor(k/m_multCell[ii]);
+	k -= m_multCell[ii]*indx[ii];
+      }
+      
+      double dist = 0.;
+      for (int ii=0; ii<m_nDim; ii++)
+	dist += pow((indx[ii]+0.5)*m_cell_size+m_Lim[ii][0]-center[ii], 2.);
+
+      dist = sqrt(dist);
+      
+      double half_diag = m_cell_size*0.5*sqrt(m_nDim);
+      double max_radius = m_rMAX+half_diag;
+      double min_radius = (m_rMIN>0.) ? m_rMIN-half_diag : 0.;
+      
+      if (dist<max_radius && dist>min_radius)
+	while (j>-1 && j>ii) {
+	  list.push_back(j);
+	  j = m_List[j];
+	}
+    }
+    else
+      while (j>-1 && j>ii) {
+	list.push_back(j);
+	j = m_List[j];
+      }
+  }
+
+  return list;
+}
+
+// ============================================================================
+
+
 void cbl::chainmesh::ChainMesh::normalize (std::vector<std::vector<double>> points, std::vector<double> values, const double rMAX)
 {
-
-  if(points[0].size() != values.size()) ErrorCBL("the size of points is different from the size of values", "norm_grid", "ChainMesh.cpp");
+  if (points[0].size()!=values.size()) ErrorCBL("the size of points is different from the size of values", "norm_grid", "ChainMesh.cpp");
 
   const int nparams = points.size();
 
@@ -299,14 +357,14 @@ void cbl::chainmesh::ChainMesh::normalize (std::vector<std::vector<double>> poin
   std::vector<std::vector<double>> extremals(2, std::vector<double> (nparams, 0));
   std::vector<double> delta (nparams, 0.);
 
-  for(int N=0; N<nparams; N++)
-  {
-   extremals[0][N] = *max_element(points[N].begin(), points[N].end());
-   extremals[1][N] = *min_element(points[N].begin(), points[N].end());
+  for(int N=0; N<nparams; N++) {
+    extremals[0][N] = cbl::Max(points[N]);
+    extremals[1][N] = cbl::Min(points[N]);
   }
 
-  for(int N=0; N<nparams; N++){
+  for(int N=0; N<nparams; N++) {
     delta[N] = extremals[0][N]-extremals[1][N];
+    if (delta[N]==0) ErrorCBL("the grid cannot be normalised", "norm_grid", "ChainMesh.cpp");
     for(size_t ii=0; ii<points[0].size(); ii++){
       points[N][ii] = 100. - (200./(delta[N]))*(extremals[0][N] - points[N][ii]);
     }
@@ -316,10 +374,9 @@ void cbl::chainmesh::ChainMesh::normalize (std::vector<std::vector<double>> poin
   m_delta = delta;
   m_extremals = extremals;
 
-  long nMAX = 160;
+  long nMAX = floor(200/m_cell_size)+10*rMAX;
 
-  create_chain_mesh(m_points, m_rMAX, 0, nMAX);
-
+  create_chain_mesh(m_points, m_rMAX, -1., nMAX, 0);
 }
 
 
@@ -328,74 +385,53 @@ void cbl::chainmesh::ChainMesh::normalize (std::vector<std::vector<double>> poin
 
 double cbl::chainmesh::ChainMesh::interpolate (std::vector<double> xi, const int distNum)
 {
-  if(m_points.size() != xi.size()) ErrorCBL("the dimension of points is different from the dimension of xi", "interp_coord", "ChainMesh.cpp");
-
-  if(m_delta.size()==0.) ErrorCBL("the chain mesh grid is not normalised!", "interp_coord", "ChainMesh.cpp");
+  if (m_points.size() != xi.size()) ErrorCBL("the dimension of points is different from the dimension of xi", "interp_coord", "ChainMesh.cpp");
+  if (m_delta.size()==0.) ErrorCBL("the chain mesh grid is not normalised!", "interp_coord", "ChainMesh.cpp");
 
   const int nparams = m_points.size();
 
   // stretch the interpolation sample
-
-  for(int N=0; N<nparams; N++){
-      xi[N] = 100. - (200./(m_delta[N]))*(m_extremals[0][N] - xi[N]);
-    }
-
-
-  double interp_value = 0.;
+  for (int N=0; N<nparams; N++)
+    xi[N] = 100. - (200./(m_delta[N]))*(m_extremals[0][N] - xi[N]);
+  
+  double interp_value = cbl::Min(m_values);
   std::vector<long> close;
   std::vector<double> distances;
   std::vector<double> indices;
-  int size_indices = 0;
-  double sum = 0.;
-  double dist = 0.;
+  double dist, sum = 0.;
+  double sum_distances = 0.;
   int npoints = 0;
 
+  close = close_objects(xi);
 
-  close = close_objects(xi, m_points.size());
-
-
-  if(close.size()>0){
-    for (auto&& k : close) {
+  if (close.size()>0) {
+    for (auto&&k : close) {
       dist = 0.;
-      for(int N=0; N<nparams; N++) dist += pow((xi[N]-m_points[N][k]), 2);
-      dist=sqrt(dist);
+      for(int N=0; N<nparams; N++)
+	dist += pow((xi[N]-m_points[N][k]), 2);
+      dist = sqrt(dist);
       distances.push_back(dist);
       indices.push_back(k);
-
     }
-
-
-
-    cbl::sort_2vectors(distances.begin(),indices.begin(), distances.size());
-
-    size_indices = indices.size();
-
-    if(size_indices > distNum){
-      for(auto&&k : indices){
-        sum += m_values[k];
-        npoints++;
-        if(npoints>distNum) break;
-        }
+    
+    cbl::sort_2vectors(distances.begin(), indices.begin(), distances.size());
+    
+    for (auto&&k : indices) {
+      if (distances[npoints]>0.) {
+	sum += m_values[k]/distances[npoints];
+	sum_distances += 1./distances[npoints];
+	npoints++;
       }
-
-    else
-      {
-        for(auto&&k : indices){
-          sum += m_values[k];
-          npoints++;
-          if(npoints>size_indices) break;
-        }
-      }
-
-      if(npoints!=0) interp_value = sum/npoints;
-
+      if (npoints>distNum) break;
     }
-
-    distances.clear();
-    indices.clear();
-
+    
+    interp_value = sum/sum_distances;
+  }
+  
+  distances.clear();
+  indices.clear();
+  
   return interp_value;
-
 }
 
 
@@ -404,117 +440,82 @@ double cbl::chainmesh::ChainMesh::interpolate (std::vector<double> xi, const int
 
 vector<double> cbl::chainmesh::ChainMesh::interpolate (std::vector<std::vector<double>> points, std::vector<double> values, std::vector<std::vector<double>> xi, const int distNum, const double rMAX)
 {
-
-  if(points.size() != xi.size()) ErrorCBL("the dimension of points is different from the dimension of xi", "interpolate", "ChainMesh.cpp");
-  if(points[0].size() != values.size()) ErrorCBL("the size of points is different from the size of values", "interpolate", "ChainMesh.cpp");
+  if (points.size() != xi.size()) ErrorCBL("the dimension of points is different from the dimension of xi", "interpolate", "ChainMesh.cpp");
+  if (points[0].size() != values.size()) ErrorCBL("the size of points is different from the size of values", "interpolate", "ChainMesh.cpp");
 
   const int nparams = points.size();
+  const int points_values = points[0].size();
   const int xi_values = xi[0].size();
+  std::vector<std::vector<double>> unique_vect(nparams, std::vector<double> (points_values+xi_values, 0));
 
   std::vector<std::vector<double>> extremals(2, std::vector<double> (nparams, 0));
   double delta = 0.;
-  for(int N=0; N<nparams; N++)
-  {
-   extremals[0][N] = std::max(*max_element(points[N].begin(), points[N].end()), *max_element(xi[N].begin(), xi[N].end()));
-   extremals[1][N] = std::min(*min_element(points[N].begin(), points[N].end()), *min_element(xi[N].begin(), xi[N].end()));
+  for (int N=0; N<nparams; N++) {
+    extremals[0][N] = std::max(cbl::Max(points[N]), cbl::Max(xi[N]));
+    extremals[1][N] = std::min(cbl::Min(points[N]), cbl::Min(xi[N]));
   }
 
-  for(int N=0; N<nparams; N++){
+  for (int N=0; N<nparams; N++){
     delta = extremals[0][N]-extremals[1][N];
-    for(size_t ii=0; ii<points[0].size(); ii++){
-      points[N][ii] = 100. - (200./(delta))*(extremals[0][N] - points[N][ii]);
-    }
-    for(int ii=0; ii<xi_values; ii++){
+    
+    for (int ii=0; ii<xi_values; ii++) {
       xi[N][ii] = 100. - (200./(delta))*(extremals[0][N] - xi[N][ii]);
-  }
-}
-
-  std::vector<double> center(nparams);
-  std::vector<long> close;
-  std::vector<double> distances;
-  std::vector<double> indices;
-  int size_indices = 0;
-  double dist, sum_posterior = 0.;
-  int npoints = 0;
-  long dim_grid = 150.;
-  long nMAX = dim_grid+10;
-
-  std::vector<double> interp_values(xi[0].size(), *min_element(values.begin(), values.end()));
-
-  create_chain_mesh(points, rMAX, 0, nMAX);
-
-  for(size_t ii=0; ii<xi[0].size();ii++){
-    sum_posterior = 0.;
-    npoints=0.;
-    for(int N=0; N<nparams; N++) center[N] = xi[N][ii];
-    close = close_objects(center);
-    if(close.size()>0){
-      for (auto&& k : close) {
-        dist = 0.;
-        for(int N=0; N<nparams; N++) dist += pow((center[N]-points[N][k]), 2);
-        dist=sqrt(dist);
-        distances.push_back(dist);
-        indices.push_back(k);
-      }
-
-      cbl::sort_2vectors(distances.begin(),indices.begin(), distances.size());
-      size_indices = indices.size();
-      if(size_indices > distNum){
-        for(auto&&k : indices){
-          sum_posterior += values[k];
-          npoints++;
-          if(npoints>distNum) break;
-        }
-      }
-      else
-      {
-        for(auto&&k : indices){
-          sum_posterior += values[k];
-          npoints++;
-          if(npoints>size_indices) break;
-        }
-      }
-
-      if(npoints!=0) interp_values[ii] = sum_posterior/npoints;
-
+      unique_vect[N][ii] = xi[N][ii];
     }
-
-    distances.clear();
-    indices.clear();
-
+    
+    for (int ii=0; ii<points_values; ii++) {
+      points[N][ii] = 100. - (200./(delta))*(extremals[0][N] - points[N][ii]);
+      unique_vect[N][xi_values+ii] = points[N][ii];
+    }
+    
   }
 
+  long nMAX = floor(200/m_cell_size)+10*rMAX;
+
+  std::vector<double> interp_values(xi_values, cbl::Min(values));
+
+  create_chain_mesh(unique_vect, rMAX, -1., nMAX, 0);
+
+#pragma omp parallel num_threads(omp_get_max_threads())
+  { 
+    std::vector<double> center(nparams);
+    std::vector<long> close;
+    std::vector<double> distances;
+    std::vector<double> indices;
+    double dist, sum_posterior = 0.;
+    int npoints = 0;
+  
+#pragma omp for schedule(dynamic)
+    for (int ii=0; ii<xi_values; ii++) {
+      sum_posterior = 0.;
+      npoints = 0;
+      for (int N=0; N<nparams; N++) center[N] = xi[N][ii];
+      close = close_objects(center, xi_values);
+      if (close.size()>0) {
+	for (auto&&k : close) {
+	  dist = 0.;
+	  for (int N=0; N<nparams; N++) dist += pow((center[N]-unique_vect[N][k]), 2);
+	  dist = sqrt(dist);
+	  distances.push_back(dist);
+	  indices.push_back(k-xi_values);
+	}
+
+	cbl::sort_2vectors(distances.begin(), indices.begin(), distances.size());
+
+	for (auto&&k : indices) {
+	  sum_posterior += values[k];
+	  npoints++;
+	  if (npoints>distNum) break;
+	}
+	interp_values[ii] = sum_posterior/npoints;
+      }
+
+      distances.clear();
+      indices.clear();
+    }
+  }
+  
   return interp_values;
-
-}
-
-
-// ============================================================================
-
-
-vector<long> cbl::chainmesh::ChainMesh::close_objects (const vector<double> center, const long ii) const
-{
-  // r2 != -1 ---> search in a nDim annulus from r1 to r2
-  // r2 == -1 ---> search in a nDim sphere from center to r1
-
-  vector<long> list;
-
-  if (long(center.size())!=m_nDim) ErrorCBL("point must have same dimensions of the chain-mesh", "close_objects", "ChainMesh.cpp");
-
-   long center_indx = pos_to_index(center);
-
-   for (unsigned long i=0; i<m_search_region.size(); i++) {
-
-     long k = min(max(m_search_region[i]+center_indx, (long)0), m_nCell_tot-1);
-     long j = m_Label[k];
-
-     while (j>-1 && j>ii) {
-       list.push_back(j);
-       j = m_List[j];
-     }
-   }
-
-   return list;
 }
 
 
@@ -538,66 +539,66 @@ vector<long> cbl::chainmesh::ChainMesh::get_list (const long cell_index) const
 // ============================================================================
 
 
-void cbl::chainmesh::ChainMesh1D::set_par (const double cell_size, const vector<double> xx, const double rMAX, const long nMIN, const long nMAX)
+void cbl::chainmesh::ChainMesh1D::set_par (const double cell_size, const vector<double> xx, const double rMAX, const double rMIN, const long nMAX, const long nMIN)
 {
   ChainMesh::set_par(cell_size, 1);
 
   vector<vector<double>> data;
   data.push_back(xx);
-  create_chain_mesh(data, rMAX, nMIN, nMAX);
+  create_chain_mesh(data, rMAX, rMIN, nMAX, nMIN);
 }
 
 
 // ============================================================================
 
 
-cbl::chainmesh::ChainMesh1D::ChainMesh1D (const double cell_size, const std::vector<double> xx, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size,1)
+cbl::chainmesh::ChainMesh1D::ChainMesh1D (const double cell_size, const std::vector<double> xx, const double rMAX, const double rMIN, const long nMAX, const long nMIN) : ChainMesh(cell_size,1)
 {
-  set_par(cell_size, xx, rMAX, nMIN, nMAX);
+  set_par(cell_size, xx, rMAX, rMIN, nMAX, nMIN);
 }
 
 
 // ============================================================================
 
 
-void cbl::chainmesh::ChainMesh2D::set_par (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const double rMAX, const long nMIN, const long nMAX)
+void cbl::chainmesh::ChainMesh2D::set_par (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const double rMAX, const double rMIN, const long nMAX, const long nMIN)
 {
   ChainMesh::set_par(cell_size, 2);
 
   vector<vector<double>> data;
   data.push_back(xx);
   data.push_back(yy);
-  create_chain_mesh(data, rMAX, nMIN, nMAX);
+  create_chain_mesh(data, rMAX, rMIN, nMAX, nMIN);
 }
 
 
 // ============================================================================
 
 
-cbl::chainmesh::ChainMesh2D::ChainMesh2D (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size,2)
+cbl::chainmesh::ChainMesh2D::ChainMesh2D (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const double rMAX, const double rMIN, const long nMAX, const long nMIN) : ChainMesh(cell_size,2)
 {
-  set_par(cell_size, xx, yy, rMAX, nMIN, nMAX);
+  set_par(cell_size, xx, yy, rMAX, rMIN, nMAX, nMIN);
 }
 
 
 // ============================================================================
 
 
-void cbl::chainmesh::ChainMesh3D::set_par (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const double rMAX, const long nMIN, const long nMAX)
+void cbl::chainmesh::ChainMesh3D::set_par (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const double rMAX, const double rMIN, const long nMAX, const long nMIN)
 {
   ChainMesh::set_par(cell_size, 3);
   vector<vector<double>> data;
   data.push_back(xx);
   data.push_back(yy);
   data.push_back(zz);
-  create_chain_mesh(data, rMAX, nMIN, nMAX);
+  create_chain_mesh(data, rMAX, rMIN, nMAX, nMIN);
 }
 
 
 // ============================================================================
 
 
-cbl::chainmesh::ChainMesh3D::ChainMesh3D (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const double rMAX, const long nMIN, const long nMAX) : ChainMesh(cell_size, 3)
+cbl::chainmesh::ChainMesh3D::ChainMesh3D (const double cell_size, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const double rMAX, const double rMIN, const long nMAX, const long nMIN) : ChainMesh(cell_size, 3)
 {
-  set_par(cell_size, xx, yy, zz, rMAX, nMIN, nMAX);
+  set_par(cell_size, xx, yy, zz, rMAX, rMIN, nMAX, nMIN);
 }

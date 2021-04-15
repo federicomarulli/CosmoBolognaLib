@@ -1,4 +1,4 @@
-/*******************************************************************
+/********************************************************************
  *  Copyright (C) 2010 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
@@ -43,31 +43,31 @@ using namespace catalogue;
 // ============================================================================
 
 
-cbl::lognormal::LogNormalFull::LogNormalFull (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const std::string author)
+cbl::lognormal::LogNormalFull::LogNormalFull (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int n_redshift_bins, const std::string author)
 {
-  set_cosmo_function(cosmology, redshift_min, redshift_max, nredshift, author);
+  set_cosmo_function(cosmology, redshift_min, redshift_max, n_redshift_bins, author);
 }
 
 
 // ============================================================================
 
 
-cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const std::string author)
+cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int n_redshift_bins, const std::string author)
 {
   set_grid_parameters(rmin, xMin, xMax, yMin, yMax, zMin, zMax);
 
-  set_cosmo_function(cosmology, redshift_min, redshift_max, nredshift, author);
+  set_cosmo_function(cosmology, redshift_min, redshift_max, n_redshift_bins, author);
 }
 
 
 // ============================================================================
 
 
-cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const std::string author)
+cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int n_redshift_bins, const std::string author)
 {
   set_grid_parameters(rmin, random, pad);
 
-  set_cosmo_function(cosmology, redshift_min, redshift_max, nredshift, author);
+  set_cosmo_function(cosmology, redshift_min, redshift_max, n_redshift_bins, author);
 }
 
 
@@ -76,7 +76,6 @@ cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const std::vect
 
 void cbl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const std::string author)
 {
-
   m_cosmology = make_shared<Cosmology>(cosmology);
 
   m_author = author;
@@ -90,7 +89,6 @@ void cbl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosmolog
     dc.push_back(cosmology.D_C(redshift[i]));
     ff.push_back(cosmology.linear_growth_rate(redshift[i], 0.));
     dd.push_back(cosmology.DD(redshift[i])/cosmology.DD(0.));
-
   }
 
   m_func_DC = make_shared<glob::FuncGrid>(glob::FuncGrid(redshift, dc, "Spline"));
@@ -106,10 +104,10 @@ void cbl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosmolog
   int nk = 500;
   double kmin = 1.e-4;
   double kmax = 1.e2;
-
   vector<double> kk = logarithmic_bin_vector(nk, kmin, kmax), Pk;
-  for (size_t i=0;i<kk.size();i++)
-    Pk.push_back(m_cosmology->Pk_DM(kk[i], m_author, 0, 0.));
+  
+  for (auto &&KK : kk)
+    Pk.push_back(m_cosmology->Pk_DM(KK, m_author, 0, 0.));
 
   m_func_pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, Pk, "Spline"));
 }
@@ -118,7 +116,7 @@ void cbl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosmolog
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::set_grid_parameters ()
+void cbl::lognormal::LogNormalFull::m_set_grid_parameters ()
 {
   m_nx = (m_xMax-m_xMin)/m_rmin;
   m_nx = (m_nx%2==0) ? m_nx : m_nx+1; 
@@ -148,7 +146,7 @@ void cbl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, cons
   m_yMax = yMax;
   m_zMax = zMax;
 
-  set_grid_parameters();
+  m_set_grid_parameters();
 }
 
 
@@ -157,7 +155,6 @@ void cbl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, cons
 
 void cbl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad)
 {
-
   m_rmin = rmin;
 
   m_random = random;
@@ -182,14 +179,14 @@ void cbl::lognormal::LogNormalFull::set_grid_parameters (const double rmin, cons
   m_yMax = Max(yMax)+pad;
   m_zMax = Max(zMax)+pad;
 
-  set_grid_parameters();
+  m_set_grid_parameters();
 }
 
 
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::set_fields (const bool use_random, const bool doRSD)
+void cbl::lognormal::LogNormalFull::m_set_fields (const bool use_random, const bool doRSD)
 {
   m_clustering_signal = make_shared<data::ScalarField3D> (data::ScalarField3D(m_nx, m_ny, m_nz, m_xMin, m_xMax, m_yMin, m_yMax, m_zMin, m_zMax));
 
@@ -215,7 +212,7 @@ void cbl::lognormal::LogNormalFull::set_fields (const bool use_random, const boo
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::reset_fields (const bool use_random, const bool doRSD)
+void cbl::lognormal::LogNormalFull::m_reset_fields (const bool use_random, const bool doRSD)
 {
   m_clustering_signal->reset();
 
@@ -247,18 +244,16 @@ void cbl::lognormal::LogNormalFull::reset_fields (const bool use_random, const b
 /*
 void cbl::lognormal::LogNormalFull::write_XiMultipoles(const std::vector<double> rr, const std::string file_out)
 {
-  vector<double> kk = logarithmic_bin_vector(200, 1.e-4, 1.e1);
-  
+  vector<double> kk = logarithmic_bin_vector(200, 1.e-4, 1.e1); 
 }
 */
 
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::set_clustering_signal()
+void cbl::lognormal::LogNormalFull::m_set_clustering_signal ()
 {
   double Volume = m_clustering_signal->Volume();
-
 
   for (int i=0; i<m_nx; i++) {
     double kx = m_clustering_signal->kX(i);
@@ -295,7 +290,7 @@ void cbl::lognormal::LogNormalFull::set_clustering_signal()
 // ============================================================================
 
       
-void cbl::lognormal::LogNormalFull::set_density_field (const double smoothing_radius)
+void cbl::lognormal::LogNormalFull::m_set_density_field (const double smoothing_radius)
 {
   random::NormalRandomNumbers normal(0., 1., m_generator());
 
@@ -313,16 +308,15 @@ void cbl::lognormal::LogNormalFull::set_density_field (const double smoothing_ra
 	}
 	else if (i == m_nx/2 || j == m_ny/2) {
 
-	  double smoothing = exp(-0.5*pow(kk*smoothing_radius,2));
-	  double Pkk = sqrt(max(0., 0.5*m_clustering_signal->ScalarField_FourierSpace_real(i,j,k)));
+	  double smoothing = exp(-0.5*pow(kk*smoothing_radius, 2));
+	  double Pkk = sqrt(max(0., 0.5*m_clustering_signal->ScalarField_FourierSpace_real(i, j, k)));
 
 	  normal.set_mean_sigma(0., Pkk);
 
 	  double val = normal()*smoothing;
 
-	  while(val!=val) {
+	  while (val!=val) 
 	    val = normal()*smoothing;
-	  }
 
 	  m_densityG->set_ScalarField_FourierSpace_real(val, i, j, k, 0);
 	  m_densityG->set_ScalarField_FourierSpace_complex(0, i, j, k, 0);
@@ -335,13 +329,11 @@ void cbl::lognormal::LogNormalFull::set_density_field (const double smoothing_ra
 	  double val1 = normal()*smoothing;
 	  double val2 = normal()*smoothing;
 
-	  while(val1!=val1) {
-	    val1 = normal()*smoothing;
-	  }
+	  while (val1!=val1) 
+	    val1 = normal()*smoothing; 
 
-	  while(val2!=val2) {
+	  while (val2!=val2) 
 	    val2 = normal()*smoothing;
-	  }
 
 	  m_densityG->set_ScalarField_FourierSpace_real(val1, i, j, k, 0);
 	  m_densityG->set_ScalarField_FourierSpace_complex(val2, i, j, k, 0);
@@ -374,14 +366,14 @@ void cbl::lognormal::LogNormalFull::set_density_field (const double smoothing_ra
     }
   }
 
-  m_density->FourierTransformField ();
+  m_density->FourierTransformField();
 }
 
 
 // ============================================================================
 
       
-void cbl::lognormal::LogNormalFull::set_radial_velocity ()
+void cbl::lognormal::LogNormalFull::m_set_radial_velocity ()
 {
   for (int i=0; i<m_nx; i++) {
     double kx = m_clustering_signal->kX(i);
@@ -453,7 +445,7 @@ void cbl::lognormal::LogNormalFull::set_radial_velocity ()
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::set_visibility ()
+void cbl::lognormal::LogNormalFull::m_set_visibility ()
 {
   double mmax = max(max((m_xMax-m_xMin)/2, (m_yMax-m_yMin)/2),(m_xMax-m_xMin)/2); 
   m_nCells_eff=0;
@@ -466,11 +458,11 @@ void cbl::lognormal::LogNormalFull::set_visibility ()
 	double zz = m_visibility->ZZ(k);
 
 	double dc = sqrt(xx*xx+yy*yy+zz*zz);
-	if ( dc<mmax) {
+	if (dc<mmax) {
 	  m_nCells_eff +=1;
 	  m_visibility->set_ScalarField(1., i, j, k, 0);
 	}
-	else{
+	else {
 	  m_visibility->set_ScalarField(0., i, j, k, 0);
 	}
       }
@@ -489,7 +481,7 @@ void cbl::lognormal::LogNormalFull::set_visibility ()
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::set_visibility_from_random ()
+void cbl::lognormal::LogNormalFull::m_set_visibility_from_random ()
 {
   coutCBL << "I'm setting the visibility from random sample..." << endl;
   int nsamples = m_random.size();
@@ -517,7 +509,7 @@ void cbl::lognormal::LogNormalFull::set_visibility_from_random ()
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::set_visibility_from_random_RSD ()
+void cbl::lognormal::LogNormalFull::m_set_visibility_from_random_RSD ()
 {
   coutCBL << "I'm setting the visibility from random sample, using velocity field..." << endl;
   int nsamples = m_random.size();
@@ -552,12 +544,12 @@ void cbl::lognormal::LogNormalFull::set_visibility_from_random_RSD ()
   coutCBL << "Done!" << endl;
 }
 
+
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::extract_points_lognormal_field (const double nObjects, const bool doRSD, const std::vector<double> redshift, const std::vector<double> bias, const std::shared_ptr<data::Field3D> visibility, const std::string file_out)
+void cbl::lognormal::LogNormalFull::m_extract_points_lognormal_field (const double nObjects, const bool doRSD, const std::vector<double> redshift, const std::vector<double> bias, const std::shared_ptr<data::Field3D> visibility, const std::string file_out)
 {
-
   ofstream fout(file_out.c_str());
 
   double max_redshift = m_func_redshift->operator()(sqrt(m_xMax*m_xMax+m_yMax*m_yMax+m_zMax*m_zMax));
@@ -568,7 +560,7 @@ void cbl::lognormal::LogNormalFull::extract_points_lognormal_field (const double
   double min = -m_rmin*0.5, max = m_rmin*0.5;
   random::UniformRandomNumbers ran(min, max, m_generator());
 
-  int nObj=0;
+  int nObj = 0;
   for (int i=0; i<m_nx; i++) {
     double xx = m_density->XX(i);
     for (int j=0; j<m_ny; j++) {
@@ -606,7 +598,7 @@ void cbl::lognormal::LogNormalFull::extract_points_lognormal_field (const double
 	  obscoord.ra = obscoord.ra*180./par::pi;
 	  obscoord.dec = obscoord.dec*180./par::pi;
 	  
-	  obscoord.ra = (obscoord.ra<0) ? obscoord.ra+360 : obscoord.ra;
+	  obscoord.ra = (obscoord.ra<0) ? obscoord.ra+360. : obscoord.ra;
 
 	  obscoord.redshift =  m_func_redshift->operator()(ddcc);
 	  obscoord.redshift -= vv*(1+obscoord.redshift);
@@ -623,37 +615,36 @@ void cbl::lognormal::LogNormalFull::extract_points_lognormal_field (const double
 }
 
 
-
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::generate_lognormal (const int start, const int stop, const bool doRSD, const double smoothing_radius, const std::vector<double> nObjects, const std::vector<std::vector<double>> redshift, const std::vector<std::vector<double> > bias, const std::string dir, const std::string filename, const int seed, const bool setfields, const bool use_random)
+void cbl::lognormal::LogNormalFull::generate_lognormal (const int start, const int stop, const bool doRSD, const double smoothing_radius, const std::vector<double> nObjects, const std::vector<std::vector<double>> redshift, const std::vector<std::vector<double> > bias, const std::string dir, const std::string filename, const int seed, const bool set_fields, const bool use_random)
 {
   m_generator.seed(seed);
 
-  if (setfields)
-    set_fields(use_random, doRSD);
+  if (set_fields)
+    m_set_fields(use_random, doRSD);
   else
-    reset_fields(use_random, doRSD);
+    m_reset_fields(use_random, doRSD);
 
-  set_clustering_signal();
+  m_set_clustering_signal();
 
   int nsamples = nObjects.size();
 
   if (use_random)
-    set_visibility_from_random();
+    m_set_visibility_from_random();
   else
-    set_visibility();
+    m_set_visibility();
 
   for (int i=start; i<stop; i++) {
-    set_density_field(smoothing_radius);
+    m_set_density_field(smoothing_radius);
 
-    if (doRSD) set_radial_velocity();
+    if (doRSD) m_set_radial_velocity();
 
     for (int n=0;n<nsamples; n++) {
       string ff = dir+filename+"_sample_"+conv(n+1, par::fINT)+"_realization_"+conv(i+1, par::fINT);
 
-      extract_points_lognormal_field(nObjects[n], doRSD, redshift[n], bias[n], (use_random) ? m_visibility_random[n] : m_visibility, ff);
+      m_extract_points_lognormal_field(nObjects[n], doRSD, redshift[n], bias[n], (use_random) ? m_visibility_random[n] : m_visibility, ff);
     }
 
   }
@@ -664,7 +655,7 @@ void cbl::lognormal::LogNormalFull::generate_lognormal (const int start, const i
 // ============================================================================
 /*
       
-void cbl::lognormal::LogNormalFull::set_potential()
+void cbl::lognormal::LogNormalFull::m_set_potential()
 {
   double OmH02 = m_cosmology->OmegaM()*pow(m_cosmology->H0(),2);
 
@@ -701,8 +692,10 @@ void cbl::lognormal::LogNormalFull::set_potential()
 }
 
 
-      
-void cbl::lognormal::LogNormalFull::set_displacement_field()
+// ============================================================================
+
+
+void cbl::lognormal::LogNormalFull::set_displacement_field ()
 {
 
   m_density->FourierTransformField ();
@@ -757,7 +750,7 @@ void cbl::lognormal::LogNormalFull::set_displacement_field()
 // ============================================================================
 
       
-void cbl::lognormal::LogNormalFull::set_rsd_displacement_field()
+void cbl::lognormal::LogNormalFull::set_rsd_displacement_field ()
 {
   for (int i=0; i<m_nx; i++) {
     double xx = m_displacement->XX(i);
@@ -784,8 +777,5 @@ void cbl::lognormal::LogNormalFull::set_rsd_displacement_field()
 
 }
 */
-
-
-// ============================================================================
 
 

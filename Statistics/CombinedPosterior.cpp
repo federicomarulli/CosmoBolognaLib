@@ -25,9 +25,9 @@
  *  This file contains the implementation of the methods of the class
  *  CombinedPosterior, used for bayesian analyses
  *
- *  @authors Davide Pelliciari
+ *  @authors Davide Pelliciari, Sofia Contarini, Giorgio Lesci
  *
- *  @authors davide.pelliciari@studio.unibo.it
+ *  @authors davide.pelliciari@studio.unibo.it, sofia.contarini3@unibo.it, giorgio.lesci2@unibo.it
  */
 
 #include "FITSwrapper.h"
@@ -44,9 +44,8 @@ using namespace cbl;
 // ============================================================================================
 
 
-cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::shared_ptr<Posterior>> posteriors)
+cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par)
 {
-
   m_posteriors = posteriors;
   m_Nposteriors = m_posteriors.size();
   std::vector<bool> is_from_chain(m_Nposteriors);
@@ -56,48 +55,201 @@ cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::sh
     if(m_posteriors[N]->m_get_seed() != -1) is_from_chain[N] = true;
     else is_from_chain[N] = false;
 
-  if(std::find(is_from_chain.begin(), is_from_chain.end(), false) == is_from_chain.end())   // All false
-    set_all();
+  if(std::find(is_from_chain.begin(), is_from_chain.end(), false) == is_from_chain.end()) {    // All false
+    m_set_parameters_priors(m_posteriors, repeated_par);
+    m_set_independent_probes();
+  }
 
   else if (std::find(is_from_chain.begin(), is_from_chain.end(), true) == is_from_chain.end()) // All true
-  {
-    impsampling = true;
-    for(int N=1; N<m_Nposteriors; N++)
-      if(m_posteriors[N]->get_Nparameters()!=m_posteriors[0]->get_Nparameters())
-        ErrorCBL("Different number of parameters for the combination", "CombinedPosterior", "CombinedPosterior.cpp");
-    m_Nparameters = m_posteriors[0]->get_Nparameters();
-    m_model_parameters = m_posteriors[0]->get_model_parameters();
-  }
+    {
+      impsampling = true;
+      for(int N=1; N<m_Nposteriors; N++)
+	if(m_posteriors[N]->get_Nparameters()!=m_posteriors[0]->get_Nparameters())
+	  ErrorCBL("Different number of parameters for the combination", "CombinedPosterior", "CombinedPosterior.cpp");
+      m_Nparameters = m_posteriors[0]->get_Nparameters();
+      m_model_parameters = m_posteriors[0]->get_model_parameters();
+    }
 
   // at least one is false
   else
     ErrorCBL("Different kind of Posterior objects given as input!", "CombinedPosterior", "CombinedPosterior.cpp");
-
-  m_check_consistency();
 }
 
 
 // ============================================================================================
 
 
-void cbl::statistics::CombinedPosterior::m_check_consistency ()
+cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::vector<std::shared_ptr<Posterior>>> posteriors, const std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<std::shared_ptr<Posterior>> independent_posteriors, std::vector<std::string> repeated_par)
 {
-  for (int i=1; i<m_Nposteriors; i++){
-    if ((int)(m_posteriors[i]->get_model_parameters()->nparameters()) != m_Nparameters)
-      cbl::ErrorCBL("The input objects do not have the same number of set parameters!", "m_check_consistency", "CombinedPosterior.cpp");
-    for (int k=0; k<m_Nparameters; k++)
-      if (m_posteriors[i]->get_model_parameters()->name(k) != m_posteriors[0]->get_model_parameters()->name(k))
-	cbl::ErrorCBL("Different parameters are set for the objects in input!", "m_check_consistency", "CombinedPosterior.cpp");
+  // Check the covariance matrices
+  if (posteriors.size() != covariance.size())
+    ErrorCBL("The number of sets of dependent posteriors must match the number of covariance matrices!", "CombinedPosterior", "CombinedPosterior.cpp");
+
+  for (size_t i=0; i<posteriors.size(); i++) {
+    int dataset_length = 0;
+    for (size_t j=0; j<posteriors[i].size(); j++)
+      dataset_length += posteriors[i][j]->get_m_data()->xx().size();
+    std::vector<std::vector<double>> cov = covariance[i]->operator()();
+    if (dataset_length != (int)(cov.size()))
+      ErrorCBL("Dataset "+cbl::conv(i+1, cbl::par::fINT)+": The dimension of the covariance matrix does not match the length of the data vector!", "CombinedPosterior", "CombinedPosterior.cpp");
   }
+
+  // Set the core variables
+  m_Nposteriors = posteriors.size() + independent_posteriors.size();
+
+  m_use_grid.resize(m_Nposteriors);
+  m_likelihood_inputs.resize(m_Nposteriors);
+  m_log_likelihood_functions.resize(m_Nposteriors);
+  m_likelihood_functions.resize(m_Nposteriors);
+  m_log_likelihood_functions_grid.resize(m_Nposteriors);
+  m_likelihood_functions_grid.resize(m_Nposteriors);
+
+  // Set parameters and priors
+  std::vector<std::shared_ptr<Posterior>> dummy_posteriors;
+  for (size_t i=0; i<posteriors.size(); i++)
+    for (size_t j=0; j<posteriors[i].size(); j++)
+      dummy_posteriors.emplace_back(posteriors[i][j]);
+  for (size_t i=0; i<independent_posteriors.size(); i++)
+    dummy_posteriors.emplace_back(independent_posteriors[i]);
+
+  m_set_parameters_priors(dummy_posteriors, repeated_par);
+
+  m_parameter_indexes2.resize(dummy_posteriors.size());
+  
+  // Set the models and the likelihood functions for the dependent probes
+  int name_idx = 0;
+  for (size_t i=0; i<posteriors.size(); i++) {
+    auto inputs = make_shared<STR_DependentProbes_data_model>(m_data_model);
+    inputs->models.resize(posteriors[i].size(), NULL);
+    inputs->xx.resize(posteriors[i].size());
+    inputs->par_indexes.resize(posteriors[i].size());
+    for (size_t j=0; j<posteriors[i].size(); j++) {
+      if (posteriors[i][j]->get_m_model()->dimension() != Dim::_1D_)
+	ErrorCBL("The model dimension of the statistically dependent probes must be 1!", "CombinedPosterior", "CombinedPosterior.cpp");
+      inputs->models[j] = posteriors[i][j]->get_m_model();
+      m_models.emplace_back(posteriors[i][j]->get_m_model());  // Used only for writing the models at percentile values
+      m_datasets.emplace_back(posteriors[i][j]->get_m_data()); // Used only for writing the models at percentile values
+      inputs->xx[j] = posteriors[i][j]->get_m_data()->xx();
+      for (size_t k=0; k<posteriors[i][j]->get_model_parameters()->name().size(); k++)
+	for(int rr=0; rr<m_Nparameters; rr++)
+	  if (m_parameter_names[name_idx][k] == m_model_parameters->name(rr)) {
+	    inputs->par_indexes[j].emplace_back(rr);
+	    m_parameter_indexes2[name_idx].emplace_back(rr);
+	  }
+      for (size_t k=0; k<posteriors[i][j]->get_m_data()->xx().size(); k++)
+	inputs->flat_data.emplace_back(posteriors[i][j]->get_m_data()->data(k));
+      name_idx ++;
+    }
+    inputs->covariance = covariance[i];
+
+    m_likelihood_inputs[i] = inputs;
+    m_log_likelihood_functions[i] = &LogLikelihood_Gaussian_combined;
+    m_likelihood_functions[i] = [&] (vector<double> &par, const shared_ptr<void> input) { return exp(m_log_likelihood_functions[i](par, input)); };
+
+    m_use_grid[i] = false;
+    m_log_likelihood_functions_grid[i] = NULL;
+    m_likelihood_functions_grid[i] = NULL;
+  }
+
+  // Set the models and the likelihood functions for the independent probes
+  int idx = 0;
+  if (independent_posteriors.size() > 0) {
+    for(int i=posteriors.size(); i<m_Nposteriors; i++) {
+      m_use_grid[i] = independent_posteriors[idx]->get_m_use_grid();
+      m_likelihood_inputs[i] = independent_posteriors[idx]->get_m_likelihood_inputs();
+      m_log_likelihood_functions[i] = independent_posteriors[idx]->get_m_log_likelihood_function();
+      m_likelihood_functions[i] = independent_posteriors[idx]->get_m_likelihood_function();
+
+      m_models.emplace_back(independent_posteriors[idx]->get_m_model());
+      m_datasets.emplace_back(independent_posteriors[idx]->get_m_data());
+      
+      idx ++;
+    }
+  }
+
+  // Set the parameter indexes for the dependent posteriors
+  m_parameter_indexes.resize(m_Nposteriors);
+
+  for (size_t N=0; N<posteriors.size(); N++)
+    for (size_t j=0; j<m_model_parameters->nparameters(); j++)
+      m_parameter_indexes[N].emplace_back(j);
+
+  // Set the parameter indexes for the independent posteriors
+  for (int N=(int)(posteriors.size()); N<m_Nposteriors; N++) {
+    for (size_t k=0; k<m_parameter_names[name_idx].size(); k++) {
+      for(int j=0; j<m_Nparameters; j++) {
+	if (m_parameter_names[name_idx][k] == m_model_parameters->name(j)) {
+	  m_parameter_indexes[N].emplace_back(j);
+	  m_parameter_indexes2[name_idx].emplace_back(j);
+	}
+      }
+    }
+    name_idx ++;
+  }
+
+  m_set_seed(321);
+  
 }
 
 
 // ============================================================================================
 
 
-void cbl::statistics::CombinedPosterior::set_all ()
+void cbl::statistics::CombinedPosterior::m_set_parameters_priors (std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par)
 {
-  m_seeds.resize(m_Nposteriors);
+  const int dummy_Nposteriors = (int)(posteriors.size());
+  
+  // Set the parameter names and the priors
+  std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> prior_distributions = posteriors[0]->get_model_parameters()->prior_distribution();
+  std::vector<ParameterType> parameter_types = posteriors[0]->get_model_parameters()->type();
+  std::vector<std::string> parameter_names = posteriors[0]->get_model_parameters()->name();
+  
+  m_parameter_names.resize(posteriors.size());
+  m_parameter_names[0] = parameter_names;
+  
+  if (dummy_Nposteriors > 1) {
+    for (int N=1; N<dummy_Nposteriors; N++) {
+      for (size_t k=0; k<posteriors[N]->get_model_parameters()->name().size(); k++) {
+	const bool is_in_parnames = std::count(parameter_names.begin(), parameter_names.end(), posteriors[N]->get_model_parameters()->name(k));
+	const bool is_repeated = std::count(repeated_par.begin(), repeated_par.end(), posteriors[N]->get_model_parameters()->name(k));
+	if (is_in_parnames && is_repeated == false) {
+	  m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k));
+	} else {
+	  if ( (is_in_parnames && is_repeated) || (is_in_parnames == false && is_repeated) ) {
+	    m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior"+cbl::conv(N+1, cbl::par::fINT));
+	    parameter_names.emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior"+cbl::conv(N+1, cbl::par::fINT));
+	  } else if (is_in_parnames == false && is_repeated == false) {
+	    m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k));
+	    parameter_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
+	  }
+	  parameter_types.emplace_back(posteriors[N]->get_model_parameters()->type(k));
+	  prior_distributions.emplace_back(posteriors[N]->get_model_parameters()->prior_distribution(k));
+	}
+      }
+    }
+  }
+
+  m_Nparameters = (int)(prior_distributions.size());
+  
+  cbl::statistics::PosteriorParameters posterior_par (m_Nparameters, prior_distributions, parameter_types, parameter_names);
+
+  // Check if the strings in repeated_par correspond to the parameter names defined internally
+  for (size_t i=0; i<repeated_par.size(); i++)
+    if (std::count(parameter_names.begin(), parameter_names.end(), repeated_par[i]))
+      continue;
+    else
+      ErrorCBL("Wrong parameter name declaration in repeated_par!", "m_set_parameter_priors", "CombinedPosterior.cpp");
+  
+  // Set m_model_parameters
+  m_model_parameters = std::make_shared<PosteriorParameters>(posterior_par);  
+}
+
+
+// ============================================================================================
+
+
+void cbl::statistics::CombinedPosterior::m_set_independent_probes ()
+{
   m_use_grid.resize(m_Nposteriors);
   m_models.resize(m_Nposteriors);
   m_datasets.resize(m_Nposteriors);
@@ -106,12 +258,8 @@ void cbl::statistics::CombinedPosterior::set_all ()
   m_log_likelihood_functions.resize(m_Nposteriors);
   m_likelihood_functions.resize(m_Nposteriors);
   m_likelihood_functions_grid.resize(m_Nposteriors);
-  m_priors.resize(m_Nposteriors);
-  m_model_Parameters.resize(m_Nposteriors);
 
-  for(int N=0; N<m_Nposteriors; N++)
-  {
-    m_seeds[N] = m_posteriors[N]->m_get_seed();
+  for(int N=0; N<m_Nposteriors; N++) {
     m_use_grid[N] = m_posteriors[N]->get_m_use_grid();
     m_models[N] = m_posteriors[N]->get_m_model();
     m_datasets[N] = m_posteriors[N]->get_m_data();
@@ -120,16 +268,22 @@ void cbl::statistics::CombinedPosterior::set_all ()
     m_log_likelihood_functions[N] = m_posteriors[N]->get_m_log_likelihood_function();
     m_likelihood_functions[N] = m_posteriors[N]->get_m_likelihood_function();
     m_likelihood_functions_grid[N] = m_posteriors[N]->get_m_likelihood_function_grid();
-    m_priors[N] = m_posteriors[N]->get_m_prior();
-    m_model_Parameters[N] = m_posteriors[N]->get_model_parameters();
-
   }
 
-  m_model_parameters = m_model_Parameters[0];
-  m_Nparameters = m_model_parameters->nparameters();
-  m_seed = m_seeds[0];
+  m_seed = m_posteriors[0]->m_get_seed();
   m_set_seed(m_seed);
 
+  // Set the parameter indexes
+  m_parameter_indexes.resize(m_Nposteriors);
+  m_parameter_indexes2.resize(m_Nposteriors);
+
+  for(int N=0; N<m_Nposteriors; N++)
+    for (size_t k=0; k<m_parameter_names[N].size(); k++)
+      for(int j=0; j<m_Nparameters; j++)
+	if (m_parameter_names[N][k] == m_model_parameters->name(j)) {
+	  m_parameter_indexes[N].emplace_back(j);
+	  m_parameter_indexes2[N].emplace_back(j);
+	}
 }
 
 
@@ -183,7 +337,7 @@ void cbl::statistics::CombinedPosterior::importance_sampling (const int distNum,
   set_log_posterior(logpostA, logpostB);
 
   // initialize the Chain Mesh for interpolation
-  cbl::chainmesh::ChainMesh chmesh(cell_size,m_Nparameters);
+  cbl::chainmesh::ChainMesh chmesh(cell_size, m_Nparameters);
 
   // interpolate using chainmesh
   std::vector<double> logpostA_interpolated = chmesh.interpolate(parametersA, logpostA, parametersB, distNum, rMAX);
@@ -199,22 +353,22 @@ void cbl::statistics::CombinedPosterior::importance_sampling (const int distNum,
   std::vector<double> weights_A(logpostA.size());
   std::vector<double> weights_B(logpostB.size());
 
-  for(size_t ii=0; ii<logpostA.size();ii++) weights_A[ii] = exp(logpostB_interpolated[ii] - logpostA[ii] + shift_A);
-  for(size_t ii=0; ii<logpostB.size();ii++) weights_B[ii] = exp(logpostA_interpolated[ii] - logpostB[ii] + shift_B);
+  for(size_t ii=0; ii<logpostA.size(); ii++) weights_A[ii] = exp(logpostB_interpolated[ii] - logpostA[ii] + shift_A);
+  for(size_t ii=0; ii<logpostB.size(); ii++) weights_B[ii] = exp(logpostA_interpolated[ii] - logpostB[ii] + shift_B);
 
   // cut weights distribution if cut_sigma!=-1
-  if(cut_sigma!=-1)
- {
-   const double mean_A = cbl::Average(weights_A);
-   const double mean_B = cbl::Average(weights_B);
-   const double sigma_A = cbl::Sigma(weights_A);
-   const double sigma_B = cbl::Sigma(weights_B);
+  if(cut_sigma>0)
+    {
+      const double mean_A = cbl::Average(weights_A);
+      const double mean_B = cbl::Average(weights_B);
+      const double sigma_A = cbl::Sigma(weights_A);
+      const double sigma_B = cbl::Sigma(weights_B);
 
-   for(size_t ii=0; ii<weights_A.size(); ii++)
-     if(weights_A[ii]>mean_A+cut_sigma*sigma_A) weights_A[ii] = mean_A;
-   for(size_t ii=0; ii<weights_B.size(); ii++)
-     if(weights_B[ii]>mean_B+cut_sigma*sigma_B) weights_B[ii] = mean_B;
- }
+      for(size_t ii=0; ii<weights_A.size(); ii++)
+	if(weights_A[ii]>mean_A+cut_sigma*sigma_A) weights_A[ii] = mean_A;
+      for(size_t ii=0; ii<weights_B.size(); ii++)
+	if(weights_B[ii]>mean_B+cut_sigma*sigma_B) weights_B[ii] = mean_B;
+    }
 
   set_weight(weights_A, weights_B);
 }
@@ -330,18 +484,21 @@ void cbl::statistics::CombinedPosterior::sample_stretch_move (const double aa, c
 
   sampler.get_chain_function_acceptance(chain_values, m_log_posterior, m_acceptance);
 
-  for(int N=0; N<m_Nposteriors; N++)
-  {
-    m_model_Parameters[N]->set_chain_values(chain_values, n_walkers);
-
-    // set the best-fit parameters to the meadian values of the MCMC chain
-    m_model_Parameters[N]->set_bestfit_values(start, thin, nbins, m_generate_seed());
-  }
-
-  m_model_parameters = m_model_parameters;
+  m_model_parameters->set_chain_values(chain_values, n_walkers);
   m_model_parameters->set_bestfit_values(start, thin, nbins, m_generate_seed());
   m_weight.erase(m_weight.begin(), m_weight.end());
   m_weight.resize(m_log_posterior.size(), 1.);
+    
+  // Set the chain values also for each Model
+  for (size_t i=0; i<m_models.size(); i++) {
+    vector<vector<double>> probe_chain_values;
+    probe_chain_values.resize(m_parameter_indexes2[i].size());
+    for (size_t j=0; j<m_parameter_indexes2[i].size(); j++)
+      probe_chain_values[j] = chain_values[m_parameter_indexes2[i][j]];
+    m_models[i]->parameters()->set_chain_values(probe_chain_values, n_walkers);
+    m_models[i]->parameters()->set_bestfit_values(start, thin, nbins, m_generate_seed());
+  }
+
 }
 
 
@@ -351,20 +508,23 @@ void cbl::statistics::CombinedPosterior::sample_stretch_move (const double aa, c
 double cbl::statistics::CombinedPosterior::operator () (std::vector<double> &pp) const
 {
   pp = m_model_parameters->full_parameter(pp);
-  double prior = m_priors[0]->operator()(pp);
+  double prior = m_model_parameters->prior()->operator()(pp);
 
   double val = 1.;
 
   for(int N=0; N<m_Nposteriors; N++)
-  {
-    if(prior<=0)
     {
-      val = 0.;
-      break;
+      if(prior<=0)
+	{
+	  val = 0.;
+	  break;
+	}
+      std::vector<double> pp_single (m_parameter_indexes.size(), 0);
+      for (size_t ii=0; ii<pp_single.size(); ii++)
+	pp_single[ii] = pp[m_parameter_indexes[N][ii]];
+      val *= (m_use_grid[N]) ? m_likelihood_functions_grid[N](pp_single, m_likelihood_inputs[N]) : m_likelihood_functions[N](pp_single, m_likelihood_inputs[N]);
     }
-    val *= (m_use_grid[N]) ? m_likelihood_functions_grid[N](pp, m_likelihood_inputs[N]) : m_likelihood_functions[N](pp, m_likelihood_inputs[N]);
-
-  }
+  
   return val*prior;
 }
 
@@ -374,21 +534,25 @@ double cbl::statistics::CombinedPosterior::operator () (std::vector<double> &pp)
 
 double cbl::statistics::CombinedPosterior::log (std::vector<double> &pp) const
 {
-  pp = m_model_parameters->full_parameter(pp);
-  const double logprior = m_priors[0]->log(pp);
+  pp = m_model_parameters->full_parameter(pp);  
+  const double logprior = m_model_parameters->prior()->log(pp);  
 
   double val = 0.;
-
+  
   for(int N=0; N<m_Nposteriors; N++)
-  {
-    if (logprior>par::defaultDouble)
-      val += (m_use_grid[N]) ? m_log_likelihood_functions_grid[N](pp, m_likelihood_inputs[N]) : m_log_likelihood_functions[N](pp, m_likelihood_inputs[N]);
-    else
     {
-      val = par::defaultDouble;
-      break;
+      if (logprior>par::defaultDouble) {
+	std::vector<double> pp_single (m_parameter_indexes[N].size(), 0);
+	for (size_t ii=0; ii<pp_single.size(); ii++)
+	  pp_single[ii] = pp[m_parameter_indexes[N][ii]];
+	val += (m_use_grid[N]) ? m_log_likelihood_functions_grid[N](pp_single, m_likelihood_inputs[N]) : m_log_likelihood_functions[N](pp_single, m_likelihood_inputs[N]);
+      }
+      else
+	{
+	  val = par::defaultDouble;
+	  break;
+	}
     }
-  }
 
   return val+logprior;
 }
@@ -401,16 +565,16 @@ void cbl::statistics::CombinedPosterior::maximize (const std::vector<double> sta
 {
   vector<double> starting_par;
 
-  unsigned int npar_free = m_models[0]->parameters()->nparameters_free();
-  unsigned int npar = m_models[0]->parameters()->nparameters();
-
+  unsigned int npar = m_model_parameters->nparameters();
+  unsigned int npar_free = m_model_parameters->nparameters_free();
+  
   if (start.size()==npar_free)
     starting_par = start;
   else if (start.size()==npar)
     for (size_t i=0; i<npar_free; i++)
-      starting_par.push_back(start[m_models[0]->parameters()->free_parameter()[i]]);
+      starting_par.push_back(start[m_model_parameters->free_parameter()[i]]);
   else
-    ErrorCBL("check your inputs: start.size()="+conv(start.size(), par::fINT)+" must be equal to either npar_free="+conv(npar_free, par::fINT)+" or npar="+conv(npar, par::fINT)+"!", "maximize", "Posterior.cpp");
+    ErrorCBL("check your inputs: start.size()="+conv(start.size(), par::fINT)+" must be equal to either npar_free="+conv(npar_free, par::fINT)+" or npar="+conv(npar, par::fINT)+"!", "maximize", "CombinedPosterior.cpp");
 
   function<double(vector<double> &)> post = [this](vector<double> &pp) { return -this->log(pp); };
 
@@ -418,40 +582,34 @@ void cbl::statistics::CombinedPosterior::maximize (const std::vector<double> sta
   // extra check on epsilon
 
   function<bool(vector<double> &)> checkWrong = [&] (vector<double> &pp)
-    {
-      bool ch = true;
-      if (post(pp)<-par::defaultDouble)
-	     ch = false;
-      return ch;
-    };
+						{
+						  bool ch = true;
+						  if (post(pp)<-par::defaultDouble)
+						    ch = false;
+						  return ch;
+						};
 
   vector<double> par = starting_par;
   if (checkWrong(par))
-    ErrorCBL("The starting position is outside the prior range: the first input parameter must be changed!", "maximize", "CombinedPosterior.cpp");
-
+    ErrorCBL("The starting position is outside the prior range: the first input parameter must be changed!", "maximize", "CombinedPosterior.cpp");  
+  
   // loop on simplex side
   for (size_t i=0; i<npar_free; i++) {
     par = starting_par;
     par[i] += epsilon;
     if (checkWrong(par))
       ErrorCBL("The simplex side is outside prior range: the epsilon parameter or the starting position must be changed.", "maximize", "CombinedPosterior.cpp");
-  }
+  }  
 
   // everything is fine up to here... let's go
   coutCBL << "Maximizing the posterior..." << endl;
   vector<double> result = cbl::wrapper::gsl::GSL_minimize_nD(post, starting_par, {}, max_iter, tol, epsilon);
   // check if the result is inside the prior ranges
 
-  for(int N = 0; N<m_Nposteriors; N++)
-    if(m_priors[N]->log(result)<=par::defaultDouble)
-      ErrorCBL("the maximization ended with parameter values out of the priors: check your inputs or change the epsilon value!", "maximize", "CombinedPosterior.cpp");
+  if(m_model_parameters->prior()->log(result)<=par::defaultDouble)
+    ErrorCBL("the maximization ended with parameter values out of the priors: check your inputs or change the epsilon value!", "maximize", "CombinedPosterior.cpp");
 
   coutCBL << "Done!" << endl << endl;
-  for(int N=0; N<m_Nposteriors; N++)
-  {
-    m_model_Parameters[N]->set_bestfit_values(result);
-    //m_model_Parameters[N]->write_bestfit_info();
-  }
 
   m_model_parameters->set_bestfit_values(result);
   m_model_parameters->write_bestfit_info();
@@ -471,7 +629,7 @@ void cbl::statistics::CombinedPosterior::show_results (const int start, const in
     for (int i=0; i<m_Nparameters; i++){
       coutCBL << "Parameter: " << par::col_yellow << this->parameters()->name(i) << par::col_default << endl;
       coutCBL << "Weighted Average: " << cbl::Average(m_parameters[i], m_weight) << endl;
-      coutCBL << "Standard Deviation: " << cbl::Sigma(m_parameters[i]) << endl << endl;
+      coutCBL << "Standard Deviation: " << cbl::Sigma(m_parameters[i], m_weight) << endl << endl;
     }
   }
 }
@@ -499,13 +657,13 @@ void cbl::statistics::CombinedPosterior::write_results (const string output_dir,
     fout << setprecision(7);
 
     for(size_t ii=0; ii<m_weight.size(); ii++)
-    {
-      fout << ii;
-      for(int N=0; N<m_Nparameters; N++){
-        fout << setw(25) << std::fixed << m_parameters[N][ii];
+      {
+	fout << ii;
+	for(int N=0; N<m_Nparameters; N++){
+	  fout << setw(25) << std::fixed << m_parameters[N][ii];
+	}
+	fout << setw(25) << std::fixed << m_log_posterior[ii] << setw(25) << std::scientific << m_weight[ii] << endl;
       }
-      fout << setw(25) << std::fixed << m_log_posterior[ii] << setw(25) << std::scientific << m_weight[ii] << endl;
-    }
     fout.clear(); fout.close();
 
     coutCBL << "I wrote the file: " << file << endl;
@@ -558,17 +716,16 @@ void cbl::statistics::CombinedPosterior::write_chain_ascii (const string output_
       vector<double> pp(nparameters);
 
       for (int k=0; k<nparameters; k++) {
-	       pp[k] = m_model_parameters->chain_value(k, j, i);
-	        cbl::Print(m_model_parameters->chain_value(k, j, i), prec, ww, "", "  ", false, fout);
+	pp[k] = m_model_parameters->chain_value(k, j, i);
+	cbl::Print(m_model_parameters->chain_value(k, j, i), prec, ww, "", "  ", false, fout);
       }
 
-  double pr = 0.;
-  for(int N=0; N<m_Nposteriors; N++) pr += m_priors[N]->log(pp);
-	cbl::Print(m_log_posterior[j*n_walkers+i]-pr, prec, ww, "", "  ", false, fout);
-	cbl::Print(pr, prec, ww, "", "  ", false, fout);
+      double pr = m_model_parameters->prior()->log(pp);
+      cbl::Print(m_log_posterior[j*n_walkers+i]-pr, prec, ww, "", "  ", false, fout);
+      cbl::Print(pr, prec, ww, "", "  ", false, fout);
 
-  cbl::Print(m_log_posterior[j*n_walkers+i], prec, ww, "", "  ", false, fout);
-  cbl::Print(m_weight[j*n_walkers+i], prec, ww, "", "\n", false, fout);
+      cbl::Print(m_log_posterior[j*n_walkers+i], prec, ww, "", "  ", false, fout);
+      cbl::Print(m_weight[j*n_walkers+i], prec, ww, "", "\n", false, fout);
     }
   }
 
@@ -615,10 +772,9 @@ void cbl::statistics::CombinedPosterior::write_chain_fits (const string output_d
       }
 
 
-  double lpr = 0.;
-  for(int N=0; N<m_Nposteriors; N++) lpr += m_priors[N]->log(pp);
-	value[nparameters+1].emplace_back(m_log_posterior[j*n_walkers+i]-lpr);
-	value[nparameters+2].emplace_back(lpr);
+      double lpr = m_model_parameters->prior()->log(pp);
+      value[nparameters+1].emplace_back(m_log_posterior[j*n_walkers+i]-lpr);
+      value[nparameters+2].emplace_back(lpr);
 
       value[nparameters+3].emplace_back(m_log_posterior[j*n_walkers+i]);
       value[nparameters+4].emplace_back(m_weight[j*n_walkers+i]);
@@ -635,32 +791,29 @@ void cbl::statistics::CombinedPosterior::write_chain_fits (const string output_d
 
 void cbl::statistics::CombinedPosterior::write_model_from_chain (const std::string output_dir, const std::string output_file, const int start, const int thin)
 {
-  switch (m_models[0]->dimension()) {
+  for(size_t N=0; N<m_models.size(); N++) {
+  
+    switch (m_models[N]->dimension()) {
 
-  case Dim::_1D_:
-    {
-      vector<double> xvec;
-      for(int N=0; N<m_Nposteriors; N++)
+    case Dim::_1D_:
       {
-        xvec = m_datasets[N]->xx();
-        m_models[N]->write_from_chains(output_dir, std::to_string(N)+"_"+output_file, xvec, start, thin);
+	vector<double> xvec = m_datasets[N]->xx();
+	m_models[N]->write_from_chains(output_dir, std::to_string(N)+"_"+output_file, xvec, start, thin);
       }
-    }
-
-    break;
+      break;
+    
     case Dim::_2D_:
-    {
-      for(int N=0; N<m_Nposteriors; N++)
       {
-        vector<double> xvec = m_datasets[N]->xx();
-        vector<double> yvec = m_datasets[N]->yy();
-        m_models[N]->write_from_chains(output_dir, std::to_string(N)+"_"+output_file, xvec, yvec, start, thin);
+	vector<double> xvec = m_datasets[N]->xx();
+	vector<double> yvec = m_datasets[N]->yy();
+	m_models[N]->write_from_chains(output_dir, std::to_string(N)+"_"+output_file, xvec, yvec, start, thin);
       }
+      break;
+    
+    default:
+      ErrorCBL("the input dimension must be Dim::_1D_ or Dim::_2D_ !", "write_model_from_chain", "CombinedPosterior.cpp");
+      
     }
-
-    break;
-  default:
-    ErrorCBL("the input dimension must be Dim::_1D_ or Dim::_2D_ !", "write_model_from_chain", "CombinedPosterior.cpp");
   }
 }
 
@@ -703,38 +856,74 @@ void cbl::statistics::CombinedPosterior::write_maximization_results (const std::
 
 std::vector<std::vector<double>> cbl::statistics::CombinedPosterior::read (const std::string path, const std::string filename)
 {
-    std::vector< std::vector<double>> table;
-    std::fstream ifs;
+  std::vector< std::vector<double>> table;
+  std::fstream ifs;
 
-    ifs.open(path+filename);
+  ifs.open(path+filename);
 
-    while (true)
+  while (true)
     {
-        std::string line;
-        double buf;
-        getline(ifs, line);
+      std::string line;
+      double buf;
+      getline(ifs, line);
 
-        std::stringstream ss(line, std::ios_base::out|std::ios_base::in|std::ios_base::binary);
+      std::stringstream ss(line, std::ios_base::out|std::ios_base::in|std::ios_base::binary);
 
-        if (!ifs)
-            // mainly catch EOF
-            break;
+      if (!ifs)
+	// mainly catch EOF
+	break;
 
-        if (line[0] == '#' || line.empty())
-            // catch empty lines or comment lines
-            continue;
+      if (line[0] == '#' || line.empty())
+	// catch empty lines or comment lines
+	continue;
 
+      std::vector<double> row;
 
-        std::vector<double> row;
+      while (ss >> buf)
+	row.push_back(buf);
 
-        while (ss >> buf)
-            row.push_back(buf);
-
-        table.push_back(row);
-
+      table.push_back(row);
     }
 
-    ifs.close();
+  ifs.close();
 
-    return table;
+  return table;
+}
+
+
+// ============================================================================================
+
+
+double cbl::statistics::LogLikelihood_Gaussian_combined (std::vector<double> &likelihood_parameter, const std::shared_ptr<void> fixed_parameter)
+{
+  // ----- extract the parameters -----    
+  shared_ptr<statistics::STR_DependentProbes_data_model> pp = static_pointer_cast<statistics::STR_DependentProbes_data_model>(fixed_parameter);
+
+  // ----- compute the model values -----   
+  vector<double> computed_model;
+  for (size_t i=0; i<pp->models.size(); i++) {
+    std::vector<double> single_par ((int)(pp->par_indexes[i].size()));
+    for (size_t jj=0; jj<single_par.size(); jj++)
+      single_par[jj] = likelihood_parameter[pp->par_indexes[i][jj]];
+    std::vector<double> single_probe_model = pp->models[i]->operator()(pp->xx[i], single_par);
+    for (size_t kk=0; kk<single_probe_model.size(); kk++)
+      computed_model.emplace_back(single_probe_model[kk]);
+  }
+   
+  // ----- compute the difference between model and data at each bin -----    
+  vector<double> diff(pp->flat_data.size(), 0);
+  for (size_t i=0; i<pp->flat_data.size(); i++)
+    diff[i] = pp->flat_data[i]-computed_model[i];
+
+  // ----- define the inverse covariance matrix -----
+  data::CovarianceMatrix cov = *pp->covariance;
+  std::vector<std::vector<double>> inverse_covariance = cov.precision();
+  
+  // ----- estimate the Gaussian log-likelihood -----    
+  double LogLikelihood = 0.;
+  for (size_t i=0; i<pp->flat_data.size(); i++)
+    for (size_t j=0; j<pp->flat_data.size(); j++)
+      LogLikelihood += diff[i]*inverse_covariance[i][j]*diff[j];
+
+  return -0.5*LogLikelihood - sqrt(pow(2*cbl::par::pi, computed_model.size()) * cov.determinant());
 }

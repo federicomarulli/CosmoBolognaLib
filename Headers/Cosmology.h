@@ -4088,8 +4088,8 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
-       *  non-linear power spectrum
+       *  @param NL false \f$\rightarrow\f$ linear power spectrum;
+       *  true \f$\rightarrow\f$ non-linear power spectrum
        *
        *  @param redshift the redshift
        *
@@ -10142,6 +10142,67 @@ namespace cbl {
       double Pk_ThetaTheta_fitting_function (const double kk, const std::string method_Pk, const double redshift, const std::string author, const bool store_output, const std::string output_root, const bool NL, const int norm, double k_min, double k_max, const double prec, const std::string file_par, const bool unit1);
 
       /**
+       *  @brief the linear-order one-dimensional pairwise velocity
+       *  dispersion, \f$\sigma_{\mathrm{v}, \mathrm{lin}}\f$
+       *
+       *  This function computes the linear-order one-dimensional
+       *  pairwise velocity dispersion, \f$\sigma_{\mathrm{v},
+       *  \mathrm{lin}}\f$, as defined in Taruya et al. (2010) (Eq. 7
+       *  of https://arxiv.org/abs/1006.0699)
+       *
+       *  \f[ \sigma_{\mathrm{v}, \mathrm{lin}}^{2} = \frac{1}{3} \int
+       *  \frac{d^{3} \boldsymbol{q}}{(2 \pi)^{3}}
+       *  \frac{P_{\mathrm{lin}}(q, z)}{q^{2}} \f]
+       *
+       *  where \f$P_{\mathrm{lin}}(q, z)\f$ is the linear power
+       *  spectrum at a given redshift
+       *
+       *  @param redshift the redshift
+       *
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root the output_root parameter of the
+       *  parameter file used to compute the power spectrum; it can be
+       *  any name
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed to estimate the power spectrum
+       *  normalisation; this parameter is used only if norm=1
+       *
+       *  @param bin_k number of wave vector modules used for the
+       *  integration
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param file_par name of the parameter file; if a parameter
+       *  file is provided (i.e. file_par!=NULL), it will be used,
+       *  ignoring the cosmological parameters of the object
+       *
+       *  @param unit1 true \f$\rightarrow\f$ force cosmological units
+       *
+       *  @return \f$\sigma_{\mathrm{v}, \mathrm{lin}}\f$
+       */
+      double sigma_v (const double redshift=0., const std::string method_Pk="CAMB", const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=5., const int bin_k=512, const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      
+      /**
        *  @brief the multipoles of the A and B correction terms for
        *  the TNS model 
        *
@@ -11674,14 +11735,17 @@ namespace cbl {
       double zeta_ell_1_factor (const double b1, const double beta);
       
       /**
-       * @brief the multiplicative factor for \f$ \zeta_2 \f$, with local bias
+       * @brief the multiplicative factor for \f$ \zeta_2 \f$, with
+       * local bias
        *
-       * This function computes the multiplicative factor for \f$ \zeta_2 \f$, with local bias:
+       * This function computes the multiplicative factor for \f$
+       * \zeta_2 \f$, with local bias:
        *
-       * \f[
-       *  l = 2 : b_1^3 \left( \frac{8}{21} \left[ 1+\frac{4}{3}\beta+\frac{52}{21}\beta^2+
-       *  \frac{81}{49}\beta^3+\frac{12}{35}\beta^4\right]+\frac{32}{945}\gamma \beta^2  \right)
-       * \f]
+       * \f[ l = 2 : b_1^3 \left( \frac{8}{21} \left[
+       *  1+\frac{4}{3}\beta+\frac{52}{21}\beta^2 +
+       *  \frac{81}{49}\beta^3 +
+       *  \frac{12}{35}\beta^4\right]+\frac{32}{945}\gamma \beta^2
+       *  \right) \f]
        *
        * with \f$b_1\f$ the linear bias, \f$\gamma\f$ the ratio of quadratic and linear bias, 
        * \f$\gamma= 2 b_2 / b_1 \f$ and \f$ \beta = f/b_1 \f$ with \f$ f \f$ the linear growth rate
@@ -11951,7 +12015,8 @@ namespace cbl {
        * @param use_k if true, use the \f$k_l\f$ part of the model
        * \f$O(\beta^2)\f$
        *
-       * @return the halo redshift space three-point correlation function
+       * @return the halo redshift space three-point correlation
+       * function
        */
       std::vector<double> zeta_RSD (const double r1, const double r2, const int ntheta, const double b1, const double b2, const double bt, const double redshift, const std::string method_Pk, const int step_r, const int step_k, const bool store_output=true, const std::string output_root="test", const bool force_RealSpace = false, const bool include_limits=false, const int max_ll=4, const bool use_k=false);
 
