@@ -45,7 +45,7 @@ using namespace cbl;
 // ============================================================================================
 
 
-std::vector<std::vector<double>> cbl::modelling::twopt::xi2D_dispersionModel (const std::vector<double> rp, const std::vector<double> pi, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<std::vector<double>> cbl::modelling::twopt::xi2D_dispersion (const std::vector<double> rp, const std::vector<double> pi, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
@@ -53,21 +53,21 @@ std::vector<std::vector<double>> cbl::modelling::twopt::xi2D_dispersionModel (co
 
   // ----- input parameters -----
 
-  // AP parameter: D_A,1(z)/D_A,2(z)
-  double AP1 = parameter[0];
-
-  // AP parameter: H_2(z)/H_1(z)
-  double AP2 = parameter[1];
-
   // f(z)*sigma8(z)
-  double fsigma8 = parameter[2];
+  double fsigma8 = parameter[0];
   
   // bias(z)*sigma8(z)
-  double bsigma8 = parameter[3];
+  double bsigma8 = parameter[1];
 
   // the dispersion in the pairwise random peculiar velocities
-  double sigma12 = parameter[4];
+  double sigmav = parameter[2];
+  
+  // AP parameter: D_A,1(z)/D_A,2(z)
+  double AP1 = parameter[3];
 
+  // AP parameter: H_2(z)/H_1(z)
+  double AP2 = parameter[4];
+  
 
   // ----- derived parameters -----
 
@@ -80,14 +80,14 @@ std::vector<std::vector<double>> cbl::modelling::twopt::xi2D_dispersionModel (co
   vector<vector<double>> model(rp.size(), vector<double>(pi.size(), 0.));
 
   // return the 2D correlation function in Cartesian coordinates modelled with the dispersion model
-  if (sigma12 == 0)
+  if (sigmav == 0)
     for (size_t i=0; i<rp.size(); i++)
       for (size_t j=0; j<pi.size(); j++) 
 	model[i][j] = xi2D_lin_model(AP1*rp[i], AP2*pi[j], beta, bias, pp->func_xi, pp->func_xi_, pp->func_xi__, pp->bias_nl, pp->bA);
   else
     for (size_t i=0; i<rp.size(); i++)
       for (size_t j=0; j<pi.size(); j++) 
-	model[i][j] = xi2D_model(AP1*rp[i], AP2*pi[j], beta, bias, sigma12, pp->func_xi, pp->func_xi_, pp->func_xi__, pp->var, pp->FV, pp->bias_nl, pp->bA, pp->v_min, pp->v_max, pp->step_v);
+	model[i][j] = xi2D_model(AP1*rp[i], AP2*pi[j], beta, bias, sigmav, pp->func_xi, pp->func_xi_, pp->func_xi__, pp->var, pp->FV, pp->bias_nl, pp->bA, pp->v_min, pp->v_max, pp->step_v);
 
   return model;
 }

@@ -289,9 +289,10 @@ namespace cbl {
        *  @param input_file input data file
        *
        *  @param skip_nlines the header lines to be skipped
-       *
-       *  @param column_x the column of x values in the input file; if
-       *  it is not provided, the first column will be used by default
+       *    
+       *  @param column vector containing the column of x values in
+       *  the input file; if it is not provided, the first column will
+       *  be used by default
        *
        *  @param column_data the column of data values in the input
        *  file; the size of column_data is the number of data to be
@@ -312,10 +313,16 @@ namespace cbl {
        *  that only 1 random vector has to be read; if the input file
        *  has only 2 columns, the errors will be set to 1
        *
-       *  @warning column_x, column_data, column_errors are not used
-       *  in the current implementation: work in progress!
+       *  @param column_edges vector containing the columns of x bin
+       *  edge values in the input file; if it is not provided, the
+       *  third and four columns after the column of x values will be
+       *  used; if these columns do no exist the edges are not read
+       *
+       *  @warning column, column_data, column_errors, column_edges
+       *  are not used in the current implementation: work in
+       *  progress!
        */
-      void read (const std::string input_file, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={}) override;
+      void read (const std::string input_file, const int skip_nlines=0, const std::vector<int> column={1}, const std::vector<int> column_data={}, const std::vector<int> column_errors={}, const std::vector<int> column_edges={}) override;
       
       /**
        *  @brief read the data
@@ -324,8 +331,9 @@ namespace cbl {
        *
        *  @param skip_nlines the header lines to be skipped
        *
-       *  @param column_x the column of x values in the input file; if
-       *  it is not provided, the first column will be used by default
+       *  @param column vector containing the column of x values in
+       *  the input file; if it is not provided, the first column will
+       *  be used by default
        *
        *  @param column_data the column of data values in the input
        *  file; the size of column_data is the number of data to be
@@ -346,10 +354,16 @@ namespace cbl {
        *  that only 1 random vector has to be read; if the input file
        *  has only 2 columns, the errors will be set to 1
        *
-       *  @warning column_x, column_data, column_errors are not used
-       *  in the current implementation: work in progress!
+       *  @param column_edges vector containing the columns of x bin
+       *  edge values in the input file; if it is not provided, the
+       *  third and four columns after the column of x values will be
+       *  used; if these columns do no exist the edges are not read
+       *
+       *  @warning column, column_data, column_errors, column_edges
+       *  are not used in the current implementation: work in
+       *  progress!
        */
-      void read (const std::vector<std::string> input_files, const int skip_nlines=0, const int column_x=0, const std::vector<int> column_data={}, const std::vector<int> column_errors={}) override;
+      void read (const std::vector<std::string> input_files, const int skip_nlines=0, const std::vector<int> column={1}, const std::vector<int> column_data={}, const std::vector<int> column_errors={}, const std::vector<int> column_edges={}) override;
 
       /**
        *  @brief print the data on screen

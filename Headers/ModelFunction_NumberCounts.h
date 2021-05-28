@@ -36,6 +36,8 @@
 #define __MODFUNCNC__
 
 #include "Cosmology.h"
+#include "NumberCounts.h"
+#include "Cluster.h"
 
 
 // ============================================================================
@@ -58,12 +60,33 @@ namespace cbl {
 
 	/// false &rarr; data not from a simulation snapshot; true &rarr; data from a simulation snapshot 
 	bool isSnapshot;
+	
+	/// the x variable bin edges
+	std::vector<double> edges_x;
+	
+	/// the y variable bin edges
+	std::vector<double> edges_y;
 
 	/// fiducial cosmology
 	std::shared_ptr<cosmology::Cosmology> cosmology;
+	
+	/// pointer to the object of the class Cluster
+	std::shared_ptr<catalogue::Cluster> cluster;
 
 	/// cosmological parameters
 	std::vector<cosmology::CosmologicalParameter> Cpar;
+	
+	/// pointer to the redshift evolution function in the scaling relation
+	double (*fz)(std::vector<double>, std::shared_ptr<void>);
+	
+	/// pointer to the multiplicative term in the transfer function
+	double (*transfer_func)(const double, const double, const double, const std::string, const double, const std::string, std::shared_ptr<void>);
+	
+	/// pointer to the redshift error
+	double (*z_error)(std::vector<double>);
+	
+	/// pointer to the mass proxy error
+	double (*proxy_error)(std::vector<double>);
 
 	/// redshift
 	double redshift;
@@ -85,9 +108,6 @@ namespace cbl {
 
 	/// vector of wave vector modules
 	std::vector<double> kk;
-
-	/// the output_dir directory where the output of external codes are written
-	std::string output_dir;
 
 	/// true \f$\rightarrow\f$ the output files created by the Boltzmann solver are stored; false \f$\rightarrow\f$ the output files are removed
 	bool store_output;
@@ -112,6 +132,9 @@ namespace cbl {
 
 	/// author(s) who proposed the mass function
 	std::string model_MF;
+	
+	/// author(s) who proposed the bias function
+	std::string model_bias;
 
         /// minimum redshift
 	double z_min; 
@@ -151,6 +174,21 @@ namespace cbl {
 	
 	/// function to interpolate the selection function in mass and redshift
 	std::shared_ptr<glob::FuncGrid2D> interp_SelectionFunction;
+	
+	/// number counts weights derived from the selection function
+	std::vector<double> SF_weights;
+	
+	/// redshift pivot in the mass-observable scaling relation
+	double z_pivot;
+	
+	/// mass proxy pivot in the mass-observable scaling relation
+	double proxy_pivot;
+	
+	/// mass pivot in the mass-observable scaling relation
+	double mass_pivot;
+	
+	/// the base of the logarithm used in the mass-mass proxy scaling relation
+	double log_base;
 
 	/**
 	 *  @brief default constructor
@@ -578,16 +616,203 @@ namespace cbl {
        * @param interp_DlnsigmaM interpolating function of \f$
        * \mathrm{d} \ln(\sigma(M)) / \mathrm{d} M \f$
        *
-       * @param npt_redshift number of redshifts bins to compute the
-       * integral
-       *
-       * @param npt_mass number of mass bins to compute the integral
-       *
        * @return values of the mass function as a function of redshift
        * and mass
        */
-      double number_counts(const double redshift_min, const double redshift_max, const double Mass_min, const double Mass_max, cosmology::Cosmology cosmology, const double Area, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const glob::FuncGrid interp_sigmaM, const  glob::FuncGrid interp_DlnsigmaM, const int npt_redshift=10, const int npt_mass=10);
-
+      double number_counts(const double redshift_min, const double redshift_max, const double Mass_min, const double Mass_max, cosmology::Cosmology cosmology, const double Area, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const glob::FuncGrid interp_sigmaM, const  glob::FuncGrid interp_DlnsigmaM);
+      
+      /**
+       * @brief compute the number counts as function
+       * of mass proxy and redshift, with this functional
+       * form:
+       *
+       * \f$ \langle N(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j})\rangle 
+       *  = w(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j})\,\,\Omega 
+       *  \int_{0}^{\infty} {\rm d} z_{\rm tr}\,\,
+       *  \frac{{\rm d} V}{{\rm d} z_{\rm tr}{\rm d}\Omega}\int_{0}^{\infty} 
+       *  {\rm d} M_{\rm tr} \,\,\frac{{\rm d} n(M_{\rm tr},z_{\rm tr})}{{\rm d} M_{\rm tr}}\,\, 
+       *  \int_{0}^{\infty}{\rm d}\lambda_{\rm tr}\,\,
+       *  P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\,
+       *  \int_{\Delta z_{\text{ob},j}}{\rm d} z_{\rm ob} 
+       *  \,\,P(z_{\rm ob}|z_{\rm tr})\,
+       *  \int_{\Delta\lambda_{\text{ob},i}}{\rm d} \lambda_{\rm ob} 
+       *  \,\,P(\lambda_{\rm ob}|\lambda_{\rm tr}). \f$
+       *
+       *  The distirbution \f$P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\f$ is expressed as:
+       *
+       *  \f$P(\lambda_{\rm tr}|M_{\rm tr},z_{\rm tr})= 
+       *  P(M_{\rm tr}|\lambda_{\rm tr},z_{\rm tr})\,
+       *  P(\lambda_{\rm tr}|z_{\rm tr})\,/\,P( M_{\rm tr}|z_{\rm tr}),\f$
+       *
+       * @param fz redshift evolution function in the scaling relation
+       *
+       * @param z_error relative or absolute error on the redshift
+       *
+       * @param proxy_error relative or absolute error on the mass proxy
+       *
+       * @param transfer_func the transfer function factor for the super-sample covariance
+       *
+       * @param redshift_min minimum redshift
+       *
+       * @param redshift_max maximum redshift
+       *
+       * @param proxy_min minimum mass proxy
+       *
+       * @param proxy_max maximum mass proxy
+       *
+       * @param cosmology the cosmology 
+       *
+       * @param cluster the cluster object
+       *
+       * @param Area the area in degrees
+       *
+       * @param model_MF author(s) who proposed the mass function;
+       * valid authors are: PS (Press & Schechter), ST (Sheth &
+       * Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       * al. 2006), Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH
+       * (halo MF by Shen et al. 2006), ShenF (filament MF by Shen et
+       * al. 2006), ShenS (sheet MF by Shen et al. 2006), Tinker
+       * (Tinker et al. 2008), Crocce (Crocce et al. 2010),
+       * Angulo_FOF (FoF MF by Angulo et al. 2012), Angulo_Sub
+       * (SUBFIND MF by Angulo et al. 2012), Watson_FOF (FoF MF by
+       * Watson et al. 2012), Watson_SOH (Spherical Overdensity halo
+       * MF by Watson et al. 2012), Manera (Manera et al. 2010),
+       * Bhattacharya (Bhattacharya et al. 2011), Courtin (Courtin et
+       * al. 2010), Peacock (by Peacock at al. 2007)
+       *
+       * @param model_bias the bias model, used for the computation 
+       * of the super-sample covariance
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       * @param Delta \f$\Delta\f$: the overdensity, defined as the
+       * mean interior density relative to the background
+       *
+       * @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
+       * virial overdensity
+       *
+       * @param interp_sigmaM interpolating function of \f$
+       * \sigma(M)\f$
+       *
+       * @param interp_DlnsigmaM interpolating function of \f$
+       * \mathrm{d} \ln(\sigma(M)) / \mathrm{d} M \f$
+       *
+       * @param proxy_pivot mass proxy pivot in the scaling relation
+       *
+       * @param z_pivot redshift pivot in the scaling relation
+       *
+       * @param mass_pivot mass pivot in the scaling relation
+       *
+       * @param log_base logarithmic base used in the scaling relation
+       *
+       * @param weight weight derived from the selection function
+       *
+       * @return values of the mass function as a function of redshift
+       * and mass proxy
+       */
+      double counts_proxy(double (*fz)(std::vector<double>, std::shared_ptr<void>), double (*z_error)(std::vector<double>), double (*proxy_error)(std::vector<double>), double (*transfer_func)(const double, const double, const double, const std::string, const double, const std::string, std::shared_ptr<void>), const double redshift_min, const double redshift_max, const double proxy_min, const double proxy_max, cbl::cosmology::Cosmology cosmology, cbl::catalogue::Cluster cluster, const double Area, const std::string model_MF, const std::string model_bias, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const double proxy_pivot, const double z_pivot, const double mass_pivot, const double log_base, const double weight);
+      
+      /**
+       * @brief compute the number counts as function
+       * of mass proxy and redshift, with this functional
+       * form:
+       *
+       * \f$ \langle N(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j})\rangle 
+       *  = w(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j})\,\,\Omega 
+       *  \int_{0}^{\infty} {\rm d} z_{\rm tr}\,\,
+       *  \frac{{\rm d} V}{{\rm d} z_{\rm tr}{\rm d}\Omega}\int_{0}^{\infty} 
+       *  {\rm d} M_{\rm tr} \,\,\frac{{\rm d} n(M_{\rm tr},z_{\rm tr})}{{\rm d} M_{\rm tr}}\,\, 
+       *  \int_{0}^{\infty}{\rm d}\lambda_{\rm tr}\,\,
+       *  P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\,
+       *  \int_{\Delta z_{\text{ob},j}}{\rm d} z_{\rm ob} 
+       *  \,\,P(z_{\rm ob}|z_{\rm tr})\,
+       *  \int_{\Delta\lambda_{\text{ob},i}}{\rm d} \lambda_{\rm ob} 
+       *  \,\,P(\lambda_{\rm ob}|\lambda_{\rm tr}). \f$
+       *
+       *  The distirbution \f$P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\f$ is 
+       *  a log-normal whose mean is given by the mass-mass proxy
+       *  relation, i.e. 
+       *
+       *  \f$\log (\lambda/\lambda_{\rm piv}) = \alpha + \beta 
+       *  \log (M/M_{\rm piv}) + \gamma \log (f(z)),\f$
+       *
+       *  and whose standard deviation is given by the intrinsic scatter, \f$ \sigma_{\rm intr} \f$, expressed as:
+       *
+       *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{M} 
+       *  \log (M/M_{\rm piv})^{e_{M}} + \sigma_z \log (f(z))^{e_z}. \f$
+       *
+       * @param fz redshift evolution function in the scaling relation
+       *
+       * @param z_error relative or absolute error on the redshift
+       *
+       * @param proxy_error relative or absolute error on the mass proxy
+       *
+       * @param transfer_func the transfer function factor for the super-sample covariance
+       *
+       * @param redshift_min minimum redshift
+       *
+       * @param redshift_max maximum redshift
+       *
+       * @param proxy_min minimum mass proxy
+       *
+       * @param proxy_max maximum mass proxy
+       *
+       * @param cosmology the cosmology 
+       *
+       * @param cluster the cluster object
+       *
+       * @param Area the area in degrees
+       *
+       * @param model_MF author(s) who proposed the mass function;
+       * valid authors are: PS (Press & Schechter), ST (Sheth &
+       * Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       * al. 2006), Reed, (Reed et al. 2007), Pan (Pan 2007), ShenH
+       * (halo MF by Shen et al. 2006), ShenF (filament MF by Shen et
+       * al. 2006), ShenS (sheet MF by Shen et al. 2006), Tinker
+       * (Tinker et al. 2008), Crocce (Crocce et al. 2010),
+       * Angulo_FOF (FoF MF by Angulo et al. 2012), Angulo_Sub
+       * (SUBFIND MF by Angulo et al. 2012), Watson_FOF (FoF MF by
+       * Watson et al. 2012), Watson_SOH (Spherical Overdensity halo
+       * MF by Watson et al. 2012), Manera (Manera et al. 2010),
+       * Bhattacharya (Bhattacharya et al. 2011), Courtin (Courtin et
+       * al. 2010), Peacock (by Peacock at al. 2007)
+       *
+       * @param model_bias the bias model, used for the computation 
+       * of the super-sample covariance
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       * @param Delta \f$\Delta\f$: the overdensity, defined as the
+       * mean interior density relative to the background
+       *
+       * @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
+       * virial overdensity
+       *
+       * @param interp_sigmaM interpolating function of \f$
+       * \sigma(M)\f$
+       *
+       * @param interp_DlnsigmaM interpolating function of \f$
+       * \mathrm{d} \ln(\sigma(M)) / \mathrm{d} M \f$
+       *
+       * @param proxy_pivot mass proxy pivot in the scaling relation
+       *
+       * @param z_pivot redshift pivot in the scaling relation
+       *
+       * @param mass_pivot mass pivot in the scaling relation
+       *
+       * @param log_base logarithmic base used in the scaling relation
+       *
+       * @param weight weight derived from the selection function
+       *
+       * @return values of the mass function as a function of redshift
+       * and mass proxy
+       */
+      double counts_proxy_classic(double (*fz)(std::vector<double>, std::shared_ptr<void>), double (*z_error)(std::vector<double>), double (*proxy_error)(std::vector<double>), double (*transfer_func)(const double, const double, const double, const std::string, const double, const std::string, std::shared_ptr<void>), const double redshift_min, const double redshift_max, const double proxy_min, const double proxy_max, cbl::cosmology::Cosmology cosmology, cbl::catalogue::Cluster cluster, const double Area, const std::string model_MF, const std::string model_bias, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const double proxy_pivot, const double z_pivot, const double mass_pivot, const double log_base, const double weight);
+      
     }
   }
 }

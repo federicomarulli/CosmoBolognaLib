@@ -100,7 +100,7 @@ namespace cbl {
        *  @name Constructors/destructors
        */
       ///@{ 
-
+      
       /**
        *  @brief default constructor
        */
@@ -163,8 +163,6 @@ namespace cbl {
        * @brief set the model function, for Model2D
        *
        * @param function pointer to a model_function_2D
-       *
-       *  
        */
       void set_function (const model_function_2D function)
       { (void)function; ErrorCBL("", "set_function", "Model.h"); } 
@@ -173,8 +171,6 @@ namespace cbl {
        *  @brief set the model inputs
        *
        *  @param inputs the inputs of the model
-       *
-       *  
        */
       void set_inputs (std::shared_ptr<void> inputs) { m_inputs = inputs; }
 
@@ -182,8 +178,6 @@ namespace cbl {
        *  @brief set the model parameters
        * 
        *  @param parameters pointer to parameters
-       *
-       *  
        */
       void set_parameters (const std::shared_ptr<ModelParameters> parameters) {m_parameters = parameters;}
 
@@ -195,8 +189,6 @@ namespace cbl {
        *  @param parameterTypes the parameter types
        *
        *  @param parameterNames the parameter names
-       *
-       *  
        */
       void set_parameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames);
 

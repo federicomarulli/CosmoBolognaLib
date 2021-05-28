@@ -64,7 +64,7 @@ def com (ex, language, input):
 ### function to check if the example is ok ###
 
 def check (dir, file, language, input=""):
-    if (("ALL" in sys.argv and language!="python3") or (file in sys.argv and "C++" in sys.argv and language=="C++") or (file in sys.argv and "python" in sys.argv and language=="python") or (file in sys.argv and "python3" in sys.argv and language=="python3") or ("all" in sys.argv and "python" in sys.argv and language=="python") or ("all" in sys.argv and "python3" in sys.argv and language=="python3") or ("all" in sys.argv and "C++" in sys.argv and language=="C++")):
+    if (("ALL" in sys.argv and language!="python") or (file in sys.argv and "C++" in sys.argv and language=="C++") or (file in sys.argv and "python" in sys.argv and language=="python") or (file in sys.argv and "python3" in sys.argv and language=="python3") or ("all" in sys.argv and "python" in sys.argv and language=="python") or ("all" in sys.argv and "python3" in sys.argv and language=="python3") or ("all" in sys.argv and "C++" in sys.argv and language=="C++")):
         print("\n\n-----> Testing", file, "<-----\n")
         os.chdir(cwd+"/Examples/"+dir)
         com(file, language, input)
@@ -80,7 +80,12 @@ cwd = os.getcwd()
 ### compile the CBL ###
 
 if not ("nocompile" in sys.argv):
-    out = os.system("make clean && make FLAGS=\"-O0 -g\" && make allExamples FLAGS=\"-O0 -g\"")
+    comm = "make clean && make FLAGS=\"-O0 -g\" && "
+    if ("python3" in sys.argv):
+        comm = comm+"make allExamples PY=python3 FLAGS=\"-O0 -g\""
+    else:
+        comm = comm+"make allExamples PY=python2 FLAGS=\"-O0 -g\""
+    out = os.system(comm)
     check_sys(out)
 
 
@@ -119,6 +124,8 @@ check("statistics/codes", "fit", "C++")
 check("statistics/codes", "sampler", "C++")
 
 check("catalogue", "catalogue", "C++") 
+
+check("lognormal/codes", "lognormal", "C++") 
 
 check("numberCounts/codes", "numberCounts", "C++")
 check("numberCounts/codes", "numberCounts_errors", "C++")

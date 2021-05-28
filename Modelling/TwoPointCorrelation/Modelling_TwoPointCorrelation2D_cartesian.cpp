@@ -87,7 +87,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian::set_fiduc
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian::set_model_dispersionModel_AP (const statistics::PriorDistribution alpha_perp_prior, const statistics::PriorDistribution alpha_par_prior, const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigma12_prior)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian::set_model_dispersion (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution alpha_perp_prior, const statistics::PriorDistribution alpha_par_prior)
 {
   // compute the fiducial dark matter two-point correlation function and associated quantities
   set_fiducial_xiDM();
@@ -99,30 +99,18 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian::set_model
 
   vector<string> parameterName(nparameters);
 
-  parameterName[0] = "alpha_perp";
-  parameterName[1] = "alpha_par";
-  parameterName[2] = "f*sigma8";
-  parameterName[3] = "b*sigma8";
-  parameterName[4] = "sigma12";
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b*sigma8";
+  parameterName[2] = "sigmav";
+  parameterName[3] = "alpha_perp";
+  parameterName[4] = "alpha_par";
+  
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigmav_prior, alpha_perp_prior, alpha_par_prior};
 
-  vector<statistics::PriorDistribution> priors = {alpha_perp_prior, alpha_par_prior, fsigma8_prior, bsigma8_prior, sigma12_prior};
-
-  //set the priors
+  // set the priors
   m_set_prior(priors);
 
   // construct the model
-  m_model = make_shared<statistics::Model2D>(statistics::Model2D(&xi2D_dispersionModel, nparameters, parameterType, parameterName, m_data_model)); 
+  m_model = make_shared<statistics::Model2D>(statistics::Model2D(&xi2D_dispersion, nparameters, parameterType, parameterName, m_data_model)); 
 
-}
-
-
-// ============================================================================================
-
-
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian::set_model_dispersionModel (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigma12_prior)
-{
-  const statistics::PriorDistribution alpha_perp_prior {cbl::glob::DistributionType::_Constant_, 1.}; 
-  const statistics::PriorDistribution alpha_par_prior {cbl::glob::DistributionType::_Constant_, 1.}; 
-
-  set_model_dispersionModel_AP(alpha_perp_prior, alpha_par_prior, fsigma8_prior, bsigma8_prior, sigma12_prior);
 }

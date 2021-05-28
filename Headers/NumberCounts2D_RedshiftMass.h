@@ -62,7 +62,6 @@ namespace cbl {
        *
        *  This is the base class used to measure the 
        *  mass-redshift number counts
-       *
        */
       class NumberCounts2D_RedshiftMass : public NumberCounts2D {
 
@@ -75,14 +74,11 @@ namespace cbl {
 
 	  /**
 	   *  @brief default constructor
-	   *
-	   *  2D_RedshiftMass
 	   */
 	  NumberCounts2D_RedshiftMass () {}
 
 	  /**
 	   *  @brief default destructor
-	   *  
 	   */
 	  virtual ~NumberCounts2D_RedshiftMass () = default;
 
@@ -111,9 +107,27 @@ namespace cbl {
 	   *
 	   * @param fact factor used to normalized the distribution
 	   *
-	   * 2D_RedshiftMass
+	   * @param bin_type1 the var1 bin type
+	   *
+	   * @param bin_type2 the var2 bin type
 	   */
-	  NumberCounts2D_RedshiftMass (const catalogue::Catalogue data, const size_t nbins1, const size_t nbins2, const double minVar1=par::defaultDouble, const double maxVar1=par::defaultDouble, const double minVar2=par::defaultDouble, const double maxVar2=par::defaultDouble, const double shift1=0.5, const double shift2=0.5, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.) : NumberCounts2D (catalogue::Var::_Redshift_, BinType::_linear_, catalogue::Var::_Mass_, BinType::_logarithmic_, data, nbins1, nbins2, minVar1, maxVar1, minVar2, maxVar2, shift1, shift2, hist_type, fact) {} 
+	  NumberCounts2D_RedshiftMass (const catalogue::Catalogue data, const size_t nbins1, const size_t nbins2, const double minVar1=par::defaultDouble, const double maxVar1=par::defaultDouble, const double minVar2=par::defaultDouble, const double maxVar2=par::defaultDouble, const double shift1=0.5, const double shift2=0.5, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1., const BinType bin_type1=BinType::_linear_, const BinType bin_type2=BinType::_logarithmic_) : NumberCounts2D (catalogue::Var::_Redshift_, bin_type1, catalogue::Var::_Mass_, bin_type2, data, nbins1, nbins2, minVar1, maxVar1, minVar2, maxVar2, shift1, shift2, hist_type, fact) {} 
+	  
+	  /**
+	   * @brief constructor
+	   * 
+	   * @param data object of class Catalogue
+	   *
+	   * @param vec_edges1 the bin edges for var1
+	   *
+	   * @param vec_edges2 the bin edges for var2
+	   * 
+	   * @param hist_type the type of histogram
+	   *
+	   * @param fact factor used to normalized the distribution
+	   *
+	   */
+	  NumberCounts2D_RedshiftMass (const catalogue::Catalogue data, const std::vector<double> vec_edges1, const std::vector<double> vec_edges2, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.) : NumberCounts2D (catalogue::Var::_Redshift_, catalogue::Var::_Mass_, vec_edges1, vec_edges2, data, hist_type, fact) {} 
 
 	  ///@}
 

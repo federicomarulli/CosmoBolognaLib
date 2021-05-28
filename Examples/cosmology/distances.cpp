@@ -21,7 +21,7 @@ int main () {
     // ---------------- set the cosmological parameters ------------
     // -------------------------------------------------------------
 
-    cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
+    cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck18_};
 
 
     // ---------------------------------------------------------------------------------------

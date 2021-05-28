@@ -200,6 +200,12 @@
  *  This example shows how to estimate f*sigma8(z=1)
  */
 /**
+ *  @example Pk_dynamical_DE.cpp
+ *
+ *  This example shows how to compute the dark matter power spectrum
+ *  and growth rate
+ */
+/**
  *  @example model_cosmology.cpp
  *
  *  This example shows how to estimate f*sigma8(z=1)
@@ -230,6 +236,12 @@
  *
  *  This example shows how to construct a catalogue of extragalactic
  *  objects
+ */
+/**
+ *  @example lognormal.cpp
+ *
+ *  This example shows how to construct a log-normal density field
+ *  catalogue
  */
 /**
  * @example 2pt_monopole.cpp 
@@ -373,7 +385,7 @@
 /**
  *  @example divide_catalogue.py
  *
- *  This example shows how to divide the a catalogue in sub regions
+ *  This example shows how to divide a catalogue in sub-regions
  */
 /**
  *  @example mask_catalogue.py
@@ -461,6 +473,15 @@
  *  notebook</a>
  */
 /**
+ *  @example combinedPosterior.ipynb 
+ *  
+ *  This \b notebook shows how to combine posterior distributions
+ *
+ *  To see the notebook, click here: <a
+ *  href="https://github.com/federicomarulli/CosmoBolognaLib/blob/master/Examples/statistics/codes/combinedPosterior.ipynb">
+ *  notebook</a>
+ */
+/**
  *  @example CLeaning_Algorithm_for_Void_Abundances.ipynb
  *  
  *  This \b notebook explains how to clean cosmic void catalogues and
@@ -485,6 +506,10 @@
  *  
  *  This \b notebook explains how to compute the de-wiggled power
  *  spectrum model
+ *
+ *  To see the notebook, click here: <a
+ *  href="https://github.com/federicomarulli/CosmoBolognaLib/blob/master/Examples/clustering/codes/no_wiggles_pk.ipynb">
+ *  notebook</a>
  */
 /**
  *  @example BAO_primer.ipynb 
@@ -537,7 +562,10 @@ namespace cbl {
 		      _linear_,
       
 		      /// logarithmic binning
-		      _logarithmic_
+		      _logarithmic_,
+
+		      /// custom binning
+		      _custom_
       
   };
 
@@ -827,7 +855,7 @@ namespace cbl {
    *  beep
    */
   inline void Beep (const std::string beep="beep")
-  { if (system(("say "+beep).c_str())) {} }
+  { if (system(("command -v say >/dev/null && { say "+beep+"; }").c_str())) {} }
 
   /**
    *  @brief check if the value of a [string] variable has already
@@ -835,8 +863,8 @@ namespace cbl {
    *
    *  @param var a string variable
    *
-   *  @return if var is different than par::defaultString \f$ \rightarrow \f$ true;
-   *  else \f$ \rightarrow \f$ false
+   *  @return if var is different than par::defaultString \f$
+   *  \rightarrow \f$ true; else \f$ \rightarrow \f$ false
    */
   inline bool isSet (const std::string var) 
   { return (var!=cbl::par::defaultString) ? true : false; }
@@ -916,12 +944,24 @@ namespace cbl {
   /**
    *  @brief common logarithm (i.e. logarithm to base 10)
    *  @param val a number
+   *  @param fact factor multiplying par::defaultDouble
    *  @return if val>0 \f$ \rightarrow \f$ log10(val); else \f$ \rightarrow \f$
    *  par::defaultDouble
    */
   template <typename T> 
-  T Log (const T val) 
-  { return (val>0) ? log10(val) : par::defaultDouble; }
+  T Log (const T val, const double fact=0.9) 
+  { return (val>0) ? log10(val) : par::defaultDouble*fact; }
+  
+  /**
+   *  @brief natural logarithm
+   *  @param val a number
+   *  @param fact factor multiplying par::defaultDouble
+   *  @return if val>0 \f$ \rightarrow \f$ log(val); else \f$ \rightarrow \f$
+   *  par::defaultDouble
+   */
+  template <typename T> 
+  T Ln (const T val, const double fact=0.9) 
+  { return (val>0) ? log(val) : par::defaultDouble*fact; }
 
   /**
    *  @brief given a number x, return the closest of two values a, b
@@ -1959,6 +1999,49 @@ namespace cbl {
       
     return nv;
   }
+  
+  /**
+   *  @brief read a data from a file ASCII
+   *
+   *  @param file_name the name of the file to read
+   *
+   *  @param path_name the path where the file is stored
+   *
+   *  @param column_data vector containing the indices of the columns
+   *  to read, starting the counting from 1
+   *
+   *  @param skip_nlines the number of lines to skip
+   *
+   *  @return a vector of vectors containing the columns (first index)
+   *  and the lines (second index) read from the file
+   *
+   *  @author Sofia Contarini
+   *  @author sofia.contarini3@unibo.it
+   */
+  std::vector<std::vector<double>> read_file (const std::string file_name, const std::string path_name, const std::vector<int> column_data, const int skip_nlines=0);
+  
+  /**
+   *  @brief read a data from a file ASCII. Useful e.g. when
+   *  the data are written between comment lines.
+   *
+   *  @param file_name the name of the file to read
+   *
+   *  @param path_name the path where the file is stored
+   *
+   *  @param column_data vector containing the indices of the columns
+   *  to read, starting the counting from 1
+   *
+   *  @param delimiter the delimiter between the columns
+   *
+   *  @param comment the comment char at the beginning of the line
+   *
+   *  @return a vector of vectors containing the columns (first index)
+   *  and the lines (second index) read from the file
+   *
+   *  @author Giorgio Lesci
+   *  @author giorgio.lesci2@unibo.it
+   */
+  std::vector<std::vector<double>> read_file (const std::string file_name, const std::string path_name, const std::vector<int> column_data, const std::string delimiter, const char comment='#');
   
   ///@}
   

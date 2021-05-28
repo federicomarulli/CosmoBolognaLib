@@ -67,6 +67,25 @@ void cbl::modelling::Modelling::m_set_posterior (const int seed)
 // ============================================================================================
 
 
+shared_ptr<statistics::Model> cbl::modelling::Modelling::transfer_function ()
+{
+  return m_transfer_func;
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::Modelling::isSet_response ()
+{
+  if (m_transfer_func == NULL)
+    ErrorCBL("the response function is not set!", "isSet_response", "Modelling.cpp");
+}
+
+
+// ============================================================================================
+
+
 shared_ptr<statistics::Likelihood> cbl::modelling::Modelling::likelihood ()
 {
   if (m_likelihood!=NULL)
@@ -122,7 +141,7 @@ shared_ptr<cbl::statistics::ModelParameters> cbl::modelling::Modelling::posterio
 void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type, const vector<size_t> x_index, const int w_index, const double prec, const int Nres)
 {
   if (m_model==NULL)
-    ErrorCBL("undefined  model!", "set_likelihood", "Modelling.cpp");
+    ErrorCBL("undefined model!", "set_likelihood", "Modelling.cpp");
 
   if (m_fit_range) {
     if (m_data_fit==NULL)
@@ -134,6 +153,28 @@ void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType
     if (m_data==NULL)
       ErrorCBL("Error in set_likelihood of Modelling.cpp. Undefined dataset!", "set_likelihood", "Modelling.cpp");
     m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, likelihood_type, x_index, w_index, NULL, prec, Nres));
+  }
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::Modelling::set_likelihood (const cbl::statistics::Likelihood_function log_likelihood_function)
+{
+  if (m_model==NULL)
+    ErrorCBL("undefined model!", "set_likelihood", "Modelling.cpp");
+
+  if (m_fit_range) {
+    if (m_data_fit==NULL)
+      ErrorCBL("undefined fit range!", "set_likelihood", "Modelling.cpp");
+    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data_fit, m_model, log_likelihood_function, NULL));
+  }
+  
+  else  {
+    if (m_data==NULL)
+      ErrorCBL("Error in set_likelihood of Modelling.cpp. Undefined dataset!", "set_likelihood", "Modelling.cpp");
+    m_likelihood = make_shared<statistics::Likelihood> (statistics::Likelihood(m_data, m_model, log_likelihood_function, NULL));
   }
 }
 
@@ -262,3 +303,13 @@ void cbl::modelling::Modelling::write_results (const string dir, const string fi
   m_posterior->write_results(dir, file, start, thin, nbins, fits, compute_mode, ns, m_data_fit->ndata());
 }
 
+
+// ============================================================================================
+
+
+double cbl::modelling::Modelling::reduced_chi2 (const std::vector<double> parameter)
+{
+  if (m_posterior==NULL) m_set_posterior(666);
+  
+  return m_posterior->chi2(parameter)/(m_data_fit->ndata()-m_posterior->parameters()->nparameters_free()); 
+}

@@ -6,9 +6,11 @@
 %include "std_vector.i"
 %include <std_shared_ptr.i>
 
+%shared_ptr(cbl::statistics::Model);
 %shared_ptr(cbl::statistics::Model1D);
 %shared_ptr(cbl::cosmology::Cosmology);
 
+%import (module="CosmoBolognaLib") "Model.h"
 %import (module="CosmoBolognaLib") "Model1D.h"
 %import (module="CosmoBolognaLib") "Cosmology.h"
 

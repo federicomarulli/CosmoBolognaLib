@@ -366,14 +366,18 @@ namespace cbl {
     	
       /**
        *  @brief get the private member \e m_radius
-       *  @param radius the radius of the sphere with volume equivalent to that of the void
+       *
+       *  @param radius the radius of the sphere with volume
+       *  equivalent to that of the void
        */
       void set_radius (const double radius=par::defaultDouble) override
       { m_radius = radius; }
 	
       /**
        *  @brief get the private member \e m_densityContrast
-       *  @param densityContrast ratio between the central density of the void and the density at its border
+       *
+       *  @param densityContrast ratio between the central density of
+       *  the void and the density at its border
        */
       void set_densityContrast (const double densityContrast=par::defaultDouble)
       { m_densityContrast = densityContrast; }
@@ -386,8 +390,7 @@ namespace cbl {
       { m_centralDensity = centralDensity; }
     
       ///@}
-
-
+      
       /**
        *  @name Member functions used to check if the private members are set 
        */

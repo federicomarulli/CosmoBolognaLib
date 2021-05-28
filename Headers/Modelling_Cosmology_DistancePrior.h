@@ -38,6 +38,7 @@
 #include "Cosmology.h"
 #include "Data1D.h"
 
+
 // ===================================================================================================
 
 
@@ -45,10 +46,9 @@ namespace cbl {
 
   namespace modelling {
 
-    namespace cosmo{
+    namespace cosmo {
 
-      class CMB_DistancePrior
-      {
+      class CMB_DistancePrior {
 
       protected:
 
@@ -57,13 +57,13 @@ namespace cbl {
 
       public:
 
-	CMB_DistancePrior() {}
+	CMB_DistancePrior () = default;
 
-	virtual ~CMB_DistancePrior() = default;
+	virtual ~CMB_DistancePrior () = default;
 
 	static std::shared_ptr<CMB_DistancePrior> Create (const std::string distance_prior_name);
 
-	virtual std::shared_ptr<data::Data> dataset()
+	virtual std::shared_ptr<data::Data> dataset ()
 	{ ErrorCBL("no dataset for base class!", "dataset", "Modelling_Cosmology_DistancePrior.h"); return NULL; }
 	  
 	virtual std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
@@ -98,25 +98,23 @@ namespace cbl {
 	std::shared_ptr<data::Data> dataset() {return m_dataset; }
 
 	std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
-	  {
-	    std::vector<double> mm(3, 0);
+	{
+	  std::vector<double> mm(3, 0);
 
-	    mm[0] = cosmology.Omega_baryon()*cosmology.hh()*cosmology.hh();
-	    mm[1] = cosmology.Omega_matter()*cosmology.hh()*cosmology.hh();
-	    mm[2] = cosmology.D_M(m_dataset->xx(2))/cosmology.rs_CAMB();
+	  mm[0] = cosmology.Omega_baryon()*cosmology.hh()*cosmology.hh();
+	  mm[1] = cosmology.Omega_matter()*cosmology.hh()*cosmology.hh();
+	  mm[2] = cosmology.D_M(m_dataset->xx(2))/cosmology.rs_CAMB();
 
-	    return mm;
-	  }
+	  return mm;
+	}
 
       };
 
-      class Aubourg15_WMAP09 : public CMB_DistancePrior
-      {
+      class Aubourg15_WMAP09 : public CMB_DistancePrior {
 
       public:
 
 	Aubourg15_WMAP09 () {
-
 	  std::vector<double> redshift = {0., 0., 1090.};
 	  std::vector<double> data = {0.02259, 0.1354, 94.51};
 	  std::vector<std::vector<double>> covariance(3, std::vector<double>(3, 0));
@@ -135,18 +133,18 @@ namespace cbl {
 	  m_dataset = std::make_shared<data::Data1D>(data::Data1D(redshift, data, covariance));
 	}
 
-	std::shared_ptr<data::Data> dataset() {return m_dataset; }
+	std::shared_ptr<data::Data> dataset () { return m_dataset; }
 
 	std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
-	  {
-	    std::vector<double> mm(3, 0);
+	{
+	  std::vector<double> mm(3, 0);
 
-	    mm[0] = cosmology.Omega_baryon()*cosmology.hh()*cosmology.hh();
-	    mm[1] = cosmology.Omega_matter()*cosmology.hh()*cosmology.hh();
-	    mm[2] = cosmology.D_M(m_dataset->xx(2))/cosmology.rs_CAMB();
+	  mm[0] = cosmology.Omega_baryon()*cosmology.hh()*cosmology.hh();
+	  mm[1] = cosmology.Omega_matter()*cosmology.hh()*cosmology.hh();
+	  mm[2] = cosmology.D_M(m_dataset->xx(2))/cosmology.rs_CAMB();
 
-	    return mm;
-	  }
+	  return mm;
+	}
       };
     }
   }

@@ -58,7 +58,6 @@ namespace cbl {
        *  This file defines the interface of the base class
        *  Modelling_TwoPointCorrelation1D_filtered, used for modelling
        *  the filtered two-point correlation function
-       *
        */
       class Modelling_TwoPointCorrelation1D_filtered : public Modelling_TwoPointCorrelation1D_monopole {
 

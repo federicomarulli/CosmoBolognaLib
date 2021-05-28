@@ -58,7 +58,7 @@ std::vector<double> cbl::modelling::numbercounts::mass_function_mass (const std:
     cosmo.set_parameter(pp->Cpar[i], parameter[i]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
   return cbl::modelling::numbercounts::mass_function (mass, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
 }
@@ -83,7 +83,7 @@ std::vector<double> cbl::modelling::numbercounts::number_density_mass (const std
     cosmo.set_parameter(pp->Cpar[i], parameter[i]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
   std::vector<double> mass_function = cbl::modelling::numbercounts::mass_function (pp->Mass_vector, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
 
@@ -91,11 +91,8 @@ std::vector<double> cbl::modelling::numbercounts::number_density_mass (const std
 
   std::vector<double> number_density(mass.size());
 
-  double logMinMass = log10(mass[0]);
-  double deltaLogM = (log10(mass[1])-logMinMass);
-
   for (size_t i=0; i<mass.size(); i++) 
-    number_density[i] = interp_MF.integrate_qag(pow(10., logMinMass+i*deltaLogM), pow(10, logMinMass+(i+1)*deltaLogM));
+    number_density[i] = interp_MF.integrate_qag(pp->edges_x[i], pp->edges_x[i+1]);
 
   return number_density;
 }
@@ -106,6 +103,8 @@ std::vector<double> cbl::modelling::numbercounts::number_density_mass (const std
 
 std::vector<double> cbl::modelling::numbercounts::number_counts_mass (const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
+  (void)mass;
+  
   // structure contaning the required input data
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
 
@@ -120,17 +119,14 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_mass (const std:
     cosmo.set_parameter(pp->Cpar[i], parameter[i]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
   const std::vector<cbl::glob::FuncGrid> interp = cbl::modelling::numbercounts::sigmaM_dlnsigmaM (pp->Mass_vector, cosmo, pp->kk, Pk, "Spline", pp->k_max);
 
-  double deltaLogM = 0.5*(log10(mass[1])-log10(mass[0]));
+  std::vector<double> number_counts(pp->edges_x.size()-1);
 
-  std::vector<double> number_counts(mass.size());
-
-  for (size_t j=0; j<mass.size(); j++) {
-    std::vector<double> Mlim = {pow(10, log10(mass[j])-deltaLogM), pow(10, log10(mass[j])+deltaLogM)};
-    number_counts[j] = cbl::modelling::numbercounts::number_counts(pp->z_min, pp->z_max, Mlim[0], Mlim[1], cosmo, pp->area_rad, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, interp[0], interp[1], 100, 1);
+  for (size_t j=0; j<pp->edges_x.size()-1; j++) {
+    number_counts[j] = cbl::modelling::numbercounts::number_counts(pp->z_min, pp->z_max, pp->edges_x[j], pp->edges_x[j+1], cosmo, pp->area_rad, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, interp[0], interp[1]);
   }
 
   return number_counts;
@@ -142,7 +138,9 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_mass (const std:
 
 std::vector<double> cbl::modelling::numbercounts::number_counts_mass_snapshot (const std::vector<double> mass, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
-    // structure contaning the required input data
+  (void)mass;
+  
+  // structure contaning the required input data
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
 
   // redefine the cosmology
@@ -156,20 +154,16 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_mass_snapshot (c
     cosmo.set_parameter(pp->Cpar[i], parameter[i]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
   std::vector<double> mass_function = cbl::modelling::numbercounts::mass_function (pp->Mass_vector, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
 
   glob::FuncGrid interp_MF (pp->Mass_vector, mass_function, "Spline");
 
-  std::vector<double> number_counts(mass.size());
+  std::vector<double> number_counts(pp->edges_x.size()-1);
 
-  double deltaLogM = 0.5*(log10(mass[1])-log10(mass[0]));
-
-  for (size_t i=0; i<mass.size(); i++) {
-    double minM = pow(10, log10(mass[i])-deltaLogM);
-    double maxM = pow(10, log10(mass[i])+deltaLogM);
-    number_counts[i] = pp->Volume*interp_MF.integrate_qag(minM, maxM); //*(maxM-minM);
+  for (size_t i=0; i<pp->edges_x.size()-1; i++) {
+    number_counts[i] = pp->Volume*interp_MF.integrate_qag(pp->edges_x[i], pp->edges_x[i+1]); //*(maxM-minM);
   }
 
   return number_counts;

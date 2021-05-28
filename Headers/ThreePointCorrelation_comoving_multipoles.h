@@ -40,8 +40,7 @@
 #define __THREEPOINTMULT__ 
 
 
-#include "Triplet.h"
-#include "Measure.h"
+#include "ThreePointCorrelation.h"
 
 
 // ===================================================================================================
@@ -51,13 +50,6 @@ namespace cbl {
 
   namespace measure {
 
-    /**
-     *  @brief The namespace of the <B> three-point correlation function
-     *  </B>
-     *  
-     * The \e measure::threept namespace contains all the functions and
-     * classes to measure the three-point correlation function
-     */
     namespace threept {
 
       /**
@@ -70,10 +62,10 @@ namespace cbl {
        *  This is the base class used to measure the three-point
        *  correlation function multipoles
        */
-      class ThreePointCorrelation_comoving_multipoles : public Measure {
-
+      class ThreePointCorrelation_comoving_multipoles : public ThreePointCorrelation {
+	
       protected :
-
+	
 	/**
 	 *  @name variables for triangles
 	 */
@@ -83,7 +75,7 @@ namespace cbl {
 	size_t m_nOrders;
 
 	///@}
-
+	
 	/**
 	 *  @name Input and random catalogues
 	 */
@@ -110,7 +102,7 @@ namespace cbl {
 	 *  @name triplet vectors
 	 */
 	///@{
-
+	
 	/// number of (data-random) triplets
 	std::vector<double> m_nnn;
 
@@ -262,42 +254,13 @@ namespace cbl {
 	  (void)rMin; (void)rMax; (void)binSize; (void)nOrders;
 	  ErrorCBL("", "set_parameters", "ThreePointCorrelation_comoving_multipoles.h");
 	}
-
-	/**
-	 * @brief measure the three-point correlation function 
-	 * multipoles
-	 *
-	 * @param errorType type of error 
-	 *
-	 * @param dir_output_triplets name of the output directory used to
-	 * store the number of triplets
-	 * 
-	 * @param dir_input_triplets name of the input directories
-	 * containing the number of triplets
-	 *
-	 * @param nResamplings number of resamplings
-	 *
-	 * @param count_triplets 1 &rarr; count the triplets
-	 * triplets; 0 &rarr; read the triplets from a file
-	 *
-	 * @param tcount 1 &rarr; activate the CPU time counter; 0
-	 * &rarr; no time counter
-	 *
-	 * @param seed the seed for random number generation
-	 *
-	 * @return none, or an error message if the derived object
-	 * does not have this member
-	 *
-	 * @warning no error have been implemented so far, any choice
-	 * will be ignored
-	 */
-	virtual void measure (const ErrorType errorType, const std::string dir_output_triplets=par::defaultString, const std::vector<std::string> dir_input_triplets={}, const int nResamplings=100, const bool count_triplets=true, const bool tcount=false, const int seed=3213) = 0;
-
+	
+	
 	/**
 	 *  @name Input/Output member functions (customized in all the derived classes)
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief write the measured three-point correlation
 	 *  @param dir output directory
@@ -313,7 +276,7 @@ namespace cbl {
 	 *  @name members function to resum the triplet counts
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief resum the three-point correlation function, write
 	 *  output in file
@@ -336,55 +299,6 @@ namespace cbl {
 	virtual void resum (const std::string dir, const std::string file, const cbl::triplets::TripletType tripletType, const int nBins, const bool bin=true) const = 0;
 
 	///@}
-
-	/**
-	 *  @brief static factory used to construct three-point correlation
-	 *  functions multipoles 
-	 *
-	 *  @param data object of class Catalogue containing the input
-	 *  catalogue
-	 *  @param random of class Catalogue containing the random data
-	 *  catalogue
-	 *  @param r12Min the minimum triangle first side
-	 *  @param r12Max the maximum triangle first side
-	 *  @param r13Min the minimum triangle second side
-	 *  @param r13Max the maximum triangle second side
-	 *  @param nOrders the number of Legendre multipoles
-	 *  @param split factor to split the random sample. 
-	 * 	It must be a multiple m_data.nObjects()
-	 *  @param seed seed to shuffle the random sample
-	 *
-	 *  @return a pointer to an object of class
-	 *  ThreePointCorrelation_comoving_multipoles_single
-	 * @warning this function will raise an error if m_random.nObjects() < split*m_data.nObjects
-	 * if m_random.nObjects() > split*m_data.nObjects, only random points up to split*m_data.nObjects
-	 * Negative values of the split factor allow to use the whole random sample.
-	 */
-	static std::shared_ptr<ThreePointCorrelation_comoving_multipoles> Create (const catalogue::Catalogue data, const catalogue::Catalogue random, const double r12Min, const double r12Max, const double r13Min, const double r13Max, const int nOrders, const double split=-1, const int seed=234);
-
-	/**
-	 *  @brief static factory used to construct three-point correlation
-	 *  functions multipoles 
-	 *
-	 *  @param data object of class Catalogue containing the input
-	 *  catalogue
-	 *  @param random of class Catalogue containing the random data
-	 *  catalogue
-	 *  @param rMin the minimum triangle side
-	 *  @param rMax the maximum triangle side
-	 *  @param binSize the triangle side width
-	 *  @param nOrders the number of Legendre multipoles
-	 *  @param split factor to split the random sample. 
-	 * 	It must be a multiple m_data.nObjects()
-	 *  @param seed seed to shuffle the random sample
-	 *
-	 *  @return a pointer to an object of class
-	 *  ThreePointCorrelation_comoving_multipoles_all
-	 *  @warning this function will raise an error if m_random.nObjects() < split*m_data.nObjects
-	 *  if m_random.nObjects() > split*m_data.nObjects, only random points up to split*m_data.nObjects
-	 *  Negative values of the split factor allow to use the whole random sample.
-	 */
-	static std::shared_ptr<ThreePointCorrelation_comoving_multipoles> Create (const catalogue::Catalogue data, const catalogue::Catalogue random, const double rMin, const double rMax, const double binSize, const int nOrders, const double split=-1, const int seed=234);
 
       };
     }

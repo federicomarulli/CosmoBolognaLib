@@ -42,58 +42,58 @@ using namespace cbl;
 cbl::statistics::STR_likelihood_inputs::STR_likelihood_inputs (const std::shared_ptr<data::Data> input_data, const std::shared_ptr<Model> input_model, const vector<size_t> input_x_index, const int input_w_index) : data(input_data), model(input_model) 
 {																							
   switch (data->dataType()) {
-    case(data::DataType::_1D_):
+  case(data::DataType::_1D_):
+    xx = data->xx();
+    weights1D.resize(data->ndata(), 1.);
+    break;
+
+  case (data::DataType::_1D_extra_):
+
+    if (input_x_index.size()==0)
       xx = data->xx();
-      weights1D.resize(data->ndata(), 1.);
-      break;
-
-    case (data::DataType::_1D_extra_):
-
-      if (input_x_index.size()==0)
-	xx = data->xx();
-      else 
-	for (int i=0; i<data->ndata(); i++) // using extra info
-	  xx.push_back(data->extra_info(input_x_index[0], i));
+    else 
+      for (int i=0; i<data->ndata(); i++) // using extra info
+	xx.push_back(data->extra_info(input_x_index[0], i));
       
-      if (input_w_index<0)
-	weights1D.resize(data->ndata(), 1.);
-      else 
-	for (int i=0; i<data->ndata(); i++) // using extra info
-	  weights1D.push_back(data->extra_info(input_w_index, i));
-      break;
+    if (input_w_index<0)
+      weights1D.resize(data->ndata(), 1.);
+    else 
+      for (int i=0; i<data->ndata(); i++) // using extra info
+	weights1D.push_back(data->extra_info(input_w_index, i));
+    break;
 
-    case (data::DataType::_2D_):
+  case (data::DataType::_2D_):
+    xx = data->xx();
+    yy = data->yy();
+    if (input_w_index<0) 
+      weights2D.resize(data->xsize(), vector<double>(data->ysize(), 1.));
+    break;
+
+  case (data::DataType::_2D_extra_):
+    if (input_x_index.size()==0) {
       xx = data->xx();
       yy = data->yy();
-      if (input_w_index<0) 
-	weights2D.resize(data->xsize(), vector<double>(data->ysize(), 1.));
-      break;
+    }
+    else {
+      for (int i=0; i<data->ndata(); i++) { // using extra info
+	xx.push_back(data->extra_info(input_x_index[0], i));
+	yy.push_back(data->extra_info(input_x_index[1], i));
+      }
+      xx = different_elements(xx);
+      yy = different_elements(yy);
+    }
 
-    case (data::DataType::_2D_extra_):
-      if (input_x_index.size()==0) {
-	xx = data->xx();
-	yy = data->yy();
-      }
-      else {
-	for (int i=0; i<data->ndata(); i++) { // using extra info
-	  xx.push_back(data->extra_info(input_x_index[0], i));
-	  yy.push_back(data->extra_info(input_x_index[1], i));
-	}
-        xx = different_elements(xx);
-        yy = different_elements(yy);
-      }
-
-      if (input_w_index<0) 
-	weights2D.resize(data->xsize(), vector<double>(data->ysize(), 1.));
-      else {
-	weights2D.resize(data->xsize(), vector<double>(data->ysize(), 0));
-	for (int i=0; i<data->xsize(); i++)
-	  for (int j=0; j<data->ysize(); j++)
-	    weights2D[i][j] = data->extra_info(input_w_index, i*data->ysize()+j);
-      }
-      break;
-    default:
-      ErrorCBL("wrong dataType!", "STR_likelihood_inputs", "LikelihoodFunction.cpp");
+    if (input_w_index<0) 
+      weights2D.resize(data->xsize(), vector<double>(data->ysize(), 1.));
+    else {
+      weights2D.resize(data->xsize(), vector<double>(data->ysize(), 0));
+      for (int i=0; i<data->xsize(); i++)
+	for (int j=0; j<data->ysize(); j++)
+	  weights2D[i][j] = data->extra_info(input_w_index, i*data->ysize()+j);
+    }
+    break;
+  default:
+    ErrorCBL("wrong dataType!", "STR_likelihood_inputs", "LikelihoodFunction.cpp");
   }
 }
 
@@ -139,12 +139,13 @@ double statistics::LogLikelihood_Gaussian_1D_error (std::vector<double> &likelih
   // ----- compute the model values ----- 
 
   vector<double> computed_model = pp->model->operator()(pp->xx, likelihood_parameter);
- 
+
+  
   // ----- estimate the Gaussian log-likelihood -----
   
   double LogLikelihood = 0.;
   for (int i=0; i<pp->data->ndata(); i++)  
-      LogLikelihood += pow((pp->data->data(i)-computed_model[i])/pp->data->error(i), 2);
+    LogLikelihood += pow((pp->data->data(i)-computed_model[i])/pp->data->error(i), 2);
 
   return -0.5*LogLikelihood;
 }
@@ -220,7 +221,7 @@ double statistics::LogLikelihood_Poissonian_1D_ (std::vector<double> &likelihood
   double LogLikelihood = 0.;
 
   for (int i=0; i<pp->data->ndata(); i++)
-    LogLikelihood += pp->data->data(i)*log(computed_model[i])-computed_model[i]-gsl_sf_lnfact(int(pp->data->data(i)));
+    LogLikelihood += pp->data->data(i)*cbl::Ln(computed_model[i],1.e-50)-computed_model[i]-gsl_sf_lnfact(int(pp->data->data(i)));
 
   return LogLikelihood;
 }
@@ -243,7 +244,7 @@ double statistics::LogLikelihood_Poissonian_2D_ (std::vector<double> &likelihood
 
   for (int i=0; i<pp->data->xsize(); i++)
     for (int j=0; j<pp->data->ysize(); j++)
-       LogLikelihood += pp->data->data(i,j)*log(computed_model[i][j])-computed_model[i][j]-gsl_sf_lnfact(int(pp->data->data(i, j)));
+      LogLikelihood += pp->data->data(i,j)*cbl::Ln(computed_model[i][j],1.e-50)-computed_model[i][j]-gsl_sf_lnfact(int(pp->data->data(i, j)));
 
   return LogLikelihood;
 }

@@ -446,9 +446,41 @@ double cbl::catalogue::Catalogue::var (int index, Var var_name) const
   case Var::_Dec_:
     vv = m_object[index]->dec();
     break;
+    
+  case Var::_SN_:
+    vv = m_object[index]->sn();
+    break;
 
   case Var::_Redshift_:
     vv = m_object[index]->redshift();
+    break;
+    
+  case Var::_RedshiftMin_:
+    vv = m_object[index]->redshiftMin();
+    break;
+    
+  case Var::_RedshiftMax_:
+    vv = m_object[index]->redshiftMax();
+    break;
+    
+  case Var::_Shear1_:
+    vv = m_object[index]->shear1();
+    break;
+    
+  case Var::_Shear2_:
+    vv = m_object[index]->shear2();
+    break;
+    
+  case Var::_ODDS_:
+    vv = m_object[index]->odds();
+    break;
+    
+  case Var::_LensingWeight_:
+    vv = m_object[index]->lensingWeight();
+    break;
+    
+  case Var::_LensingCalib_:
+    vv = m_object[index]->lensingCalib();
     break;
 
   case Var::_Dc_:
@@ -466,6 +498,22 @@ double cbl::catalogue::Catalogue::var (int index, Var var_name) const
   case Var::_Magnitude_:
     vv = m_object[index]->magnitude();
     break;
+    
+  case Var::_MagnitudeU_:
+    vv = m_object[index]->magnitudeU();
+    break;
+    
+  case Var::_MagnitudeG_:
+    vv = m_object[index]->magnitudeG();
+    break;
+    
+  case Var::_MagnitudeR_:
+    vv = m_object[index]->magnitudeR();
+    break;
+    
+  case Var::_MagnitudeI_:
+    vv = m_object[index]->magnitudeI();
+    break;
 
   case Var::_SFR_:
     vv = m_object[index]->SFR();
@@ -475,12 +523,12 @@ double cbl::catalogue::Catalogue::var (int index, Var var_name) const
     vv = m_object[index]->sSFR();
     break;
 
-  case Var::_Richness_:
-    vv = m_object[index]->richness();
+  case Var::_MassProxy_:
+    vv = m_object[index]->mass_proxy();
     break;
-
-  case Var::_RichnessError_:
-    vv = m_object[index]->richness_error();
+    
+  case Var::_MassProxyError_:
+    vv = m_object[index]->mass_proxy_error();
     break;
 
   case Var::_Vx_:
@@ -631,9 +679,33 @@ bool cbl::catalogue::Catalogue::isSetVar (int index, Var var_name) const
 
   else if (var_name==Var::_Dec_)
     return m_object[index]->isSet_dec();
+    
+  else if (var_name==Var::_SN_)
+    return m_object[index]->isSet_sn();
 
   else if (var_name==Var::_Redshift_)
     return m_object[index]->isSet_redshift();
+    
+  else if (var_name==Var::_RedshiftMin_)
+    return m_object[index]->isSet_redshiftMin();
+    
+  else if (var_name==Var::_RedshiftMax_)
+    return m_object[index]->isSet_redshiftMax();
+    
+  else if (var_name==Var::_Shear1_)
+    return m_object[index]->isSet_shear1();
+    
+  else if (var_name==Var::_Shear2_)
+    return m_object[index]->isSet_shear2();
+    
+  else if (var_name==Var::_ODDS_)
+    return m_object[index]->isSet_odds();
+    
+  else if (var_name==Var::_LensingWeight_)
+    return m_object[index]->isSet_lensingWeight();
+    
+  else if (var_name==Var::_LensingCalib_)
+    return m_object[index]->isSet_lensingCalib();
 
   else if (var_name==Var::_Dc_)
     return m_object[index]->isSet_dc();
@@ -646,18 +718,30 @@ bool cbl::catalogue::Catalogue::isSetVar (int index, Var var_name) const
 
   else if (var_name==Var::_Magnitude_)
     return m_object[index]->isSet_magnitude();
+    
+  else if (var_name==Var::_MagnitudeU_)
+    return m_object[index]->isSet_magnitudeU();
+    
+  else if (var_name==Var::_MagnitudeG_)
+    return m_object[index]->isSet_magnitudeG();
+    
+  else if (var_name==Var::_MagnitudeR_)
+    return m_object[index]->isSet_magnitudeR();
+    
+  else if (var_name==Var::_MagnitudeI_)
+    return m_object[index]->isSet_magnitudeI();
 
   else if (var_name==Var::_SFR_)
     return m_object[index]->isSet_SFR();
 
   else if (var_name==Var::_sSFR_)
     return m_object[index]->isSet_sSFR();
+    
+  else if (var_name==Var::_MassProxy_)
+    return m_object[index]->isSet_mass_proxy();
 
-  else if (var_name==Var::_Richness_)
-    return m_object[index]->isSet_richness();
-
-  else if (var_name==Var::_RichnessError_)
-    return m_object[index]->isSet_richness_error();
+  else if (var_name==Var::_MassProxyError_)
+    return m_object[index]->isSet_mass_proxy_error();
 
   else if (var_name==Var::_Vx_)
     return m_object[index]->isSet_vx();
@@ -790,7 +874,7 @@ void cbl::catalogue::Catalogue::set_field (const std::vector<std::string> field)
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, const double value, const cosmology::Cosmology cosmology)
+void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, const double value, const cosmology::Cosmology cosmology, const bool update_coordinates)
 {
   switch (var_name) {
 
@@ -813,10 +897,42 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
   case Var::_Dec_:
     m_object[index]->set_dec(value);
     break;
+    
+  case Var::_SN_:
+    m_object[index]->set_sn(value);
+    break;
 
   case Var::_Redshift_:
-    m_object[index]->set_redshift(value, cosmology);
+    m_object[index]->set_redshift(value, cosmology, update_coordinates);
     break;
+    
+  case Var::_RedshiftMin_:
+    m_object[index]->set_redshiftMin(value);
+    break;
+    
+  case Var::_RedshiftMax_:
+    m_object[index]->set_redshiftMax(value);
+    break;
+    
+  case Var::_Shear1_:
+    m_object[index]->set_shear1(value);
+    break;
+    
+  case Var::_Shear2_:
+    m_object[index]->set_shear2(value);
+    break;
+    
+  case Var::_ODDS_:
+    m_object[index]->set_odds(value);
+    break;
+    
+  case Var::_LensingWeight_:
+    m_object[index]->set_lensingWeight(value);
+    break;
+    
+  case Var::_LensingCalib_:
+    m_object[index]->set_lensingCalib(value);
+    break;    
 
   case Var::_Dc_:
     m_object[index]->set_dc(value);
@@ -833,6 +949,22 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
   case Var::_Magnitude_:
     m_object[index]->set_magnitude(value);
     break;
+    
+  case Var::_MagnitudeU_:
+    m_object[index]->set_magnitudeU(value);
+    break;
+    
+  case Var::_MagnitudeG_:
+    m_object[index]->set_magnitudeG(value);
+    break;
+    
+  case Var::_MagnitudeR_:
+    m_object[index]->set_magnitudeR(value);
+    break;
+    
+  case Var::_MagnitudeI_:
+    m_object[index]->set_magnitudeI(value);
+    break;
 
   case Var::_SFR_:
     m_object[index]->set_SFR(value);
@@ -842,8 +974,12 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
     m_object[index]->set_sSFR(value);
     break;
     
-  case Var::_Richness_:
-    m_object[index]->set_richness(value);
+  case Var::_MassProxy_:
+    m_object[index]->set_mass_proxy(value);
+    break;
+    
+  case Var::_MassProxyError_:
+    m_object[index]->set_mass_proxy_error(value);
     break;
 
   case Var::_Vx_:
@@ -971,7 +1107,7 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<double> var, const cosmology::Cosmology cosmology)
+void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<double> var, const cosmology::Cosmology cosmology, const bool update_coordinates)
 {
   if (m_object.size()!=var.size()) ErrorCBL("m_object.size()!=var.size()!", "set_var", "Catalogue.cpp");
   
@@ -996,9 +1132,41 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<d
   case Var::_Dec_:
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_dec(var[i]);
     break;
+    
+  case Var::_SN_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_sn(var[i]);
+    break;
 
   case Var::_Redshift_:
-    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_redshift(var[i], cosmology);
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_redshift(var[i], cosmology, update_coordinates);
+    break;
+    
+  case Var::_RedshiftMin_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_redshiftMin(var[i]);
+    break;
+    
+  case Var::_RedshiftMax_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_redshiftMax(var[i]);
+    break;
+    
+  case Var::_Shear1_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_shear1(var[i]);
+    break;
+    
+  case Var::_Shear2_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_shear2(var[i]);
+    break;
+    
+  case Var::_ODDS_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_odds(var[i]);
+    break;
+    
+  case Var::_LensingWeight_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_lensingWeight(var[i]);
+    break;
+    
+  case Var::_LensingCalib_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_lensingCalib(var[i]);
     break;
 
   case Var::_Dc_:
@@ -1016,6 +1184,22 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<d
   case Var::_Magnitude_:
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_magnitude(var[i]);
     break;
+    
+  case Var::_MagnitudeU_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_magnitudeU(var[i]);
+    break;
+    
+  case Var::_MagnitudeG_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_magnitudeG(var[i]);
+    break;
+    
+  case Var::_MagnitudeR_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_magnitudeR(var[i]);
+    break;
+    
+  case Var::_MagnitudeI_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_magnitudeI(var[i]);
+    break;
 
   case Var::_SFR_:
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_SFR(var[i]);
@@ -1025,12 +1209,12 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<d
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_sSFR(var[i]);
     break;
     
-  case Var::_Richness_:
-    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_richness(var[i]);
+  case Var::_MassProxy_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_mass_proxy(var[i]);
     break;
     
-  case Var::_RichnessError_:
-    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_richness_error(var[i]);
+  case Var::_MassProxyError_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_mass_proxy_error(var[i]);
     break;
 
   case Var::_Vx_:
@@ -1430,7 +1614,6 @@ void cbl::catalogue::Catalogue::write_comoving_coordinates (const std::string ou
   for (size_t i=0; i<nObjects(); ++i) 
     fout << xx(i) << "   " << yy(i) << "   " << zz(i) << endl;
 
-  coutCBL << "I wrote the file: " << outputFile << endl;
   fout.clear(); fout.close();
 }
 
@@ -1452,7 +1635,6 @@ void cbl::catalogue::Catalogue::write_obs_coordinates (const std::string outputF
   for (size_t i=0; i<nObjects(); ++i) 
     fout << ra(i) << "   " << dec(i) << "   " << redshift(i) << endl;
   
-  coutCBL << "I wrote the file: " << outputFile << endl;
   fout.clear(); fout.close();
 }
 
@@ -1493,7 +1675,6 @@ void cbl::catalogue::Catalogue::write_data (const std::string outputFile, const 
     
   }
 
-  coutCBL << "I wrote the file: " << outputFile << endl;
   fout.clear(); fout.close();
 }
 

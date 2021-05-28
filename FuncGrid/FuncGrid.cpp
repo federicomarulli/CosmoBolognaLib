@@ -140,6 +140,7 @@ double cbl::glob::FuncGrid::operator () (const double xx) const
   // performe an interpolation
   else {
     val = (m_binType==cbl::BinType::_logarithmic_) ? pow(10., gsl_spline_eval(m_spline.get(), _xx, m_acc.get())) : gsl_spline_eval(m_spline.get(), _xx, m_acc.get());
+    if (val!=val) coutCBL << "xx = " << conv(_xx, par::fDP3) << endl;
     if (val!=val) return ErrorCBL("the return value is nan!", "operator ()", "FuncGrid.cpp");
     else return val;
   }
@@ -188,6 +189,17 @@ double cbl::glob::FuncGrid::integrate_qag (const double a, const double b, const
   function<double(double)> f = bind(&FuncGrid::operator(), this, std::placeholders::_1);
 
   return wrapper::gsl::GSL_integrate_qag(f, a, b, rel_err, abs_err, limit_size, rule);
+}
+
+
+// =====================================================================================
+
+
+double cbl::glob::FuncGrid::integrate_cquad (const double a, const double b, const double rel_err, const double abs_err, const int neval)
+{
+  function<double(double)> f = bind(&FuncGrid::operator(), this, std::placeholders::_1);
+
+  return wrapper::gsl::GSL_integrate_cquad(f, a, b, rel_err, abs_err, neval);
 }
 
 

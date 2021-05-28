@@ -140,9 +140,6 @@ namespace cbl {
 	 *  @param step number of steps used to compute the binned
 	 *  power spectrum
 	 *
-	 *  @param output_dir the output_dir directory
-	 *  where the output of external codes are written
-	 *  
 	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
 	 *  &rarr; normalize the power spectrum
 	 *
@@ -166,7 +163,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4); 
+	void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4); 
 	
 	///@}
 

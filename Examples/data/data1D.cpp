@@ -34,16 +34,17 @@ int main () {
     
     // specifying that the x column is the second one (the y and error
     // columns will be the third and fourth ones, by default)
-    const cbl::data::Data1D data2(file, n_lines_header, 2);
+    const cbl::data::Data1D data2(file, n_lines_header, {2});
     data2.Print(); cout << endl;
     
-    // specifying all the columns
-    const cbl::data::Data1D data3(file, n_lines_header, 2, {3}, {4});
+    // specifying all the columns (the 4th argument indicates
+    // the bin edges column, not present in the file considered here)
+    const cbl::data::Data1D data3(file, n_lines_header, {2}, {3}, {4});
     data3.Print(); cout << endl;
       
     // reading two datasets (that will be added one after the other in
     // a single dataset)
-    const cbl::data::Data1D data4(file, n_lines_header, 2, {3, 5}, {4, 6});
+    const cbl::data::Data1D data4(file, n_lines_header, {2}, {3, 5}, {4, 6});
     data4.Print(); cout << endl;
 
     

@@ -154,6 +154,17 @@ cbl::statistics::Likelihood::Likelihood (const std::shared_ptr<data::Data> data,
 // ============================================================================================
 
 
+cbl::statistics::Likelihood::Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const Likelihood_function log_likelihood_function, const std::shared_ptr<ModelParameters> model_parameters)
+{
+  set_data(data);
+  set_model(model, model_parameters);
+  set_log_function(log_likelihood_function);
+}
+
+
+// ============================================================================================
+
+
 double cbl::statistics::Likelihood::operator () (std::vector<double> &pp) const
 {
   return exp(this->log(pp));
@@ -261,7 +272,7 @@ void cbl::statistics::Likelihood::set_function (const LikelihoodType likelihood_
       
       case (LikelihoodType::_Gaussian_Error_):	
 	for (int i=0; i<m_data->ndata(); i++) {
-	  if (isinf(pow(1./m_data->error(i), 2)))
+	  if (std::isinf(pow(1./m_data->error(i), 2)))
 	    ErrorCBL("error("+conv(i, par::fINT)+") is too small, and 1/error("+conv(i, par::fINT)+")^2 = inf!", "set_function", "Likelihood.cpp");
 	  else
 	    continue;
@@ -292,7 +303,7 @@ void cbl::statistics::Likelihood::set_function (const LikelihoodType likelihood_
       case (LikelihoodType::_Gaussian_Error_):
 	for (int i=0; i<m_data->xsize(); i++) {
 	  for (int j=0; j<m_data->ysize(); j++) {
-	    if (isinf(pow(1./m_data->error(i, j), 2)))				
+	    if (std::isinf(pow(1./m_data->error(i, j), 2)))				
 	      ErrorCBL("error("+conv(i, par::fINT)+", "+conv(j, par::fINT)+") is too small, and 1/error("+conv(i, par::fINT)+", "+conv(j, par::fINT)+")^2 = inf!", "set_function", "Likelihood.cpp");
 	    else
 	      continue;
@@ -312,9 +323,8 @@ void cbl::statistics::Likelihood::set_function (const LikelihoodType likelihood_
   }
   else 
     ErrorCBL("data type not recognized or not yet implemented!", "set_function", "Likelihood.cpp");
-  
-  m_likelihood_function = [&] (vector<double> &par, const shared_ptr<void> input) { return exp(m_log_likelihood_function(par, input)); };
 
+  m_likelihood_function = [&] (vector<double> &par, const shared_ptr<void> input) { return exp(m_log_likelihood_function(par, input)); };
 }
 
 
@@ -326,6 +336,17 @@ void cbl::statistics::Likelihood::set_function (const Likelihood_function likeli
   m_likelihood_type = LikelihoodType::_UserDefined_;
   m_likelihood_function = likelihood_function;
   m_log_likelihood_function = [&] (vector<double> &par, const shared_ptr<void> input) { return std::log(m_likelihood_function(par, input)); };
+}
+
+
+// ============================================================================================
+
+
+void cbl::statistics::Likelihood::set_log_function (const Likelihood_function log_likelihood_function)
+{
+  m_likelihood_type = LikelihoodType::_UserDefined_;
+  m_log_likelihood_function = log_likelihood_function;
+  m_likelihood_function = [&] (vector<double> &par, const shared_ptr<void> input) { return exp(m_log_likelihood_function(par, input)); };
 }
 
 
@@ -360,9 +381,10 @@ void cbl::statistics::Likelihood::maximize (const std::vector<double> start, con
 
   m_likelihood_inputs = make_shared<STR_likelihood_inputs>(STR_likelihood_inputs(m_data, m_model, m_x_index, m_w_index));
 
-  function<double(vector<double> &)> ll = [this](vector<double> &pp) {
-    return -m_log_likelihood_function(pp, m_likelihood_inputs); 
-  };
+  function<double(vector<double> &)> ll = [this] (vector<double> &pp)
+					  {
+					    return -m_log_likelihood_function(pp, m_likelihood_inputs); 
+					  };
 
   coutCBL << "Maximizing the likelihood..." << endl;
   vector<double> result = cbl::wrapper::gsl::GSL_minimize_nD(ll, starting_par, limits_par, max_iter, tol, epsilon);
@@ -375,6 +397,7 @@ void cbl::statistics::Likelihood::maximize (const std::vector<double> start, con
 
 
 // ============================================================================================
+
 
 void cbl::statistics::Likelihood::write_results (const string dir_output, const string file)
 {
@@ -404,6 +427,7 @@ void cbl::statistics::Likelihood::write_results (const string dir_output, const 
   fout.clear(); fout.close();
   coutCBL << "I wrote the file " << dir_output+file << endl;
 }
+
 
 // ============================================================================================
 

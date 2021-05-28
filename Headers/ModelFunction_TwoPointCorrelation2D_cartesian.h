@@ -53,15 +53,9 @@ namespace cbl {
        *  Cartesian coordinates
        *
        *  the function computes \f$\xi(r_p,\pi)\f$ with the dispersion
-       *  model (see e.g. http://arxiv.org/abs/1203.1002)
-       *
-       *  the model has 5 parameters: 
-       *    - the two Alcock-Paczynski parameters
-       *      (\f$\alpha_\perp=\frac{D_{\rm A,1}(z)}{D_{\rm A,2}(z)}\f$
-       *      and \f$\alpha_\parallel=\frac{H_2(z)}{H_1(z)}\f$)
-       *    - \f$f(z)\sigma_8(z)\f$
-       *    - \f$b(z)\sigma_8(z)\f$ 
-       *    - \f$\sigma_{12}(z)\f$
+       *  model (see e.g. Marulli et al. 2012
+       *  http://arxiv.org/abs/1203.1002), which is computed with
+       *  either cbl::xi2D_lin_model or cbl::xi2D_model
        *
        *  @param rp the scale perpendicular to the line of sight at
        *  which the model is computed
@@ -77,7 +71,7 @@ namespace cbl {
        *  @return the 2D two-point correlation function in redshift
        *  space
        */
-      std::vector<std::vector<double>> xi2D_dispersionModel (const std::vector<double> rp, const std::vector<double> pi, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+      std::vector<std::vector<double>> xi2D_dispersion (const std::vector<double> rp, const std::vector<double> pi, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
       
     }
   }

@@ -140,23 +140,29 @@ namespace cbl {
       /// the distribution upper limit
       double m_xmax;
 
-      /// parameters of the distribution function
+      /// the parameters of the distribution function
       std::vector<double> m_distribution_func_pars;
 
       /// void pointer for the distribution function
       std::shared_ptr<void> m_distribution_func_fixed_pars;
 
-      /// distribution normalization
+      /// the distribution normalization
       double m_distribution_normalization;
       
-      /// natural log of distribution normalization
+      /// the natural log of distribution normalization
       double m_log_distribution_normalization;
 
-      /// distribution mean
+      /// the distribution mean
       double m_mean;
 
-      ///distribution variance
+      /// the distribution variance
       double m_variance;
+      
+      /// the distribution standard deviation
+      double m_sigma;
+
+      /// the distribution seed
+      int m_seed;
 
       /**
        * @brief set distribution normalization 
@@ -433,6 +439,27 @@ namespace cbl {
        * @return the distribution upper limit
        */
       double xmax () const { return m_xmax; }
+
+      /**
+       * @brief return the private member m_mean
+       *
+       * @return the distribution mean
+       */
+      double get_mean () const { return m_mean; }
+
+      /**
+       * @brief return the private member m_sigma
+       *
+       * @return the distribution standard deviation
+       */
+      double get_sigma () const { return m_sigma; }
+
+      /**
+       * @brief return the private member m_seed
+       *
+       * @return the distribution seed
+       */
+      double get_seed () const { return m_seed; }
 
       /**
        * @brief the distribution range

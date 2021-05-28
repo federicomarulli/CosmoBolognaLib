@@ -35,6 +35,7 @@
 #ifndef __CATALOGUE__
 #define __CATALOGUE__ 
 
+#include "Cosmology.h"
 #include "Field3D.h"
 #include "ChainMesh.h"
 #include "Object.h"
@@ -82,9 +83,33 @@ namespace cbl {
 
       /// Declination
       _Dec_, 
+      
+      /// Signal-to-noise ratio
+      _SN_,
 
       /// redshift
       _Redshift_, 
+      
+      /// minimum redshift
+      _RedshiftMin_,
+      
+      /// maximum redshift
+      _RedshiftMax_,
+      
+      /// first component of the shear signal
+      _Shear1_,
+      
+      /// second component of the shear signal
+      _Shear2_,
+      
+      /// the ODDS parameter quantifies which fraction of the redshift distribution, p(z), is concentrated around the peak value, allowing the construction of a threshold useful in excluding distributions with significant secondary  solutions or wide tails (Coe  et  al.  2006;  Bellagamba  et  al.  2012)
+      _ODDS_,
+      
+      /// lensing weight
+      _LensingWeight_,
+      
+      /// lensing calibration factor
+      _LensingCalib_,
 
       /// comoving distance
       _Dc_, 
@@ -97,18 +122,30 @@ namespace cbl {
 
       /// magnitude
       _Magnitude_,
+      
+      /// u-band magnitude
+      _MagnitudeU_,
+      
+      /// g-band magnitude
+      _MagnitudeG_,
+      
+      /// r-band magnitude
+      _MagnitudeR_,
+      
+      /// i-band magnitude
+      _MagnitudeI_,
 
       /// star formation rate
       _SFR_,
 
       /// specific star formation rate
       _sSFR_, 
-
-      /// richness
-      _Richness_,
-
-      /// richness error
-      _RichnessError_,
+      
+      /// mass proxy
+      _MassProxy_,
+      
+      /// mass proxy error
+      _MassProxyError_,
       
       /// velocity along the x direction
       _Vx_, 
@@ -241,7 +278,7 @@ namespace cbl {
      * Var names
      */
     inline std::vector<std::string> VarNames ()
-    { return {"X", "Y", "Z", "RA", "Dec", "Redshift", "Dc", "Weight", "Mass", "Magnitude", "SFR", "sSFR", "Richness", "RichnessError", "Vx", "Vy", "Vz", "Region", "Radius", "DensityContrast", "CentralDensity", "X_displacement", "Y_displacement", "Z_displacement", "MassGas", "MassHalo", "MassDisk", "MassBulge", "MassStars", "MassBndry", "MassEstimate", "RadiusEstimate", "VeldispEstimate", "XCM", "YCM", "ZCM", "XSpin", "YSpin", "ZSpin", "VelDisp", "Vmax", "VmaxRad", "TotMass", "Generic"}; }
+    { return {"X", "Y", "Z", "RA", "Dec", "SN", "Redshift", "RedshiftMin", "RedshiftMax", "Shear1", "Shear2", "ODDS", "LensingWeight", "LensingCalib", "Dc", "Weight", "Mass", "Magnitude", "MagnitudeU", "MagnitudeG", "MagnitudeR", "MagnitudeI", "SFR", "sSFR", "MassProxy", "MassProxyError", "Vx", "Vy", "Vz", "Region", "Radius", "DensityContrast", "CentralDensity", "X_displacement", "Y_displacement", "Z_displacement", "MassGas", "MassHalo", "MassDisk", "MassBulge", "MassStars", "MassBndry", "MassEstimate", "RadiusEstimate", "VeldispEstimate", "XCM", "YCM", "ZCM", "XSpin", "YSpin", "ZSpin", "VelDisp", "Vmax", "VmaxRad", "TotMass", "Generic"}; }
 
     /**
      * @brief cast an enum of type Var
@@ -1445,6 +1482,65 @@ namespace cbl {
        *  
        */
       Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const std::vector<double> par_numdensity, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
+
+
+            /**
+       *  @brief constructor that modifies an input void catalogue
+       *  according to a set of user selected criteria. If all the
+       *  steps are selected the final result is a catalogue of
+       *  spherical, not-overlapped voids. This version takes into
+       *  account the variation of the number density with the
+       *  redshift, therefore it can works with loghtcones.
+       * 
+       *  @param input_voidCatalogue the input void catalogue to be modified
+       *
+       *  @param data_numdensity 2D matrix containing the sampled
+       *  values of the mean number density as a function of
+       *  redshift. These data will be interpolated to finf the value
+       *  of the number desnity of the tracers at a specific redshift
+       *
+       *  @param method_interpolation the type of method used for the
+       *  interpolation: "Linear" &rarr; linear interpolation; "Poly"
+       *  &rarr; polynomial interpolation; "Spline" &rarr; cubic
+       *  spline interpolation; "Rat" &rarr; diagonal rational
+       *  function interpolation; "BaryRat" &rarr; barycentric
+       *  rational interpolation
+       *
+       *  @param clean a 3 element bool vector. clean[0] = true, erase
+       *  voids outside a given interval; clean[1] = true, erase voids
+       *  with voids higher than a given threshold; clean[2] = true,
+       *  erase voids with density contrast lower than a given value
+       *
+       *  @param delta_r the interval of accepted radii
+       *
+       *  @param threshold the density threshold
+       *
+       *  @param statistical_relevance the minimum accepted density contrast
+       *
+       *  @param rescale true = for each void finds the larger radius enclosing
+       *  density = threshold, false = skip the step
+       *
+       *  @param tracers_catalogue object of class Catalogue with the tracers defining
+       *  the void distribution (necessary if rescale = true)
+       *
+       *  @param ChM object of ChainMesh3D class
+       *
+       *  @param ratio distance from the void centre at which the
+       *  density contrast is evaluated in units of the void
+       *  radius. Ex: ratio = 0.1 \f$\rightarrow\f$ 10% of the void
+       *  radius lenght
+       *
+       *  @param checkoverlap true \f$\rightarrow\f$ erase all the
+       *  voids wrt a given criterion, false \f$\rightarrow\f$ skip
+       *  the step
+       *
+       *  @param ol_criterion the criterion for the overlap step
+       *  (valid criteria: Var::_DensityContrast_,
+       *  Var::_CentralDensity_)
+       * 
+       *  
+       */
+      Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const std::vector<std::vector<double>> data_numdensity, const std::string method_interpolation="Spline", const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
       
       ///@} 
 
@@ -1603,6 +1699,13 @@ namespace cbl {
        * @return the Declination of the i-th object
        */
       double dec (const int i) const { return m_object[i]->dec(); };
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_sn
+       * @param i the object index
+       * @return the signal-to-noise ratio of the i-th object
+       */
+      double sn (const int i) const { return m_object[i]->sn(); };
 
       /**
        * @brief get the private member Catalogue::m_object[i]->m_redshift
@@ -1610,6 +1713,55 @@ namespace cbl {
        * @return the redshift of the i-th object
        */
       double redshift (const int i) const { return m_object[i]->redshift(); };
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_redshiftMin
+       * @param i the object index
+       * @return the minimum redshift of the i-th object
+       */
+      double redshiftMin (const int i) const { return m_object[i]->redshiftMin(); };
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_redshiftMax
+       * @param i the object index
+       * @return the maximum redshift of the i-th object
+       */
+      double redshiftMax (const int i) const { return m_object[i]->redshiftMax(); };
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_shear1
+       * @param i the object index
+       * @return the first shear component of the i-th object
+       */
+      double shear1 (const int i) const { return m_object[i]->shear1(); };
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_shear2
+       * @param i the object index
+       * @return the second shear component of the i-th object
+       */
+      double shear2 (const int i) const { return m_object[i]->shear2(); };
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_odds
+       * @param i the object index
+       * @return the odds of the i-th object
+       */
+      double odds (const int i) const { return m_object[i]->odds(); };
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_lensingWeight
+       * @param i the object index
+       * @return the lensing weight of the i-th object
+       */
+      double lensingWeight (const int i) const { return m_object[i]->lensingWeight(); };
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_lensingCalib
+       * @param i the object index
+       * @return the lensing calibration factor of the i-th object
+       */
+      double lensingCalib (const int i) const { return m_object[i]->lensingCalib(); };
 
       /**
        * @brief get the private member Catalogue::m_object[i]->m_weight
@@ -1700,6 +1852,34 @@ namespace cbl {
        * @return the magnitude of the i-th object
        */
       double magnitude (const int i) const { return m_object[i]->magnitude(); }
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_magnitudeU
+       * @param i the object index
+       * @return the u-band magnitude of the i-th object
+       */
+      double magnitudeU (const int i) const { return m_object[i]->magnitudeU(); }
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_magnitudeG
+       * @param i the object index
+       * @return the g-band magnitude of the i-th object
+       */
+      double magnitudeG (const int i) const { return m_object[i]->magnitudeG(); }
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_magnitudeR
+       * @param i the object index
+       * @return the r-band magnitude of the i-th object
+       */
+      double magnitudeR (const int i) const { return m_object[i]->magnitudeR(); }
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_magnitudeI
+       * @param i the object index
+       * @return the i-band magnitude of the i-th object
+       */
+      double magnitudeI (const int i) const { return m_object[i]->magnitudeI(); }
 
       /**
        * @brief get the private member Catalogue::m_object[i]->m_radius
@@ -1731,11 +1911,19 @@ namespace cbl {
       
       /**
        * @brief get the private member
-       * Catalogue::m_object[i]->m_richness
+       * Catalogue::m_object[i]->m_mass_proxy
        * @param i the object index
-       * @return the richness of the i-th object
+       * @return the mass proxy of the i-th object
        */
-      double richness (const int i) const { return m_object[i]->richness(); }
+      double mass_proxy (const int i) const { return m_object[i]->mass_proxy(); }
+      
+      /**
+       * @brief get the private member
+       * Catalogue::m_object[i]->m_mass_proxy_error
+       * @param i the object index
+       * @return the mass proxy error of the i-th object
+       */
+      double mass_proxy_error (const int i) const { return m_object[i]->mass_proxy_error(); }
 
       /**
        * @brief get the private member Catalogue::m_object[i]->m_generic
@@ -1966,17 +2154,20 @@ namespace cbl {
        * @param index index of the variable to set
        * @param var_name name of the variable
        * @param value variable value       
-       * @param cosmology object of class Cosmology, used to estimate
+       * @param cosmology object of class Cosmology, used to estimate 
        * the comoving distance from the given redshift
+       * @param update_coordinates if true the function 
+       * cbl::catalogue::Object::set_redshift update the coordinates 
+       * according to the redshift value
        */
-      void set_var (const int index, const Var var_name, const double value, const cosmology::Cosmology cosmology={});
+      void set_var (const int index, const Var var_name, const double value, const cosmology::Cosmology cosmology={}, const bool update_coordinates=true);
 
       /**
        * @brief set a private variable
        * @param index index of the variable to set
        * @param var_name name of the variable
        * @param value variable value
-       * @param cosmology object of class Cosmology     
+       * @param cosmology object of class Cosmology   
        */
       void set_var (const int index, const Var var_name, const int value, const cosmology::Cosmology cosmology={});
       
@@ -1986,8 +2177,11 @@ namespace cbl {
        * @param var vector of variables
        * @param cosmology object of class Cosmology, used to estimate
        * the comoving distance from the given redshift
+       * @param update_coordinates if true the function 
+       * cbl::catalogue::Object::set_redshift update the coordinates 
+       * according to the redshift value
        */
-      void set_var (const Var var_name, const std::vector<double> var, const cosmology::Cosmology cosmology={});
+      void set_var (const Var var_name, const std::vector<double> var, const cosmology::Cosmology cosmology={}, const bool update_coordinates=true);
 
       /**
        * @brief set a private variable
@@ -2037,6 +2231,37 @@ namespace cbl {
       void compute_centralDensity (const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const double Volume, const double ratio=0.1);
 
       /**
+       *  @brief compute the central density of each object in a void catalogue.
+       *  The central density is defined as \f$ n_0=\frac{r\,N_v}{V(R_0)} \f$,
+       *  \f$r\f$ is the ratio between the number of particle around the centre
+       *  of the void to be used as tracers of the central density and the total 
+       *  number of particles contained in the void, \f$N_v\f$.
+       *  The distance between the furthest of those \f$r\,N_v\f$ particles 
+       *  from the centre of the void determines the radius of the centre \f$R_0\f$.
+       *  \f$V(R_0)\f$ is the volume of a sphere with radius \f$R_0\f$.
+       *
+       *  @param tracers_catalogue the density field tracers catalogue
+       *
+       *  @param ChM a 3D chain mesh object, used to speed-up the
+       *  search of close pairs
+       *
+       *  @param data_numdensity 2D matrix containing the sampled
+       *  values of the mean number density as a function of
+       *  redshift. These data will be interpolated to finf the value
+       *  of the number desnity of the tracers at a specific redshift
+       *
+       *  @param method_interpolation the type of method used for the
+       *  interpolation: "Linear" &rarr; linear interpolation; "Poly"
+       *  &rarr; polynomial interpolation; "Spline" &rarr; cubic
+       *  spline interpolation; "Rat" &rarr; diagonal rational
+       *  function interpolation; "BaryRat" &rarr; barycentric
+       *  rational interpolation
+       *
+       *  @param ratio the ratio \f$r\f$ 
+       */
+      void compute_centralDensity (const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const std::vector<std::vector<double>> data_numdensity, const std::string method_interpolation, const double ratio=0.1);
+
+            /**
        *  @brief compute the central density of each object in a void catalogue.
        *  The central density is defined as \f$ n_0=\frac{r\,N_v}{V(R_0)} \f$,
        *  \f$r\f$ is the ratio between the number of particle around the centre

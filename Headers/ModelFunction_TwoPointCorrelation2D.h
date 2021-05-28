@@ -41,15 +41,4 @@
 // ============================================================================
 
 
-namespace cbl {
-
-  namespace modelling {
-
-    namespace twopt {
-      
-      
-    }
-  }
-}
-
 #endif

@@ -19,7 +19,7 @@
  ********************************************************************/
 
 /**
- *  @file CosmoBolognaLib/Func/SphericalHarmonics_Coefficients.cpp
+ *  \@file CosmoBolognaLib/Func/SphericalHarmonics_Coefficients.cpp
  *
  *  @brief Methods of the class
  *  SphericalHarmonics_Coefficients used to compute the spherical

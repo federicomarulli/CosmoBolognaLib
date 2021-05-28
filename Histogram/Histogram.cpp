@@ -55,7 +55,7 @@ cbl::glob::Histogram1D::Histogram1D (const std::vector<double> var, const std::v
 // ============================================================================
 
 
-void cbl::glob::Histogram1D::set (const size_t nbins, const double minVar, const double maxVar, const double shift, const BinType bin_type)
+void cbl::glob::Histogram1D::set (const size_t nbins, const double minVar, const double maxVar, const double shift, const BinType bin_type, const std::vector<double> vec_edges)
 {
   if (shift>1 || shift<0) 
     ErrorCBL("shift must be 0<shift<1!", "set", "Histogram.cpp");
@@ -100,6 +100,15 @@ void cbl::glob::Histogram1D::set (const size_t nbins, const double minVar, const
 
     gsl_histogram_set_ranges(histo1.get(), m_edges.data(), m_nbins+1);
     gsl_histogram_set_ranges(histo2.get(), m_edges.data(), m_nbins+1);
+  }
+  else if (m_binType==BinType::_custom_) {
+    if (m_nbins+1!=vec_edges.size())
+      ErrorCBL("length of vec_edges != nbins+1 !", "set", "Histrogram.cpp");      
+    m_edges[0] = m_minVar;
+    for (size_t i=0; i<m_nbins; i++) {
+      m_edges[i+1] = vec_edges[i+1];
+      m_bins[i] = 0.5*(vec_edges[i]+vec_edges[i+1]);
+    }
   }
 
   m_histo = histo1;
@@ -323,7 +332,7 @@ cbl::glob::Histogram2D::Histogram2D (const std::vector<double> var1, const std::
 // ============================================================================
 
 
-void cbl::glob::Histogram2D::set (const size_t nbins1, const size_t nbins2, const double minVar1, const double maxVar1, const double minVar2, const double maxVar2, const double shift1, const double shift2, const BinType bin_type1, const BinType bin_type2)
+void cbl::glob::Histogram2D::set (const size_t nbins1, const size_t nbins2, const double minVar1, const double maxVar1, const double minVar2, const double maxVar2, const double shift1, const double shift2, const BinType bin_type1, const BinType bin_type2, const std::vector<double> vec_edges1, const std::vector<double> vec_edges2)
 {
   if (shift1>1 || shift1<0 || shift2>1 || shift2<0) 
     ErrorCBL("shift must be in the range (0,1) !", "set", "Histrogram.cpp");
@@ -392,6 +401,15 @@ void cbl::glob::Histogram2D::set (const size_t nbins1, const size_t nbins2, cons
 	m_bins1[i] = pow(10., log10(m_edges1[i])+m_shift1*m_binSize1);
       }
     }
+    else if (m_binType1==BinType::_custom_) {
+      if (m_nbins1+1!=vec_edges1.size())
+	ErrorCBL("length of vec_edges1 != nbins1+1 !", "set", "Histrogram.cpp");      
+      m_edges1[0] = m_minVar1;
+      for (size_t i=0; i<m_nbins1; i++) {
+	m_edges1[i+1] = vec_edges1[i+1];
+	m_bins1[i] = 0.5*(vec_edges1[i]+vec_edges1[i+1]);
+      }
+    }
     else 
       ErrorCBL("no such bin_type!", "set", "Histogram2D.cpp");
 
@@ -410,6 +428,15 @@ void cbl::glob::Histogram2D::set (const size_t nbins1, const size_t nbins2, cons
       for (size_t i=0; i<m_nbins2; i++) {
 	m_edges2[i+1] = pow(10., log10(m_edges2[i])+m_binSize2);
 	m_bins2[i] = pow(10., log10(m_edges2[i])+m_shift2*m_binSize2);
+      }
+    }
+    else if (m_binType2==BinType::_custom_) {
+      if (m_nbins2+1!=vec_edges2.size())
+	ErrorCBL("length of vec_edges2 != nbins2+1 !", "set", "Histrogram.cpp");      
+      m_edges2[0] = m_minVar2;
+      for (size_t i=0; i<m_nbins2; i++) {
+	m_edges2[i+1] = vec_edges2[i+1];
+	m_bins2[i] = 0.5*(vec_edges2[i]+vec_edges2[i+1]);
       }
     }
     else 

@@ -227,6 +227,18 @@ namespace cbl {
       double integrate_qag (const double a, const double b, const double rel_err=1.e-2, const double abs_err=1.e-6, const int limit_size=1000, const int rule=6);
 
       /**
+       *  @brief compute the definite integral with GSL cquad method
+       *  @param a the lower limit of the integral
+       *  @param b the upper limit of the integral
+       *  @param rel_err the relative error
+       *  @param abs_err the absolute error
+       *  @param nevals the number of intervals
+       *
+       *  @return the definite integral of the function
+       */  
+      double integrate_cquad (const double a, const double b, const double rel_err=1.e-2, const double abs_err=1.e-6, const int nevals=100);
+
+      /**
        *  @brief compute the definite integral with GSL qaws method
        *  @param a the lower limit of the integral
        *  @param b the upper limit of the integral

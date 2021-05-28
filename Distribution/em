@@ -1,1 +1,1 @@
-emacs ../Headers/Distribution.h *cpp &
+emacs ../Headers/Distribution.h ../Headers/CombinedDistribution.h *cpp &

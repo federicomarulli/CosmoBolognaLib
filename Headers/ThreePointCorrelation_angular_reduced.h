@@ -109,13 +109,12 @@ namespace cbl {
 	 *  @param perc_increase the ratio
 	 *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
 	 *  @param nbins number of bins
-	 *  _angular_reduced
 	 *
 	 *  @warning This method has not been implemented yet
 	 */
 	ThreePointCorrelation_angular_reduced (const catalogue::Catalogue data, const catalogue::Catalogue random, const double side_s, const double side_u, const double perc_increase, const int nbins)
 	  : ThreePointCorrelation_angular_connected(data, random, side_s, side_u, perc_increase, nbins)
-	  { ErrorCBL("", "ThreePointCorrelation_angular_reduced", "ThreePointCorrelation_angular_reduced.h", cbl::glob::ExitCode::_workInProgress_); }
+	{ ErrorCBL("", "ThreePointCorrelation_angular_reduced", "ThreePointCorrelation_angular_reduced.h", cbl::glob::ExitCode::_workInProgress_); }
           
 	/**
 	 *  @brief constructor
@@ -128,7 +127,6 @@ namespace cbl {
 	 *  @param r13 the size of r<SUB>13</SUB>
 	 *  @param r13_binSize the size of r<SUB>13</SUB> bin
 	 *  @param nbins number of bins
-	 *  _angular_reduced
 	 *
 	 *  @warning This method has not been implemented yet
 	 */
@@ -138,7 +136,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default destructor
-	 *  
 	 */
 	~ThreePointCorrelation_angular_reduced () = default;
 
@@ -181,13 +178,16 @@ namespace cbl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
-	 * @param seed the seed for random number generation
+	 * @param fact factor used to compute the cell size of the
+	 * chain mesh: it is multiplied by the maximum distance
+	 * considered for the couples and can be setted by the user
+	 * to optimize the count of the couples
 	 *
-	 * 
+	 * @param seed the seed for random number generation
 	 *
 	 * @warning This method has not been implemented yet 
 	 */
-	void measure (const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213) override;
+	void measure (const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1, const int seed=3213) override;
 
 	///@}
 
@@ -205,7 +205,6 @@ namespace cbl {
 	 *  @param connected 0 &rarr; write the reducted 3pt correlation
 	 *  function; 1 &rarr; write both the reduced and connected 3pt
 	 *  correlation function
-	 *  
 	 *
 	 *  @warning This method has not been implemented yet
 	 */
@@ -215,7 +214,6 @@ namespace cbl {
 	 *  @brief write the measured three-point correlation covariance
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  
 	 */
 	void write_covariance (const std::string dir, const std::string file) const override;
 

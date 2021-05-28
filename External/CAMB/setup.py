@@ -48,7 +48,7 @@ def get_forutils():
         try:
             print('forutils not found, attempting to install using git...')
             os.chdir('..')
-            fbranch = os.getenv('FORUTILSBRANCH', '1.0.1')
+            fbranch = os.getenv('FORUTILSBRANCH', '1.0.3' if os.environ.get('CONDA_BUILD') else 'master')
             try:
                 if subprocess.call("git clone --branch %s --depth=1 https://github.com/cmbant/forutils" % fbranch,
                                    shell=True) == 0:
@@ -287,7 +287,7 @@ if __name__ == "__main__":
           platforms="any",
           package_data={'camb': [DLLNAME, 'HighLExtrapTemplate_lenspotentialCls.dat',
                                  'PArthENoPE_880.2_marcucci.dat', 'PArthENoPE_880.2_standard.dat',
-                                 'PRIMAT_Yp_DH_Error.dat']},
+                                 'PRIMAT_Yp_DH_Error.dat', 'PRIMAT_Yp_DH_ErrorMC_2021.dat']},
           test_suite='camb.tests',
           entry_points={
               'console_scripts': [
@@ -301,7 +301,8 @@ if __name__ == "__main__":
               'Programming Language :: Python :: 3',
               'Programming Language :: Python :: 3.6',
               'Programming Language :: Python :: 3.7',
-              'Programming Language :: Python :: 3.8'
+              'Programming Language :: Python :: 3.8',
+              'Programming Language :: Python :: 3.9'
           ],
           keywords=['cosmology', 'CAMB', 'CMB'],
           install_requires=['scipy>=1.0', 'sympy>=1.0'],

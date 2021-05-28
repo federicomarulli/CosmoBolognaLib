@@ -122,7 +122,7 @@ double cbl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const do
   // compute the mass variance
   //return 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4)+wrapper::gsl::GSL_integrate_qagiu(ff, 1., 1.e-5);
  
-  return 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(ff, 1.e-4, kmax, 1.e-1);
+  return 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(ff, 1.e-4, kmax, 1.e-3);
 }
 
 
@@ -159,7 +159,7 @@ double cbl::cosmology::Cosmology::sigma2R (const double radius, const string met
   if (input_file==par::defaultString || is_parameter_file) {
     if (m_sigma8>0) 
       // sigma_8 = sigma(8Mpc/h)
-      fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, redshift, store_output, output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor
+      fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, 0., store_output, output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor
   }
 
   return m_sigma2R_notNormalised(radius, method_Pk, redshift, store_output, output_root, interpType, kmax, input_file, is_parameter_file, unit1)*fact;

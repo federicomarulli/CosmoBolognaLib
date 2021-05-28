@@ -165,9 +165,14 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the
 	 *  two-point correlation function
 	 *
+	 *  @param fact factor used to compute the cell size of the
+	 *  chain mesh: it is multiplied by the maximum distance
+	 *  considered for the couples and can be setted by the user
+	 *  to optimize the count of the couples
+	 *
 	 *  
 	 */
-	void count_allPairs (const TwoPType type, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_SzapudiSzalay_);
+	void count_allPairs (const TwoPType type, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_SzapudiSzalay_, const double fact=0.1);
 
 	///@}
 
@@ -245,11 +250,16 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
+	 *  @param fact factor used to compute the cell size of the
+	 *  chain mesh: it is multiplied by the maximum distance
+	 *  considered for the couples and can be setted by the user
+	 *  to optimize the count of the couples
+	 *
 	 *  @return none, or an error message if the derived object
 	 *  does not have this member
 	 */
-	virtual void measurePoisson (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_)
-	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)count_d1d2; (void)count_rr; (void)count_d1r; (void)count_d2r; (void)tcount; (void)estimator; cbl::ErrorCBL("", "measurePoisson", "TwoPointCorrelation.h"); }
+	virtual void measurePoisson (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, double fact=0.1)
+	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)count_d1d2; (void)count_rr; (void)count_d1r; (void)count_d2r; (void)tcount; (void)estimator; (void)fact; cbl::ErrorCBL("", "measurePoisson", "TwoPointCorrelation.h"); }
 	
 	///@}
 

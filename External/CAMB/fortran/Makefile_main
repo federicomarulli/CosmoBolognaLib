@@ -1,11 +1,12 @@
 
 #Files containing classes to include
 #e.g. change RECOMBINATION_FILES to "recfast cosmorec" to also support cosmorec
+#     or to "recfast hyrec" to support HYREC-2
 POWERSPECTRUM_FILES ?= InitialPower
 REIONIZATION_FILES ?= reionization
 RECOMBINATION_FILES ?= recfast
 NONLINEAR_FILES     ?= halofit SecondOrderPK
-DARKENERGY_FILES  ?= DarkEnergyFluid DarkEnergyPPF
+DARKENERGY_FILES  ?= DarkEnergyFluid DarkEnergyPPF PowellMinimize DarkEnergyQuintessence
 
 BISPECTRUM ?= SeparableBispectrum
 
@@ -67,7 +68,7 @@ endif
 
 ifneq (,$(findstring hyrec,$(RECOMBINATION_FILES)))
 FFLAGS += -DHYREC
-HYREC_PATH ?= ../../HyRec/
+HYREC_PATH ?= ../../HYREC-2/
 LIBLINK += -L$(HYREC_PATH) -lhyrec
 camb: libhyrec.a
 python: libhyrec.a
@@ -99,14 +100,14 @@ libcamb: libforutils directories
 python: libforutils_so directories_so
 	@$(MAKE) -C $(DLL_DIR) $(MAKEOPT) -r -f ../Makefile_main camblib.so F90FLAGS="$(SF90FLAGS)" OUTPUT_DIR=$(DLL_DIR)
 
-../camb: $(CAMBLIB) $(DRIVER).o $(FORUTILS_DIR)/libforutils.a | silent
+../camb: $(CAMBLIB) $(DRIVER).o | silent
 	@$(MAKE) -C .. $(MAKEOPT) -f Makefile_main camb_exe
 
 camb_exe:
 	$(F90C) $(F90FLAGS) $(MODOUT) $(IFLAG)$(OUTPUT_DIR)/ $(IFLAG)"$(FORUTILS_DIR)" \
 		$(OUTPUT_DIR)/$(DRIVER).o $(OUTPUT_DIR)/$(CAMBLIB) $(F90CRLINK) $(LIBLINK) -o camb
 
-camblib.so: $(CAMBOBJ) $(FORUTILS_DIR)/libforutils.a
+camblib.so: $(CAMBOBJ)
 	@$(MAKE) -C .. $(MAKEOPT) -f Makefile_main $(DLL_DIR)/camblib.so
 
 libcambobj:

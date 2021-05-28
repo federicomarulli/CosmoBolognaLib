@@ -77,9 +77,7 @@ namespace cbl {
 	/// the upper limit of the line-of-sight integration
 	double pi_max = 100.;
 
-	/// the maximum separation used to count pairs; it is used to
-	/// compute the upper limit of the line-of-sight integration
-	/// in approximate projected clustering estimators
+	/// the maximum separation used to count pairs; it is used to compute the upper limit of the line-of-sight integration in approximate projected clustering estimators
 	double r_max_int = 100.;
 	
 	/// minimum separation up to which the correlation function is computed

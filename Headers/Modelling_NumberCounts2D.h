@@ -34,7 +34,7 @@
 #ifndef __MODELLINGNC2D__
 #define __MODELLINGNC2D__
 
-#include "Modelling2D.h"
+
 #include "Modelling_NumberCounts.h"
 
 
@@ -66,8 +66,7 @@ namespace cbl {
        *  2D number counts measurements
        *
        */
-      class Modelling_NumberCounts2D : public Modelling_NumberCounts, public Modelling2D
-      {
+      class Modelling_NumberCounts2D : public Modelling_NumberCounts {
 
       public:
 

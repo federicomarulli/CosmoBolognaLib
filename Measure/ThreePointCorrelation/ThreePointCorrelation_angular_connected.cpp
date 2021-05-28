@@ -71,9 +71,9 @@ void cbl::measure::threept::ThreePointCorrelation_angular_connected::set_paramet
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_angular_connected::measure (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_angular_connected::measure (const string dir_output_triplets, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const double fact, const int seed) 
 {
-  (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed;
+  (void)dir_output_triplets; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)fact; (void)seed;
   ErrorCBL("", "measure", "ThreePointCorrelation_angular_connected.cpp", ExitCode::_workInProgress_);
 }
 

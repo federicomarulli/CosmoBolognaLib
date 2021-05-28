@@ -53,6 +53,7 @@ void cbl::data::CovarianceMatrix::m_set_default ()
   m_correlation.resize(0, 0);
   m_variance.resize(0);
   m_std.resize(0);
+  m_determinant = cbl::par::defaultDouble;
   
 }
 
@@ -70,6 +71,7 @@ void cbl::data::CovarianceMatrix::m_set (const vector<double> covariance, const 
 
   m_matrix = cbl::wrapper::eigen::SquareMatrixToEigen(covariance);
   m_precision = m_matrix.inverse();
+  m_determinant = m_matrix.determinant();
   
   m_variance = m_matrix.diagonal();
   m_std = m_variance.cwiseSqrt();
@@ -388,4 +390,18 @@ cbl::data::CovarianceMatrix cbl::data::CovarianceMatrix::operator += (const std:
   }
 
   return CovarianceMatrix(matrix);
+}
+
+
+// ======================================================================================
+
+
+std::shared_ptr<cbl::statistics::SuperSampleCovariance> cbl::data::CovarianceMatrix::SSC () const
+{
+  if (isSet_SSC())
+    return m_SSC;
+  else {
+    ErrorCBL("The super-sample covariance is not set!", "SSC", "CovarianceMatrix.h");
+    return NULL;
+  }
 }

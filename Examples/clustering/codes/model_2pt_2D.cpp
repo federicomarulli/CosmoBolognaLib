@@ -1,5 +1,5 @@
 // ===================================================================================================================
-// Example code: how to model the Cartesian 2D two-point correlation function to constrain the linear bias and sigma12
+// Example code: how to model the Cartesian 2D two-point correlation function to constrain the linear bias and sigmav
 // ===================================================================================================================
 
 #include "Modelling_TwoPointCorrelation2D_cartesian.h"
@@ -64,7 +64,7 @@ int main () {
   
 
     // ----------------------------------------------------------------------------------------------------------------------------------
-    // ----------------- model the Cartesian 2D two-point correlation function and estimate the linear bias and sigma12 ----------------- 
+    // ----------------- model the Cartesian 2D two-point correlation function and estimate the linear bias and sigmav ----------------- 
     // ----------------------------------------------------------------------------------------------------------------------------------
 
     cbl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian model_twop(TwoP); // object used for modelling
@@ -78,9 +78,9 @@ int main () {
     const std::vector<double> bsigma8_limits = {0.8*cosmology.sigma8(), 3.*cosmology.sigma8()}; 
     const cbl::statistics::PriorDistribution bsigma8_prior {cbl::glob::DistributionType::_Uniform_, bsigma8_limits[0], bsigma8_limits[1], 63656}; 
   
-    // flat prior for sigma12
-    //const std::vector<double> sigma12_limits = {1., 1000.}; 
-    const cbl::statistics::PriorDistribution sigma12_prior {cbl::glob::DistributionType::_Constant_, 0.};// sigma12_limits[0], sigma12_limits[1], 5411}; 
+    // flat prior for sigmav
+    //const std::vector<double> sigmav_limits = {1., 1000.}; 
+    const cbl::statistics::PriorDistribution sigmav_prior {cbl::glob::DistributionType::_Constant_, 0.};// sigmav_limits[0], sigmav_limits[1], 5411}; 
 
     // mean redshift of the sample
     const double redshift = 1.;
@@ -89,7 +89,7 @@ int main () {
     model_twop.set_data_model(cosmology, redshift);
     
     // set the model for the redshift-space 2D two-point correlation 
-    model_twop.set_model_dispersionModel(fsigma8_prior, bsigma8_prior, sigma12_prior); 
+    model_twop.set_model_dispersion(fsigma8_prior, bsigma8_prior, sigmav_prior); 
 
     // ----------------------------------------------------------------------
     // ------------- run chains and write output chain and model ------------
@@ -105,7 +105,7 @@ int main () {
 
     std::vector<double> starting_parameters = {0.5, 1.5, 100.};
     
-    const std::string chain_file = "chain_cartesian_bias_sigma12.dat";
+    const std::string chain_file = "chain_cartesian_bias_sigmav.dat";
     
     model_twop.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_);
     

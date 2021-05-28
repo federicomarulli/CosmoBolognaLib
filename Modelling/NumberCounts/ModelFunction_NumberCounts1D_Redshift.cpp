@@ -59,7 +59,7 @@ std::vector<double> cbl::modelling::numbercounts::number_density_redshift (const
     cosmo.set_parameter(pp->Cpar[i], parameter[i]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
   std::vector<std::vector<double>> mass_function = cbl::modelling::numbercounts::mass_function(redshift, pp->Mass_vector, cosmo, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
 
@@ -78,7 +78,7 @@ std::vector<double> cbl::modelling::numbercounts::number_density_redshift (const
 
 
 std::vector<double> cbl::modelling::numbercounts::number_counts_redshift (const std::vector<double> redshift, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
-{
+{ 
   // structure contaning the required input data
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
 
@@ -94,49 +94,16 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_redshift (const 
   }
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
   std::vector<std::vector<double>> mass_function = cbl::modelling::numbercounts::mass_function (redshift, pp->Mass_vector, cosmo, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
 
   std::vector<double> number_counts(redshift.size());
-  double deltaZ = redshift[1]-redshift[0];
 
   for (size_t i=0; i<redshift.size(); i++) {
     glob::FuncGrid interpMF(pp->Mass_vector, mass_function[i], "Spline");
-    number_counts[i] = pp->area_rad*interpMF.integrate_qag(pp->Mass_min, pp->Mass_max)*cosmo.dV_dZdOmega(redshift[i], true)*deltaZ;
+    number_counts[i] = pp->area_rad*interpMF.integrate_qag(pp->Mass_min, pp->Mass_max)*cosmo.dV_dZdOmega(redshift[i], true)*(pp->edges_x[i+1]-pp->edges_x[i]);
   }
-
-  /*
-  std::vector<std::vector<double>> mass_function = cbl::modelling::numbercounts::mass_function (pp->z_std::vector, pp->Mass_vector, cosmo, pp->model_MF, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
-
-  std::vector<double> dV_dzdOmega (pp->z_vector.size());
-
-  for(size_t i=0; i<pp->z_vector.size(); i++)
-    dV_dzdOmega[i] = pp->area_rad*cosmo.dV_dZdOmega(pp->z_vector[i], true);
-
-  std::vector<double> number_density(redshift.size());
-
-  for (size_t i=0; i<pp->z_vector.size(); i++) {
-    glob::FuncGrid interpMF(pp->Mass_vector, mass_function[i], "Linear");
-    number_density[i] = interpMF.integrate_qag(pp->Mass_min, pp->Mass_max);
-  }
-
-  glob::FuncGrid interp_dVdZdOmega(pp->z_vector, dV_dzdOmega, "Linear");
-  glob::FuncGrid interp_nz(pp->z_vector, number_density, "Linear");
-
-  std::vector<double> number_counts(redshift.size());
-  double deltaZ = redshift[1]-redshift[0];
-
-  for (size_t i=0; i<redshift.size(); i++) {
-
-    auto integrand = [&] (const double z) 
-    {
-      return interp_nz(z)*interp_dVdZdOmega(z);
-    };
-
-    number_counts[i] = cbl::gsl::GSL_integrate_qag(integrand, redshift[0]+i*deltaZ, redshift[0]+(i+1)*deltaZ, 1.e-4);
-  }
-  */
 
   return number_counts;
 }

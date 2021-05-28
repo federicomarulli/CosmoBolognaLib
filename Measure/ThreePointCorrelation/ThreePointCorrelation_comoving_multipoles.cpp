@@ -19,7 +19,7 @@
  ********************************************************************/
 
 /**
- *  @file CosmoBolognaLib/Measure/ThreePointCorrelation/ThreePointCorrelation_comoving_multipoles.cpp
+ *  \@file CosmoBolognaLib/Measure/ThreePointCorrelation/ThreePointCorrelation_comoving_multipoles.cpp
  *
  *  @brief Methods of the class
  *  ThreePointCorrelation_comoving_multipoles used to compute the 
@@ -36,8 +36,6 @@
 
 
 #include "ThreePointCorrelation_comoving_multipoles.h"
-#include "ThreePointCorrelation_comoving_multipoles_single.h"
-#include "ThreePointCorrelation_comoving_multipoles_all.h"
 
 using namespace std;
 
@@ -173,22 +171,3 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles::set_catal
     m_nSplit = 1;
 
 }
-
-
-// ============================================================================
-
-
-std::shared_ptr<ThreePointCorrelation_comoving_multipoles> cbl::measure::threept::ThreePointCorrelation_comoving_multipoles::Create (const catalogue::Catalogue data, const catalogue::Catalogue random, const double r12Min, const double r12Max, const double r13Min, const double r13Max, const int nOrders, const double split, const int seed)
-{
-  return move(unique_ptr<ThreePointCorrelation_comoving_multipoles_single>(new ThreePointCorrelation_comoving_multipoles_single(data, random, r12Min, r12Max, r13Min, r13Max, nOrders, split, seed)));
-}
-
-
-// ============================================================================
-
-
-std::shared_ptr<ThreePointCorrelation_comoving_multipoles> cbl::measure::threept::ThreePointCorrelation_comoving_multipoles::Create (const catalogue::Catalogue data, const catalogue::Catalogue random, const double rMin, const double rMax, const double binSize, const int nOrders, const double split, const int seed)
-{
-  return move(unique_ptr<ThreePointCorrelation_comoving_multipoles_all>(new ThreePointCorrelation_comoving_multipoles_all(data, random, rMin, rMax, binSize, nOrders, split, seed)));
-}
-

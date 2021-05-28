@@ -53,36 +53,36 @@ namespace cbl {
         /// derived parameter
         _Derived_,
 
+       /// correlated parameters
+        _Correlated_,
     };
 
     /**
-     * @brief return a vector containing the
-     * ParameterType names
-     * @return a vector containing the
-     * ParameterType names
+     * @brief return a vector containing the ParameterType names
+     *
+     * @return a vector containing the ParameterType names
      */
-    inline std::vector<std::string> ParameterTypeNames () { return {"Base", "Derived"}; }
+    inline std::vector<std::string> ParameterTypeNames () { return {"Base", "Derived", "Correlated"}; }
 
     /**
+     * @brief cast an enum of type ParameterType from its index
      *
-     * @brief cast an enum of type ParameterType
-     * from its index
      * @param parameterTypeIndex the parameterType index
      * @return object of class ParameterType
      */
     inline ParameterType ParameterTypeCast (const int parameterTypeIndex) { return castFromValue<ParameterType>(parameterTypeIndex); }
 
     /**
-     * @brief cast an enum of type ParameterType
-     * from its name
+     * @brief cast an enum of type ParameterType from its name
+     *
      * @param parameterTypeName the parameterType name
      * @return object of class ParameterType
      */
     inline ParameterType ParameterTypeCast (const std::string parameterTypeName) { return castFromName<ParameterType>(parameterTypeName, ParameterTypeNames()); }
 
     /**
-     * @brief cast an enum of type ParameterType
-     * from indeces
+     * @brief cast an enum of type ParameterType from indeces
+     *
      * @param parameterTypeIndeces the parameterType indeces
      * @return object of class ParameterType
      */
@@ -98,8 +98,8 @@ namespace cbl {
 
 
     /**
-     * @class ModelParameters ModelParameters.h
-     * "Headers/ModelParameters.h"
+     *  @class ModelParameters ModelParameters.h
+     *  "Headers/ModelParameters.h"
      *
      *  @brief The class ModelParameters
      *
@@ -124,11 +124,15 @@ namespace cbl {
       /// number of derived parameters
       size_t m_nparameters_derived = 0;
 
+      /// number of correlated parameters
+      size_t m_nparameters_correlated = 0;
+
       /// indexes of base parameters
       std::vector<unsigned int> m_base_parameter;
 
       /// indexes of the derived parameters
       std::vector<unsigned int> m_derived_parameter;
+
 
       /**
        * @brief private member to set the parameter
@@ -163,6 +167,16 @@ namespace cbl {
       ModelParameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames);
 
       /**
+       *  @brief constructor for ModelParameters
+       *
+       *  @param nparameters the number of parameters
+       * 
+       *  @param parameterNames the parameter names
+       */
+      ModelParameters (const size_t nparameters, std::vector<std::string> parameterNames);
+
+
+      /**
        *  @brief default destructor
        */
       ~ModelParameters () = default;
@@ -182,33 +196,30 @@ namespace cbl {
        *  @name Member functions used to set private/protected of the ModelParameters
        */
       ///@{
-
+      
       /**
-       * @brief return the total number of
-       * parameters
+       * @brief return the total number of parameters
        *
        * @return the total number of parameters
        */
       size_t nparameters () const;
 
       /**
-       * @brief return the number of base
-       * parameters
+       * @brief return the number of base parameters
        *
        * @return the number of base parameters
        */
       size_t nparameters_base () const;
 
       /**
-       * @brief return the private member
-       * m_base_parameters
+       * @brief return the private member m_base_parameters
+       *
        * @return the private member m_base_parameters
        */
       std::vector<unsigned int> base_parameter () const { return m_base_parameter; }
 
       /**
-       * @brief return the number of derived
-       * parameters
+       * @brief return the number of derived parameters
        *
        * @return the number of derived parameters
        */
@@ -292,6 +303,17 @@ namespace cbl {
        *  @return none
        */
       virtual void set_parameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames);
+      
+      /**
+       *  @brief set the parameter
+       *
+       *  @param nparameters the number of parameters
+       *
+       *  @param parameterNames the parameter names
+       *
+       *  @return none
+       */
+      virtual void set_parameters (const size_t nparameters, std::vector<std::string> parameterNames);
 
       /**
        *  @brief set the parameter
@@ -316,10 +338,9 @@ namespace cbl {
        *  @name Member functions used to set private/protected of the ModelParameters
        */
       ///@{
-
+      
       /**
-       * @brief return the number of free
-       * parameters
+       * @brief return the number of free parameters
        *
        * @return the number of free parameters
        */
@@ -398,7 +419,7 @@ namespace cbl {
       /**
        * @brief get the protected member m_value
        *
-       *  @param p the p-th parameter
+       * @param p the p-th parameter
        *
        * @return the bestfit value of the parameter
        */

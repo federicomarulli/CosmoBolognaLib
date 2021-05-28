@@ -36,7 +36,6 @@
 #define __MODELLINGTWOPOINT2D__
 
 
-#include "Modelling2D.h"
 #include "Modelling_TwoPointCorrelation.h"
 
 
@@ -57,11 +56,10 @@ namespace cbl {
        *  @brief The class Modelling_TwoPointCorrelation2D
        *
        *  This file defines the interface of the base class
-       *  Modelling_TwoPointCorrelation2D, used for modelling
-       *  the 2D two-point correlation function in cartesian coordinates
-       *
+       *  Modelling_TwoPointCorrelation2D, used for modelling the 2D
+       *  two-point correlation function in cartesian coordinates
        */
-      class Modelling_TwoPointCorrelation2D : public Modelling2D, public Modelling_TwoPointCorrelation {
+      class Modelling_TwoPointCorrelation2D : public Modelling_TwoPointCorrelation {
 
       public:
 
@@ -72,7 +70,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default constuctor
-	 *  _TwoPointCorrelation2D
 	 */
 	Modelling_TwoPointCorrelation2D () = default;
 
@@ -94,7 +91,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default destructor
-	 *  
 	 */
 	virtual ~Modelling_TwoPointCorrelation2D () = default;
 

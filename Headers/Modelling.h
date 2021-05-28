@@ -76,6 +76,9 @@ namespace cbl {
 
       /// input model
       std::shared_ptr<statistics::Model> m_model = NULL;
+      
+      /// transfer function, for the computation of the super-sample covariance
+      std::shared_ptr<statistics::Model> m_transfer_func = NULL;
 
       /// likelihood
       std::shared_ptr<statistics::Likelihood> m_likelihood = NULL;
@@ -89,20 +92,10 @@ namespace cbl {
       /**
        *  @brief set the interal variable m_parameter_priors
        *
-       *  @param prior_distribution vector containing the prior distributions
-       *
-       *  
+       *  @param prior_distribution vector containing the prior
+       *  distributions
        */
       void m_set_prior (std::vector<statistics::PriorDistribution> prior_distribution);
-
-      /**
-       *  @brief set the interal variable m_posterior
-       *
-       *  @param seed the seed
-       *
-       *  
-       */
-      void m_set_posterior (const int seed);
 
     public:
 
@@ -110,26 +103,31 @@ namespace cbl {
        *  @name Constructors/destructors
        */
       ///@{
-
+      
       /**
-       *  @brief default constuctor
-       *  
+       *  @brief default constuctor 
        */
       Modelling () = default;
 
       /**
-       *  @brief default destructor
-       *  
+       *  @brief default destructor 
        */
       virtual ~Modelling () = default;
 
       ///@}
-
+      
+      /**
+       *  @brief set the interal variable m_posterior
+       *
+       *  @param seed the seed
+       */
+      void m_set_posterior (const int seed);
+      
       /**
        *  @name Member functions used to get the protected members
        */
       ///@{
-
+      
       /**
        *  @brief return the dataset
        *  @return pointer to the current dataset
@@ -148,6 +146,20 @@ namespace cbl {
 	return m_data_fit; 
       }
 
+      /**
+       *  @brief return the transfer function, or response, used to compute the 
+       *  super-sample covariance
+       *
+       *  @return pointer to the transfer function
+       */    
+      std::shared_ptr<statistics::Model> transfer_function ();
+      
+      /**
+       *  @brief check if the response function used to compute the 
+       *  super-sample covariance is set
+       */    
+      void isSet_response ();
+      
       /**
        *  @brief return the likelihood parameters
        *  @return pointer to the likelihood parameters
@@ -171,15 +183,37 @@ namespace cbl {
        *  @return pointer to the posterior parameters
        */    
       std::shared_ptr<statistics::ModelParameters> posterior_parameters ();
+      
+      /**
+       *  @brief set the value of a parameter 
+       *  providing its name string
+       *  
+       *  @param parameter parameter name to set
+       *  @param value the new value for the parameter 
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_parameter_from_string (const std::string parameter, const double value)
+      { (void)parameter; (void)value; ErrorCBL("", "set_parameter_from_string", "Modelling.h"); }
+      
+      /**
+       *  @brief get the value of a parameter 
+       *  providing its name string
+       *  
+       *  @param parameter parameter name to get
+       *  @return the parameter value
+       */
+      virtual double get_parameter_from_string (const std::string parameter) const
+      { return ErrorCBL("", "get_parameter_from_string ("+parameter+")", "Modelling.h"); }
 
       ///@}
-
+      
 
       /**
        *  @name Member functions used to set internal parameters
        */
       ///@{
-
+      
       /**
        *  @brief reset the fit range 
        *
@@ -194,12 +228,8 @@ namespace cbl {
        *  @param xmin minimum x value used for the fit
        *
        *  @param xmax maximum x value used for the fit
-       * 
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
-      virtual void set_fit_range (const double xmin, const double xmax)
-      { (void)xmin; (void)xmax; ErrorCBL("", "set_fit_range", "Modelling.h"); }
+      void set_fit_range (const double xmin, const double xmax);
       
       /**
        *  @brief set the fit range 
@@ -211,12 +241,8 @@ namespace cbl {
        *  @param ymin minimum y value used for the fit
        *
        *  @param ymax maximum y value used for the fit
-       *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
-      virtual void set_fit_range (const double xmin, const double xmax, const double ymin, const double ymax)
-      { (void)xmin; (void)xmax; (void)ymin; (void)ymax; ErrorCBL("", "set_fit_range", "Modelling.h"); }
+      void set_fit_range (const double xmin, const double xmax, const double ymin, const double ymax);
 
       /**
        *  @brief set the dataset
@@ -256,6 +282,26 @@ namespace cbl {
        *  estimated with resampling methods
        */
       void set_likelihood (const statistics::LikelihoodType likelihood_type, const std::vector<size_t> x_index={0, 2}, const int w_index=-1, const double prec=1.e-10, const int Nres=-1);
+      
+      /**
+       *  @brief set the likelihood function, given a user-defined
+       *  log-likelihood function
+       *
+       *  if the input parameter Nres is larger than 0, the inverted
+       *  covariance matrix is corrected as follows (Hartlap, Simon
+       *  and Schneider 2006):
+       *
+       *  \f[ \hat{C}^{-1} =
+       *  \left(1-\frac{n_b+1}{N_{res}-1}\right)C^{-1} \f]
+       *
+       *  where \f$n_b\f$ is the number of bins and \f$N_{res}\f$ is
+       *  the number of resamplings
+       *
+       *  @param log_likelihood_function the user-defined
+       *  loglikelihood function (natural logarithm)
+       *
+       */
+      void set_likelihood (const cbl::statistics::Likelihood_function log_likelihood_function);
 
       ///@}
       
@@ -297,8 +343,6 @@ namespace cbl {
        *  @param tol the tolerance in finding convergence 
        *
        *  @param epsilon the simplex side
-       *
-       *  
        */
       void maximize_likelihood (const std::vector<double> start, const std::vector<std::vector<double>> parameter_limits, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3);
 
@@ -333,8 +377,6 @@ namespace cbl {
        *  simplex size
        *
        *  @param seed the seed
-       *
-       *  
        */
       void maximize_posterior (const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3, const int seed=666);
 
@@ -355,8 +397,6 @@ namespace cbl {
        *
        *  @param parallel false \f$\rightarrow\f$ non-parallel
        *  sampler; true \f$\rightarrow\f$ parallel sampler
-       *
-       *  
        */
       void sample_posterior (const int chain_size, const int nwalkers, const int seed=666, const double aa=2, const bool parallel=true);
 
@@ -393,8 +433,6 @@ namespace cbl {
        *
        *  @param parallel false \f$\rightarrow\f$ non-parallel
        *  sampler; true \f$\rightarrow\f$ parallel sampler
-       *
-       *  
        */
       void sample_posterior (const int chain_size, const int nwalkers, const double radius, const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3, const int seed=666, const double aa=2, const bool parallel=true);
 
@@ -420,8 +458,6 @@ namespace cbl {
        *
        *  @param parallel false \f$\rightarrow\f$ non-parallel
        *  sampler; true \f$\rightarrow\f$ parallel sampler
-       *
-       *  
        */
       void sample_posterior (const int chain_size, const int nwalkers, std::vector<double> &value, const double radius, const int seed=666, const double aa=2, const bool parallel=true);
 
@@ -443,8 +479,6 @@ namespace cbl {
        *
        *  @param parallel false \f$\rightarrow\f$ non-parallel
        *  sampler; true \f$\rightarrow\f$ parallel sampler
-       *
-       *  
        */
       void sample_posterior (const int chain_size, const std::vector<std::vector<double>> chain_value, const int seed=666, const double aa=2, const bool parallel=true);
 
@@ -470,8 +504,6 @@ namespace cbl {
        *
        *  @param parallel false \f$\rightarrow\f$ non-parallel
        *  sampler; true \f$\rightarrow\f$ parallel sampler
-       *
-       *  
        */
       void sample_posterior (const int chain_size, const int nwalkers, const std::string input_dir, const std::string input_file, const int seed=666, const double aa=2, const bool parallel=true);
 
@@ -506,8 +538,6 @@ namespace cbl {
        * the posterior ratio is used as weight
        *
        * @warning column is used only for ASCII chain files
-       *
-       * 
        */
       void importance_sampling (const std::string input_dir, const std::string input_file, const int seed=666, const std::vector<size_t> column={}, const int header_lines_to_skip=1, const bool is_FITS_format=false, const bool apply_to_likelihood=false);
 
@@ -537,8 +567,6 @@ namespace cbl {
        *  @param prec decimal precision
        *
        *  @param ww number of characters to be used as field width
-       *
-       *  
        */
       void write_chain (const std::string output_dir, const std::string output_file, const int start=0, const int thin=1, const bool is_FITS_format=false, const int prec=5, const int ww=14);
 
@@ -558,8 +586,6 @@ namespace cbl {
        *
        *  @param fits false \f$\rightarrow\f$ ascii file; true
        *  \f$\rightarrow\f$ fits file
-       *
-       *  
        */
       void read_chain (const std::string input_dir, const std::string input_file, const int nwalkers, const std::vector<size_t> columns={}, const int skip_header=1, const bool fits=false);
 
@@ -600,8 +626,6 @@ namespace cbl {
        *
        *  @param ns number of samples used to estimate the covariance
        *  matrix
-       *
-       *  
        */
       void show_results (const int start=0, const int thin=1, const int nbins=50, const bool show_mode=false, const int ns=-1);
 
@@ -661,8 +685,6 @@ namespace cbl {
        *
        *  @param ns number of samples used to estimate the covariance
        *  matrix
-       *
-       *  
        */
       void write_results (const std::string output_dir, const std::string root_file, const int start=0, const int thin=1, const int nbins=50, const bool fits=false, const bool compute_mode=false, const int ns=-1);
 
@@ -679,11 +701,9 @@ namespace cbl {
        *  used to compute the model; if this vector is not provided,
        *  the model will be computed using the best-fit parameters
        *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @return none
        */
-      virtual void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters)
-      { (void)output_dir; (void)output_file; (void)xx; (void)parameters; cbl::ErrorCBL("", "write_model", "Modelling.h"); }
+      virtual void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters);
 
       /**
        *  @brief write the model at xx, yy for given parameters
@@ -702,11 +722,9 @@ namespace cbl {
        *  used to compute the model; if this vector is not provided,
        *  the model will be computed using the best-fit parameters
        *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @return none
        */
-      virtual void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> parameters)
-      { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)parameters; cbl::ErrorCBL("", "write_model", "Modelling.h"); }
+      virtual void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> parameters);
 
       /**
        *  @brief write the model at xx with best-fit parameters
@@ -718,11 +736,9 @@ namespace cbl {
        *
        *  @param xx vector of points at which the model is computed
        *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @return none
        */
-      virtual void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx)
-      { (void)output_dir; (void)output_file; (void)xx; cbl::ErrorCBL("", "write_model_at_bestfit", "Modelling.h"); }
+      virtual void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx);
 
       /**
        *  @brief write the model at xx, yy with best-fit parameters
@@ -738,11 +754,9 @@ namespace cbl {
        *  @param yy vector of points at which the model is computed,
        *  second axis
        *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @return none
        */
-      virtual void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy)
-      { (void)output_dir; (void)output_file; (void)xx; (void)yy; cbl::ErrorCBL("", "write_model_at_bestfit", "Modelling.h"); }
+      virtual void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy);
 
       /**
        *  @brief write the model at xx computing 16th, 50th and 84th
@@ -758,11 +772,9 @@ namespace cbl {
        *
        *  @param thin the position step
        *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @return none
        */
-      virtual void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start=0, const int thin=1)
-      { (void)output_dir; (void)output_file; (void)xx; (void)start; (void)thin; cbl::ErrorCBL("", "write_model_from_chains", "Modelling.h"); }
+      virtual void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start=0, const int thin=1);
 
       /**
        *  @brief write the model at xx, yy computing 16th, 50th and
@@ -782,14 +794,26 @@ namespace cbl {
        *
        *  @param thin the position step
        *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @return none
        */
-      virtual void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const int start=0, const int thin=1)
-      { (void)output_dir; (void)output_file; (void)xx; (void)yy; (void)start; (void)thin; cbl::ErrorCBL("", "write_model_from_chains", "Modelling.h"); }
+      virtual void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const int start=0, const int thin=1);
 
+      /**
+       *  @brief the reduced \f$\chi^2\f$
+       *
+       *  this function computes the reduced \f$\chi^2\f$,
+       *  i.e. \f$\chi^2/(N_{\rm bins}-N_{\rm parameters})\f$
+       *
+       *  @param parameter vector containing the model parameters; if
+       *  not provided in input, the chi2 is evaluated at best-fit
+       *  parameter values
+       *
+       *  @return the reduced \f$\chi^2\f$
+       */
+      double reduced_chi2 (const std::vector<double> parameter={});
+      
       ///@}
-	
+      
     };
   }
 }

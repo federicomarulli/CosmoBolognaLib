@@ -66,3 +66,5 @@ V5.2 new notebook and example codes for cosmic void analyses; makefile updated t
 V5.3 new functions to model number counts, redshift-space distortions and three-point correlation function
 
 V5.4 new logo (by Sofia Contarini), new functions to model 2 and 3 point correlation functions
+
+V5.5 new functions for modelling different cosmological probes and their combinations

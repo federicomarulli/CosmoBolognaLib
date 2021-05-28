@@ -19,7 +19,7 @@
  ********************************************************************/
 
 /**
- *  @file CosmoBolognaLib/Measure/ThreePointCorrelation/ThreePointCorrelation_comoving_multipoles_all.cpp
+ *  \@file CosmoBolognaLib/Measure/ThreePointCorrelation/ThreePointCorrelation_comoving_multipoles_all.cpp
  *
  *  @brief Methods of the class
  *  ThreePointCorrelation_comoving_multipoles_all used to compute the 
@@ -157,9 +157,9 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_all::m_cou
 	    }
 
 	// estimate the computational time and update the time count
-	if (i==int(nObjects*0.25)) coutCBL << ".............25% completed" << endl;
-	if (i==int(nObjects*0.5)) coutCBL << ".............50% completed" << endl;
-	if (i==int(nObjects*0.75)) coutCBL << ".............75% completed"<< endl;   
+	if (i==int(nObjects*0.25)) coutCBL << ".............25% completed   " << endl;
+	if (i==int(nObjects*0.5)) coutCBL << ".............50% completed   " << endl;
+	if (i==int(nObjects*0.75)) coutCBL << ".............75% completed   "<< endl;   
       }
 #pragma omp critical
     {
@@ -265,8 +265,6 @@ cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_all::ThreePoint
 {
   coutCBL << "Setting parameters..." << endl;
   set_parameters(rMin, rMax, binSize, nOrders);
-  coutCBL << "Setting parameters..." << endl;
-  coutCBL << "Done!" << endl;
   set_catalogues(catalogue, random_catalogue, split, seed);
   coutCBL << "Done!" << endl;
 }
@@ -371,6 +369,7 @@ cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_all::ThreePoint
 	m_zeta.push_back(zeta[ell]);
       }
     }
+  
 }
 
 
@@ -390,13 +389,14 @@ void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_all::set_p
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_all::measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_triplets, const bool tcount, const int seed)
+void cbl::measure::threept::ThreePointCorrelation_comoving_multipoles_all::measure (const ErrorType errorType, const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets, const int nResamplings, const bool count_triplets, const bool tcount, const double fact, const int seed)
 {
   coutCBL << "I'm computing the three-point correlation multipoles..." << endl;
 
   (void)errorType; 
   (void)nResamplings;
   (void)tcount;
+  (void)fact;
   (void)seed;
 
   if (count_triplets) { // count triplets

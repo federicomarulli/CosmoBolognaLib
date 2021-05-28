@@ -51,9 +51,9 @@ using namespace glob;
 // ============================================================================
 
 
-void cbl::measure::threept::ThreePointCorrelation_angular_reduced::measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const int seed) 
+void cbl::measure::threept::ThreePointCorrelation_angular_reduced::measure (const string dir_output_triplets, const string dir_output_2pt, const vector<string> dir_input_triplets, const bool count_ddd, const bool count_rrr, const bool count_ddr, const bool count_drr, const bool tcount, const double fact, const int seed) 
 {
-  (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)seed; 
+  (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)fact; (void)seed; 
   ErrorCBL("", "measure", "ThreePointCorrelation_angular_reduced.cpp", ExitCode::_workInProgress_);
 }
 

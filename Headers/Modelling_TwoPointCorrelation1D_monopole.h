@@ -212,7 +212,7 @@ namespace cbl {
 	 *    - \f$\alpha\f$
 	 *    - \f$f(z)\sigma_8(z)\f$
 	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$A_i\f$
+	 *    - \f${A_i}_{i=0}^N\f$
 	 *
 	 *  the dark matter two-point correlation function is computed
 	 *  using the input cosmological parameters
@@ -249,7 +249,7 @@ namespace cbl {
 	 *    - \f$\alpha\f$
 	 *    - \f$f(z)\sigma_8(z)\f$
 	 *    - \f$b(z)\sigma_8(z)\f$
-	 *    - \f$A_i\f$
+	 *    - \f${A_i}_{i=0}^N\f$
 	 *
 	 *  the positions of the BAO peak, dip, and linear point are
 	 *  provided in output as derived parameters
@@ -346,7 +346,7 @@ namespace cbl {
 	 *
 	 *  the model has 1+N parameters: 
 	 *    - bias
-	 *    - cosmological paramters
+	 *    - N cosmological paramters
 	 *
 	 *  the dark matter two-point correlation function is computed
 	 *  using the input cosmological parameters

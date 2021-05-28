@@ -93,10 +93,9 @@ namespace cbl {
 
 	/**
 	 *  @brief default constructor
-	 *  _angular_connected
 	 */
 	ThreePointCorrelation_angular_connected () = default;
-
+	
 	/**
 	 *  @brief constructor
 	 *  @param data object of class Catalogue containing the input
@@ -108,11 +107,10 @@ namespace cbl {
 	 *  @param perc_increase the ratio
 	 *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
 	 *  @param nbins number of bins
-	 *  _angular_connected
 	 */
 	ThreePointCorrelation_angular_connected (const catalogue::Catalogue data, const catalogue::Catalogue random, const double side_s, const double side_u, const double perc_increase, const int nbins)
 	  : ThreePointCorrelation(data, random) { ErrorCBL("", "ThreePointCorrelation_angular_connected", "ThreePointCorrelation_angular_connected.h", cbl::glob::ExitCode::_workInProgress_); set_parameters(side_s, side_u, perc_increase, nbins); }
-
+	
 	/**
 	 *  @brief constructor
 	 *  @param data object of class Catalogue containing the input
@@ -124,14 +122,12 @@ namespace cbl {
 	 *  @param r13 the size of r<SUB>13</SUB>
 	 *  @param r13_binSize the size of r<SUB>13</SUB> bin
 	 *  @param nbins number of bins
-	 *  _angular_connected
 	 */
 	ThreePointCorrelation_angular_connected (const catalogue::Catalogue data, const catalogue::Catalogue random, const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins)
 	  : ThreePointCorrelation(data, random) { ErrorCBL("", "ThreePointCorrelation_angular_connected", "ThreePointCorrelation_angular_connected.h", cbl::glob::ExitCode::_workInProgress_); set_parameters(r12, r12_binSize, r13, r13_binSize, nbins); }
 
 	/**
 	 *  @brief default destructor
-	 *  
 	 */
 	~ThreePointCorrelation_angular_connected () = default;
 
@@ -150,7 +146,6 @@ namespace cbl {
 	 *  @param perc_increase the ratio
 	 *  &Delta;r<SUB>12</SUB>/r<SUB>12</SUB>=&Delta;r<SUB>13</SUB>/r<SUB>13</SUB>
 	 *  @param nbins number of bins
-	 *  
 	 *
 	 *  @warning This method has not been implemented yet
 	 */
@@ -164,7 +159,6 @@ namespace cbl {
 	 *  @param r13_binSize the size of r<SUB>13</SUB> bin 
 	 *  @param nbins number of bins
 	 *  
-	 *
 	 *  @warning This method has not been implemented yet
 	 */
 	void set_parameters (const double r12, const double r12_binSize, const double r13, const double r13_binSize, const int nbins);
@@ -176,7 +170,7 @@ namespace cbl {
 	 *  @name Member functions to get protected parameters
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief get the protected member
 	 *  ThreePointCorrelation_angular_connected::m_scale
@@ -201,13 +195,12 @@ namespace cbl {
 	std::vector<double> error () const override { return m_error; }
 
 	///@}
-
-
+	
 	/**
 	 *  @name Member functions to measure the three-point correlation function
 	 */
 	///@{
-
+	
 	/**
 	 * @brief method to measure the three-point correlation function
 	 *
@@ -236,16 +229,18 @@ namespace cbl {
 	 * @param tcount 1 &rarr; activate the CPU time counter; 0
 	 * &rarr; no time counter
 	 *
-	 * @param seed the seed for random number generation
+	 * @param fact factor used to compute the cell size of the
+	 * chain mesh: it is multiplied by the maximum distance
+	 * considered for the couples and can be setted by the user
+	 * to optimize the count of the couples
 	 *
-	 * 
+	 * @param seed the seed for random number generation
 	 *
 	 * @warning This method has not been implemented yet
 	 */
-	void measure (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const int seed=3213) override;
+	void measure (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1, const int seed=3213) override;
     
 	///@}
-
     
 	/**
 	 *  @name Input/Output methods
@@ -258,7 +253,6 @@ namespace cbl {
 	 *  @param dir output directory
 	 *  @param file output file
 	 *  
-	 *
 	 *  @warning This method has not been implemented yet
 	 */
 	void write (const std::string dir, const std::string file) const override;
@@ -267,7 +261,6 @@ namespace cbl {
 	 *  @brief write the measured three-point correlation covariance
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  
 	 */
 	void write_covariance (const std::string dir, const std::string file) const override;
 

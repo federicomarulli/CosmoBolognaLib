@@ -71,10 +71,9 @@ namespace cbl {
        *  @name Constructors/destructors
        */
       ///@{
-
+      
       /**
        *  @brief default constructor
-       *  1D
        */
       Data1D ()
 	: Data(DataType::_1D_) {}
@@ -86,8 +85,9 @@ namespace cbl {
        *
        *  @param skip_nlines the header lines to be skipped
        *
-       *  @param column_x the column of x values in the input file; if
-       *  it is not provided, the first column will be used by default
+       *  @param column vector containing the column of x values in
+       *  the input file; if it is not provided, the first column will
+       *  be used by default
        *
        *  @param column_data the column of data values in the input
        *  file; the size of column_data is the number of data to be
@@ -96,24 +96,27 @@ namespace cbl {
        *  the size of column_data is larger than 1, more than 1 data
        *  vectors are read and then added one after the other in a
        *  single data object; if column_data is not provided, the
-       *  first column after column_x will be used by default,
-       *  assuming that only 1 data vector has to be read
+       *  first column after the column of x values will be used by
+       *  default, assuming that only 1 data vector has to be read
        *
        *  @param column_errors the column of error values in the input
        *  file; the size of column_error must be equal to the size of
        *  column_data; if the size of column_error is larger than 1,
        *  more than 1 error vectors are read and then added one after
        *  the other in a single data object; if column_random is not
-       *  provided, the second column after column_x will be used by
-       *  default, assuming that only 1 random vector has to be read;
-       *  if the input file has only 2 columns, the errors will be set
-       *  to 1
+       *  provided, the second column after the column of x values
+       *  will be used by default, assuming that only 1 random vector
+       *  has to be read; if the input file has only 2 columns, the
+       *  errors will be set to 1
        *
-       *  1D
+       *  @param column_edges vector containing the columns of x bin
+       *  edge values in the input file; if it is not provided, the
+       *  third and four columns after the column of x values will be
+       *  used; if these columns do no exist the edges are not read
        */
-      Data1D (const std::string input_file, const int skip_nlines=0, const int column_x=1, const std::vector<int> column_data={}, const std::vector<int> column_errors={})
+      Data1D (const std::string input_file, const int skip_nlines=0, const std::vector<int> column={1}, const std::vector<int> column_data={}, const std::vector<int> column_errors={}, const std::vector<int> column_edges={})
 	: Data(cbl::data::DataType::_1D_)
-	{ read(input_file, skip_nlines, column_x, column_data, column_errors); }
+      { read(input_file, skip_nlines, column, column_data, column_errors, column_edges); }
 
       /**
        *  @brief constructor which gets the data from input vectors
@@ -122,11 +125,14 @@ namespace cbl {
        *
        *  @param data vector containing data
        *
-       *  1D
+       *  @param val unused variable, only used to distinguish
+       *  the different constructors of the class
+       *
+       *  @param bin_edges_x the x variable bin edges
        */
-      Data1D (const std::vector<double> x, const std::vector<double> data)
+      Data1D (const std::vector<double> x, const std::vector<double> data, const double val=-1, const std::vector<double> bin_edges_x={})
 	: Data(cbl::data::DataType::_1D_, data)
-	{ set_xx(x); }
+	{ (void)val; set_xx(x); if (bin_edges_x.size()>0) set_edges_xx(bin_edges_x); }
       
       /**
        *  @brief constructor which gets both the data and the errors
@@ -138,11 +144,14 @@ namespace cbl {
        *
        *  @param error vector containing the errors
        *
-       *  1D
+       *  @param val unused variable, only used to distinguish
+       *  the different constructors of the class
+       *
+       *  @param bin_edges_x the x variable bin edges
        */
-      Data1D (const std::vector<double> x, const std::vector<double> data, const std::vector<double> error) 
+      Data1D (const std::vector<double> x, const std::vector<double> data, const std::vector<double> error, const double val=-1, const std::vector<double> bin_edges_x={}) 
 	: Data(cbl::data::DataType::_1D_, data, error)
-	{ set_xx(x); }
+	{ (void)val; set_xx(x); if (bin_edges_x.size()>0) set_edges_xx(bin_edges_x); }
       
       /**
        *  @brief constructor which gets both the data and the
@@ -152,13 +161,16 @@ namespace cbl {
        *
        *  @param data vector containing the data
        *
-       *  @param covariance matrix containing the covariance 
+       *  @param covariance matrix containing the covariance
        *
-       *  1D
+       *  @param val unused variable, only used to distinguish
+       *  the different constructors of the class
+       *
+       *  @param bin_edges_x the x variable bin edges
        */
-      Data1D (const std::vector<double> x, const std::vector<double> data, const std::vector<std::vector<double>> covariance)
+      Data1D (const std::vector<double> x, const std::vector<double> data, const std::vector<std::vector<double>> covariance, const double val=-1, const std::vector<double> bin_edges_x={})
 	: Data(cbl::data::DataType::_1D_, data, covariance)
-	{ set_xx(x); }
+	{ (void)val; set_xx(x); if (bin_edges_x.size()>0) set_edges_xx(bin_edges_x); }
       
       /**
        *  @brief default destructor
@@ -240,15 +252,21 @@ namespace cbl {
        *  @param x vector containing x points
        */
       void set_xx (const std::vector<double> x);
+      
+      /**
+       *  @brief set interval variable m_edges_xx
+       *  @param edges std::vector containing the x bin edges
+       */
+      void set_edges_xx (const std::vector<double> edges) override { checkDim(edges, ndata()+1, "edges"); m_edges_xx = edges; }
 
       ///@}
-
+      
       
       /**
        *  @name Member functions for Input/Output 
        */
       ///@{
-
+      
       /**
        *  @brief read the data
        *
@@ -256,8 +274,9 @@ namespace cbl {
        *
        *  @param skip_nlines the header lines to be skipped
        *
-       *  @param column_x the column of x values in the input file; if
-       *  it is not provided, the first column will be used by default
+       *  @param column vector containing the column of x values in
+       *  the input file; if it is not provided, the first column will
+       *  be used by default
        *
        *  @param column_data the column of data values in the input
        *  file; the size of column_data is the number of data to be
@@ -266,20 +285,25 @@ namespace cbl {
        *  the size of column_data is larger than 1, more than 1 data
        *  vectors are read and then added one after the other in a
        *  single data object; if column_data is not provided, the
-       *  first column after column_x will be used by default,
-       *  assuming that only 1 data vector has to be read
+       *  first column after the column of x values will be used by
+       *  default, assuming that only 1 data vector has to be read
        *
        *  @param column_errors the column of error values in the input
        *  file; the size of column_error must be equal to the size of
        *  column_data; if the size of column_error is larger than 1,
        *  more than 1 error vectors are read and then added one after
        *  the other in a single data object; if column_random is not
-       *  provided, the second column after column_x will be used by
-       *  default, assuming that only 1 random vector has to be read;
-       *  if the input file has only 2 columns, the errors will be set
-       *  to 1
+       *  provided, the second column after the column of x values
+       *  will be used by default, assuming that only 1 random vector
+       *  has to be read; if the input file has only 2 columns, the
+       *  errors will be set to 1
+       *
+       *  @param column_edges vector containing the columns of x bin
+       *  edge values in the input file; if it is not provided, the
+       *  third and four columns after the column of x values will be
+       *  used; if these columns do no exist the edges are not read
        */
-      void read (const std::string input_file, const int skip_nlines=0, const int column_x=1, const std::vector<int> column_data={}, const std::vector<int> column_errors={}) override;
+      void read (const std::string input_file, const int skip_nlines=0, const std::vector<int> column={1}, const std::vector<int> column_data={}, const std::vector<int> column_errors={}, const std::vector<int> column_edges={}) override;
 
       /**
        *  @brief print the data on screen

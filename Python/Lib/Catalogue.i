@@ -3,6 +3,7 @@
 %module cblCatalogue
 
 %ignore *::operator[];
+%ignore *::operator=;
 
 %shared_ptr(cbl::catalogue::Object);
 %shared_ptr(cbl::catalogue::RandomObject);

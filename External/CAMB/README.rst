@@ -11,10 +11,10 @@ CAMB
    :target: https://anaconda.org/conda-forge/camb
 .. image:: https://readthedocs.org/projects/camb/badge/?version=latest
    :target: https://camb.readthedocs.org/en/latest
-.. image:: https://secure.travis-ci.org/cmbant/CAMB.png?branch=master
-  :target: https://secure.travis-ci.org/cmbant/CAMB/builds
-.. image:: https://mybinder.org/badge.svg
-  :target: https://mybinder.org/v2/gh/cmbant/camb/master?filepath=docs%2FCAMBdemo.ipynb
+.. image:: https://travis-ci.org/cmbant/camb.svg?branch=master
+  :target: https://travis-ci.org/cmbant/camb/builds
+.. image:: https://mybinder.org/badge_logo.svg
+  :target: https://mybinder.org/v2/gh/cmbant/CAMB/HEAD?filepath=docs%2FCAMBdemo.ipynb
 
 Description and installation
 =============================

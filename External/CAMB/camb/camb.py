@@ -7,6 +7,7 @@ from .model import CAMBparams
 from .results import CAMBdata, MatterTransferData, ClTransferData
 import logging
 import os
+import numbers
 from inspect import getfullargspec
 
 _debug_params = False
@@ -142,7 +143,7 @@ def set_params(cp=None, verbose=False, **params):
 
     def do_set(setter):
         kwargs = {kk: params[kk] for kk in getfullargspec(setter).args[1:] if kk in params}
-        used_params.update(kwargs.keys())
+        used_params.update(kwargs)
         if kwargs:
             if verbose:
                 logging.warning('Calling %s(**%s)' % (setter.__name__, kwargs))
@@ -180,10 +181,44 @@ def set_params(cp=None, verbose=False, **params):
     return cp
 
 
+def get_valid_numerical_params(transfer_only=False, **class_names):
+    """
+    Get numerical parameter names that are valid input to :func:`set_params`
+
+    :param transfer_only: if True, exclude parameters that affect only initial power spectrum or non-linear model
+    :param class_names: class name parameters that will be used by :meth:`.model.CAMBparams.set_classes`
+    :return: set of valid input parameter names for :func:`set_params`
+    """
+    cp = CAMBparams()
+    cp.set_classes(**class_names)
+    params = set()
+
+    def extract_params(set_func):
+        pars = getfullargspec(set_func)
+        for arg in pars.args[1:len(pars.args) - len(pars.defaults or [])]:
+            params.add(arg)
+        if pars.defaults:
+            for arg, v in zip(pars.args[len(pars.args) - len(pars.defaults):], pars.defaults):
+                if (isinstance(v, numbers.Number) or v is None) and 'version' not in arg:
+                    params.add(arg)
+
+    extract_params(cp.DarkEnergy.set_params)
+    extract_params(cp.set_cosmology)
+    if not transfer_only:
+        extract_params(cp.InitPower.set_params)
+        extract_params(cp.NonLinearModel.set_params)
+    for f, tp in cp._fields_:
+        if not f.startswith('_') and tp == ctypes.c_double:
+            params.add(f)
+    return params - {'max_eta_k_tensor', 'max_eta_k', 'neutrino_hierarchy', 'standard_neutrino_neff',
+                     'pivot_scalar', 'pivot_tensor', 'num_massive_neutrinos', 'num_nu_massless', 'bbn_predictor'}
+
+
 def set_params_cosmomc(p, num_massive_neutrinos=1, neutrino_hierarchy='degenerate', halofit_version='mead',
                        dark_energy_model='ppf', lmax=2500, lens_potential_accuracy=1, inpars=None):
     """
     get CAMBParams for dictionary of cosmomc-named parameters assuming Planck 2018 defaults
+
     :param p: dictionary of cosmomc parameters (e.g. from getdist.types.BestFit's getParamDict() function)
     :param num_massive_neutrinos: usually 1 if fixed mnu=0.06 eV, three if mnu varying
     :param neutrino_hierarchy: hierarchy

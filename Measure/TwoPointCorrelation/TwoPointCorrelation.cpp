@@ -268,9 +268,9 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs (const std::shared_pt
       // estimate the computational time and update the time count
       time_t end_temp; time(&end_temp); double diff_temp = difftime(end_temp, start);
       if (tcount && tid==0) { coutCBL << "\r" << float(i)*fact_count << "% completed (" << diff_temp << " seconds)\r"; cout.flush(); }    
-      if (i==int(nObj*0.25)) coutCBL << ".............25% completed" << endl;
-      if (i==int(nObj*0.5)) coutCBL << ".............50% completed" << endl;
-      if (i==int(nObj*0.75)) coutCBL << ".............75% completed"<< endl;   
+      if (i==int(nObj*0.25)) coutCBL << ".............25% completed   " << endl;
+      if (i==int(nObj*0.5)) coutCBL << ".............50% completed   " << endl;
+      if (i==int(nObj*0.75)) coutCBL << ".............75% completed   "<< endl;   
    
     }
 
@@ -299,7 +299,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs (const std::shared_pt
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation::count_allPairs (const TwoPType type, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)  
+void cbl::measure::twopt::TwoPointCorrelation::count_allPairs (const TwoPType type, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const double fact)  
 {
   // ----------- compute polar coordinates, if necessary ----------- 
 
@@ -308,7 +308,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs (const TwoPType ty
   
   if (!m_random->isSetVar(Var::_RA_) || !m_random->isSetVar(Var::_Dec_) || !m_random->isSetVar(Var::_Dc_))
     m_random->computePolarCoordinates();
-  
+
   if (type==TwoPType::_angular_) {
     m_data->normalizeComovingCoordinates();
     m_random->normalizeComovingCoordinates();
@@ -328,37 +328,47 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs (const TwoPType ty
   // ----------- create the chain-mesh ----------- 
 
   double rMAX;
+  double rMIN;
 
-  if (type==TwoPType::_monopole_ || type==TwoPType::_multipoles_direct_ || type==TwoPType::_filtered_)
+  if (type==TwoPType::_monopole_ || type==TwoPType::_multipoles_direct_ || type==TwoPType::_filtered_) {
     rMAX = m_dd->sMax();
+    rMIN = m_dd->sMin();
+  }
 
   else if (type==TwoPType::_angular_) {
     double xx, yy, zz;
     cartesian_coord(radians(m_dd->sMax(), m_dd->angularUnits()), radians(m_dd->sMax(), m_dd->angularUnits()), 1., xx, yy, zz);
-    rMAX = max(xx, zz);
+    rMAX = sqrt(xx*xx+zz*zz);
+    cartesian_coord(radians(m_dd->sMin(), m_dd->angularUnits()), radians(m_dd->sMin(), m_dd->angularUnits()), 1., xx, yy, zz);
+    rMIN = sqrt(xx*xx+zz*zz);
   }
 
-  else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_wedges_) 
+  else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_wedges_) {
     rMAX = m_dd->sMax_D1();
+    rMIN = m_dd->sMin_D1();
+  }
   
-  else if (type==TwoPType::_2D_Cartesian_ || type==TwoPType::_projected_ || type==TwoPType::_deprojected_)
+  else if (type==TwoPType::_2D_Cartesian_ || type==TwoPType::_projected_ || type==TwoPType::_deprojected_) {
     rMAX = max(m_dd->sMax_D1(), m_dd->sMax_D2())*sqrt(2.);
+    rMIN = max(m_dd->sMin_D1(), m_dd->sMin_D2())*sqrt(2.);
+  }
 
   else
     ErrorCBL("the chosen two-point correlation function type is uknown!", "count_allPairs", "TwoPointCorrelation.cpp");
-  
-  double cell_size = rMAX*0.1; // to be optimized!!!
+
+
+  double cell_size = fact*rMAX; // to be optimized!!!
   
   ChainMesh_Catalogue ChM_data, ChM_random, ChM_random_dil;
   
   if (count_dd)
-    ChM_data.set_par(cell_size, m_data, rMAX);
+    ChM_data.set_par(cell_size, m_data, rMAX, rMIN);
   
   if (count_rr)
-    ChM_random_dil.set_par(cell_size, random_dil, rMAX);
+    ChM_random_dil.set_par(cell_size, random_dil, rMAX, rMIN);
 
   if (count_dr)
-    ChM_random.set_par(cell_size, m_random, rMAX);    
+    ChM_random.set_par(cell_size, m_random, rMAX, rMIN);
 
   // ----------- reset the pair counts --------------------------------------
   resets();
@@ -376,7 +386,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs (const TwoPType ty
   }
   else read_pairs(m_dd, dir_input_pairs, file);
   
-  
+
   cout << endl; coutCBL << par::col_green << "random-random" << par::col_default << endl;
   file = "rr.dat";
  
@@ -497,9 +507,9 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region (const std::sh
       // estimate the computational time and update the time count
       time_t end_temp; time (&end_temp); double diff_temp = difftime(end_temp, start);
       if (tcount && tid==0) { coutCBL << "\r" << float(i)*fact_count << "% completed (" << diff_temp << " seconds)\r"; cout.flush(); }    
-      if (i==int(nObj*0.25)) coutCBL << ".............25% completed" << endl;
-      if (i==int(nObj*0.5)) coutCBL << ".............50% completed" << endl;
-      if (i==int(nObj*0.75)) coutCBL << ".............75% completed"<< endl;   
+      if (i==int(nObj*0.25)) coutCBL << ".............25% completed   " << endl;
+      if (i==int(nObj*0.5)) coutCBL << ".............50% completed   " << endl;
+      if (i==int(nObj*0.75)) coutCBL << ".............75% completed   "<< endl;   
     }
     
 #pragma omp critical
@@ -622,9 +632,9 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_1D (const
       // estimate the computational time and update the time count
       time_t end_temp; time (&end_temp); double diff_temp = difftime(end_temp, start);
       if (tcount && tid==0) { coutCBL << "\r" << float(i)*fact_count << "% completed (" << diff_temp << " seconds)\r"; cout.flush(); }    
-      if (i==int(nObj*0.25)) coutCBL << ".............25% completed" << endl;
-      if (i==int(nObj*0.5)) coutCBL << ".............50% completed" << endl;
-      if (i==int(nObj*0.75)) coutCBL << ".............75% completed"<< endl;   
+      if (i==int(nObj*0.25)) coutCBL << ".............25% completed   " << endl;
+      if (i==int(nObj*0.5)) coutCBL << ".............50% completed   " << endl;
+      if (i==int(nObj*0.75)) coutCBL << ".............75% completed   "<< endl;   
     }
     
 #pragma omp critical
@@ -714,9 +724,9 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_2D (const
       // estimate the computational time and update the time count
       time_t end_temp; time (&end_temp); double diff_temp = difftime(end_temp, start);
       if (tcount && tid==0) { coutCBL << "\r" << float(i)*fact_count << "% completed (" << diff_temp << " seconds)\r"; cout.flush(); }    
-      if (i==int(nObj*0.25)) coutCBL << ".............25% completed" << endl;
-      if (i==int(nObj*0.5)) coutCBL << ".............50% completed" << endl;
-      if (i==int(nObj*0.75)) coutCBL << ".............75% completed"<< endl;   
+      if (i==int(nObj*0.25)) coutCBL << ".............25% completed   " << endl;
+      if (i==int(nObj*0.5)) coutCBL << ".............50% completed   " << endl;
+      if (i==int(nObj*0.75)) coutCBL << ".............75% completed   "<< endl;   
     }
     
 #pragma omp critical
@@ -747,7 +757,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_2D (const
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region (std::vector<std::shared_ptr<Pair> > &dd_regions, std::vector<std::shared_ptr<Pair> > &rr_regions, std::vector<std::shared_ptr<Pair> > &dr_regions, const TwoPType type, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)  
+void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region (std::vector<std::shared_ptr<Pair> > &dd_regions, std::vector<std::shared_ptr<Pair> > &rr_regions, std::vector<std::shared_ptr<Pair> > &dr_regions, const TwoPType type, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const double fact)  
 {
   // ----------- compute polar coordinates, if necessary ----------- 
 
@@ -776,38 +786,47 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region (std::vecto
   // ----------- create the chain-mesh ----------- 
 
   double rMAX;
+  double rMIN;
 
-  if (type==TwoPType::_monopole_ || type==TwoPType::_multipoles_direct_ || type==TwoPType::_filtered_)
+  if (type==TwoPType::_monopole_ || type==TwoPType::_multipoles_direct_ || type==TwoPType::_filtered_) {
     rMAX = m_dd->sMax();
+    rMIN = m_dd->sMin();
+  }
 
   else if (type==TwoPType::_angular_) {
     double xx, yy, zz;
     cartesian_coord(radians(m_dd->sMax(), m_dd->angularUnits()), radians(m_dd->sMax(), m_dd->angularUnits()), 1., xx, yy, zz);
-    rMAX = max(xx, zz);
+    rMAX = sqrt(xx*xx+zz*zz);
+    cartesian_coord(radians(m_dd->sMin(), m_dd->angularUnits()), radians(m_dd->sMin(), m_dd->angularUnits()), 1., xx, yy, zz);
+    rMIN = sqrt(xx*xx+zz*zz);
   }
 
-  else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_wedges_) 
+  else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_wedges_) {
     rMAX = m_dd->sMax_D1();
+    rMIN = m_dd->sMin_D1();
+  }
   
-  else if (type==TwoPType::_2D_Cartesian_ || type==TwoPType::_projected_ || type==TwoPType::_deprojected_)
+  else if (type==TwoPType::_2D_Cartesian_ || type==TwoPType::_projected_ || type==TwoPType::_deprojected_) {
     rMAX = max(m_dd->sMax_D1(), m_dd->sMax_D2())*sqrt(2.);
+    rMIN = max(m_dd->sMin_D1(), m_dd->sMin_D2())*sqrt(2.);
+  }
 
   else
     ErrorCBL("the chosen two-point correlation function type is uknown!", "count_allPairs_regions", "TwoPointCorrelation.cpp");
   
   
-  double cell_size = rMAX*0.1; // to be optimized!!!
+  double cell_size = fact*rMAX; // to be optimized!!!
 
   ChainMesh_Catalogue ChM_data, ChM_random, ChM_random_dil;
 
   if (count_dd)
-    ChM_data.set_par(cell_size, m_data, rMAX);
+    ChM_data.set_par(cell_size, m_data, rMAX, rMIN);
 
   if (count_rr || count_dr) 
-    ChM_random.set_par(cell_size, m_random, rMAX);
+    ChM_random.set_par(cell_size, m_random, rMAX, rMIN);
 
   if (count_dr)
-    ChM_random_dil.set_par(cell_size, random_dil, rMAX);
+    ChM_random_dil.set_par(cell_size, random_dil, rMAX, rMIN);
 
   
   // ----------- initialize the pair vectors used for resampling ----------- 
@@ -917,7 +936,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region (std::vecto
 // ============================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (const TwoPType type, const std::vector<double> weight, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)  
+void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (const TwoPType type, const std::vector<double> weight, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const double fact)  
 {
   // ----------- compute polar coordinates, if necessary ----------- 
 
@@ -946,38 +965,47 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (const
   // ----------- create the chain-mesh ----------- 
 
   double rMAX;
+  double rMIN;
 
-  if (type==TwoPType::_monopole_ || type==TwoPType::_filtered_)
+  if (type==TwoPType::_monopole_ || type==TwoPType::_filtered_) {
     rMAX = m_dd->sMax();
+    rMIN = m_dd->sMin();
+  }
 
   else if (type==TwoPType::_angular_) {
     double xx, yy, zz;
     cartesian_coord(radians(m_dd->sMax(), m_dd->angularUnits()), radians(m_dd->sMax(), m_dd->angularUnits()), 1., xx, yy, zz);
-    rMAX = max(xx, zz);
+    rMAX = sqrt(xx*xx+zz*zz);
+    cartesian_coord(radians(m_dd->sMin(), m_dd->angularUnits()), radians(m_dd->sMin(), m_dd->angularUnits()), 1., xx, yy, zz);
+    rMIN = sqrt(xx*xx+zz*zz);
   }
 
-  else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_wedges_) 
+  else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_wedges_) {
     rMAX = m_dd->sMax_D1();
+    rMIN = m_dd->sMin_D1();
+  }
   
-  else if (type==TwoPType::_2D_Cartesian_ || type==TwoPType::_projected_ || type==TwoPType::_deprojected_)
+  else if (type==TwoPType::_2D_Cartesian_ || type==TwoPType::_projected_ || type==TwoPType::_deprojected_) {
     rMAX = max(m_dd->sMax_D1(), m_dd->sMax_D2())*sqrt(2.);
-
+    rMIN = max(m_dd->sMin_D1(), m_dd->sMin_D2())*sqrt(2.);
+  }
+  
   else
     ErrorCBL("the chosen two-point correlation function type is uknown!", "count_allPairs_regions", "TwoPointCorrelation.cpp");
   
   
-  double cell_size = rMAX*0.1; // to be optimized!!!
+  double cell_size = fact*rMAX; // to be optimized!!!
 
   ChainMesh_Catalogue ChM_data, ChM_random, ChM_random_dil;
 
   if (count_dd)
-    ChM_data.set_par(cell_size, m_data, rMAX);
+    ChM_data.set_par(cell_size, m_data, rMAX, rMIN);
 
   if (count_rr || count_dr) 
-    ChM_random.set_par(cell_size, m_random, rMAX);
+    ChM_random.set_par(cell_size, m_random, rMAX, rMIN);
 
   if (count_dr)
-    ChM_random_dil.set_par(cell_size, random_dil, rMAX);
+    ChM_random_dil.set_par(cell_size, random_dil, rMAX, rMIN);
 
   
   // ----------- initialize the pair vectors used for resampling ----------- 

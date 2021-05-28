@@ -43,7 +43,7 @@ using namespace chainmesh;
 // ============================================================================
 
 
-void cbl::chainmesh::ChainMesh_Catalogue::set_par (const double cell_size, std::shared_ptr<Catalogue> cat, const double rmax) 
+void cbl::chainmesh::ChainMesh_Catalogue::set_par (const double cell_size, std::shared_ptr<Catalogue> cat, const double rmax, const double rmin) 
 {
   ChainMesh::set_par(cell_size, 3);
   
@@ -51,7 +51,7 @@ void cbl::chainmesh::ChainMesh_Catalogue::set_par (const double cell_size, std::
 
   vector<vector<double>> data = { m_catalogue->var(Var::_X_), m_catalogue->var(Var::_Y_), m_catalogue->var(Var::_Z_) }; 
   
-  create_chain_mesh(data, rmax);
+  create_chain_mesh(data, rmax, rmin);
  
   vector<int> order;
   get_order(order);
@@ -60,7 +60,7 @@ void cbl::chainmesh::ChainMesh_Catalogue::set_par (const double cell_size, std::
   data.erase(data.begin(), data.end());
   data = { m_catalogue->var(Var::_X_), m_catalogue->var(Var::_Y_), m_catalogue->var(Var::_Z_) }; 
 
-  create_chain_mesh(data, rmax);
+  create_chain_mesh(data, rmax, rmin);
 }
 
 

@@ -19,7 +19,7 @@
  *******************************************************************/
 
 /**
- *  @file CosmoBolognaLib/Kernel/Kernel.cpp
+ *  \@file CosmoBolognaLib/Kernel/Kernel.cpp
  *
  *  @brief Useful generic functions
  *
@@ -422,4 +422,99 @@ int cbl::makeDir (std::string path, const std::string rootPath, const mode_t mod
   }
   
   return 0;
+}
+
+// ============================================================================
+
+std::vector<std::vector<double>> cbl::read_file (const std::string file_name, const std::string path_name, const std::vector<int> column_data, const int skip_nlines)
+{
+  const string input_file (path_name+file_name);
+  const int cl_max = column_data.size();
+
+  ifstream fin(input_file.c_str()); checkIO(fin, input_file);
+  string line;
+
+  // get the number of lines to read
+  unsigned int n_lines = 0;
+  while(getline(fin, line)) n_lines++;
+  n_lines-=skip_nlines;
+
+  fin.clear(); fin.close();
+
+  // vector of vectors to return
+  vector<vector<double>> final_data(cl_max, vector<double>(n_lines, 0));
+
+#pragma omp parallel num_threads(cl_max>omp_get_max_threads() ? omp_get_max_threads() : cl_max)
+  {
+    // loop on the columns to read
+#pragma omp for schedule(dynamic)
+    for (int cl=0; cl<cl_max; ++cl) {
+
+      // share ifstream between the CPUs
+      ifstream Fin (input_file);
+      string Line;
+
+      if (skip_nlines>0)
+	for (int i=0; i<skip_nlines; ++i)
+	  getline(Fin, Line);
+
+
+      // read the file lines
+      for (unsigned int nn=0; nn<n_lines; ++nn) {
+
+	getline(Fin, Line);
+	stringstream ss(Line);
+	vector<double> num; double NUM;
+	while (ss>>NUM) num.emplace_back(NUM);
+
+	// store the data
+	final_data[cl][nn] = num[column_data[cl]-1];
+      }
+
+      Fin.clear(); Fin.close();
+    }
+  }
+
+  return final_data;
+}
+
+// ============================================================================
+
+std::vector<std::vector<double>> cbl::read_file (const std::string file_name, const std::string path_name, const std::vector<int> column_data, const std::string delimiter, const char comment)
+{
+  std::ifstream file_input(path_name+file_name.c_str(),std::ios::in);
+  std::string line;
+  int line_count = 0;
+  while (!file_input.eof())
+    {
+      std::getline(file_input,line);
+      line_count++;
+    }
+  line_count --; // it counts one more  
+  file_input.clear(); file_input.seekg(0, std::ios::beg);
+
+  std::vector<std::vector<double>> read_data(column_data.size(), std::vector<double>());
+  std::vector<std::string> temp(1000); // The max number (now it's 1000) must be generalised according to file columns
+  for (int i=0; i<line_count; i++){
+    getline(file_input,line);
+    if (line.at(0) != comment){
+      int line_pos = 0;
+      int vector_ind = 0;
+      while (line.find(delimiter) != std::string::npos){
+	line_pos = line.find(delimiter);
+	temp[vector_ind] = line.substr(0, line_pos);
+	line.erase(0, line_pos + delimiter.length());
+	vector_ind++;
+      }
+      // I save also the last part of string
+      temp[vector_ind] = line.substr(0, line_pos);
+      line.erase(0, line_pos + delimiter.length());
+
+      for (size_t i=0; i<read_data.size(); i++){
+	read_data[i].emplace_back(std::stod(temp[column_data[i]]));
+      }
+    }
+  }
+
+  return read_data;
 }

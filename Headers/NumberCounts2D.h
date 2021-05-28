@@ -169,6 +169,25 @@ namespace cbl {
 	 * @param fact factor used to normalized the distribution
 	 */
 	NumberCounts2D (const catalogue::Var var1, const BinType bin_type1, const catalogue::Var var2, const BinType bin_type2, const catalogue::Catalogue data, const size_t nbins1, const size_t nbins2, const double minVar1=par::defaultDouble, const double maxVar1=par::defaultDouble, const double minVar2=par::defaultDouble, const double maxVar2=par::defaultDouble, const double shift1=0.5, const double shift2=0.5, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.); 
+	
+	/**
+	 * @brief constructor
+	 *
+	 * @param var1 the first variable type 
+	 *
+	 * @param var2 the second variable type 
+	 *
+	 * @param vec_edges1 the bin edges for var1
+	 *
+	 * @param vec_edges2 the bin edges for var2
+	 * 
+	 * @param data object of class Catalogue
+	 * 
+	 * @param hist_type the type of histogram
+	 *
+	 * @param fact factor used to normalized the distribution
+	 */
+	NumberCounts2D (const catalogue::Var var1, const catalogue::Var var2, const std::vector<double> vec_edges1, const std::vector<double> vec_edges2, const catalogue::Catalogue data, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.); 
 
 	///@}
 

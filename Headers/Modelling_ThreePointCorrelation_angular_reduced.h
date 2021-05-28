@@ -63,7 +63,6 @@ namespace cbl {
        *  Modelling_ThreePointCorrelation_angular_reduced, that
        *  contains all the methods to model the reduced three-point
        *  correlation function in angular coordinates
-       *
        */
       class Modelling_ThreePointCorrelation_angular_reduced : public Modelling_ThreePointCorrelation_angular_connected {
 
@@ -98,7 +97,6 @@ namespace cbl {
 	
 	/**
 	 *  @brief default destructor
-	 *  
 	 */
 	~Modelling_ThreePointCorrelation_angular_reduced () = default;
 	

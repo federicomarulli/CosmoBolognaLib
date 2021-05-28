@@ -35,8 +35,6 @@
 #ifndef __MODELLINGTWOPOINT1D__
 #define __MODELLINGTWOPOINT1D__
 
-
-#include "Modelling1D.h"
 #include "Modelling_TwoPointCorrelation.h"
 #include "ModelFunction_TwoPointCorrelation1D.h"
 
@@ -62,7 +60,7 @@ namespace cbl {
        *  methods to model 1D two-point correlation functions
        *
        */
-      class Modelling_TwoPointCorrelation1D : public Modelling1D, public Modelling_TwoPointCorrelation 
+      class Modelling_TwoPointCorrelation1D : public Modelling_TwoPointCorrelation 
       {
 
       protected:
@@ -77,7 +75,7 @@ namespace cbl {
 	 *  @name Constructors/destructors
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief default constuctor
 	 */
@@ -101,13 +99,11 @@ namespace cbl {
 	
 	/**
 	 *  @brief default destructor
-	 *  
 	 */
 	virtual ~Modelling_TwoPointCorrelation1D () = default;
 	
 	///@}
-
-
+	
 	/**
 	 *  @name Member functions used to get the protected members of the class
 	 */

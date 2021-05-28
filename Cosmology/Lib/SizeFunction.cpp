@@ -133,7 +133,7 @@ double cbl::cosmology::Cosmology::size_function (const double RV, const double r
   double SSSR = sigmaRz*sigmaRz;
         
   double Dln_SigmaR = dnsigma2R(1, RL, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file)*(RL/(2.*SSSR))*pow(fact, 2.);
-  
+
   if (model == "Vdn") return f_nu(sigmaRz, del_v, del_c)/volume_sphere(RV)*fabs(Dln_SigmaR);
   else return f_nu(sigmaRz, del_v, del_c)/volume_sphere(RL)*fabs(Dln_SigmaR);
   
@@ -175,7 +175,10 @@ std::vector<double> cbl::cosmology::Cosmology::size_function (const std::vector<
     
   }
 
-  if (!store_output) m_remove_output_Pk_tables(method_Pk, false, 0.); 
+  if (!store_output) {
+    m_remove_output_Pk_tables(method_Pk, false, 0.); 
+    m_remove_output_Pk_tables(method_Pk, false, redshift);
+  }
 
   std::vector<double> result(RV.size());
   
@@ -189,7 +192,7 @@ std::vector<double> cbl::cosmology::Cosmology::size_function (const std::vector<
 // =====================================================================================
 
 
-std::vector<std::vector<double>> cbl::cosmology::Cosmology::Nvoids (const double min_r, const double max_r, const int num_bins, const double min_z, const double max_z, const double mean_z, const double factor, const std::string model, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const double k_Pk_ratio, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file) const
+std::vector<std::vector<double>> cbl::cosmology::Cosmology::Nvoids (const double min_r, const double max_r, const int num_bins, const double min_z, const double max_z, const double mean_z, const double Area, const std::string model, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const double k_Pk_ratio, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file) const
 {
   
   double del_v = deltav_L(deltav_NL, b_eff, slope, offset);
@@ -213,7 +216,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Nvoids (const double
 
   for (int i=0; i<num_bins; i++) {
 
-    RV[i] = r_bins[i]+0.5*(r_bins[i+1]-r_bins[i]);
+    RV[i] = pow(10., log10(r_bins[i])+0.5*(log10(r_bins[i+1]/r_bins[i])));
     RL[i] = RV[i]/NLcorr;
     sigmaR[i] = sqrt(sigma2R(RL[i], method_Pk, 0., true, output_root, interpType, k_max, input_file, is_parameter_file));
     sigmaRz[i] = sigmaR[i]*fact;
@@ -222,18 +225,21 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Nvoids (const double
     
   }
 
-  if (!store_output) m_remove_output_Pk_tables(method_Pk, false, 0.); 
-
+  if (!store_output) {
+    m_remove_output_Pk_tables(method_Pk, false, 0.); 
+    m_remove_output_Pk_tables(method_Pk, false, mean_z);
+  }
   std::vector<std::vector<double>> result(2,std::vector<double>(num_bins));
   
+  double volume = Volume(min_z,max_z,Area);
   if (model == "Vdn") for (int i=0; i<num_bins; i++) {
       result[0][i] = RV[i]; 
-      result[1][i] = f_nu(sigmaRz[i], del_v, del_c)/volume_sphere(RV[i])*fabs(Dln_SigmaR[i])*(r_bins[i+1]-r_bins[i])/RV[i]*factor*(pow(D_C(max_z),3.)-pow(D_C(min_z),3.));
+      result[1][i] = f_nu(sigmaRz[i], del_v, del_c)/volume_sphere(RV[i])*fabs(Dln_SigmaR[i])*(r_bins[i+1]-r_bins[i])/RV[i]*volume;
     }
   
   else for (int i=0; i<num_bins; i++) {
       result[0][i] = RV[i];
-      result[1][i] = f_nu(sigmaRz[i], del_v, del_c)/volume_sphere(RL[i])*fabs(Dln_SigmaR[i])*(r_bins[i+1]-r_bins[i])/RV[i]*factor*(pow(D_C(max_z),3.)-pow(D_C(min_z),3.));
+      result[1][i] = f_nu(sigmaRz[i], del_v, del_c)/volume_sphere(RL[i])*fabs(Dln_SigmaR[i])*(r_bins[i+1]-r_bins[i])/RV[i]*volume;
     }
   return result;
     

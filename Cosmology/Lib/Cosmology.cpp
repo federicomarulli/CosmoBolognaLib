@@ -152,9 +152,8 @@ void cbl::cosmology::Cosmology::set_default ()
 
   m_Omega_k = 1.-m_Omega_matter-m_Omega_radiation-m_Omega_DE;
   m_Omega_CDM = m_Omega_matter-m_Omega_baryon-m_Omega_neutrinos;
-  m_H0 = (m_unit) ? 100. : m_hh*100.;
-  double HH0 = (m_unit) ? 100.*m_hh : m_H0;
-  m_t_H = 1./HH0;
+  m_H0 = (m_unit) ? 100. : 100.*m_hh;
+  m_t_H = 1./m_H0;
   m_D_H = par::cc*m_t_H;
   m_RhoZero = rho_m(0.); 
   m_Pk0_EH = 1., m_Pk0_CAMB = 1., m_Pk0_MPTbreeze = 1., m_Pk0_CLASS = 1.;
@@ -205,9 +204,9 @@ cbl::cosmology::Cosmology::Cosmology (const CosmologicalModel cosmoModel, const 
     // Hinshaw et al. 2013: Table 3, WMAP-only Nine-year
   case(CosmologicalModel::_WMAP9_):
     m_Omega_baryon = 0.0463;                          // Omega_b = 0.0463 ± 0.0024
-    m_Omega_radiation = OmegaR_zeq(3273.);            // Table 2
     m_Omega_DE = 0.721;                               // Omega_DE = 0.721 ± 0.025
-    m_Omega_matter = 1.-m_Omega_radiation-m_Omega_DE; // flat LCDM
+    m_Omega_matter = 0.233+m_Omega_baryon;            // Omega_CDM = 0.233 ± 0.023
+    m_Omega_radiation = OmegaR_zeq(3273.);            // Table 2
     m_hh = 0.70;                                      // h = 0.700 ± 0.022 Km/s/Mpc
     m_scalar_amp = 2.41e-9;                           // scalar amplitude = (2.41 ± 0.10)e-9 -> sigma8 = 0.821 ± 0.023
     m_scalar_pivot = 0.002;                           // baseline
@@ -570,7 +569,7 @@ double cbl::cosmology::Cosmology::EE (const double redshift) const
 
 double cbl::cosmology::Cosmology::HH (const double redshift) const 
 {
-  return m_hh*100*EE(redshift);
+  return m_H0*EE(redshift);
 }
 
 
@@ -682,10 +681,12 @@ double cbl::cosmology::Cosmology::DD (const double redshift) const
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::DD_norm (const double redshift, const double redshift_norm, const std::string computing_method, const std::string method_Pk, const bool NL, const double kk, const double prec) const 
-{   
-  if ((m_w0!=-1. or m_wa!=0 or computing_method=="growth_rate") and m_Omega_neutrinos==0.) {
-
+double cbl::cosmology::Cosmology::DD_norm (const double redshift, const double redshift_norm, const std::string computing_method, const std::string method_Pk, const bool NL, const double kk, const bool store_output, const std::string output_root, const double prec) const 
+{
+  if (m_w0==-1. and m_wa==0. and computing_method=="classic")
+    return DD(redshift)/DD(redshift_norm);
+  
+  else if (m_w0!=-1. or m_wa!=0. or computing_method=="growth_rate") {
     auto func = [kk, prec, this] (const double aa) {
       return linear_growth_rate(1./aa-1., kk, prec)/aa;
     };
@@ -693,12 +694,12 @@ double cbl::cosmology::Cosmology::DD_norm (const double redshift, const double r
     return exp(cbl::wrapper::gsl::GSL_integrate_qag(func, 1./(1.+redshift_norm), 1./(1.+redshift)));
   }
 
-  else if (m_w0!=-1. or m_wa!=0 or computing_method=="Pk_ratio") {
+  else if (computing_method=="Pk_ratio" and kk>0.) {
     cbl::cosmology::Cosmology cosm = *this;
-    return pow(cosm.Pk_DM(kk, method_Pk, NL, redshift, true, "test", 0)/cosm.Pk_DM(kk, method_Pk, NL, redshift_norm, true, "test", 0),0.5);
+    return pow(cosm.Pk_DM(kk, method_Pk, NL, redshift, store_output, output_root, 0)/cosm.Pk_DM(kk, method_Pk, NL, redshift_norm, store_output, output_root, 0),0.5);
   }
-
-  else return DD(redshift)/DD(redshift_norm);
+  
+  else {ErrorCBL("Wrong computing_method!", "DD_norm", "Cosmology.cpp"); return 0;}
 }
 
 
@@ -1359,7 +1360,7 @@ double cbl::cosmology::Cosmology::D_C_LCDM (const double redshift) const
   double aa = 1./(1.+redshift);
   double phi1 = acos((1.+f_m*aa)/(1.+f_p*aa));
   
-  return CC*(F_phi0-m_elf_dz(phi1))*2997.9199;
+  return CC*(F_phi0-m_elf_dz(phi1))*2997.9199*m_t_H*100.;
 }  
 
 

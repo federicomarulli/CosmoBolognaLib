@@ -185,6 +185,21 @@ namespace cbl {
        *  
        */
       Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const LikelihoodType likelihood_type, const std::vector<size_t> x_index={0,2}, const int w_index=-1, const std::shared_ptr<ModelParameters> model_parameters=NULL, const double prec=1.e-10, const int Nres=-1);
+      
+      /**
+       *  @brief constructor
+       *  
+       *  @param data pointers to the data container
+       *  
+       *  @param model pointers to the model 
+       *
+       *  @param log_likelihood_function user-defined
+       *  log-likelihood function (natural logarithm)
+       *
+       *  @param model_parameters parameters of the likelihood
+       *  
+       */
+      Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const Likelihood_function log_likelihood_function, const std::shared_ptr<ModelParameters> model_parameters=NULL);
 
       /**
        *  @brief default destructor
@@ -250,6 +265,27 @@ namespace cbl {
       void unset_grid ();
 
       /**
+       * @brief get the values of the internal variable m_model
+       *
+       * @return pointer containing the model to test
+       */
+      std::shared_ptr<Model> get_m_model () { return m_model; }
+
+      /**
+       * @brief get the values of the internal variable m_model
+       *
+       * @return pointer containing the model parameters
+       */
+      std::shared_ptr<ModelParameters> get_model_parameters () { return m_model_parameters; }
+
+      /**
+       * @brief get the values of the internal variable m_data
+       *
+       * @return pointer containing the data containers
+       */
+      std::shared_ptr<data::Data> get_m_data () { return m_data; }
+
+      /**
        *  @brief set the likelihood function as a grid, to speed up
        *  computation: this only works for one or two free parameters
        *
@@ -286,19 +322,22 @@ namespace cbl {
        *  resamplings used to estimate the covariance matrix;
        *  \f$N_{res}=-1\f$ if the covariance matrix has not been
        *  estimated with resampling methods
-       *
-       *  
        */
       void set_function (const LikelihoodType likelihood_type, const std::vector<size_t> x_index={0,2}, const int w_index=-1, const double prec=1.e-10, const int Nres=-1);
 
       /**
        *  @brief set the likelihood function 
        *
-       *  @param loglikelihood_function the loglikelihood function
-       *
-       *  
+       *  @param likelihood_function the likelihood function
        */
-      void set_function (const LogLikelihood_function loglikelihood_function);
+      void set_function (const LogLikelihood_function likelihood_function);
+      
+      /**
+       *  @brief set the natural logarithm of the likelihood function 
+       *
+       *  @param loglikelihood_function the loglikelihood function
+       */
+      void set_log_function (const LogLikelihood_function loglikelihood_function);
 
       /**
        *  @brief write best-fit results on a file
@@ -306,8 +345,6 @@ namespace cbl {
        *  @param dir_output output directory
        *
        *  @param file output file
-       *
-       *  
        */
       void write_results (const std::string dir_output, const std::string file); 
 
@@ -341,8 +378,6 @@ namespace cbl {
        *  @param tol the tolerance in finding convergence 
        *
        *  @param epsilon the simplex side
-       *
-       *  
        */
       void maximize (const std::vector<double> start, const std::vector<std::vector<double>> parameter_limits, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-3); 
 

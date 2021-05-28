@@ -72,11 +72,12 @@ namespace cbl {
        *  @param cell_size the cell size
        *  @param cat pointer to an object of class Catalogue
        *  @param rmax the maximum separation
+       *  @param rmin the minimum separation
        *  _Catalogue
        */
-      ChainMesh_Catalogue (const double cell_size, std::shared_ptr<catalogue::Catalogue> cat, const double rmax) : ChainMesh(cell_size, 3)
+      ChainMesh_Catalogue (const double cell_size, std::shared_ptr<catalogue::Catalogue> cat, const double rmax, const double rmin=-1.) : ChainMesh(cell_size, 3)
 	{
-	  set_par(cell_size, cat, rmax); 
+	  set_par(cell_size, cat, rmax, rmin); 
 	}
 
       /**
@@ -89,8 +90,9 @@ namespace cbl {
        *  @param cell_size storing the cell size
        *  @param cat pointer to an object Catalogue
        *  @param rmax the maximum separation
+       *  @param rmin the minimum separation
        */
-      void set_par (const double cell_size, std::shared_ptr<catalogue::Catalogue> cat, const double rmax);
+      void set_par (const double cell_size, std::shared_ptr<catalogue::Catalogue> cat, const double rmax, const double rmin=-1.);
 
       /**
        *  @brief order the catalogue according to the input vector

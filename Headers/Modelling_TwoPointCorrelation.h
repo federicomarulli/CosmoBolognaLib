@@ -68,8 +68,7 @@ namespace cbl {
        *  two-point correlation function measurements
        *
        */
-      class Modelling_TwoPointCorrelation
-      {
+      class Modelling_TwoPointCorrelation : public Modelling {
       
       protected:
 	
@@ -86,16 +85,14 @@ namespace cbl {
 	 *  @name Constructors/destructors
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief default constuctor
-	 *  TwoPointCorrelation
 	 */
 	Modelling_TwoPointCorrelation () = default;
 	
 	/**
 	 *  @brief default destructor
-	 *  
 	 */
 	virtual ~Modelling_TwoPointCorrelation () = default;
 

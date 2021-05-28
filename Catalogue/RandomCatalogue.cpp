@@ -173,20 +173,27 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
 	dec.erase(dec.begin(), dec.end());
         
 	random::UniformRandomNumbers ran(0., 1., seed);
-	
-	const double cos_ra_min = cos(catalogue.Min(Var::_RA_)),
-	             cos_ra_max = cos(catalogue.Max(Var::_RA_)), 
-	  //sin_dec_min = sin(catalogue.Min(Var::_Dec_)),
-	  //sin_dec_max = sin(catalogue.Max(Var::_Dec_));
-	             dec_min = catalogue.Min(Var::_Dec_),
-	             dec_max = catalogue.Max(Var::_Dec_);
-	            
 
+	const double ra_min = catalogue.Min(Var::_RA_),
+	  ra_max = catalogue.Max(Var::_RA_),
+	  sin_dec_min = sin(catalogue.Min(Var::_Dec_)),
+	  sin_dec_max = sin(catalogue.Max(Var::_Dec_));
 	
 	for (size_t i=0; i<nRandom; i++) {
-	  ra.push_back(acos(cos_ra_min+(cos_ra_max-cos_ra_min)*ran()));
-	  //dec.push_back(asin((sin_dec_max-sin_dec_min)*ran()+sin_dec_min));
-	  dec.push_back((dec_max-dec_min)*ran()+dec_min);
+	  ra.push_back((ra_max-ra_min)*ran()+ra_min);
+	  dec.push_back(asin((sin_dec_max-sin_dec_min)*ran()+sin_dec_min));
+	
+	  /*
+	    const double cos_ra_min = cos(catalogue.Min(Var::_RA_)),
+	    cos_ra_max = cos(catalogue.Max(Var::_RA_)), 
+	    dec_min = catalogue.Min(Var::_Dec_),
+	    dec_max = catalogue.Max(Var::_Dec_);
+	            
+	    for (size_t i=0; i<nRandom; i++) {
+	    ra.push_back(acos(cos_ra_min+(cos_ra_max-cos_ra_min)*ran()));
+	    dec.push_back((dec_max-dec_min)*ran()+dec_min);
+	  */
+	  
 	}
 	
       }

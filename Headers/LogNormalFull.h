@@ -1,4 +1,4 @@
-/*******************************************************************
+/********************************************************************
  *  Copyright (C) 2010 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
@@ -21,7 +21,7 @@
 /**
  *  @file Headers/LogNormalFull.h
  *
- *  @brief Implementation of the lognormal data structure
+ *  @brief Implementation of the log-normal data structure
  *
  *  This file defines the interface of the class LogNormalFull
  *
@@ -40,7 +40,7 @@ namespace cbl {
     
   /**
    *  @brief The namespace of the functions and classes used to
-   *  construct <B> log-normal mocks </B> 
+   *  construct <B> log-normal mocks </B>
    *  
    *  The \e lognormal namespace contains all the functions and
    *  classes used to construct log-normal mocks
@@ -53,17 +53,26 @@ namespace cbl {
      *
      *  @brief The class LogNormalFull
      *
-     *  This class is used to handle objects of type <EM> lognormalFull
-     *  </EM>
+     *  This class is used to handle objects of type <EM>
+     *  LogNormalFull </EM>. It is an improved version of the
+     *  LogNormal class, aimed at providing log-normal mocks in
+     *  redshift-space with reliable clustering multipoles. Still to
+     *  be tested!
      */
     class LogNormalFull {
 
     protected:
+      
+      /// pointer to the input datasets
+      std::vector<std::shared_ptr<catalogue::Catalogue>> m_data;
 
+      /// pointer to the random catalogues
+      std::vector<std::shared_ptr<catalogue::Catalogue>> m_random;
+      
       /// pointer to the fiducial cosmology
       std::shared_ptr<cosmology::Cosmology> m_cosmology;
 
-      /// std::string containing the author for the model power spectrum
+      /// std::string containing the author of the model power spectrum (i.e. the Boltzmann solver)
       std::string m_author;
 
       /// false \f$\rightarrow\f$ compute the linear power spectrum; true \f$\rightarrow\f$ compute the non-linear power spectrum
@@ -87,7 +96,7 @@ namespace cbl {
       /// the number of cells along z-axis
       int m_nz;
 
-      /// the number of cells along z-axis, Fourier Space
+      /// the number of cells along z-axis, Fourier space
       int m_nzF;
 
       /// the minimum x-value
@@ -111,20 +120,14 @@ namespace cbl {
       /// the effective cell numbers
       int m_nCells_eff;
 
-      /// the number of lognormal realization to produce/read
+      /// the number of log-normal realizations to produce/read
       int m_nLN;
 
       /// smoothing radius
       double m_rsmooth;
 
-      /// 1 \f$\rightarrow\f$ use visibility, 0 \f$\rightarrow\f$ don't use visibility
+      /// 1 \f$\rightarrow\f$ use the visibility mask, 0 \f$\rightarrow\f$ don't use the visibility mask
       bool m_use_visibility;
-
-      /// pointer to the input datasets
-      std::vector<std::shared_ptr<catalogue::Catalogue>> m_data;
-
-      /// pointer to the random catalogues
-      std::vector<std::shared_ptr<catalogue::Catalogue>> m_random;
 
       /// vector containing pointers to the LogNormal realizations
       std::shared_ptr<data::Field3D> m_density;  
@@ -159,106 +162,92 @@ namespace cbl {
       /// vector containing pointers to the LogNormal realizations
       std::vector<std::vector<std::shared_ptr<catalogue::Catalogue>>> m_LNCat;  
 
-      /// interpolator \f$z(D_c)\f$ 
+      /// interpolator for \f$z(D_c)\f$ 
       std::shared_ptr<glob::FuncGrid> m_func_redshift;
 
-      /// interpolator \f$D_c(z)\f$ 
+      /// interpolator for \f$D_c(z)\f$ 
       std::shared_ptr<glob::FuncGrid> m_func_DC;
 
-      /// interpolator \f$H(z)\f$ 
+      /// interpolator for \f$H(z)\f$ 
       std::shared_ptr<glob::FuncGrid> m_func_HH;
 
-      /// interpolator \f$b(z)\f$ 
+      /// interpolator for \f$b(z)\f$ 
       std::vector<std::shared_ptr<glob::FuncGrid> > m_func_bias;
 
-      /// interpolator \f$gg(z)\f$ 
+      /// interpolator for \f$g(z)\f$ 
       std::shared_ptr<glob::FuncGrid> m_func_growth_factor;
 
-      /// interpolator \f$f(z)\f$ 
+      /// interpolator for \f$f(z)\f$ 
       std::shared_ptr<glob::FuncGrid> m_func_growth_rate;
 
-      /// interpolator \f$P(k)\f$ 
+      /// interpolator for \f$P(k)\f$ 
       std::shared_ptr<glob::FuncGrid> m_func_pk;
 
       /**
        * @brief set the grid parameters
-       * 
        */
-      void set_grid_parameters ();
+      void m_set_grid_parameters ();
 
       /**
-       * @brief set the fields
+       *  @brief set the fields
        *
-       *  @param use_random true \f$\rightarrow\f$ use random for
-       *  visibility mask; false \f$\rightarrow\f$ do not use random
+       *  @param use_random true \f$\rightarrow\f$ use an input random
+       *  catalogue for the visibility mask; false \f$\rightarrow\f$
+       *  do not use random
        *
-       *  @param doRSD true \f$\rightarrow\f$do redshift-space
-       *  mocks; false \f$\rightarrow\f$ do real-space mocks
-       *
-       *  
+       *  @param doRSD true \f$\rightarrow\f$ construct redshift-space
+       *  mocks; false \f$\rightarrow\f$ construct real-space mocks
        */
-      void set_fields (const bool use_random, const bool doRSD);
+      void m_set_fields (const bool use_random, const bool doRSD);
 
       /**
        *  @brief reset the fields
        *
-       *  @param use_random true \f$\rightarrow\f$ use random for
-       *  visibility mask, false \f$\rightarrow\f$ do not use random
+       *  @param use_random true \f$\rightarrow\f$ use an input random
+       *  catalogue for visibility mask, false \f$\rightarrow\f$ do
+       *  not use random
        *
        *  @param doRSD true \f$\rightarrow\f$do redshift-space
        *  mocks, false \f$\rightarrow\f$ do real-space mocks
-       *
-       *  
        */
-      void reset_fields (const bool use_random, const bool doRSD);
+      void m_reset_fields (const bool use_random, const bool doRSD);
 
       /**
        *  @brief set the target dark matter clustering signal
-       *
-       *  
        */
-      void set_clustering_signal ();
+      void m_set_clustering_signal ();
 
       /**
        *  @brief set the density field
        *
        *  @param smoothing_radius the gaussian kernel size
-       *
-       *  
        */
-      void set_density_field (const double smoothing_radius);
+      void m_set_density_field (const double smoothing_radius);
 
       /**
        *  @brief set the gravitational potential field
-       *  
        */
-      void set_potential ();
+      void m_set_potential ();
 
       /**
        *  @brief set the radial velocity field
-       *  
        */
-      void set_radial_velocity ();
+      void m_set_radial_velocity ();
 
       /**
        *  @brief set the visibility
-       *  
        */
-      void set_visibility ();
+      void m_set_visibility ();
 
       /**
        *  @brief set the visibility from random catalogue
-       *
-       *  
        */
-      void set_visibility_from_random ();
+      void m_set_visibility_from_random ();
 
       /**
        *  @brief set the visibility for redshift space mocks
-       *
-       *  
        */
-      void set_visibility_from_random_RSD ();
+      void m_set_visibility_from_random_RSD ();
 
       /**
        *  @brief extract points from lognormal density fields
@@ -275,17 +264,14 @@ namespace cbl {
        *  @param visibility pointer to the visibility
        *
        *  @param file_out out file for the extracted sample
-       *
-       *  
        */
-      void extract_points_lognormal_field (const double nObjects, const bool doRSD, const std::vector<double> redshift, const std::vector<double> bias, const std::shared_ptr<data::Field3D> visibility, const std::string file_out);
+      void m_extract_points_lognormal_field (const double nObjects, const bool doRSD, const std::vector<double> redshift, const std::vector<double> bias, const std::shared_ptr<data::Field3D> visibility, const std::string file_out);
 
 	
     public:
 
       /**
        *  @brief default constructor
-       *  
        */
       LogNormalFull () = default;
 
@@ -294,11 +280,10 @@ namespace cbl {
        *  @param cosmology the input cosmology
        *  @param redshift_min the minimum redshift
        *  @param redshift_max the maximum redshift
-       *  @param nredshift the number or redshift bins
+       *  @param n_redshift_bins the number or redshift bins
        *  @param author the linear power spectrum method
-       *  
        */
-      LogNormalFull (const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int nredshift=500, const std::string author="CAMB");
+      LogNormalFull (const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int n_redshift_bins=500, const std::string author="CAMB");
 
       /**
        *  @brief constructor
@@ -312,11 +297,10 @@ namespace cbl {
        *  @param cosmology the input cosmology
        *  @param redshift_min the minimum redshift
        *  @param redshift_max the maximum redshift
-       *  @param nredshift the number or redshift bins
+       *  @param n_redshift_bins the number or redshift bins
        *  @param author the linear power spectrum
-       *  
        */
-      LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int nredshift=500, const std::string author="CAMB");
+      LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int n_redshift_bins=500, const std::string author="CAMB");
 
       /**
        *  @brief constructor
@@ -326,15 +310,13 @@ namespace cbl {
        *  @param cosmology the input cosmology
        *  @param redshift_min the minimum redshift
        *  @param redshift_max the maximum redshift
-       *  @param nredshift the number or redshift bins
+       *  @param n_redshift_bins the number or redshift bins
        *  @param author the linear power spectrum
-       *  
        */
-      LogNormalFull (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad, const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int nredshift=500, const std::string author="CAMB");
+      LogNormalFull (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad, const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int n_redshift_bins=500, const std::string author="CAMB");
 
       /**
        *  @brief default destructor
-       *  
        */
       ~LogNormalFull () = default;
 
@@ -343,15 +325,13 @@ namespace cbl {
        *  @param cosmology the input cosmology
        *  @param redshift_min the minimum redshift
        *  @param redshift_max the maximum redshift
-       *  @param nredshift the number or redshift bins
+       *  @param n_redshift_bins the number or redshift bins
        *  @param author the linear power spectrum
-       *  
        */
-      void set_cosmo_function (const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int nredshift=500, const std::string author="CAMB");
+      void set_cosmo_function (const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int n_redshift_bins=500, const std::string author="CAMB");
 
       /**
        *  @brief set grid parameters
-       *
        *  @param rmin cell size
        *  @param xMin the minimum x-value
        *  @param xMax the minimum x-value
@@ -359,8 +339,6 @@ namespace cbl {
        *  @param yMax the maximum x-value
        *  @param zMin the minimum z-value
        *  @param zMax the maximum z-value
-       *
-       *  
        */
       void set_grid_parameters (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax);
 
@@ -369,7 +347,6 @@ namespace cbl {
        *  @param rmin cell size
        *  @param random vector containing random samples
        *  @param pad the size of padding area around grid
-       *  
        */
       void set_grid_parameters (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad);
 
@@ -398,16 +375,14 @@ namespace cbl {
        *
        *  @param seed seed for random generator
        *
-       *  @param setfields true \f$\rightarrow\f$ set the fields,
+       *  @param set_fields true \f$\rightarrow\f$ set the fields,
        *  false \f$\rightarrow\f$ don't set the fields
        *
-       *  @param use_random true \f$\rightarrow\f$ use random for
-       *  visibility mask, false \f$\rightarrow\f$ don't use random
-       *  for visibility mask
-       *
-       *  
+       *  @param use_random true \f$\rightarrow\f$ use an input random
+       *  catalogue for the visibility mask; false \f$\rightarrow\f$
+       *  don't use random
        */
-      void generate_lognormal (const int start, const int stop, const bool doRSD, const double smoothing_radius, const std::vector<double> nObjects, const std::vector<std::vector<double>> redshift, const std::vector<std::vector<double> > bias, const std::string dir, const std::string filename, const int seed, const bool setfields=1, const bool use_random=true);
+      void generate_lognormal (const int start, const int stop, const bool doRSD, const double smoothing_radius, const std::vector<double> nObjects, const std::vector<std::vector<double>> redshift, const std::vector<std::vector<double> > bias, const std::string dir, const std::string filename, const int seed, const bool set_fields=true, const bool use_random=true);
 
     };
   }

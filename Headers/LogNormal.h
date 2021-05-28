@@ -1,4 +1,4 @@
-/*******************************************************************
+/********************************************************************
  *  Copyright (C) 2010 by Federico Marulli and Alfonso Veropalumbo  *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
@@ -21,7 +21,7 @@
 /**
  *  @file Headers/LogNormal.h
  *
- *  @brief Implementation of the lognormal data structure
+ *  @brief Implementation of the log-normal data structure
  *
  *  This file defines the interface of the class LogNormal
  *
@@ -52,161 +52,239 @@ namespace cbl {
      *
      *  @brief The class LogNormal
      *
-     *  This class is used to handle objects of type <EM> lognormal
+     *  This class is used to handle objects of type <EM> LogNormal
      *  </EM>
      */
     class LogNormal {
     
     protected:
+ 
+      /// vector containing pointers to the log-normal realizations
+      std::vector<std::shared_ptr<catalogue::Catalogue>> m_catalogue = {}; 
+      
+      /// the random catalogues used to construct the mask
+      catalogue::Catalogue m_random;
 
-      /// the number of lognormal realization to produce/read
-      int m_nLN;
-    
-      /// pointer to the input data 
-      std::shared_ptr<catalogue::Catalogue> m_data;
-    
-      /// pointer to the random catalogues
-      std::shared_ptr<catalogue::Catalogue> m_random;
-    
-      /// cector containing pointers to the LogNormal realizations
-      std::vector<std::shared_ptr<catalogue::Catalogue> > m_LNCat;  
+      /// the assumed cosmological model
+      cosmology::Cosmology m_cosmology;
 
-      /// 0 &rarr; the input is a cosmology; 1 &rarr; the input is &xi;(r)
-      bool m_withxi;
+      /// the mean total number of objects in the log-normal catalogues
+      int m_nObjects; 
 
-      /// vector containing the binnend separations of the two-point corrleation function used to create the density field
-      std::vector<double> m_rmodel;
+      /// the mean redshift the log-normal catalogues
+      double m_redshift;  
     
-      /// vector containing the starting two-point correlation function used to create the density field
-      std::vector<double> m_ximodel;
-
-      /// approximate cell size of the density field
-      double m_rmin;
-    
-      /// bias of the lognormal density field to be realized
+      /// the bias of the log-normal density field catalogues
       double m_bias;
-    
-      /// pointer to the fiducial cosmology
-      std::shared_ptr<cosmology::Cosmology> m_cosmology;
-    
-      /// 0 &rarr; redshift-space (only monopole distortion); 1 &rarr; real-space
-      bool m_Real;
-    
-      /// std::string containing the author for the model power spectrum
-      std::string m_author;
-    
-      /// 0 &rarr; compute the linear power spectrum; 1 &rarr; compute the non-linear power spectrum
-      bool m_NL;
 
-      /// the cosmological model used to compute distances
-      std::string m_model;
+      /// the cell size in comoving scale
+      double m_cell_size;
+      
+      /// true &rarr; real space; false &rarr; redshift space (only monopole distortions) 
+      bool m_real;
+    
+      /// the method to compute the model power spectrum (i.e. the Boltzmann solver)
+      std::string m_method_Pk;
+    
+      /// true &rarr; compute the non-linear power spectrum; false &rarr; compute the linear power spectrum
+      bool m_NL;
 
     
     public:
 
       /**
-       *  @brief default constructor
-       *  
+       *  @name Constructors/destructors
        */
-      LogNormal() {};
+      ///@{
+    
+      /**
+       *  @brief default constructor
+       */
+      LogNormal () = default;
 
       /**
        *  @brief default destructor
-       *  
        */
-      ~LogNormal() {};
+      ~LogNormal () = default;
 
       /**
        *  @brief constructor 
-       *  @param data input data catalogue
        *
        *  @param random input random catalogue (should be much larger
-       *  than the random catalogue used to measure &xi;(r))
+       *  than the random catalogue used to measure the two-point
+       *  correlation function)
        *
-       *  @param nLN number of lognormal realizations
-       *  
+       *  @param cosmology the assumed cosmological model
+       *
+       *  @param nObjects mean total number of objects in the
+       *  log-normal catalogues
+       *
+       *  @param redshift mean redshift the log-normal catalogues
+       *
+       *  @param bias bias of the log-normal density field catalogues
+       *
+       *  @param cell_size the cell size of the density field in
+       *  comoving coordinates
+       
+       *  @param real true &rarr; real space; false &rarr; redshift
+       *  space (only monopole distortions)
+       *
+       *  @param method_Pk the method to compute the model power
+       *  spectrum (i.e. the Boltzmann solver)
+       *
+       *  @param NL true &rarr; compute the non-linear power spectrum;
+       *  false &rarr; compute the linear power spectrum
        */
-      LogNormal (const std::shared_ptr<catalogue::Catalogue> data, const std::shared_ptr<catalogue::Catalogue> random, const int nLN) : m_nLN(nLN), m_data(data), m_random(random)
-      {
-	m_LNCat.resize(m_nLN);
-      }
+      LogNormal (const catalogue::Catalogue random, const cosmology::Cosmology cosmology, const int nObjects, const double redshift, const double bias, const double cell_size, const bool real=true, const std::string method_Pk="CAMB", const bool NL=false)
+	: m_random(random), m_cosmology(cosmology), m_nObjects(nObjects), m_redshift(redshift), m_bias(bias), m_cell_size(cell_size), m_real(real), m_method_Pk(method_Pk), m_NL(NL) {}
+
+      ///@}
+      
 
       /**
-       *  @brief set data and random catalogues
-       *  @param data input data catalogue
-       *  @param random input random catalogue
-       *  
+       *  @name Functions to get the private members of the class
        */
-      void setCatalogues (const std::shared_ptr<catalogue::Catalogue> data, const std::shared_ptr<catalogue::Catalogue> random);
-    
-      /**
-       *  @brief set the starting two-point correlation function
-       *  @param rr binned comoving separation 
-       *  @param xi input two-point correlation function
-       *  
-       */
-      void setParameters_from_xi (const std::vector<double> rr, const std::vector<double> xi);
-
-      /**
-       *  @brief set the parameters to compute a prediction of &xi;(r)
-       *  @param cosmology the input cosmology
-       *  @param bias the bias parameter
-       *  @param Real 0 &rarr; redshift-space (only monopole distortion); 1 &rarr; real-space
-       *  @param author the method used to compute dark matter power spectrum
-       *  @param NL 0 &rarr; compute the linear power spectrum; 1 &rarr; compute the non-linear power spectrum
-       *  @param model the cosmological model used to compute distances
-       *  
-       */
-      void setParameters_from_model (const std::shared_ptr<cosmology::Cosmology> cosmology, const double bias, const bool Real=1, const std::string author="CAMB", const bool NL=0, const std::string model="LCDM");
-    
-      /**
-       *  @brief set the total number of realizations
-       *  @param nLN the number of realizations
-       *  
-       */
-      void set_nLN (const int nLN);
-    
-      /**
-       *  @brief get the private member LogNormal::m_nLN
-       *  @return the number of LogNormal realizations
-       */
-      int nLN () { return m_nLN; }
-
+      ///@{
+      
       /**
        *  @brief get the private member LogNormal::m_LNCat[i]
-       *  @param i index of the LogNormal realization
-       *  @return the i-th LogNormal realization
+       *
+       *  @param i index of the log-normal realization
+       *
+       *  @return the i-th log-normal realization
        */
-      std::shared_ptr<catalogue::Catalogue> LNCat (const int i) { return m_LNCat[i]; }
+      std::shared_ptr<catalogue::Catalogue> catalogue (const size_t i);
+      
+      /**
+       *  @brief get the private member LogNormal::m_nObjects
+       *
+       *  @return the mean total number of objects in the log-normal
+       *  catalogues
+       */
+      int nObjects () const { return m_nObjects; }
 
       /**
-       *  @brief get the \f$\xi(r)\f$ model used in lognormal mock
-       *  creation
+       *  @brief get the private member LogNormal::m_redshift
        *
-       *  @param radius the scale to compute the model
-       *
-       *  @return the \f$\xi(r)\f$ model used in lognormal mock
-       *  creation
+       *  @return the mean redshift the log-normal catalogues
+       *  catalogues
        */
-      std::vector<double> get_xi_model(const std::vector<double> radius);
-    
+      int redshift () const { return m_redshift; }
+
       /**
-       *  @brief generate the LogNormal mock catalogues
+       *  @brief get the private member LogNormal::m_bias
        *
-       *  @param rmin the cell size in comoving coordinates
-       *  @param dir the output directory
-       *      
-       *  @param start the starting index of the mock to be created
+       *  @return the bias of the log-normal density field catalogues
+       */
+      double bias () const { return m_bias; }
+
+      /**
+       *  @brief get the private member LogNormal::m_real
+       *
+       *  @return true &rarr; real space; false &rarr; redshift space
+       *  (only monopole distortions)
+       */
+      bool real () const { return m_real; }
+
+      /**
+       *  @brief get the private member LogNormal::m_method_Pk
+       *
+       *  @return the method to compute the model power spectrum
+       *  (i.e. the Boltzmann solver)
+       */
+      std::string method_Pk () const { return m_method_Pk; }
+
+      /**
+       *  @brief get the private member LogNormal::m_NL
+       *
+       *  @return true &rarr; compute the non-linear power spectrum;
+       *  false &rarr; compute the linear power spectrum
+       */
+      bool NL () const { return m_NL; }
+
+      ///@}
+      
+
+      /**
+       *  @name Functions to set the private members of the class
+       */
+      ///@{
+      
+      /**
+       *  @brief set the private member LogNormal::m_nObjects
+       *
+       *  @param nObjects the mean total number of objects in the
+       *  log-normal catalogues
+       */
+      void set_nObjects (const int nObjects) { m_nObjects = nObjects; }
+
+      /**
+       *  @brief set the private member LogNormal::m_redshift
+       *
+       *  @param redshift the mean redshift the log-normal catalogues
+       *  catalogues
+       */
+      void set_redshift (const double redshift) { m_redshift = redshift; }
+
+      /**
+       *  @brief set the private member LogNormal::m_bias
+       *
+       *  @param bias the bias of the log-normal density field
+       *  catalogues
+       */
+      void set_bias (const double bias) { m_bias = bias; }
+
+      /**
+       *  @brief set the private member LogNormal::m_real
+       *
+       *  @param real true &rarr; real space; false &rarr; redshift
+       *  space (only monopole distortions)
+       */
+      void set_real (const bool real) { m_real = real; }
+
+      /**
+       *  @brief set the private member LogNormal::m_method_Pk
+       *
+       *  @param method_Pk the method to compute the model power
+       *  spectrum (i.e. the Boltzmann solver)
+       */
+      void set_method_Pk (const std::string method_Pk) { m_method_Pk = method_Pk; }
+
+      /**
+       *  @brief set the private member LogNormal::m_NL
+       *
+       *  @param NL true &rarr; compute the non-linear power spectrum;
+       *  false &rarr; compute the linear power spectrum
+       */
+      void set_NL (const bool NL) { m_NL = NL; }
+
+      ///@}
+      
+
+      /**
+       *  @name Functions to generate the log-normal mock catalogues
+       */
+      ///@{
+      
+      /**
+       *  @brief generate the log-normal mock catalogues
+       *
+       *  @param n_lognormal_mocks number of log-normal mock
+       *  catalogues to be constructed
+       *
+       *  @param output_dir the output directory
        * 
        *  @param filename the prefix of the ouput file containing the
        *  LogNormal realizations
        *
-       *  @param seed the seed for random number generation
+       *  @param start the starting index of the mock to be created
        *
-       *  
+       *  @param seed the seed for random number generation
        */
-      void generate_LogNormal_mock (const double rmin, const std::string dir, const int start=0, const std::string filename="lognormal_", const int seed=3213);
-    
+      void generate (const int n_lognormal_mocks, const std::string output_dir, const std::string filename="lognormal", const int start=1, const int seed=3213);
+
+      ///@}
+      
     };
 
   }

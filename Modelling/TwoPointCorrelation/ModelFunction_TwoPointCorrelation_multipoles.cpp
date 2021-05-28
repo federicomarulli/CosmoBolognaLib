@@ -52,10 +52,10 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles (const std::vector<doubl
 
   // input parameters
   vector<shared_ptr<glob::FuncGrid>> pk_interp(2);
+  vector<shared_ptr<glob::FuncGrid>> pk_interp_dispersion(1);
   vector<shared_ptr<glob::FuncGrid>> pk_interp_Scoccimarro_CPT(3);
   vector<shared_ptr<glob::FuncGrid>> pk_interp_TNS_CPT(17);
   vector<shared_ptr<glob::FuncGrid>> pk_interp_eTNS_CPT(25);
-  vector<shared_ptr<glob::FuncGrid>> pk_interp_Dispersion(1);
   std::vector<double> Xi_ll;
 
   if (pp->Pk_mu_model=="dispersion_dewiggled") {
@@ -63,32 +63,38 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles (const std::vector<doubl
     pk_interp[1] = pp->func_Pk_NW;
     Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, {parameter[2], parameter[3], parameter[4]/pp->sigma8_z, parameter[5]/pp->sigma8_z, parameter[6] }, pk_interp, pp->prec, parameter[0], parameter[1]);
   }
+  
   else if (pp->Pk_mu_model=="dispersion_modecoupling") {
     pk_interp[0] = pp->func_Pk;
     pk_interp[1] = pp->func_Pk1loop;
     Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, {parameter[2]/pp->sigma8_z, parameter[3]/pp->sigma8_z, parameter[4], parameter[5] }, pk_interp, pp->prec, parameter[0], parameter[1]);
   }
-  else if (pp->Pk_mu_model=="DispersionGauss" || pp->Pk_mu_model=="DispersionLorentz") {
-    pk_interp_Dispersion[0] = pp->func_Pk;
-    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_Dispersion, pp->prec, 1., 1.);
+  
+  else if (pp->Pk_mu_model=="dispersion_Gauss" || pp->Pk_mu_model=="dispersion_Lorentz") {
+    pk_interp_dispersion[0] = pp->func_Pk;
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_dispersion, pp->prec, parameter[3], parameter[4]);
   }
-  else if (pp->Pk_mu_model=="ScoccimarroPezzottaGauss" || pp->Pk_mu_model=="ScoccimarroPezzottaLorentz") {
-    pk_interp[0] = pp->func_Pk;
-    pk_interp[1] = pp->func_Pk_nonlin;
-    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2], parameter[3], parameter[4] }, pk_interp, pp->prec, 1., 1.);
-  }
-  else if (pp->Pk_mu_model=="ScoccimarroBelGauss" || pp->Pk_mu_model=="ScoccimarroBelLorentz") {
-    pk_interp[0] = pp->func_Pk;
-    pk_interp[1] = pp->func_Pk_nonlin;
-    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2], parameter[3], parameter[4], parameter[5], parameter[6], parameter[7] }, pk_interp, pp->prec, 1., 1.);
-  }
-  else if (pp->Pk_mu_model=="ScoccimarroGauss" || pp->Pk_mu_model=="ScoccimarroLorentz") {
+  
+  else if (pp->Pk_mu_model=="Scoccimarro_Gauss" || pp->Pk_mu_model=="Scoccimarro_Lorentz") {
     pk_interp_Scoccimarro_CPT[0] = pp->func_Pk_DeltaDelta;
     pk_interp_Scoccimarro_CPT[1] = pp->func_Pk_DeltaTheta;
     pk_interp_Scoccimarro_CPT[2] = pp->func_Pk_ThetaTheta;
-    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_Scoccimarro_CPT, pp->prec, 1., 1.);
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_Scoccimarro_CPT, pp->prec, parameter[3], parameter[4]);
   }
-  else if (pp->Pk_mu_model=="TaruyaGauss" || pp->Pk_mu_model=="TaruyaLorentz") {
+  
+  else if (pp->Pk_mu_model=="Scoccimarro_Pezzotta_Gauss" || pp->Pk_mu_model=="Scoccimarro_Pezzotta_Lorentz") {
+    pk_interp[0] = pp->func_Pk;
+    pk_interp[1] = pp->func_Pk_nonlin;
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2], parameter[3], parameter[4] }, pk_interp, pp->prec, parameter[5], parameter[6]);
+  }
+  
+  else if (pp->Pk_mu_model=="Scoccimarro_Bel_Gauss" || pp->Pk_mu_model=="Scoccimarro_Bel_Lorentz") {
+    pk_interp[0] = pp->func_Pk;
+    pk_interp[1] = pp->func_Pk_nonlin;
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2], parameter[3], parameter[4], parameter[5], parameter[6], parameter[7] }, pk_interp, pp->prec, parameter[8], parameter[9]);
+  }
+  
+  else if (pp->Pk_mu_model=="TNS_Gauss" || pp->Pk_mu_model=="TNS_Lorentz") {
     pk_interp_TNS_CPT[0]  = pp->func_Pk_DeltaDelta;
     pk_interp_TNS_CPT[1]  = pp->func_Pk_DeltaTheta;
     pk_interp_TNS_CPT[2]  = pp->func_Pk_ThetaTheta;
@@ -107,9 +113,10 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles (const std::vector<doubl
     pk_interp_TNS_CPT[15] = pp->func_Pk_B34;
     pk_interp_TNS_CPT[16] = pp->func_Pk_B44;
 
-    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_TNS_CPT, pp->prec, 1., 1.);
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] }, pk_interp_TNS_CPT, pp->prec, parameter[3], parameter[4]);
   }
-  else if (pp->Pk_mu_model=="eTNSGauss" || pp->Pk_mu_model=="eTNSLorentz") {
+  
+  else if (pp->Pk_mu_model=="eTNS_Gauss" || pp->Pk_mu_model=="eTNS_Lorentz") {
     pk_interp_eTNS_CPT[0]  = pp->func_Pk_DeltaDelta;
     pk_interp_eTNS_CPT[1]  = pp->func_Pk_DeltaTheta;
     pk_interp_eTNS_CPT[2]  = pp->func_Pk_ThetaTheta;
@@ -127,7 +134,6 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles (const std::vector<doubl
     pk_interp_eTNS_CPT[14] = pp->func_Pk_B33;
     pk_interp_eTNS_CPT[15] = pp->func_Pk_B34;
     pk_interp_eTNS_CPT[16] = pp->func_Pk_B44;
-
     pk_interp_eTNS_CPT[17]  = pp->func_Pk_b2d;
     pk_interp_eTNS_CPT[18]  = pp->func_Pk_b2v;
     pk_interp_eTNS_CPT[19] = pp->func_Pk_b22;
@@ -136,8 +142,7 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles (const std::vector<doubl
     pk_interp_eTNS_CPT[22] = pp->func_Pk_b2s2;
     pk_interp_eTNS_CPT[23] = pp->func_Pk_bs22;
     pk_interp_eTNS_CPT[24] = pp->func_sigma32Pklin;
-
-    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2] , parameter[3] , parameter[4] }, pk_interp_eTNS_CPT, pp->prec, 1., 1.);
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2]/pp->sigma8_z, parameter[3], 0. }, pk_interp_eTNS_CPT, pp->prec, parameter[4], parameter[5]);
   }
 
   else ErrorCBL("the chosen model ("+pp->Pk_mu_model+") is not currently implemented!", "xiMultipoles", "ModelFunction_TwoPointCorrelation_multipoles.cpp");

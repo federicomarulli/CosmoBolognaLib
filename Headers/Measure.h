@@ -52,11 +52,11 @@ namespace cbl {
    */
   namespace measure {
 
-      /**
-       *  @enum ErrorType
-       *  @brief the two-point correlation function error type
-       */
-      enum class ErrorType { 
+    /**
+     *  @enum ErrorType
+     *  @brief the two-point correlation function error type
+     */
+    enum class ErrorType { 
 
 	/// Poissonian error
 	_Poisson_,
@@ -79,8 +79,8 @@ namespace cbl {
 	/// Bootstrap resampling, by objects
 	_BootstrapObjects_,
 
-      /// No error computed
-      _None_	
+	/// No error computed
+	_None_	
     };
 
     /**
@@ -152,10 +152,9 @@ namespace cbl {
        *  @name Constructors/destructors
        */
       ///@{
-
+      
       /**
-       *  @brief default constructor
-       *  
+       *  @brief default constructor 
        */
       Measure () = default;
 

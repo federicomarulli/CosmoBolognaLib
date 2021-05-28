@@ -400,7 +400,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_bias_cosmology (const std:
   for (size_t i=0; i<rad.size(); i++)
     new_rad[i] *= alpha;
 
-  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, pp->output_dir, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
+  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
 }
 
 
@@ -566,7 +566,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_one_cosmo_par_clusters (co
   for (size_t i=0; i<rad.size(); i++)
     new_rad[i] *= alpha;
   
-  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, pp->output_dir, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
+  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
 }
 
 
@@ -602,7 +602,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_two_cosmo_pars_clusters (c
   for (size_t i=0; i<rad.size(); i++)
     new_rad[i] *= alpha;
   
-  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, pp->output_dir, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
+  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
 }
 
 
@@ -684,7 +684,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters_selecti
 
   // set the function to estimate the linear dark matter power spectrum at z=0, by interpolating it from a grid
   
-  const vector<double> Pk_grid = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->output_dir, pp->store_output, pp->output_root, -1, pp->k_min, pp->k_max, pp->prec, pp->file_par);
+  const vector<double> Pk_grid = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, -1, pp->k_min, pp->k_max, pp->prec, pp->file_par);
   glob::FuncGrid interp_Pk(pp->kk, Pk_grid, "Spline");
 
 

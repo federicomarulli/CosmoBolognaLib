@@ -64,7 +64,6 @@ namespace cbl {
        *  This file defines the interface of the base class
        *  Modelling_NumberCounts2D_RedshiftMass, used for modelling 
        *  mass-redshift number counts measurements
-       *
        */
       class Modelling_NumberCounts2D_RedshiftMass : public Modelling_NumberCounts2D
       {
@@ -75,47 +74,42 @@ namespace cbl {
 	 *  @name Constructors/destructors
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief default constuctor
-	 *  _NumberCounts2D_RedshiftMass
 	 */
 	Modelling_NumberCounts2D_RedshiftMass () = default;
 	
 	/**
 	 *  @brief constuctor
 	 *  @param nc the number counts to model
-	 *  _NumberCounts2D_RedshiftMass
 	 */
 	Modelling_NumberCounts2D_RedshiftMass (const std::shared_ptr<cbl::measure::numbercounts::NumberCounts> nc) 
-	  : Modelling_NumberCounts2D (nc) {}
+	  : Modelling_NumberCounts2D(nc) {}
 	
 	/**
 	 *  @brief constuctor
 	 *  @param dataset the number counts dataset
 	 *  @param hist_type the histogram type
 	 *  @param fact the normalization factor
-	 *
-	 *  _NumberCounts2D_RedshiftMass
 	 */
 	Modelling_NumberCounts2D_RedshiftMass (const std::shared_ptr<cbl::data::Data> dataset, glob::HistogramType hist_type, double fact)
-	  : Modelling_NumberCounts2D (dataset, hist_type, fact) {}
+	  : Modelling_NumberCounts2D(dataset, hist_type, fact) {}
 	
 	/**
 	 *  @brief default destructor
-	 *  
 	 */
 	virtual ~Modelling_NumberCounts2D_RedshiftMass () = default;
 
 	///@}
-
+	
 	/**
 	 *  @name Member functions used to set the model parameters
 	 */
 	///@{
-
+	
 	/**
-	 *  @brief set the cosmological parameters used to model the 
+	 *  @brief set the cosmological parameters used to model the
 	 *  mass function
 	 *
 	 *  the model has N cosmological parameters
@@ -125,8 +119,6 @@ namespace cbl {
 	 *
 	 *  @param cosmo_param_prior vector containing the priors for
 	 *  the cosmological parameters
-	 *
-	 *  
 	 */
 	void set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
 	///@}

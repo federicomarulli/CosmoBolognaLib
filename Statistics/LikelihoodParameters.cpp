@@ -61,6 +61,10 @@ string cbl::statistics::LikelihoodParameters::status (const int p) const
 	stat = "FREE";
       break;
 
+    case statistics::ParameterType::_Correlated_:
+      stat = "FREE";
+      break;
+      
     case statistics::ParameterType::_Derived_:
       stat = "OUTPUT";
       break;
@@ -87,7 +91,11 @@ vector<string> cbl::statistics::LikelihoodParameters::status () const
 	else 
 	  stat.push_back("FREE");
 	break;
-
+	
+      case statistics::ParameterType::_Correlated_:
+	stat.push_back("FREE");
+	break;
+	
       case statistics::ParameterType::_Derived_:
 	stat.push_back("OUTPUT");
 	break;
@@ -146,26 +154,35 @@ void cbl::statistics::LikelihoodParameters::m_set_parameter_type ()
 
   for (size_t i=0; i<m_nparameters; i++) {
     switch (m_parameter_type[i]) {
-      case statistics::ParameterType::_Base_:
-	if (m_parameter_isFixed[i]) {
-	  m_nparameters_fixed ++;
-	  m_fixed_parameter.push_back(i);
-	}
-	else {
-	  m_nparameters_free ++;
-	  m_free_parameter.push_back(i);
-	}
-	m_nparameters_base ++;
-	m_base_parameter.push_back(i);
-	break;
+    case statistics::ParameterType::_Base_:
+      if (m_parameter_isFixed[i]) {
+	m_nparameters_fixed ++;
+	m_fixed_parameter.push_back(i);
+      }
+      else {
+	m_nparameters_free ++;
+	m_free_parameter.push_back(i);
+      }
+      m_nparameters_base ++;
+      m_base_parameter.push_back(i);
+      break;
 
-      case statistics::ParameterType::_Derived_:
-	m_nparameters_derived ++;
-	m_derived_parameter.push_back(i);
-	break;
+    case statistics::ParameterType::_Correlated_:
+      if (m_parameter_isFixed[i]) WarningMsgCBL(m_parameter_name[i]+" set free since is a correlated parameter! ", "m_set_parameter_type", "LikelihoodParameters.cpp");
+      m_nparameters_free ++;
+      m_free_parameter.push_back(i);
+      m_nparameters_correlated ++;
+      m_nparameters_base ++;
+      m_base_parameter.push_back(i);
+      break;
 
-      default:
-	ErrorCBL("no such kind of parameter!", "m_set_parameter_type", "LikelihoodParameters.cpp");
+    case statistics::ParameterType::_Derived_:
+      m_nparameters_derived ++;
+      m_derived_parameter.push_back(i);
+      break;
+
+    default:
+      ErrorCBL("no such kind of parameter!", "m_set_parameter_type", "LikelihoodParameters.cpp");
     }
   }
 }
@@ -269,6 +286,10 @@ void cbl::statistics::LikelihoodParameters::free (const int p)
       m_set_parameter_type();
       break;
 
+    case ParameterType::_Correlated_:
+      WarningMsgCBL(m_parameter_name[p]+" is a correlated parameter!", "free", "LikelihoodParameters.cpp");
+      break;
+
     case ParameterType::_Derived_:
       WarningMsgCBL(m_parameter_name[p]+" is a derived parameter!", "free", "LikelihoodParameters.cpp");
       break;
@@ -290,6 +311,10 @@ void cbl::statistics::LikelihoodParameters::fix (const int p, const double value
       m_parameter_isFixed[p]=true;
       m_parameter_fixed_value[p] = value;
       m_set_parameter_type();
+      break;
+
+  case statistics::ParameterType::_Correlated_:
+      WarningMsgCBL(m_parameter_name[p]+" is a correlated parameter!", "fix", "LikelihoodParameters.cpp");
       break;
 
     case statistics::ParameterType::_Derived_:
@@ -361,6 +386,10 @@ void cbl::statistics::LikelihoodParameters::write_bestfit_info ()
 	if (m_parameter_isFixed[i]) 
 	  coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " << par::col_purple << "FIXED" << endl;
 	else 
+	  coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " <<  par::col_green << "FREE" << endl;
+	break;
+
+	case statistics::ParameterType::_Correlated_:
 	  coutCBL << "Parameter: " << par::col_yellow << m_parameter_name[i] << par::col_default << " --> status: " <<  par::col_green << "FREE" << endl;
 	break;
 

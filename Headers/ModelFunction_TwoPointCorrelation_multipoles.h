@@ -48,16 +48,16 @@ namespace cbl {
     namespace twopt {
 
       /**
-       * @brief return multipoles of the two-point 
+       * @brief return multipoles of the two-point correlation
+       * function
+       *
+       * The functions computes the multipoles of the two-point
        * correlation function
        *
-       * The functions computes the multipoles of the 
-       * two-point correlation function
+       * \f[ \xi_l(s) = i^l \int \frac{\mathrm{d} k}{2\pi^2} k^2
+       * P_l(k) j_l(ks); \f]
        *
-       * \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-       * j_l(ks); \f]
-       *
-       * where \f$j_l(ks)\f$ are the bessel functions.
+       * where \f$j_l(ks)\f$ are the Bessel functions.
        *
        * The function takes as inputs four fundamental parameters
        *    - \f$\alpha_{\perp}\f$
@@ -67,9 +67,9 @@ namespace cbl {
        *    - \f$ \Sigma_S \f$
        *
        * @param rad the scale at which the model is computed
-       * @param inputs pointer to the structure that contains the
-       * de-wiggled power spectrum, the number of multipoles and
-       * \f$\sigma_8(z)\f$, computed at a given (fixed) cosmology
+       *
+       * @param inputs pointer to the structure that contains the data
+       * required to construct the model
        *
        * @param parameter 4D vector containing the input parameters
        *
@@ -114,9 +114,9 @@ namespace cbl {
        *    - \f$A^2_2\f$
        *
        * @param rad the scale at which the model is computed
-       * @param inputs pointer to the structure that contains the
-       * de-wiggled power spectrum, the number of multipoles and
-       * \f$\sigma_8(z)\f$, computed at a given (fixed) cosmology
+       *
+       * @param inputs pointer to the structure that contains the data
+       * required to construct the model
        *
        * @param parameter 10D vector containing the input parameters
        *
@@ -131,10 +131,10 @@ namespace cbl {
        *  The functions computes the multipoles of the two-point
        *  correlation function
        *
-       *  \f[ \xi_l(s) = \frac{i^l}{2\pi^2} \int \mathrm{d} k P_l(k)
-       *  j_l(ks); \f]
+       *  \f[ \xi_l(s) = i^l \int \frac{\mathrm{d} k}{2\pi^2} k^2
+       *  P_l(k) j_l(ks); \f]
        *
-       *  where \f$j_l(ks)\f$ are the bessel functions.
+       *  where \f$j_l(ks)\f$ are the Bessel functions.
        *
        *  The function takes as inputs 2 parameters
        *    - \f$\sigma_8(z)\f$
@@ -143,8 +143,7 @@ namespace cbl {
        *  @param rad the scale at which the model is computed
        *
        *  @param inputs pointer to the structure that contains the
-       *  de-wiggled power spectrum, the number of multipoles and
-       *  \f$\sigma_8(z)\f$, computed at a given (fixed) cosmology
+       *  data required to construct the model
        *
        *  @param parameter vector containing the input parameters
        *

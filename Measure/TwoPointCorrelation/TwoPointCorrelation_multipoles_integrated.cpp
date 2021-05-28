@@ -265,17 +265,17 @@ std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_multipoles_
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measure (const ErrorType errorType, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measure (const ErrorType errorType, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const int nMocks, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const double fact, const int seed)
 {
   switch (errorType) {
     case (ErrorType::_Poisson_) :
-      measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
+      measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator, fact);
       break;
     case (ErrorType::_Jackknife_) :
-      measureJackknife(dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator);
+      measureJackknife(dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, fact);
       break;
     case (ErrorType::_Bootstrap_) :
-      measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, seed);
+      measureBootstrap(nMocks, dir_output_pairs, dir_input_pairs, dir_output_resample, count_dd, count_rr, count_dr, tcount, estimator, fact, seed);
       break;
     default:
       ErrorCBL("the input ErrorType is not allowed!", "measure", "TwoPointCorrelation_multipoles_integrated.cpp");
@@ -286,11 +286,11 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measure (co
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const double fact)
 {
   // ----------- measure the 2D two-point correlation function, xi(r, mu) ----------- 
 
-  TwoPointCorrelation2D_polar::measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
+  TwoPointCorrelation2D_polar::measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator, fact);
 
   
   // ----------- integrate the 2D two-point correlation function over the angle mu ----------- 
@@ -302,7 +302,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measurePois
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator)
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureJackknife (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const double fact)
 {
   if (dir_output_resample!=par::defaultString && dir_output_resample!="") {
     string mkdir = "mkdir -p "+dir_output_resample;
@@ -311,7 +311,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureJack
 
   vector<shared_ptr<data::Data>> data;
   vector<shared_ptr<pairs::Pair>> dd_regions, rr_regions, dr_regions;
-  count_allPairs_region(dd_regions, rr_regions, dr_regions, TwoPType::_2D_polar_, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
+  count_allPairs_region(dd_regions, rr_regions, dr_regions, TwoPType::_2D_polar_, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator, fact);
 
   auto data_polar = (estimator==Estimator::_natural_) ? correlation_NaturalEstimator(m_dd, m_rr) : correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
 
@@ -367,7 +367,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureJack
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const int seed)
+void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureBootstrap (const int nMocks, const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs, const std::string dir_output_resample, const bool count_dd, const bool count_rr, const bool count_dr, const bool tcount, const Estimator estimator, const double fact, const int seed)
 {
   if (nMocks<=0)
     ErrorCBL("the number of mocks must be >0", "measureBootstrap", "TwoPointCorrelation1D_monopole.cpp");
@@ -379,7 +379,7 @@ void cbl::measure::twopt::TwoPointCorrelation_multipoles_integrated::measureBoot
   
   vector<shared_ptr<data::Data>> data;
   vector<shared_ptr<pairs::Pair>> dd_regions, rr_regions, dr_regions;
-  count_allPairs_region(dd_regions, rr_regions, dr_regions, TwoPType::_2D_polar_, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator);
+  count_allPairs_region(dd_regions, rr_regions, dr_regions, TwoPType::_2D_polar_, dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator, fact);
 
   auto data_polar = (estimator==Estimator::_natural_) ? correlation_NaturalEstimator(m_dd, m_rr) : correlation_LandySzalayEstimator(m_dd, m_rr, m_dr);
 

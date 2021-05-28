@@ -7,9 +7,24 @@ from ctypes import Structure, POINTER, byref, c_int, c_double, c_bool, c_float
 from numpy.ctypeslib import ndpointer
 import numpy as np
 
+
+def ndpointer_or_null(*args, **kwargs):
+    # allows passing None to fortran optional arguments
+    # from https://stackoverflow.com/a/37664693/1022775
+    base = ndpointer(*args, **kwargs)
+
+    def from_param(cls, obj):
+        if obj is None:
+            return obj
+        return base.from_param(obj)
+
+    return type(base.__name__, (base,), {'from_param': classmethod(from_param)})
+
+
 numpy_3d = ndpointer(c_double, flags='C_CONTIGUOUS', ndim=3)
 numpy_2d = ndpointer(c_double, flags='C_CONTIGUOUS', ndim=2)
 numpy_1d = ndpointer(c_double, flags='C_CONTIGUOUS')
+numpy_1d_or_null = ndpointer_or_null(c_double, flags='C_CONTIGUOUS')
 numpy_1d_int = ndpointer(c_int, flags='C_CONTIGUOUS')
 
 BASEDIR = osp.abspath(osp.dirname(__file__))
@@ -97,7 +112,7 @@ def set_cl_template_file(cl_template_file=None):
                                             "HighLExtrapTemplate_lenspotentialCls.dat")
     if not osp.exists(template):
         template = osp.abspath(
-            osp.join(BASEDIR, "..", "..", "fortran",
+            osp.join(BASEDIR, "..", "fortran",
                      "HighLExtrapTemplate_lenspotentialCls.dat"))
     template = template.encode("latin-1")
     func = camblib.__handles_MOD_set_cls_template
@@ -292,7 +307,7 @@ def AllocatableObjectArray(cls=None):
 
 
 class AllocatableArrayInt(_AllocatableArray):
-    _dtype = np.int
+    _dtype = int
     _ctype = c_int
 
 
@@ -317,15 +332,10 @@ def fortran_array(c_pointer, shape, dtype=np.float64, order='F', own_data=True):
     if not hasattr(shape, '__len__'):
         shape = np.atleast_1d(shape)
     arr_size = np.prod(shape[:]) * np.dtype(dtype).itemsize
-    if sys.version_info.major >= 3:
-        buf_from_mem = ctypes.pythonapi.PyMemoryView_FromMemory
-        buf_from_mem.restype = ctypes.py_object
-        buf_from_mem.argtypes = (ctypes.c_void_p, ctypes.c_int, ctypes.c_int)
-        buffer = buf_from_mem(c_pointer, arr_size, 0x100)
-    else:
-        buffer_from_memory = ctypes.pythonapi.PyBuffer_FromMemory
-        buffer_from_memory.restype = ctypes.py_object
-        buffer = buffer_from_memory(c_pointer, arr_size)
+    buf_from_mem = ctypes.pythonapi.PyMemoryView_FromMemory
+    buf_from_mem.restype = ctypes.py_object
+    buf_from_mem.argtypes = (ctypes.c_void_p, ctypes.c_int, ctypes.c_int)
+    buffer = buf_from_mem(c_pointer, arr_size, 0x100)
     arr = np.ndarray(tuple(shape[:]), dtype, buffer, order=order)
     if own_data and not arr.flags.owndata:
         return arr.copy()
@@ -578,6 +588,7 @@ class CAMBStructureMeta(type(Structure)):
 # noinspection PyPep8Naming
 class CAMB_Structure(Structure, metaclass=CAMBStructureMeta):
 
+    # noinspection PyUnresolvedReferences
     @classmethod
     def get_all_fields(cls):
         if cls != CAMB_Structure:
@@ -689,6 +700,7 @@ class F2003Class(CAMB_Structure):
                 try:
                     if not allow_inherit or cls.__bases__[0] == F2003Class:
                         raise
+                    # noinspection PyUnresolvedReferences
                     func = cls.__bases__[0].import_method(tag, extra_args, restype, nopass=nopass)
                 except AttributeError:
                     raise AttributeError(

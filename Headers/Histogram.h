@@ -142,12 +142,13 @@ namespace cbl {
        * @param maxVar the variable maximum 
        * @param shift the shift of the bin
        * @param bin_type the binning type
+       * @param vec_edges the bin edges, used only if bin_type is custom
        *
        * @return none, or an error message if the derived object does
        * not have this member
        */
-      virtual void set (const size_t nbins, const double minVar=par::defaultDouble, const double maxVar=par::defaultDouble, const double shift=0.5, const BinType bin_type=BinType::_linear_)
-      { (void)nbins; (void)minVar; (void)maxVar; (void)shift; (void)bin_type; ErrorCBL("", "set", "Histogram.h"); }
+      virtual void set (const size_t nbins, const double minVar=par::defaultDouble, const double maxVar=par::defaultDouble, const double shift=0.5, const BinType bin_type=BinType::_linear_, const std::vector<double> vec_edges={})
+      { (void)nbins; (void)minVar; (void)maxVar; (void)shift; (void)bin_type; (void)vec_edges; ErrorCBL("", "set", "Histogram.h"); }
 
       /**
        * @brief get the histogram index
@@ -238,12 +239,14 @@ namespace cbl {
        *  @param shift2 bin shift for the second variable
        *  @param bin_type1 the binning type for the first variable
        *  @param bin_type2 the binning type for the second variable
+       *  @param vec_edges1 the first variable bin edges, used only if bin_type is custom
+       *  @param vec_edges2 the second variable bin edges, used only if bin_type is custom
        *
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set (const size_t nbins1, const size_t nbins2, const double minVar1=par::defaultDouble, const double maxVar1=par::defaultDouble, const double minVar2=par::defaultDouble, const double maxVar2=par::defaultDouble, const double shift1=0.5, const double shift2=0.5, const BinType bin_type1=BinType::_linear_, const BinType bin_type2=BinType::_linear_)
-      { (void)nbins1; (void)minVar1; (void)maxVar1; (void)nbins2; (void)minVar2; (void)maxVar2; (void)shift1; (void)shift2; (void)bin_type1; (void)bin_type2; ErrorCBL("", "set", "Histogram.h"); }
+      virtual void set (const size_t nbins1, const size_t nbins2, const double minVar1=par::defaultDouble, const double maxVar1=par::defaultDouble, const double minVar2=par::defaultDouble, const double maxVar2=par::defaultDouble, const double shift1=0.5, const double shift2=0.5, const BinType bin_type1=BinType::_linear_, const BinType bin_type2=BinType::_linear_, const std::vector<double> vec_edges1={}, const std::vector<double> vec_edges2={})
+      { (void)nbins1; (void)minVar1; (void)maxVar1; (void)nbins2; (void)minVar2; (void)maxVar2; (void)shift1; (void)shift2; (void)bin_type1; (void)bin_type2; (void)vec_edges1; (void)vec_edges2; ErrorCBL("", "set", "Histogram.h"); }
 
       /**
        * @brief get the histogram index
@@ -946,10 +949,11 @@ namespace cbl {
        * @param maxVar the variable maximum 
        * @param shift the shift of the bin
        * @param bin_type the binning type
+       * @param vec_edges the bin edges, used only if bin_type is custom
        *
        * 
        */
-      void set (const size_t nbins, const double minVar=par::defaultDouble, const double maxVar=par::defaultDouble, const double shift=0.5, const BinType bin_type=BinType::_linear_) override;
+      void set (const size_t nbins, const double minVar=par::defaultDouble, const double maxVar=par::defaultDouble, const double shift=0.5, const BinType bin_type=BinType::_linear_, const std::vector<double> vec_edges={}) override;
 
       /**
        * @brief get the histogram index
@@ -1384,9 +1388,12 @@ namespace cbl {
        * 
        * @param bin_type2 the binning type for the second variable
        *
+       *  @param vec_edges1 the first variable bin edges, used only if bin_type is custom
+       *
+       *  @param vec_edges2 the second variable bin edges, used only if bin_type is custom
        * 
        */
-      void set (const size_t nbins1, const size_t nbins2, const double minVar1=par::defaultDouble, const double maxVar1=par::defaultDouble, const double minVar2=par::defaultDouble, const double maxVar2=par::defaultDouble, const double shift1=0.5, const double shift2=0.5, const BinType bin_type1=BinType::_linear_, const BinType bin_type2=BinType::_linear_) override;
+      void set (const size_t nbins1, const size_t nbins2, const double minVar1=par::defaultDouble, const double maxVar1=par::defaultDouble, const double minVar2=par::defaultDouble, const double maxVar2=par::defaultDouble, const double shift1=0.5, const double shift2=0.5, const BinType bin_type1=BinType::_linear_, const BinType bin_type2=BinType::_linear_, const std::vector<double> vec_edges1={}, const std::vector<double> vec_edges2={}) override;
 
       /**
        * @brief get the histogram index

@@ -175,13 +175,13 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
     m_data_model->funcs_pk.push_back(m_data_model->func_Pk1loop);
   }
 
-  else if (m_data_model->Pk_mu_model=="DispersionGauss"  || m_data_model->Pk_mu_model=="DispersionLorentz") {
+  else if (m_data_model->Pk_mu_model=="dispersion_Gauss" || m_data_model->Pk_mu_model=="dispersion_Lorentz") {
     m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
 
     m_data_model->funcs_pk.push_back(m_data_model->func_Pk);
   }
 
-  else if (m_data_model->Pk_mu_model=="ScoccimarroPezzottaGauss"  || m_data_model->Pk_mu_model=="ScoccimarroPezzottaLorentz" || m_data_model->Pk_mu_model=="ScoccimarroBelGauss" || m_data_model->Pk_mu_model=="ScoccimarroBelLorentz") {
+  else if (m_data_model->Pk_mu_model=="Scoccimarro_Pezzotta_Gauss" || m_data_model->Pk_mu_model=="Scoccimarro_Pezzotta_Lorentz" || m_data_model->Pk_mu_model=="Scoccimarro_Bel_Gauss" || m_data_model->Pk_mu_model=="Scoccimarro_Bel_Lorentz") {
     vector<double> Pknonlin(m_data_model->step,0);
     for (size_t i=0; i<(size_t)m_data_model->step; i++)
       Pknonlin[i] = m_data_model->cosmology->Pk_DM(m_data_model->kk[i], m_data_model->method_Pk, true, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
@@ -192,8 +192,8 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
     m_data_model->funcs_pk.push_back(m_data_model->func_Pk_nonlin);
   }
 
-  else if (m_data_model->Pk_mu_model=="ScoccimarroGauss"  || m_data_model->Pk_mu_model=="ScoccimarroLorentz") {
-    vector<vector<double>> Pk_terms = m_data_model->cosmology->Pk_TNS_dd_dt_tt(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->output_dir, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+  else if (m_data_model->Pk_mu_model=="Scoccimarro_Gauss" || m_data_model->Pk_mu_model=="Scoccimarro_Lorentz") {
+    vector<vector<double>> Pk_terms = m_data_model->cosmology->Pk_TNS_dd_dt_tt(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
 
     m_data_model->func_Pk_DeltaDelta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[0], "Spline"));
     m_data_model->func_Pk_DeltaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[1], "Spline"));
@@ -204,9 +204,9 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
     m_data_model->funcs_pk.push_back(m_data_model->func_Pk_ThetaTheta);
   }
 
-  else if (m_data_model->Pk_mu_model=="TaruyaGauss"  || m_data_model->Pk_mu_model=="TaruyaLorentz") {
-    vector<vector<double>> Pk_terms = m_data_model->cosmology->Pk_TNS_dd_dt_tt(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->output_dir, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
-    vector<vector<double>> Pk_AB = m_data_model->cosmology->Pk_TNS_AB_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->output_dir, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+  else if (m_data_model->Pk_mu_model=="TNS_Gauss" || m_data_model->Pk_mu_model=="TNS_Lorentz") {
+    vector<vector<double>> Pk_terms = m_data_model->cosmology->Pk_TNS_dd_dt_tt(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+    vector<vector<double>> Pk_AB = m_data_model->cosmology->Pk_TNS_AB_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
     
     m_data_model->func_Pk_DeltaDelta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[0], "Spline"));
     m_data_model->func_Pk_DeltaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[1], "Spline"));
@@ -246,6 +246,68 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
     m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B44);
   }
 
+  else if (m_data_model->Pk_mu_model=="eTNS_Gauss" || m_data_model->Pk_mu_model=="eTNS_Lorentz") {
+    vector<vector<double>> Pk_AB = m_data_model->cosmology->Pk_TNS_AB_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+    vector<vector<double>> Pk_eTNS_terms = m_data_model->cosmology->Pk_eTNS_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+
+    m_data_model->func_Pk_DeltaDelta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[0], "Spline"));
+    m_data_model->func_Pk_DeltaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[1], "Spline"));
+    m_data_model->func_Pk_ThetaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[2], "Spline"));
+
+    m_data_model->func_Pk_A11 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[0], "Spline"));
+    m_data_model->func_Pk_A12 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[1], "Spline"));
+    m_data_model->func_Pk_A22 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[2], "Spline"));
+    m_data_model->func_Pk_A23 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[3], "Spline"));
+    m_data_model->func_Pk_A33 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[4], "Spline"));
+    m_data_model->func_Pk_B12 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[5], "Spline"));
+    m_data_model->func_Pk_B13 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[6], "Spline"));
+    m_data_model->func_Pk_B14 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[7], "Spline"));
+    m_data_model->func_Pk_B22 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[8], "Spline"));
+    m_data_model->func_Pk_B23 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[9], "Spline"));
+    m_data_model->func_Pk_B24 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[10], "Spline"));
+    m_data_model->func_Pk_B33 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[11], "Spline"));
+    m_data_model->func_Pk_B34 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[12], "Spline"));
+    m_data_model->func_Pk_B44 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_AB[13], "Spline"));
+
+    m_data_model->func_Pk_b2d = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[3], "Spline"));
+    m_data_model->func_Pk_b2v = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[4], "Spline"));
+    m_data_model->func_Pk_b22 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[5], "Spline"));
+    m_data_model->func_Pk_bs2d = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[6], "Spline"));
+    m_data_model->func_Pk_bs2v = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[7], "Spline"));
+    m_data_model->func_Pk_b2s2 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[8], "Spline"));
+    m_data_model->func_Pk_bs22 = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[9], "Spline"));
+    m_data_model->func_sigma32Pklin = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[10], "Spline"));
+
+    //-------------------------
+
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_DeltaDelta);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_DeltaTheta);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_ThetaTheta);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A11);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A12);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A22);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A23);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_A33);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B12);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B13);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B14);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B22);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B23);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B24);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B33);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B34);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_B44);
+
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_b2d);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_b2v);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_b22);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_bs2d);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_bs2v);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_b2s2);
+    m_data_model->funcs_pk.push_back(m_data_model->func_Pk_bs22);
+    m_data_model->funcs_pk.push_back(m_data_model->func_sigma32Pklin);
+  }
+  
   else ErrorCBL("the chosen model ("+m_data_model->Pk_mu_model+") is not currently implemented!", "set_fiducial_PkDM", "Modelling_TwoPointCorrelation_wedges.cpp");
 }
 
@@ -275,8 +337,8 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_x
   m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
   m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
 
-  std::vector<double> template_parameters = {m_data_model->sigmaNL_perp, m_data_model->sigmaNL_par, m_data_model->linear_growth_rate_z, m_data_model->bias, 0.};
-  cbl::Print(template_parameters);
+  std::vector<double> template_parameter = {m_data_model->sigmaNL_perp, m_data_model->sigmaNL_par, m_data_model->linear_growth_rate_z, m_data_model->bias, 0.};
+  cbl::Print(template_parameter);
 
   vector<vector<double>> xil = Xi_l(rad, m_data_model->nmultipoles, "dispersion_dewiggled", {m_data_model->sigmaNL_perp, m_data_model->sigmaNL_par, m_data_model->linear_growth_rate_z, m_data_model->bias, 0.}, {m_data_model->func_Pk, m_data_model->func_Pk_NW}, m_data_model->prec, 1, 1);
 
@@ -287,6 +349,90 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_x
 
 }
 
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameter)
+{
+  if (m_likelihood==NULL) ErrorCBL("this function requires the likelihood to be defined (with the function set_likelihood)!", "write_model", "Modelling_TwoPointCorrelation_wedges.cpp");
+  
+  vector<int> dataset_order_original = m_data_model->dataset_order;
+
+  vector<int> new_dataset_order;
+  vector<double> new_xx;
+  
+  if (xx.size()==0)
+    new_xx = m_data_fit->xx();
+  else
+    for (int n=0; n<m_data_model->nWedges; n++)
+      for (size_t i=0; i<xx.size(); i++) {
+	new_xx.push_back(xx[i]);
+	new_dataset_order.push_back(n);
+      }
+
+  m_data_model->dataset_order = new_dataset_order;
+  m_likelihood->write_model(output_dir, output_file, parameter, new_xx);
+  m_data_model->dataset_order = dataset_order_original;
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx)
+{
+  if (m_posterior==NULL)
+    ErrorCBL("no posterior found: run maximize_posterior first!", "write_model_at_bestfit", "Modelling_TwoPointCorrelation_wedges.cpp");
+
+  vector<int> dataset_order_original = m_data_model->dataset_order;
+
+  vector<int> new_dataset_order;
+  vector<double> new_xx;
+
+  if (xx.size()==0)
+    new_xx = m_data_fit->xx();
+  else
+    for (int n=0; n<m_data_model->nWedges; n++)
+      for (size_t i=0; i<xx.size(); i++) {
+	new_xx.push_back(xx[i]);
+	new_dataset_order.push_back(n);
+      }
+
+  m_data_model->dataset_order = new_dataset_order;
+  m_posterior->write_model_at_bestfit(output_dir, output_file, new_xx);
+
+  m_data_model->dataset_order = dataset_order_original;
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start, const int thin)
+{
+  if (m_posterior==NULL)
+    ErrorCBL("no posterior found: run sample_posterior first!", "write_model_from_chains", "Modelling_TwoPointCorrelation_wedges.cpp");
+
+  vector<int> dataset_order_original = m_data_model->dataset_order;
+
+  vector<int> new_dataset_order;
+  vector<double> new_xx;
+
+  if (xx.size()==0)
+    new_xx = m_data_fit->xx();
+  else
+    for (int n=0; n<m_data_model->nWedges; n++)
+      for (size_t i=0; i<xx.size(); i++) {
+	new_xx.push_back(xx[i]);
+	new_dataset_order.push_back(n);
+      }
+
+  m_data_model->dataset_order = new_dataset_order;
+  m_posterior->write_model_from_chain(output_dir, output_file, new_xx, {}, start, thin);
+
+  m_data_model->dataset_order = dataset_order_original;
+}
 
 
 // ============================================================================================
@@ -333,229 +479,6 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_full
   m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
   m_ModelIsSet = true;
 }
-
-
-// ============================================================================================
-
-
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Dispersion (statistics::PriorDistribution fsigma8_prior, statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigma12_prior, const bool DFoG, const bool compute_PkDM)
-{
-  if (DFoG) m_data_model->Pk_mu_model = "DispersionGauss";
-  else m_data_model->Pk_mu_model = "DispersionLorentz";
-
-  // compute the fiducial dark matter two-point correlation function
-  if (compute_PkDM) set_fiducial_PkDM();
-
-  // number of wedges to be used
-  m_data_model->nWedges = m_nWedges;
-
-  // integral limits used to measure the wedges
-  m_data_model->mu_integral_limits = m_mu_integral_limits;
-
-  // scales to be used for each wedges
-  m_data_model->dataset_order = m_wedges_order;
-
-  m_data_model->nmultipoles = 3;
-  
-  // set the model parameters
-  const int nparameters = 3;
-
-  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
-
-  vector<string> parameterName(nparameters);
-  parameterName[0] = "f*sigma8";
-  parameterName[1] = "b*sigma8";
-  parameterName[2] = "sigma12";
-
-  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigma12_prior};
-
-  //set the priors
-  m_set_prior(priors);
-
-  // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
-  m_ModelIsSet = true;
-}
-
-
-// ============================================================================================
-
-
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigma12_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution kt_prior, const bool DFoG, const bool compute_PkDM)
-{
-  if (DFoG) m_data_model->Pk_mu_model = "ScoccimarroPezzottaGauss";
-  else m_data_model->Pk_mu_model = "ScoccimarroPezzottaLorentz";
-
-  // compute the fiducial dark matter two-point correlation function
-  if (compute_PkDM) set_fiducial_PkDM();
-  
-  // number of wedges to be used
-  m_data_model->nWedges = m_nWedges;
-
-  // integral limits used to measure the wedges
-  m_data_model->mu_integral_limits = m_mu_integral_limits;
-
-  // scales to be used for each wedges
-  m_data_model->dataset_order = m_wedges_order;
-
-  m_data_model->nmultipoles = 3;
-
-  // set the model parameters
-  const int nparameters = 5;
-
-  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
-
-  vector<string> parameterName(nparameters);
-  parameterName[0] = "f*sigma8";
-  parameterName[1] = "b*sigma8";
-  parameterName[2] = "sigma12";
-  parameterName[3] = "kd";
-  parameterName[4] = "kt";
-
-  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigma12_prior, kd_prior, kt_prior};
-
-  //set the priors
-  m_set_prior(priors);
-
-  // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
-  m_ModelIsSet = true;
-}
-
-
-// ============================================================================================
-
-
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigma12_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution bb_prior, const statistics::PriorDistribution a1_prior, const statistics::PriorDistribution a2_prior, const statistics::PriorDistribution a3_prior, const bool DFoG, const bool compute_PkDM)
-{
-  if (DFoG) m_data_model->Pk_mu_model = "ScoccimarroBelGauss";
-  else m_data_model->Pk_mu_model = "ScoccimarroBelLorentz";
-
-  // compute the fiducial dark matter two-point correlation function
-  if (compute_PkDM) set_fiducial_PkDM();
-
-  // number of wedges to be used
-  m_data_model->nWedges = m_nWedges;
-
-  // integral limits used to measure the wedges
-  m_data_model->mu_integral_limits = m_mu_integral_limits;
-  
-  // scales to be used for each wedges
-  m_data_model->dataset_order = m_wedges_order;
-  
-  m_data_model->nmultipoles = 3;
-
-  // set the model parameters
-  const int nparameters = 8;
-
-  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
-
-  vector<string> parameterName(nparameters);
-  parameterName[0] = "f*sigma8";
-  parameterName[1] = "b*sigma8";
-  parameterName[2] = "sigma12";
-  parameterName[3] = "kd";
-  parameterName[4] = "bb";
-  parameterName[5] = "a1";
-  parameterName[6] = "a2";
-  parameterName[7] = "a3";
-
-  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigma12_prior, kd_prior, bb_prior, a1_prior, a2_prior, a3_prior};
-
-  //set the priors
-  m_set_prior(priors);
-
-  // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
-  m_ModelIsSet = true;
-}
-
-
-// ============================================================================================
-
-
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_TNS (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigma12_prior, const bool DFoG, const bool compute_PkDM)
-{
-  if (DFoG) m_data_model->Pk_mu_model = "TaruyaGauss";
-  else m_data_model->Pk_mu_model = "TaruyaLorentz";
-
-  // compute the fiducial dark matter two-point correlation function
-  if (compute_PkDM) set_fiducial_PkDM();
-
-  // number of wedges to be used
-  m_data_model->nWedges = m_nWedges;
-
-  // integral limits used to measure the wedges
-  m_data_model->mu_integral_limits = m_mu_integral_limits;
-  
-  // scales to be used for each wedges
-  m_data_model->dataset_order = m_wedges_order;
-  
-  m_data_model->nmultipoles = 3;
-
-  // set the model parameters
-  const int nparameters = 3;
-
-  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
-
-  vector<string> parameterName(nparameters);
-  parameterName[0] = "f*sigma8";
-  parameterName[1] = "b*sigma8";
-  parameterName[2] = "sigma12";
-
-  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigma12_prior};
-
-  //set the priors
-  m_set_prior(priors);
-
-  // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
-  m_ModelIsSet = true;
-}
-
-
-// ============================================================================================
-
-
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigma12_prior, const bool DFoG, const bool compute_PkDM)
-{
-  if (DFoG) m_data_model->Pk_mu_model = "ScoccimarroGauss";
-  else m_data_model->Pk_mu_model = "ScoccimarroLorentz";
-
-  // compute the fiducial dark matter two-point correlation function
-  if (compute_PkDM) set_fiducial_PkDM();
-  
-  // number of wedges to be used
-  m_data_model->nWedges = m_nWedges;
-
-  // integral limits used to measure the wedges
-  m_data_model->mu_integral_limits = m_mu_integral_limits;
-  
-  // scales to be used for each wedges
-  m_data_model->dataset_order = m_wedges_order;
-
-  m_data_model->nmultipoles = 3;
-
-  // set the model parameters
-  const int nparameters = 3;
-
-  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
-
-  vector<string> parameterName(nparameters);
-  parameterName[0] = "f*sigma8";
-  parameterName[1] = "b*sigma8";
-  parameterName[2] = "sigma12";
-
-  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigma12_prior};
-
-  //set the priors
-  m_set_prior(priors);
-
-  // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
-  m_ModelIsSet = true;
-}
-
 
 // ============================================================================================
 
@@ -650,83 +573,278 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_BAO 
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_dispersion (statistics::PriorDistribution fsigma8_prior, statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
-  if (m_likelihood==NULL) ErrorCBL("this function requires the likelihood to be defined (with the function set_likelihood)!", "write_model", "Modelling_TwoPointCorrelation_wedges.cpp");
-  
-  vector<int> dataset_order_original = m_data_model->dataset_order;
+  if (DFoG) m_data_model->Pk_mu_model = "dispersion_Gauss";
+  else m_data_model->Pk_mu_model = "dispersion_Lorentz";
 
-  vector<int> new_dataset_order;
-  vector<double> new_xx;
-  
-  if (xx.size()==0)
-    new_xx = m_data_fit->xx();
-  else
-    for (int n=0; n<m_data_model->nWedges; n++)
-      for (size_t i=0; i<xx.size(); i++) {
-	new_xx.push_back(xx[i]);
-	new_dataset_order.push_back(n);
-      }
+  // compute the fiducial dark matter two-point correlation function
+  if (compute_PkDM) set_fiducial_PkDM();
 
-  m_data_model->dataset_order = new_dataset_order;
-  m_likelihood->write_model(output_dir, output_file, parameters, new_xx);
-  m_data_model->dataset_order = dataset_order_original;
+  // number of wedges to be used
+  m_data_model->nWedges = m_nWedges;
+
+  // integral limits used to measure the wedges
+  m_data_model->mu_integral_limits = m_mu_integral_limits;
+
+  // scales to be used for each wedges
+  m_data_model->dataset_order = m_wedges_order;
+
+  m_data_model->nmultipoles = 3;
+  
+  // set the model parameters
+  const int nparameters = 5;
+
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b*sigma8";
+  parameterName[2] = "sigmav";
+  parameterName[3] = "alpha_perpendicular";
+  parameterName[4] = "alpha_parallel";
+  
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigmav_prior, alpha_perpendicular_prior, alpha_parallel_prior};
+
+  //set the priors
+  m_set_prior(priors);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
+  m_ModelIsSet = true;
+}
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
+{
+  if (DFoG) m_data_model->Pk_mu_model = "Scoccimarro_Gauss";
+  else m_data_model->Pk_mu_model = "Scoccimarro_Lorentz";
+
+  // compute the fiducial dark matter two-point correlation function
+  if (compute_PkDM) set_fiducial_PkDM();
+  
+  // number of wedges to be used
+  m_data_model->nWedges = m_nWedges;
+
+  // integral limits used to measure the wedges
+  m_data_model->mu_integral_limits = m_mu_integral_limits;
+  
+  // scales to be used for each wedges
+  m_data_model->dataset_order = m_wedges_order;
+
+  m_data_model->nmultipoles = 3;
+
+  // set the model parameters
+  const int nparameters = 5;
+
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b*sigma8";
+  parameterName[2] = "sigmav";
+  parameterName[3] = "alpha_perpendicular";
+  parameterName[4] = "alpha_parallel";
+  
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigmav_prior, alpha_perpendicular_prior, alpha_parallel_prior};
+
+  //set the priors
+  m_set_prior(priors);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
+  m_ModelIsSet = true;
 }
 
 
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution kt_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
-  if (m_posterior==NULL)
-    ErrorCBL("no posterior found: run maximize_posterior first!", "write_model_at_bestfit", "Modelling_TwoPointCorrelation_wedges.cpp");
+  if (DFoG) m_data_model->Pk_mu_model = "Scoccimarro_Pezzotta_Gauss";
+  else m_data_model->Pk_mu_model = "Scoccimarro_Pezzotta_Lorentz";
 
-  vector<int> dataset_order_original = m_data_model->dataset_order;
+  // compute the fiducial dark matter two-point correlation function
+  if (compute_PkDM) set_fiducial_PkDM();
+  
+  // number of wedges to be used
+  m_data_model->nWedges = m_nWedges;
 
-  vector<int> new_dataset_order;
-  vector<double> new_xx;
+  // integral limits used to measure the wedges
+  m_data_model->mu_integral_limits = m_mu_integral_limits;
 
-  if (xx.size()==0)
-    new_xx = m_data_fit->xx();
-  else
-    for (int n=0; n<m_data_model->nWedges; n++)
-      for (size_t i=0; i<xx.size(); i++) {
-	new_xx.push_back(xx[i]);
-	new_dataset_order.push_back(n);
-      }
+  // scales to be used for each wedges
+  m_data_model->dataset_order = m_wedges_order;
 
-  m_data_model->dataset_order = new_dataset_order;
-  m_posterior->write_model_at_bestfit(output_dir, output_file, new_xx);
+  m_data_model->nmultipoles = 3;
 
-  m_data_model->dataset_order = dataset_order_original;
+  // set the model parameters
+  const int nparameters = 7;
+
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b*sigma8";
+  parameterName[2] = "sigmav";
+  parameterName[3] = "kd";
+  parameterName[4] = "kt";
+  parameterName[5] = "alpha_perpendicular";
+  parameterName[6] = "alpha_parallel";
+  
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigmav_prior, kd_prior, kt_prior, alpha_perpendicular_prior, alpha_parallel_prior};
+
+  //set the priors
+  m_set_prior(priors);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
+  m_ModelIsSet = true;
 }
 
 
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start, const int thin)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution bb_prior, const statistics::PriorDistribution a1_prior, const statistics::PriorDistribution a2_prior, const statistics::PriorDistribution a3_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
-  if (m_posterior==NULL)
-    ErrorCBL("no posterior found: run sample_posterior first!", "write_model_from_chains", "Modelling_TwoPointCorrelation_wedges.cpp");
+  if (DFoG) m_data_model->Pk_mu_model = "Scoccimarro_Bel_Gauss";
+  else m_data_model->Pk_mu_model = "Scoccimarro_Bel_Lorentz";
 
-  vector<int> dataset_order_original = m_data_model->dataset_order;
+  // compute the fiducial dark matter two-point correlation function
+  if (compute_PkDM) set_fiducial_PkDM();
 
-  vector<int> new_dataset_order;
-  vector<double> new_xx;
+  // number of wedges to be used
+  m_data_model->nWedges = m_nWedges;
 
-  if (xx.size()==0)
-    new_xx = m_data_fit->xx();
-  else
-    for (int n=0; n<m_data_model->nWedges; n++)
-      for (size_t i=0; i<xx.size(); i++) {
-	new_xx.push_back(xx[i]);
-	new_dataset_order.push_back(n);
-      }
+  // integral limits used to measure the wedges
+  m_data_model->mu_integral_limits = m_mu_integral_limits;
+  
+  // scales to be used for each wedges
+  m_data_model->dataset_order = m_wedges_order;
+  
+  m_data_model->nmultipoles = 3;
 
-  m_data_model->dataset_order = new_dataset_order;
-  m_posterior->write_model_from_chain(output_dir, output_file, new_xx, {}, start, thin);
+  // set the model parameters
+  const int nparameters = 10;
 
-  m_data_model->dataset_order = dataset_order_original;
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b*sigma8";
+  parameterName[2] = "sigmav";
+  parameterName[3] = "kd";
+  parameterName[4] = "bb";
+  parameterName[5] = "a1";
+  parameterName[6] = "a2";
+  parameterName[7] = "a3";
+  parameterName[8] = "alpha_perpendicular";
+  parameterName[9] = "alpha_parallel";
+  
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigmav_prior, kd_prior, bb_prior, a1_prior, a2_prior, a3_prior, alpha_perpendicular_prior, alpha_parallel_prior};
+
+  //set the priors
+  m_set_prior(priors);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
+  m_ModelIsSet = true;
 }
+
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_TNS (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
+{
+  if (DFoG) m_data_model->Pk_mu_model = "TNS_Gauss";
+  else m_data_model->Pk_mu_model = "TNS_Lorentz";
+
+  // compute the fiducial dark matter two-point correlation function
+  if (compute_PkDM) set_fiducial_PkDM();
+
+  // number of wedges to be used
+  m_data_model->nWedges = m_nWedges;
+
+  // integral limits used to measure the wedges
+  m_data_model->mu_integral_limits = m_mu_integral_limits;
+  
+  // scales to be used for each wedges
+  m_data_model->dataset_order = m_wedges_order;
+  
+  m_data_model->nmultipoles = 3;
+
+  // set the model parameters
+  const int nparameters = 5;
+
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b*sigma8";
+  parameterName[2] = "sigmav";
+  parameterName[3] = "alpha_perpendicular";
+  parameterName[4] = "alpha_parallel";
+  
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, bsigma8_prior, sigmav_prior, alpha_perpendicular_prior, alpha_parallel_prior};
+
+  //set the priors
+  m_set_prior(priors);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
+  m_ModelIsSet = true;
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_eTNS (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution b1sigma8_prior, const statistics::PriorDistribution b2sigma8_prior, const statistics::PriorDistribution sigmav_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution N_prior, const bool DFoG, const bool compute_PkDM)
+{
+  if (DFoG) m_data_model->Pk_mu_model = "eTNS_Gauss";
+  else m_data_model->Pk_mu_model = "eTNS_Lorentz";
+
+  // compute the fiducial dark matter two-point correlation function
+  if (compute_PkDM) set_fiducial_PkDM();
+
+  // number of wedges to be used
+  m_data_model->nWedges = m_nWedges;
+
+  // integral limits used to measure the wedges
+  m_data_model->mu_integral_limits = m_mu_integral_limits;
+  
+  // scales to be used for each wedges
+  m_data_model->dataset_order = m_wedges_order;
+  
+  m_data_model->nmultipoles = 3;
+
+  // set the model parameters
+  const int nparameters = 7;
+
+  vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
+
+  vector<string> parameterName(nparameters);
+  parameterName[0] = "f*sigma8";
+  parameterName[1] = "b1*sigma8";
+  parameterName[2] = "b2*sigma8";
+  parameterName[3] = "sigmav";
+  parameterName[4] = "alpha_perpendicular";
+  parameterName[5] = "alpha_parallel";
+  parameterName[6] = "N";
+  
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, b1sigma8_prior, b2sigma8_prior, sigmav_prior, alpha_perpendicular_prior, alpha_parallel_prior, N_prior};
+
+  //set the priors
+  m_set_prior(priors);
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&xiWedges, nparameters, parameterType, parameterName, m_data_model));
+  m_ModelIsSet = true;
+}
+
+

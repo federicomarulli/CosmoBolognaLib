@@ -157,6 +157,23 @@ namespace cbl {
 	 *  1D
 	 */
 	NumberCounts1D (const catalogue::Var var, const BinType bin_type, const catalogue::Catalogue data, const size_t nbins, const double minVar=par::defaultDouble, const double maxVar=par::defaultDouble, const double shift = 0.5, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.); 
+	
+	/**
+	 *  @brief constructor
+	 *
+	 *  @param var the variable type
+	 *
+	 *  @param vec_edges bin edges, used only in case of a custom binning
+	 *
+	 *  @param data object of class Catalogue
+	 *  
+	 *  @param hist_type the type of histogram
+	 *
+	 *  @param fact factor used to normalized the distribution
+	 *
+	 *  1D
+	 */
+	NumberCounts1D (const catalogue::Var var, const std::vector<double> vec_edges, const catalogue::Catalogue data, const glob::HistogramType hist_type=glob::HistogramType::_N_V_, const double fact = 1.); 
 
 	///@}
 

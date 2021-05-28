@@ -36,7 +36,7 @@
 
 
 #include "Cosmology.h"
-#include "Modelling1D.h"
+#include "Modelling.h"
 #include "ModelFunction_Cosmology.h"
 
 
@@ -66,7 +66,7 @@ namespace cbl {
        *  used for modelling cosmological measurements
        *
        */
-      class Modelling_Cosmology : public Modelling1D {
+      class Modelling_Cosmology : public Modelling {
 
       protected:
 
@@ -88,12 +88,11 @@ namespace cbl {
 	 *  @name Constructors/destructors
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief default constuctor
-	 *  
 	 */
-	Modelling_Cosmology () {}
+	Modelling_Cosmology () = default;
 
 	/**
 	 *  @brief constuctor
@@ -103,18 +102,16 @@ namespace cbl {
 	 *
 	 *  @param data_type the type of cosmological measurements
 	 *  to be modelled
-	 *
-	 *  
 	 */
 	Modelling_Cosmology (const std::shared_ptr<cbl::data::Data> dataset, const std::vector<std::string> data_type);
 
 	/**
 	 *  @brief default destructor
 	 */
-	~Modelling_Cosmology () {}
+	~Modelling_Cosmology () = default;
 
 	///@}
-
+	
 	/**
 	 *  @brief set the fiducial cosmology
 	 *

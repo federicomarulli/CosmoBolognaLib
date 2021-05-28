@@ -62,7 +62,7 @@ namespace cbl {
        *  average number density, and \f$dP_{12}\f$ is the probability
        *  of finding a pair with one object in the volume \f$dV_1\f$
        *  and the other one in the volume \f$dV_2\f$, separated by a
-       *  comoving distance r.
+       *  comoving distance r
        */
       class TwoPointCorrelation1D : public virtual TwoPointCorrelation {
 
@@ -286,10 +286,9 @@ namespace cbl {
 	 *  @name Constructors/destructors
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief default constructor
-	 *  1D
 	 */
 	TwoPointCorrelation1D () { m_dataset = data::Data::Create(data::DataType::_1D_); }
 
@@ -305,7 +304,6 @@ namespace cbl {
 	 *  @param random_dilution_fraction fraction between the number
 	 *  of objects in the diluted and original random samples, used
 	 *  to improve performances in random-random pair counts
-	 *  1D
 	 */
 	TwoPointCorrelation1D (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool compute_extra_info=false, const double random_dilution_fraction=1.) 
 	  : TwoPointCorrelation(data, random, compute_extra_info, random_dilution_fraction)
@@ -348,12 +346,12 @@ namespace cbl {
 	  { std::vector<double> vv; m_dataset->get_error(vv); return vv; }
 
 	///@}
-
+	
 	/**
 	 *  @name Member functions to count measure the two-point correlation function
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief measure the two-point correlation function
 	 *
@@ -388,12 +386,17 @@ namespace cbl {
 	 *  @param estimator the estimator used to measure the two-point
 	 *  correlation function
 	 *
+	 *  @param fact factor used to compute the cell size of the
+	 *  chain mesh: it is multiplied by the maximum distance
+	 *  considered for the couples and can be setted by the user
+	 *  to optimize the count of the couples
+	 *
 	 *  @param seed the seed for random number generation
 	 *
 	 *  @return none, or an error message if the derived object does
 	 *  not have this member
 	 */
-	virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const int seed=3213) = 0;
+	virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const double fact=0.1, const int seed=3213) = 0;
       
 	///@}
 
@@ -429,13 +432,12 @@ namespace cbl {
 	/**
 	 *  @name Member functions to compute, read and write the covariance matrix (customised in all the derived classes)
 	 */
-	///@{ 
-
+	///@{
+	
 	/**
 	 *  @brief read the measured covariance matrix
 	 *  @param dir input directory
-	 *  @param file input file
-	 *  
+	 *  @param file input file 
 	 */
 	void read_covariance (const std::string dir, const std::string file) override;
 
