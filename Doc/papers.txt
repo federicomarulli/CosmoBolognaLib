@@ -2,6 +2,15 @@
 ----- the list of publications that used the CosmoBolognaLib -----
 ------------------------------------------------------------------
 
+33. Lindholm et al.
+    Clustering of CODEX clusters	  
+    2020, submitted to A&A
+    	       
+32. Moresco, Veropalumbo, Marulli, Moscardini, Cimatti
+    C^3 -Cluster Clustering Cosmology II. First detection of the BAO
+    peak in the three-point correlation function of galaxy clusters
+    2020, submitted to ApJ 
+	 
 31. Marulli, Veropalumbo, García-Farieta, Moresco, Moscardini, Cimatti
     C^3 - Cluster Clustering Cosmology I. New constraints on the
     cosmic growth rate at z~0.3 from redshift-space clustering
