@@ -650,6 +650,7 @@ cleanExamples:
 	cd $(PWD)/Examples/cosmology ; make clean && cd ../..
 	cd $(PWD)/Examples/data ; make clean && cd ../..
 	cd $(PWD)/Examples/statistics/codes ; make clean && cd ../..
+	cd $(PWD)/Examples/lognormal/codes ; make clean && cd ../..
 	cd $(PWD)/Examples/catalogue ; make clean && cd ../..
 	cd $(PWD)/Examples/numberCounts/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../../..
