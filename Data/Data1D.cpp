@@ -138,12 +138,13 @@ void cbl::data::Data1D::read (const string input_file, const int skip_nlines, co
 
   // set the data size and diagonal covariance
 
+  m_xsize = m_data.size();
   m_ndata = m_data.size();
 
   m_covariance.resize(m_ndata, vector<double>(m_ndata, 0));
   for (int i=0; i<m_ndata; i++)
     m_covariance[i][i] = pow(m_error[i], 2);
-  
+
 }
 
 

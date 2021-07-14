@@ -44,6 +44,9 @@
  *
  *  Physical units are forced.
  *
+ *  This code is a reimplementation of the Python code presented in Lacasa & Grain 2019.
+ *  The original code can be found here: https://github.com/fabienlacasa/PySSC
+ *
  *  @author Giorgio Lesci
  *
  *  @author giorgio.lesci2@unibo.it
@@ -55,6 +58,7 @@
 
 
 #include "Cosmology.h"
+#include "Modelling.h"
 
 
 namespace cbl {
@@ -75,6 +79,9 @@ namespace cbl {
     {
       
     protected:
+    
+      /// pointer to the transfer function, or response, of the probe
+      std::vector<std::shared_ptr<statistics::Model>> m_transfer_func;
     
       /// pointer to the Cosmology object
       std::shared_ptr<cosmology::Cosmology> m_cosmo;
@@ -165,9 +172,11 @@ namespace cbl {
        *  Bessel spherical function, and \f$W_i\f$ is the window function.
        *
        *  Physical units are forced, in set_SSC.
+       *
+       *  @param modelling pointers to Modelling objects
        *  
        */
-      SuperSampleCovariance () {}
+      SuperSampleCovariance (std::vector<std::shared_ptr<cbl::modelling::Modelling>> modelling);
 
       /**
        *  @brief default destructor
@@ -287,6 +296,30 @@ namespace cbl {
        *  @return the covariance matrix
        */
       std::vector<std::vector<double>> operator () (std::vector<double> &parameter) const;
+      
+      /**
+       *  @brief get the response, or the transfer function, of all the probes
+       *
+       *  @param xx the points where the response is evaluated
+       *
+       *  @param parameter the parameters of interest in the covariance matrix
+       *
+       *  @return the values of the response function
+       */
+      std::vector<std::vector<double>> get_response (std::vector<std::vector<double>> xx, std::vector<double> &parameter) const;
+      
+      /**
+       *  @brief get the response, or the transfer function, of the i-th probe
+       *
+       *  @param i index of the probe
+       *
+       *  @param xx the points where the response is evaluated
+       *
+       *  @param parameter the parameters of interest in the covariance matrix
+       *
+       *  @return the values of the response function
+       */
+      std::vector<double> get_response (int i, std::vector<double> xx, std::vector<double> &parameter) const;
        
        ///@}
        
@@ -303,6 +336,13 @@ namespace cbl {
        * @return the window function
        */
        std::vector<std::vector<double>> get_window_function ();
+       
+       /**
+       * @brief return the dimension of the Sij matrix
+       *
+       * @return the dimension of the Sij matrix
+       */
+       int Sij_dimension ();
        
        ///@}
        

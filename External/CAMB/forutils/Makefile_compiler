@@ -7,7 +7,7 @@ MAKEOPT = --no-print-directory
 # F90RELEASEFLAGS: These flags are only used for creating Release artefacts
 
 # For standalone compiling set the compiler
-ifeq ($(COMPILER),ifort)
+ifneq ($(COMPILER),gfortran)
 ifortErr = $(shell which ifort >/dev/null 2>&1; echo $$?)
 else
 ifortErr = 1
@@ -52,13 +52,13 @@ endif
 
 else
 
-major_version = $(shell $(F90C) -dumpversion 2>&1 | cut -d " " -f 3 | cut -d. -f 1)
+major_version = $(shell gfortran -dumpversion 2>&1 | cut -d " " -f 3 | cut -d. -f 1)
 ifneq ($(shell test $(major_version) -gt 5; echo $$?),0)
-$(error $(F90C) version 6.3 or higher (or ifort 14+) is required)
+$(error gfortran version 6.3 or higher (or ifort 14+) is required)
 endif
-compiler_ver = $(shell $(F90C) -dumpversion 2>&1)
+compiler_ver = $(shell gfortran -dumpversion 2>&1)
 
-F90C ?= $(F90C)
+F90C ?= gfortran
 F90COMMONFLAGS ?= -cpp -ffree-line-length-none -fmax-errors=4 -MMD -fopenmp -fPIC
 F90DEBUGFLAGS ?= -g -O0 -fbacktrace
 F90RELEASEFLAGS ?= -O3 -ffast-math

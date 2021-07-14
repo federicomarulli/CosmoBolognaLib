@@ -103,13 +103,16 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const cosmology::Cosmology cosmology, const catalogue::Cluster cluster, const std::vector<double> SF_weights, const double z_error, const double proxy_relative_error, const double z_pivot, const double proxy_pivot, const double mass_pivot, const std::string scalrel_z_evo, const double log_base, const std::string method_Pk, const bool store_output, const int norm, const double Delta, const bool isDelta_vir, const std::string model_MF, const double z_min, const double z_max, const double area_degrees, const double prec)
+void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const cosmology::Cosmology cosmology, const catalogue::Cluster cluster, const std::vector<double> SF_weights, const double z_pivot, const double proxy_pivot, const double mass_pivot, const double log_base, const std::string method_Pk, const bool store_output, const int norm, const double Delta, const bool isDelta_vir, const std::string model_MF, const std::string model_bias, const double z_min, const double z_max, const double area_degrees, const double prec)
 {
   m_data_model.isSnapshot = false;
 
   if (m_fit_range==false) ErrorCBL("You must set the fit range (through set_fit_range) first!","set_data_model","Modelling_NumberCounts.cpp");
   m_data_model.edges_x = m_data->edges_xx();
-  m_data_model.edges_y = m_data->edges_yy();
+
+  for (size_t i=0; i<m_data_model.edges_x.size(); i++)
+    if (m_data_model.edges_x[i] <= 0)
+      ErrorCBL("The values of the proxy edges cannot be <= 0.","set_data_model","Modelling_NumberCounts.cpp");
 
   m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model.cluster = make_shared<catalogue::Cluster>(cluster);
@@ -118,12 +121,9 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
     m_data_model.SF_weights = SF_weights;
   else
     ErrorCBL("The weights vector must have the same size of the x vector!","set_data_model","Modelling_NumberCounts.cpp");
-  m_data_model.z_error = z_error;
-  m_data_model.proxy_relative_error = proxy_relative_error;
   m_data_model.z_pivot = z_pivot;
   m_data_model.proxy_pivot = proxy_pivot;
   m_data_model.mass_pivot = mass_pivot;
-  m_data_model.scalrel_z_evo = scalrel_z_evo;
   m_data_model.log_base = log_base;
   
   m_data_model.method_Pk = method_Pk;
@@ -140,6 +140,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
   m_data_model.isDelta_Vir = isDelta_vir;
   m_data_model.Delta = Delta;
   m_data_model.model_MF = model_MF;
+  m_data_model.model_bias = model_bias;
 
   m_data_model.Mass_vector = logarithmic_bin_vector(200, 1.e10, 1.e16);
 

@@ -1008,6 +1008,27 @@ namespace cbl {
       { return cbl::ErrorCBL("", "zbias", "Object.h"); }
       
       /**
+       *  @brief get the member \e m_proxybias
+       *  @return the cluster mass proxy bias
+       */
+      virtual double proxybias () const
+      { return cbl::ErrorCBL("", "proxybias", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_zerror
+       *  @return the cluster redshift error
+       */
+      virtual double zerror () const
+      { return cbl::ErrorCBL("", "zerror", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_proxyerror
+       *  @return the cluster mass proxy error
+       */
+      virtual double proxyerror () const
+      { return cbl::ErrorCBL("", "proxyerror", "Object.h"); }
+      
+      /**
        *  @brief get the member \e m_Plambda_a
        *  @return \f$ a \f$ term in the function describing the 
        *  cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, 
@@ -1660,6 +1681,33 @@ namespace cbl {
        */
       virtual void set_zbias (const double value)
       { (void)value; cbl::ErrorCBL("", "set_zbias", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_proxybias
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_proxybias (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_proxybias", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_zerror
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_zerror (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_zerror", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_proxyerror
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_proxyerror (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_proxyerror", "Object.h"); }
       
       /**
        *  @brief set the member \e m_Plambda_a

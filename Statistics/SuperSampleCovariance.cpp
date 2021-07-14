@@ -33,6 +33,19 @@
 
 #include "SuperSampleCovariance.h"
 
+
+// ======================================================================================
+
+
+cbl::statistics::SuperSampleCovariance::SuperSampleCovariance (std::vector<std::shared_ptr<modelling::Modelling>> modelling)
+{
+  for (size_t i=0; i<modelling.size(); i++) {
+    modelling[i]->isSet_response();
+    m_transfer_func.emplace_back(modelling[i]->transfer_function());
+  }
+}
+
+
 // ======================================================================================
 
 
@@ -51,6 +64,9 @@ void cbl::statistics::SuperSampleCovariance::set_SSC (cbl::cosmology::Cosmology 
   m_precision = precision;
   
   m_compute_topHat_window(delta_z, redshift_edges);
+
+  if (m_nbins != (int)(m_transfer_func.size()))
+    cbl::ErrorCBL("Different number of redshift bins and input models!","set_SSC","SuperSampleCovariance");
 }
 
 
@@ -72,6 +88,9 @@ void cbl::statistics::SuperSampleCovariance::set_SSC (cbl::cosmology::Cosmology 
   m_precision = precision;
   
   m_compute_gaussian_window(delta_z, W_mean, W_std);
+
+  if (m_nbins != (int)(m_transfer_func.size()))
+    cbl::ErrorCBL("Different number of redshift bins and input models!","set_SSC","SuperSampleCovariance");
 }
 
 
@@ -177,7 +196,7 @@ std::vector<std::vector<double>> cbl::statistics::SuperSampleCovariance::compute
     kk[i]=exp(logk[i]);
   }
   
-  std::vector<double> Pk_new = cosmo.Pk_DM(kk, m_method_Pk, m_NL, 0., m_store_output, "test", -1, kk[0], kk[1], 1.e-2, cbl::par::defaultString, false);
+  std::vector<double> Pk_new = cosmo.Pk_DM(kk, m_method_Pk, m_NL, 0., m_store_output, "test", -1, 0.0001, 100, 1.e-2, cbl::par::defaultString, false);
   std::vector<std::vector<double>> Uarr(m_nbins, std::vector<double>(logk.size()));
   std::vector<double> kr(m_nsteps);
   std::vector<std::vector<double>> integrand2(m_nbins, std::vector<double>(m_nsteps));  
@@ -246,6 +265,29 @@ std::vector<std::vector<double>> cbl::statistics::SuperSampleCovariance::operato
 }
 
 
+// ======================================================================================
+
+
+std::vector<std::vector<double>> cbl::statistics::SuperSampleCovariance::get_response (std::vector<std::vector<double>> xx, std::vector<double> &parameter) const
+{
+  std::vector<std::vector<double>> response (m_transfer_func.size(), std::vector<double>());
+
+  for (size_t i=0; i<m_transfer_func.size(); i++)
+    response[i] = m_transfer_func[i]->operator()(xx[i], parameter);
+  
+  return response;
+}
+
+
+// ======================================================================================
+
+
+std::vector<double> cbl::statistics::SuperSampleCovariance::get_response (int i, std::vector<double> xx, std::vector<double> &parameter) const
+{ 
+  return m_transfer_func[i]->operator()(xx, parameter);
+}
+
+
 
 // ======================================================================================
 
@@ -310,4 +352,13 @@ void cbl::statistics::SuperSampleCovariance::write_Sij (const std::string dir, c
 	   << "  " << setiosflags(std::ios::fixed) << std::setprecision(precision) << std::setw(15) << std::right << Sij[i][j] << std::endl;
    
   fout.close(); std::cout << std::endl; coutCBL << "I wrote the file: " << file_out << std::endl;
+}
+
+
+// ======================================================================================
+
+
+int cbl::statistics::SuperSampleCovariance::Sij_dimension ()
+{
+  return m_nbins;
 }

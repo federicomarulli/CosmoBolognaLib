@@ -92,7 +92,7 @@ void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_Density
 
   // construct the model
   if (m_2halo == false)
-    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&nfw_1halo_allBins, nParams, Par_type, Par_string, inputs));
+    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_nfw_1halo, nParams, Par_type, Par_string, inputs));
   else
     ErrorCBL("The 2-halo term is not implemented yet!", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
 }
@@ -216,7 +216,7 @@ double cbl::modelling::densityprofile::nfw_1halo (cbl::cosmology::Cosmology cosm
 
 // ===========================================================================================
 
-std::vector<double> cbl::modelling::densityprofile::nfw_1halo_allBins (const std::vector<double> radius, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<double> cbl::modelling::densityprofile::model_nfw_1halo (const std::vector<double> radius, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_Profile_data_model> pp = static_pointer_cast<STR_Profile_data_model>(inputs);

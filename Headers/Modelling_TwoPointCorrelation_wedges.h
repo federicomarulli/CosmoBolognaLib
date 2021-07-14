@@ -656,13 +656,16 @@ namespace cbl {
 	 *  @param alpha_parallel_prior prior for the parameter 
 	 *  \f$\alpha_{\parallel}\f$
 	 *
+	 *  @param N_prior prior for the parameter N, i.e. the constan
+	 *  \f$\rightarrow\f$ Lorentzian damping
+	 *
 	 *  @param DFoG true \f$\rightarrow\f$ Gaussian damping, false
 	 *  \f$\rightarrow\f$ Lorentzian damping
 	 *
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 */
-	void set_model_eTNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution b1sigma8_prior={}, const statistics::PriorDistribution b2sigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
+	void set_model_eTNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution b1sigma8_prior={}, const statistics::PriorDistribution b2sigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution N_prior={cbl::glob::DistributionType::_Constant_, 0.}, const bool DFoG=true, const bool compute_PkDM=true);
         
       };
     }

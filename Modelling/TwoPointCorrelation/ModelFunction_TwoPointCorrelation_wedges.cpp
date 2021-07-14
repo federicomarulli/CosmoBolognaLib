@@ -187,7 +187,7 @@ std::vector<double> cbl::modelling::twopt::xiWedges (const std::vector<double> r
     pk_interp_eTNS_CPT[22] = pp->func_Pk_b2s2;
     pk_interp_eTNS_CPT[23] = pp->func_Pk_bs22;
     pk_interp_eTNS_CPT[24] = pp->func_sigma32Pklin;
-    Xi_wedge = xi_Wedges(rad, pp->dataset_order, pp->mu_integral_limits, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2]/pp->sigma8_z, parameter[3], 0. }, pk_interp_eTNS_CPT, pp->prec, parameter[4], parameter[5]);
+    Xi_wedge = xi_Wedges(rad, pp->dataset_order, pp->mu_integral_limits, pp->Pk_mu_model, { parameter[0]/pp->sigma8_z, parameter[1]/pp->sigma8_z, parameter[2]/pp->sigma8_z, parameter[3], parameter[6] }, pk_interp_eTNS_CPT, pp->prec, parameter[4], parameter[5]);
   }
 
   else ErrorCBL("the chosen model ("+pp->Pk_mu_model+") is not currently implemented!", "xiWedges", "ModelFunction_TwoPointCorrelation_wedges.cpp");

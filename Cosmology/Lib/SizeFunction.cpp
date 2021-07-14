@@ -96,13 +96,11 @@ double cbl::cosmology::Cosmology::f_nu (const double SS, const double del_v, con
 vector<double> cbl::cosmology::Cosmology::AP_corr(const cbl::cosmology::Cosmology cosm_true, const std::vector<double> redshift)
 {
   std::vector<double> APcorr_vect(redshift.size(),0.);
-  
+
   for (size_t ii=0; ii<redshift.size(); ii++) {
-    double epsilon_true = pow(cosm_true.HH(redshift[ii]),0.5);
-    double epsilon = pow(HH(redshift[ii]),0.5);
-    double D_m_true = cosm_true.D_M(redshift[ii]);
-    double D_m = D_M(redshift[ii]);
-    APcorr_vect[ii] = pow(pow((D_m/D_m_true),2.)*cosm_true.hh()/hh()*epsilon_true/epsilon,(-1./3.));
+    double q_par = HH(redshift[ii])/cosm_true.HH(redshift[ii]);
+    double q_perp = cosm_true.D_M(redshift[ii])/D_M(redshift[ii]);
+    APcorr_vect[ii] = pow(q_par*q_perp*q_perp,(-1./3.));
   }  
   return APcorr_vect; 
 }
@@ -231,14 +229,15 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Nvoids (const double
   }
   std::vector<std::vector<double>> result(2,std::vector<double>(num_bins));
   
+  double volume = Volume(min_z,max_z,Area);
   if (model == "Vdn") for (int i=0; i<num_bins; i++) {
       result[0][i] = RV[i]; 
-      result[1][i] = f_nu(sigmaRz[i], del_v, del_c)/volume_sphere(RV[i])*fabs(Dln_SigmaR[i])*(r_bins[i+1]-r_bins[i])/RV[i]*Volume(min_z,max_z,Area);
+      result[1][i] = f_nu(sigmaRz[i], del_v, del_c)/volume_sphere(RV[i])*fabs(Dln_SigmaR[i])*(r_bins[i+1]-r_bins[i])/RV[i]*volume;
     }
   
   else for (int i=0; i<num_bins; i++) {
       result[0][i] = RV[i];
-      result[1][i] = f_nu(sigmaRz[i], del_v, del_c)/volume_sphere(RL[i])*fabs(Dln_SigmaR[i])*(r_bins[i+1]-r_bins[i])/RV[i]*Volume(min_z,max_z,Area);
+      result[1][i] = f_nu(sigmaRz[i], del_v, del_c)/volume_sphere(RL[i])*fabs(Dln_SigmaR[i])*(r_bins[i+1]-r_bins[i])/RV[i]*volume;
     }
   return result;
     

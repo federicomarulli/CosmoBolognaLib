@@ -67,6 +67,25 @@ void cbl::modelling::Modelling::m_set_posterior (const int seed)
 // ============================================================================================
 
 
+shared_ptr<statistics::Model> cbl::modelling::Modelling::transfer_function ()
+{
+  return m_transfer_func;
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::Modelling::isSet_response ()
+{
+  if (m_transfer_func == NULL)
+    ErrorCBL("the response function is not set!", "isSet_response", "Modelling.cpp");
+}
+
+
+// ============================================================================================
+
+
 shared_ptr<statistics::Likelihood> cbl::modelling::Modelling::likelihood ()
 {
   if (m_likelihood!=NULL)

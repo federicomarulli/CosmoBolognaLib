@@ -1,5 +1,5 @@
-from .baseconfig import camblib, CAMBError, CAMBValueError, CAMBUnknownArgumentError, CAMB_Structure, \
-    F2003Class, fortran_class, numpy_1d, numpy_2d, fortran_array, AllocatableArrayDouble, ndpointer, np, lib_import
+from .baseconfig import camblib, CAMBError, CAMBValueError, CAMBUnknownArgumentError, CAMB_Structure, F2003Class, \
+    fortran_class, numpy_1d, numpy_2d, numpy_1d_int, fortran_array, AllocatableArrayDouble, ndpointer, np, lib_import
 from ctypes import c_float, c_int, c_double, c_bool, POINTER, byref
 import ctypes
 from . import model, constants
@@ -38,7 +38,8 @@ class _ClTransferData(CAMB_Structure):
 
 def save_cmb_power_array(filename, array, labels, lmin=0):
     """
-    Save an zero-based 2-d array of CL to a text file, with each line startin with L.
+    Save an zero-based 2-d array of CL to a text file, with each line starting with L.
+
     :param filename: filename to save
     :param array: 2D array of power spectra
     :param labels:  header names for each column in the output
@@ -407,7 +408,7 @@ class CAMBdata(F2003Class):
         :param filename: filename to save
         :param lmax: lmax to save
         :param CMB_unit: scale results from dimensionless. Use 'muK' for :math:`\mu K^2` units for CMB :math:`C_\ell`
-        and :math:`\mu K` units for lensing cross.
+               and :math:`\mu K` units for lensing cross.
         """
         lmax = self._lmax_setting(lmax)
         cmb = self.get_total_cls(lmax, CMB_unit=CMB_unit)
@@ -419,9 +420,13 @@ class CAMBdata(F2003Class):
                                        'lens_potential'), CMB_unit=None, raw_cl=False):
         r"""
         Get CMB power spectra, as requested by the 'spectra' argument. All power spectra are
-         :math:`\ell(\ell+1)C_\ell/2\pi` self-owned numpy arrays (0..lmax, 0..3), where 0..3 index
-         are TT, EE, BB, TE, unless raw_cl is True in which case return just :math:`C_\ell`.
+        :math:`\ell(\ell+1)C_\ell/2\pi` self-owned numpy arrays (0..lmax, 0..3), where 0..3 index
+        are TT, EE, BB, TE, unless raw_cl is True in which case return just :math:`C_\ell`.
         For the lens_potential the power spectrum returned is that of the deflection.
+
+        Note that even if lmax is None, all spectra a returned to the same lmax, appropriate
+        for lensed spectra. Use the individual functions instead if you want to the full unlensed
+        and lensing potential power spectra to the higher lmax actually computed.
 
         :param params: optional :class:`~.model.CAMBparams` instance with parameters to use. If None, must have
           previously set parameters and called `calc_power_spectra` (e.g. if you got this instance
@@ -689,8 +694,14 @@ class CAMBdata(F2003Class):
         data.nq = cdata.num_q_trans
         from numpy import ctypeslib as nplib
         data.q = nplib.as_array(cdata.q_trans, shape=(data.nq,)).copy()
-        data.sigma_8 = nplib.as_array(cdata.sigma_8, shape=(cdata.sigma_8_size,)).copy()
-        data.sigma2_vdelta_8 = nplib.as_array(cdata.sigma2_vdelta_8, shape=(cdata.sigma2_vdelta_8_size,)).copy()
+        if cdata.sigma_8_size:
+            data.sigma_8 = nplib.as_array(cdata.sigma_8, shape=(cdata.sigma_8_size,)).copy()
+        else:
+            data.sigma_8 = None
+        if cdata.sigma2_vdelta_8_size:
+            data.sigma2_vdelta_8 = nplib.as_array(cdata.sigma2_vdelta_8, shape=(cdata.sigma2_vdelta_8_size,)).copy()
+        else:
+            data.sigma2_vdelta_8 = None
         data.transfer_data = fortran_array(cdata.TransferData, cdata.TransferData_size, dtype=np.float32)
         return data
 
@@ -728,14 +739,19 @@ class CAMBdata(F2003Class):
         """
         if self.OnlyTransfers or params is not None or not have_power_spectra:
             self.calc_power_spectra(params)
-        data = self.get_matter_transfer_data()
 
-        nk = data.nq
+        num_k = c_int(0)
+        CAMBdata_mattertransferks(byref(self), byref(num_k), np.array([]))
+        nk = num_k.value
+
+        ks = np.empty(nk, dtype=np.float64)
+        CAMBdata_mattertransferks(byref(self), byref(num_k), ks)
+
         nz = self.Params.Transfer.PK_num_redshifts
-        kh = data.transfer_data[model.Transfer_kh - 1, :, 0]
-        if not k_hunit:
-            kh *= self.Params.H0 / 100
-
+        if k_hunit:
+            kh = ks / (self.Params.H0 / 100)
+        else:
+            kh = ks
         var1, var2 = self._transfer_var(var1, var2)
 
         hubble_units = c_int(hubble_units)
@@ -748,7 +764,7 @@ class CAMBdata(F2003Class):
 
         z = self.Params.Transfer.PK_redshifts[:nz]
         z.reverse()
-        return np.array(kh), np.array(z), PK
+        return kh, np.array(z), PK
 
     def get_nonlinear_matter_power_spectrum(self, var1=None, var2=None, hubble_units=True, k_hunit=True,
                                             have_power_spectra=True, params=None):
@@ -773,14 +789,71 @@ class CAMBdata(F2003Class):
                                                      have_power_spectra=have_power_spectra, params=params,
                                                      nonlinear=True)
 
+    def get_sigmaR(self, R, z_indices=None, var1=None, var2=None, hubble_units=True, return_R_z=False):
+        r"""
+        Calculate :math:`\sigma_R` values, the RMS linear matter fluctuation in spheres of radius R in linear theory.
+        Accuracy depends on the sampling with which the matter transfer functions are computed.
+
+        For a description of outputs for different var1, var2 see :ref:`transfer-variables`.
+        Note that numerical errors are slightly different to get_sigma8 for R=8 Mpc/h.
+
+        :param R: radius in Mpc or h^{-1} Mpc units, scalar or array
+        :param z_indices: indices of redshifts in Params.Transfer.PK_redshifts to calculate
+                          (default None gives all computed in order of increasing time (decreasing redshift);
+                          -1 gives redshift 0; list gives all listed indices)
+        :param var1: variable i (index, or name of variable; default delta_tot)
+        :param var2: variable j (index, or name of variable; default delta_tot)
+        :param hubble_units: if true, R is in h^{-1} Mpc, otherwise Mpc
+        :param return_R_z: if true, return tuple of R, z, sigmaR
+                           (where R always Mpc units not h^{-1}Mpc and R, z are arrays)
+        :return: array of :math:`\sigma_R` values, or 2D array indexed by (redshift, R)
+        """
+        var1, var2 = self._transfer_var(var1, var2)
+        if hubble_units:
+            if not np.isscalar(R):
+                R = np.array(R, dtype=np.float64)
+            R = R / (self.Params.H0 / 100)
+
+        radii = np.atleast_1d(np.asarray(R, dtype=np.float64)) * self.Params.H0 / 100
+        valid_indices = np.array(self.PK_redshifts_index[:self.Params.Transfer.PK_num_redshifts], dtype=np.int32)
+        if z_indices is None:
+            z_ix = valid_indices
+        else:
+            z_ix = np.atleast_1d(valid_indices[z_indices])
+        sigma_R = np.empty((len(z_ix), len(radii)), dtype=np.float64)
+        CAMBdata_GetSigmaRArray(byref(self), sigma_R, radii, byref(c_int(len(radii))), z_ix,
+                                byref(c_int(len(z_ix))), byref(var1), byref(var2))
+        if z_indices is not None and np.isscalar(z_indices):
+            sigma_R = sigma_R[0, :]
+            if np.isscalar(R):
+                sigma_R = sigma_R[0]
+        elif np.isscalar(R):
+            sigma_R = sigma_R[:, 0]
+        if return_R_z:
+            return R, np.array(self.transfer_redshifts)[z_ix - 1], sigma_R
+        else:
+            return sigma_R
+
     def get_sigma8(self):
         r"""
-        Get :math:`\sigma_8` values (must previously have calculated power spectra)
+        Get :math:`\sigma_8` values at Params.PK_redshifts (must previously have calculated power spectra)
 
         :return: array of :math:`\sigma_8` values, in order of increasing time (decreasing redshift)
         """
-        mtrans = self.get_matter_transfer_data()
-        return mtrans.sigma_8[:]
+        sigma8 = np.empty(self.Params.Transfer.PK_num_redshifts, dtype=np.float64)
+        CAMBdata_GetSigma8(byref(self), sigma8, byref(c_int(0)))
+        return sigma8
+
+    def get_sigma8_0(self):
+        r"""
+        Get :math:`\sigma_8` value today (must previously have calculated power spectra)
+
+        :return: :math:`\sigma_8` today
+        """
+        nz = self.Params.Transfer.PK_num_redshifts
+        if not nz or self.Params.Transfer.PK_redshifts[nz - 1] > 1e-5:
+            raise CAMBError("sigma8 requested at z=0, but P(z=0) not calcaulted")
+        return self.get_sigma8()[-1]
 
     def get_fsigma8(self):
         r"""
@@ -790,8 +863,9 @@ class CAMBdata(F2003Class):
 
         :return: array of f*sigma_8 values, in order of increasing time (decreasing redshift)
         """
-        mtrans = self.get_matter_transfer_data()
-        return mtrans.sigma2_vdelta_8 / mtrans.sigma_8
+        fsigma8 = np.empty(self.Params.Transfer.PK_num_redshifts, dtype=np.float64)
+        CAMBdata_GetSigma8(byref(self), fsigma8, byref(c_int(1)))
+        return fsigma8
 
     def get_matter_power_spectrum(self, minkh=1e-4, maxkh=1.0, npoints=100,
                                   var1=None, var2=None,
@@ -1180,7 +1254,7 @@ class CAMBdata(F2003Class):
                 params.Want_cl_2D_array = old_val
         return result
 
-    def get_lensed_gradient_cls(self, lmax=None, CMB_unit=None, raw_cl=False):
+    def get_lensed_gradient_cls(self, lmax=None, CMB_unit=None, raw_cl=False, clpp=None):
         r"""
         Get lensed gradient scalar CMB power spectra in flat sky approximation
         (`arXiv:1101.2234 <https://arxiv.org/abs/1101.2234>`_).
@@ -1191,6 +1265,8 @@ class CAMBdata(F2003Class):
         :param lmax: lmax to output to
         :param CMB_unit: scale results from dimensionless. Use 'muK' for :math:`\mu K^2` units for CMB :math:`C_\ell`
         :param raw_cl: return :math:`C_\ell` rather than :math:`\ell(\ell+1)C_\ell/2\pi`
+        :param clpp: custom array of :math:`[L(L+1)]^2 C_L^{\phi\phi}/2\pi` lensing potential power spectrum
+             to use (zero based), rather than calculated specturm from this model
         :return: numpy array CL[0:lmax+1,0:8], where CL[:,i] are :math:`T\nabla T`, :math:`E\nabla E`,
                  :math:`B\nabla B`, :math:`PP_\perp`, :math:`T\nabla E`, :math:`TP_\perp`, :math:`(\nabla T)^2`,
                  :math:`\nabla T\nabla T` where the first six are as defined in appendix C
@@ -1200,11 +1276,65 @@ class CAMBdata(F2003Class):
         lmax = self._lmax_setting(lmax)
         res = np.empty((lmax + 1, 8))
         opt = c_int(lmax)
-        GetFlatSkyCgrads = lib_import('lensing', '', 'getflatskycgrads')
-        GetFlatSkyCgrads.argtypes = [POINTER(CAMBdata), int_arg, numpy_1d]
-        GetFlatSkyCgrads(byref(self), byref(opt), res)
+        if clpp is not None:
+            if clpp.shape[0] < self.Params.max_l + 1:
+                raise CAMBValueError('clpp must go to at least Params.max_l (zero based)')
+            clpp = np.array(clpp, dtype=np.float64)
+            GetFlatSkyCgrads = lib_import('lensing', '', 'getflatskycgradswithspectrum')
+            GetFlatSkyCgrads.argtypes = [POINTER(CAMBdata), numpy_1d, int_arg, numpy_1d]
+            GetFlatSkyCgrads(byref(self), clpp, byref(opt), res)
+        else:
+            GetFlatSkyCgrads = lib_import('lensing', '', 'getflatskycgrads')
+            GetFlatSkyCgrads.argtypes = [POINTER(CAMBdata), int_arg, numpy_1d]
+            GetFlatSkyCgrads(byref(self), byref(opt), res)
         self._scale_cls(res, CMB_unit, raw_cl)
         return res
+
+    def get_lensed_cls_with_spectrum(self, clpp, lmax=None, CMB_unit=None, raw_cl=False):
+        r"""
+        Get lensed CMB power spectra using curved-sky correlation function method, using
+        cpp as the lensing spectrum. Useful for e.g. getting partially-delensed spectra.
+
+        :param clpp: array of :math:`[L(L+1)]^2 C_L^{\phi\phi}/2\pi` lensing potential power spectrum (zero based)
+        :param lmax: lmax to output to
+        :param CMB_unit: scale results from dimensionless. Use 'muK' for :math:`\mu K^2` units for CMB :math:`C_\ell`
+        :param raw_cl: return :math:`C_\ell` rather than :math:`\ell(\ell+1)C_\ell/2\pi`
+        :return: numpy array CL[0:lmax+1,0:4], where 0..3 indexes TT, EE, BB, TE.
+        """
+        assert self.Params.DoLensing
+        lmax_unlens = self.Params.max_l
+        if clpp.shape[0] < lmax_unlens + 1:
+            raise CAMBValueError('clpp must go to at least Params.max_l (zero based)')
+        res = np.empty((lmax_unlens + 1, 4), dtype=np.float64)
+        lmax_lensed = c_int(0)
+        lensClsWithSpectrum = lib_import('lensing', '', 'lensclswithspectrum')
+        lensClsWithSpectrum.argtypes = [POINTER(CAMBdata), numpy_1d, numpy_2d, int_arg]
+        clpp = np.array(clpp, dtype=np.float64)
+        lensClsWithSpectrum(byref(self), clpp, res, byref(lmax_lensed))
+        res = res[:min(lmax_lensed.value, lmax or lmax_lensed.value) + 1, :]
+        self._scale_cls(res, CMB_unit, raw_cl)
+        return res
+
+    def get_partially_lensed_cls(self, Alens, lmax=None, CMB_unit=None, raw_cl=False):
+        r"""
+           Get lensed CMB power spectra using curved-sky correlation function method, using
+           true lensing spectrum scaled by Alens. Alens can be an array in L for realistic delensing estimates.
+           Note that if Params.Alens is also set, the result is scaled by the product of both
+
+           :param Alens: scaling of the lensing relative to true, with Alens=1 being the standard result. Can
+              can a scalar in which case all L are scaled, or an zero-based array with the L by L scaling
+              (with L larger than the size of the array having Alens_L=1).
+           :param lmax: lmax to output to
+           :param CMB_unit: scale results from dimensionless. Use 'muK' for :math:`\mu K^2` units for CMB :math:`C_\ell`
+           :param raw_cl: return :math:`C_\ell` rather than :math:`\ell(\ell+1)C_\ell/2\pi`
+           :return: numpy array CL[0:lmax+1,0:4], where 0..3 indexes TT, EE, BB, TE.
+           """
+        clpp = self.get_lens_potential_cls()[:, 0]
+        if np.isscalar(Alens):
+            clpp *= Alens
+        else:
+            clpp[:Alens.size] *= Alens
+        return self.get_lensed_cls_with_spectrum(clpp, lmax, CMB_unit, raw_cl)
 
     def angular_diameter_distance(self, z):
         """
@@ -1457,6 +1587,9 @@ CAMBdata_transferstopowers.argtypes = [POINTER(CAMBdata)]
 CAMBdata_mattertransferdata = camblib.__handles_MOD_cambdata_mattertransferdata
 CAMBdata_mattertransferdata.argtypes = [POINTER(CAMBdata), POINTER(_MatterTransferData)]
 
+CAMBdata_mattertransferks = camblib.__handles_MOD_cambdata_getmattertransferks
+CAMBdata_mattertransferks.argtypes = [POINTER(CAMBdata), POINTER(c_int), numpy_1d]
+
 CAMBdata_cltransferdata = camblib.__handles_MOD_cambdata_cltransferdata
 CAMBdata_cltransferdata.argtypes = [POINTER(CAMBdata), POINTER(_ClTransferData), int_arg]
 CAMBdata_GetLinearMatterPower = camblib.__handles_MOD_cambdata_getlinearmatterpower
@@ -1468,6 +1601,13 @@ CAMBdata_GetNonLinearMatterPower.argtypes = [POINTER(CAMBdata), numpy_2d, int_ar
 CAMBdata_GetMatterPower = camblib.__handles_MOD_cambdata_getmatterpower
 CAMBdata_GetMatterPower.argtypes = [POINTER(CAMBdata), numpy_2d,
                                     d_arg, d_arg, int_arg, int_arg, int_arg]
+
+CAMBdata_GetSigma8 = camblib.__handles_MOD_cambdata_getsigma8
+CAMBdata_GetSigma8.argtypes = [POINTER(CAMBdata), numpy_1d, int_arg]
+
+CAMBdata_GetSigmaRArray = camblib.__handles_MOD_cambdata_getsigmararray
+CAMBdata_GetSigmaRArray.argtypes = [POINTER(CAMBdata), numpy_2d, numpy_1d, int_arg, numpy_1d_int, int_arg, int_arg,
+                                    int_arg]
 
 CAMBdata_CalcBackgroundTheory = camblib.__handles_MOD_cambdata_calcbackgroundtheory
 CAMBdata_CalcBackgroundTheory.argtypes = [POINTER(CAMBdata), POINTER(model.CAMBparams)]

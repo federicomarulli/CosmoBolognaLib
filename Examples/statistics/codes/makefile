@@ -14,7 +14,8 @@ dirCUBA = $(dirLib)External/Cuba-4.2/
 
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
-FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM
+#FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lCBL
+FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lMODEL_GLOB
 FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits) 
 
 FLAGS_LINK = -shared
@@ -32,8 +33,9 @@ ifeq ($(python_version_major),2)
 endif
 ifeq ($(python_version_major),3)
 	PYINC = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("INCLUDEDIR"))')
+	PYABI = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("ABIFLAGS"))')
 	SWIG_FLAG = -python -c++ -py3
-	PYVERSION = $(python_version_major).$(python_version_minor)
+	PYVERSION = $(python_version_major).$(python_version_minor)$(PYABI)
 endif
 
 PFLAGS = -I$(PYINC)/python$(PYVERSION)

@@ -636,55 +636,30 @@ double cbl::determinant_matrix (const std::vector<std::vector<double>> mat)
 
 void cbl::invert_matrix (const std::vector<std::vector<double>> mat, std::vector<std::vector<double>> &mat_inv, const double prec, const int Nres)
 {
-  int n = mat.size();
-  int s;
-  if (n==0)
-    ErrorCBL("the input matrix has null size!", "invert_matrix", "Func.cpp");
+  int size = mat.size();
 
-  mat_inv.erase(mat_inv.begin(), mat_inv.end());
-  mat_inv = mat;
+  Eigen::MatrixXd matrix = cbl::wrapper::eigen::MatrixToEigen(mat);
+  Eigen::MatrixXd inverse = matrix.inverse();
 
-  gsl_matrix *mm = gsl_matrix_alloc(n, n);
-  gsl_matrix *im = gsl_matrix_alloc(n, n);
-  gsl_permutation *perm = gsl_permutation_alloc(n);
+  Eigen::MatrixXd unity = matrix * inverse;
 
-  for (int i=0; i<n; i++)
-    for (int j=0; j<n; j++)
-      gsl_matrix_set(mm, i, j, mat[i][j]);
-
-  // make the lower–upper (LU) decomposition of the matrix mm
-  gsl_linalg_LU_decomp(mm, perm, &s);
-
-  // invert the matrix mm
-  gsl_linalg_LU_invert(mm, perm, im);
-
-  for (int i=0; i<n; i++)
-    for (int j=0; j<n; j++)
-      mat_inv[i][j] = gsl_matrix_get(im, i, j);
-
-  for (int i=0; i<n; i++) {
-    for (int j=0; j<n; j++) {
+  for (int i=0; i<size; i++) {
+    for (int j=0; j<size; j++) {
       const double fact = (i==j) ? 1 : 0;
-      double prod = 0;
-      for (int el=0; el<n; el++)
-	prod += mat[i][el]*mat_inv[el][j];
-
+      double prod = unity(i, j);
       if (fabs(fact-prod)>prec)
 	WarningMsgCBL("exceeded precision for element "+conv(i, par::fINT)+" "+conv(j, par::fINT)+"; "+conv(fact, par::fDP4)+" "+conv(prod, par::fDP4)+"!", "invert_matrix", "Func.cpp");
     }
   }
 
   if (Nres>0) {
-    const double fact = 1.-(mat[0].size()+1.)/(Nres-1.); // correction factor from Hartlap, Simon and Schneider 2006
-
-    for (int i=0; i<n; i++)
-      for (int j=0; j<n; j++)
-	mat_inv[i][j] = gsl_matrix_get(im, i, j)*fact;
+    const double fact = 1.-(size+1.)/(Nres-1.); // correction factor from Hartlap, Simon and Schneider 2006
+    inverse *= fact;
   }
 
-  gsl_matrix_free(mm);
-  gsl_matrix_free(im);
-  gsl_permutation_free(perm);
+  mat_inv = cbl::wrapper::eigen::EigenToMatrix(inverse);
+
+  
 }
 
 
@@ -2279,6 +2254,34 @@ double cbl::three_spherical_bessel_integral (const double r1, const double r2, c
 
 
   return term1*tt/clebsh_gordan(L1, L2, 0, 0, L3, 0);
+}
+
+
+// ============================================================================
+
+
+double cbl::average_three_spherical_bessel_integral (const double r1_min, const double r1_max, const double r2_min, const double r2_max, const double r3, const int L1, const int L2, const int L3)
+{
+    // limits of the integral
+    int ndim = 2;
+    std::vector<std::vector<double>> integration_limits(ndim);
+    integration_limits[0] = {pow(r1_min, 3), pow(r1_max, 3)};
+    integration_limits[1] = {pow(r2_min, 3), pow(r2_max, 3)};
+
+    double V1 = pow(r1_max, 3)-pow(r1_min, 3);
+    double V2 = pow(r2_max, 3)-pow(r2_min, 3);
+
+    // wrapper to CUBA libraries
+
+    auto integrand = [&] (const vector<double> xx) 
+    {
+        return three_spherical_bessel_integral(pow(xx[0], 1./3), pow(xx[1], 1./3), r3, L1, L2, L3);
+    };
+    cbl::wrapper::cuba::CUBAwrapper CW(integrand, ndim);
+    CW.inputs().SPIN = make_shared<int>(-1);
+    //CW.inputs().NVEC = 2;
+
+    return CW.IntegrateCuhre(integration_limits)/(V1*V2);
 }
 
 

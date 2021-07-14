@@ -168,8 +168,8 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measureJack
   for (size_t i=0; i<m_data->nObjects(); i++) {
     vector<int> bin = m_histogram->digitize(var1[i], var2[i]);
     for (int j=0; j<nRegions; j++)
-      if (j!=regions[i])
-	histo_JK[regions[i]]->put (bin[0], bin[1], weight[i], var1[i], var2[i]);
+      if (j!=regions[i] and bin[0]>-1 and bin[1]>-1)
+	histo_JK[regions[i]]->put(bin[0], bin[1], weight[i], var1[i], var2[i]);
   }
 
   compute_covariance(histo_JK, true);
@@ -210,9 +210,9 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts2D::m_measureBoot
 
   for (size_t i=0; i<m_data->nObjects(); i++) {
     vector<int> bin = m_histogram->digitize(var1[i], var2[i]);
-    for (int j=0; j<nResamplings; j++) {
-      histo_BS[j]->put (bin[0], bin[1], weight[i]*region_weights[j][regions[i]], var1[i], var2[i]);
-    }
+    if (bin[0]>-1 and bin[1]>-1)
+      for (int j=0; j<nResamplings; j++) 
+	histo_BS[j]->put (bin[0], bin[1], weight[i]*region_weights[j][regions[i]], var1[i], var2[i]);
   }
 
   compute_covariance(histo_BS, false);

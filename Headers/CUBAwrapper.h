@@ -50,98 +50,104 @@ namespace cbl {
      */
     namespace cuba {
 
-      /// CUBA NDIM parameter
-#define NDIM 2
+      /**
+       * @brief struct to manage cuba parameters
+       */
+      struct STR_CUBA_inputs {
 
-      /// CUBA NCOMP parameter
-#define NCOMP 1
+	/// CUBA NDIM parameter
+	int NDIM = 1;
 
-      /// CUBA USERDATA parameter
-#define USERDATA NULL
+	/// CUBA NCOMP parameter
+	int NCOMP = 1;
 
-      /// CUBA NVEC parameter
-#define NVEC 1
+	/// CUBA USERDATA parameter
+	std::shared_ptr<void> USERDATA = NULL;
 
-      /// CUBA EPSREL parameter
-#define EPSREL 1e-4
+	/// CUBA NVEC parameter
+	int NVEC = 1;
 
-      /// CUBA EPSABS parameter
-#define EPSABS 1e-12
+	/// CUBA EPSREL parameter
+	double EPSREL = 1e-4;
 
-      /// CUBA VERBOSE parameter
-#define VERBOSE 0
+	/// CUBA EPSABS parameter
+	double EPSABS = 1e-12;
 
-      /// CUBA LAST parameter
-#define LAST 4
+	/// CUBA VERBOSE parameter
+	int VERBOSE = 0;
 
-      /// CUBA SEED parameter
-#define SEED 0
+	/// CUBA LAST parameter
+	int LAST = 4;
 
-      /// CUBA MINEVAL parameter
-#define MINEVAL 0
+	/// CUBA SEED parameter
+	int SEED = 0;
 
-      /// CUBA MAXEVAL parameter
-#define MAXEVAL 50000
+	/// CUBA MINEVAL parameter
+	int MINEVAL = 0;
 
-      /// CUBA NSTART parameter
-#define NSTART 1000
+	/// CUBA MAXEVAL parameter
+	int MAXEVAL = 50000;
 
-      /// CUBA NINCREASE parameter
-#define NINCREASE 500
+	/// CUBA NSTART parameter
+	int NSTART = 1000;
 
-      /// CUBA NBATCH parameter
-#define NBATCH 1000
+	/// CUBA NINCREASE parameter
+	int NINCREASE = 500;
 
-      /// CUBA GRIDNO parameter
-#define GRIDNO 0
+	/// CUBA NBATCH parameter
+	int NBATCH = 1000;
 
-      /// CUBA STATEFILE parameter
-#define STATEFILE NULL
+	/// CUBA GRIDNO parameter
+	int GRIDNO = 0;
 
-      /// CUBA SPIN parameter
-#define SPIN NULL
+	/// CUBA STATEFILE parameter
+	char *STATEFILE = NULL;
 
-      /// CUBA NNEW parameter
-#define NNEW 1000
+	/// CUBA SPIN parameter
+	std::shared_ptr<void> SPIN = NULL;
 
-      /// CUBA NMIN parameter
-#define NMIN 2
+	/// CUBA NNEW parameter
+	int NNEW = 1000;
 
-      /// CUBA FLATNESSv parameter
-#define FLATNESS 25.
+	/// CUBA NMIN parameter
+	int NMIN = 2;
 
-      /// CUBA KEY1 parameter
-#define KEY1 47
+	/// CUBA FLATNESS parameter
+	double FLATNESS = 25.;
 
-      /// CUBA KEY2 parameter
-#define KEY2 1
+	/// CUBA KEY1 parameter
+	int KEY1 = 47;
 
-      /// CUBA KEY3 parameter
-#define KEY3 1
+	/// CUBA KEY2 parameter
+	int KEY2 = 1;
 
-      /// CUBA MAXPASS parameter
-#define MAXPASS 5
+	/// CUBA KEY3 parameter
+	int KEY3 = 1;
 
-      /// CUBA parameter
-#define BORDER 0.
+	/// CUBA MAXPASS parameter
+	int MAXPASS = 5;
 
-      /// CUBA MAXCHISQ parameter
-#define MAXCHISQ 10.
+	/// CUBA parameter
+	double BORDER = 0.;
 
-      /// CUBA MINDEVIATION parameter
-#define MINDEVIATION .25
+	/// CUBA MAXCHISQ parameter
+	double MAXCHISQ = 10.;
 
-      /// CUBA NGIVEN parameter
-#define NGIVEN 0
+	/// CUBA MINDEVIATION parameter
+	double MINDEVIATION = 0.25;
 
-      /// CUBA LDXGIVEN parameter
-#define LDXGIVEN NDIM
+	/// CUBA NGIVEN parameter
+	int NGIVEN = 0;
 
-      /// CUBA NEXTRA parameter
-#define NEXTRA 0
+	/// CUBA LDXGIVEN parameter
+	int LDXGIVEN = NDIM;
 
-      /// CUBA KEY parameter
-#define KEY 0
+	/// CUBA NEXTRA parameter
+	int NEXTRA = 0;
+
+	/// CUBA KEY parameter
+	int KEY = 0;
+      };
 
     
       /**
@@ -188,6 +194,9 @@ namespace cbl {
 	/// integral dimension
 	int m_ndim;
 
+	/// CUBA integration inputs
+	STR_CUBA_inputs m_inputs;
+
       public:
 
 	/**
@@ -214,7 +223,6 @@ namespace cbl {
 
 	/**
 	 *  @brief default destructor
-	 *  default destructor
 	 */
 	~CUBAwrapper () = default;
 
@@ -243,6 +251,13 @@ namespace cbl {
 	 */
 	void set_limits (std::vector<std::vector<double>> integration_limits)
 	{ (void)integration_limits; ErrorCBL("", "set_limits", "CUBAwrapper.h", glob::ExitCode::_workInProgress_); };
+
+	
+	/**
+	 * @brief return reference to integration parameters
+	 * @return reference to integration parameters
+	 */
+	STR_CUBA_inputs& inputs () {return m_inputs;}
 
 	/**
 	 *  @brief integrate using the Vegas routine

@@ -671,7 +671,7 @@ namespace cbl {
   double wigner_6j(const int j1, const int j2, const int j3, const int j4, const int j5, const int j6);
 
   /**
-   * @brief compute the integral of three spherical Bessel function,
+   * @brief compute the integral of three spherical bessel function, 
    * from Mehrem, 2011
    *
    * \f[ \int_{0}^{\infty} k^{2} j_{L_{1}}\left(k r_{1}\right)
@@ -695,13 +695,30 @@ namespace cbl {
    * @param r1
    * @param r2
    * @param r3
-   * @param L1 the order of the first spherical Bessel function
-   * @param L2 the order of the second spherical Bessel function
-   * @param L3 the order of the third spherical Bessel function
+   * @param L1 the order of the first spherical bessel function
+   * @param L2 the order of the second spherical bessel function
+   * @param L3 the order of the third spherical bessel function
    *
-   * @return the integral of three spherical Bessel function
+   * @return the integral of three spherical bessel function
    */
   double three_spherical_bessel_integral (const double r1, const double r2, const double r3, const int L1, const int L2, const int L3);
+
+  /**
+   * @brief compute the integral of three spherical bessel function, 
+   * from Mehrem, 2011, averaged on r1-r2 shells
+   *
+   * @param r1_min
+   * @param r1_max
+   * @param r2_min
+   * @param r2_max
+   * @param r3
+   * @param L1 the order of the first spherical bessel function
+   * @param L2 the order of the second spherical bessel function
+   * @param L3 the order of the third spherical bessel function
+   *
+   * @return the integral of three spherical bessel function, averaged
+   */
+  double average_three_spherical_bessel_integral (const double r1_min, const double r1_max, const double r2_min, const double r2_max, const double r3, const int L1, const int L2, const int L3);
 
   /**
    *  @brief generate a covariant sample of n points using a
@@ -2792,7 +2809,7 @@ namespace cbl {
 
   /**
    * @brief Covariance matrix for two-point correlation wedges (see
-   * Grieb et al. 2016, Eq. 19 (https://arxiv.org/pdf/1509.04293)
+   * Grieb et al. 2016, Eq. 19 https://arxiv.org/pdf/1509.04293)
    *
    * \f[ C_{\mu \mu^{\prime}}^{\xi}\left(s_{i}, s_{j}\right)=
    *    \sum_{\ell_{1}, \ell_{2}}

@@ -43,7 +43,7 @@ using namespace cbl;
 // ============================================================================================
 
 
-cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::shared_ptr<modelling::Modelling>> modelling, std::vector<std::string> repeated_par)
+cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::shared_ptr<modelling::Modelling>> modelling, std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par)
 {
   std::vector<std::shared_ptr<statistics::Posterior>> posteriors(modelling.size());
   for (size_t i=0; i<modelling.size(); i++) {
@@ -51,14 +51,14 @@ cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::shared_pt
     auto posterior_ptr = modelling[i]->posterior();
     posteriors[i] = std::move(posterior_ptr);
   }  
-  m_combined_posterior = make_shared<statistics::CombinedPosterior>(statistics::CombinedPosterior(posteriors, repeated_par));
+  m_combined_posterior = make_shared<statistics::CombinedPosterior>(statistics::CombinedPosterior(posteriors, repeated_par, common_repeated_par));
 }
 
 
 // ============================================================================================
 
 
-cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::vector<std::shared_ptr<modelling::Modelling>>> modelling, std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, std::vector<std::shared_ptr<modelling::Modelling>> independent_modelling, std::vector<std::string> repeated_par)
+cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::vector<std::shared_ptr<modelling::Modelling>>> modelling, std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par)
 {
   std::vector<std::vector<std::shared_ptr<statistics::Posterior>>> posteriors(modelling.size());
   for (size_t i=0; i<modelling.size(); i++) {
@@ -69,14 +69,7 @@ cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::vector<st
       posteriors[i][j] = std::move(posterior_ptr);
     }
   }
-
-  std::vector<std::shared_ptr<statistics::Posterior>> independent_posteriors(independent_modelling.size());
-  for (size_t i=0; i<independent_modelling.size(); i++) {
-    independent_modelling[i]->m_set_posterior(321);
-    auto posterior_ptr = independent_modelling[i]->posterior();
-    independent_posteriors[i] = std::move(posterior_ptr);
-  }  
-  m_combined_posterior = make_shared<statistics::CombinedPosterior>(statistics::CombinedPosterior(posteriors, covariance, independent_posteriors, repeated_par));
+  m_combined_posterior = make_shared<statistics::CombinedPosterior>(statistics::CombinedPosterior(posteriors, covariance, likelihood_types, repeated_par, common_repeated_par));
 }
 
 
@@ -105,6 +98,16 @@ void cbl::modelling::CombinedModelling::sample_combined_posterior (const int cha
 void cbl::modelling::CombinedModelling::sample_combined_posterior (const int chain_size, const int n_walkers, const double radius, const std::vector<double> start, const unsigned int max_iter, const double tol, const double epsilon, const double aa, const bool parallel)
 {
   m_combined_posterior->initialize_chains(chain_size, n_walkers, radius, start, max_iter, tol, epsilon);
+  m_combined_posterior->sample_stretch_move(aa, parallel);
+}
+
+
+// ============================================================================================
+
+
+void cbl::modelling::CombinedModelling::sample_combined_posterior (const int chain_size, const int nwalkers, const std::string input_dir, const std::string input_file, const int seed, const double aa, const bool parallel)
+{
+  m_combined_posterior->initialize_chains(chain_size, nwalkers, input_dir, input_file, seed);
   m_combined_posterior->sample_stretch_move(aa, parallel);
 }
 

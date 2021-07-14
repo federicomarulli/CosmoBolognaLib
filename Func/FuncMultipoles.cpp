@@ -1123,9 +1123,9 @@ void cbl::Covariance_XiWedges (std::vector<double> &rr, std::vector<std::vector<
 	  double VV = 0;
 
 	  for (int l1=0; l1<n_orders; l1++) {
-	    double leg_integral1 = Legendre_polynomial_mu_average(ord[l1], mu[w1], delta_mu[w1]);
-	    for(int l2=0; l2<n_orders; l2++) {
-	      double leg_integral2 = Legendre_polynomial_mu_average(ord[l2], mu[w2], delta_mu[w2]);
+	    double leg_integral1 = Legendre_polynomial_mu_average(mu[w1], mu[w1]+delta_mu[w1], ord[l1]);
+	    for (int l2=0; l2<n_orders; l2++) {
+	      double leg_integral2 = Legendre_polynomial_mu_average(mu[w2], mu[w2]+delta_mu[w2], ord[l2]);
 	      VV += covariance_multipoles[r1+nbins*l1][r2+nbins*l2]*leg_integral1*leg_integral2;
 	    }
 	  }

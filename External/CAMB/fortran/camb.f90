@@ -240,6 +240,7 @@
     use NonLinear
     use DarkEnergyFluid
     use DarkEnergyPPF
+    use Quintessence
     use results
 #ifdef COSMOREC
     use CosmoRec
@@ -315,7 +316,7 @@
                 RedWin%bias = Ini%Read_Double_Array('redshift_bias', i)
                 RedWin%dlog10Ndm = Ini%Read_Double_Array('redshift_dlog10Ndm', i ,0.d0)
             end if
-            class default
+        class default
             call MpiStop('Probable compiler bug')
         end select
     end do
@@ -408,6 +409,8 @@
         allocate (TDarkEnergyPPF::P%DarkEnergy)
     else if (DarkEneryModel == 'AXIONEFFECTIVEFLUID') then
         allocate (TAxionEffectiveFluid::P%DarkEnergy)
+    else if (DarkEneryModel == 'EARLYQUINTESSENCE') then
+        allocate (TEarlyQuintessence::P%DarkEnergy)
     else
         ErrMsg = 'Unknown dark energy model: '//trim(DarkEneryModel)
         return
@@ -717,6 +720,8 @@
     if (outroot /= '') then
         if (InputFile /= trim(outroot) // 'params.ini') then
             call Ini%SaveReadValues(trim(outroot) // 'params.ini')
+        else
+            write(*,*) 'Output _params.ini not created as would overwrite input'
         end if
     end if
 

@@ -642,7 +642,7 @@ double cbl::cosmology::Cosmology::Omega (const double redshift) const
 double cbl::cosmology::Cosmology::Omega_neutrinos (const double Mnu) const
 {
   if (m_hh<1.e-33) ErrorCBL("m_hh should be >0", "Omega_neutrinos", "Cosmology.cpp");
-  return Mnu/(93.04*pow(m_hh, 2));
+  return Mnu/(93.14*pow(m_hh, 2));
 }
 
 
@@ -652,7 +652,7 @@ double cbl::cosmology::Cosmology::Omega_neutrinos (const double Mnu) const
 double cbl::cosmology::Cosmology::neutrino_mass () const
 {
   if (m_hh<1.e-33) ErrorCBL("m_hh should be >0", "neutrino_mass", "Cosmology.cpp");
-  return m_Omega_neutrinos*93.04*pow(m_hh, 2);
+  return m_Omega_neutrinos*93.14*pow(m_hh, 2);
 }
 
 
@@ -688,7 +688,7 @@ double cbl::cosmology::Cosmology::DD_norm (const double redshift, const double r
   
   else if (m_w0!=-1. or m_wa!=0. or computing_method=="growth_rate") {
     auto func = [kk, prec, this] (const double aa) {
-      return linear_growth_rate(1./aa-1., prec)/aa;
+      return linear_growth_rate(1./aa-1., kk, prec)/aa;
     };
     
     return exp(cbl::wrapper::gsl::GSL_integrate_qag(func, 1./(1.+redshift_norm), 1./(1.+redshift)));

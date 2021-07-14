@@ -96,7 +96,7 @@ double cbl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const do
     func = ff;
   }
 
-  else if (method_Pk=="CAMB" || method_Pk=="CLASS") {
+  else if (method_Pk=="CAMB" || method_Pk=="MGCAMB" || method_Pk=="CLASS") {
     
     vector<double> lgkk, lgPk; 
     Table_PkCodes(method_Pk, false, lgkk, lgPk, redshift, store_output, output_root, kmax, input_file);
@@ -159,7 +159,7 @@ double cbl::cosmology::Cosmology::sigma2R (const double radius, const string met
   if (input_file==par::defaultString || is_parameter_file) {
     if (m_sigma8>0) 
       // sigma_8 = sigma(8Mpc/h)
-      fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, redshift, store_output, output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor
+      fact = pow(m_sigma8, 2)/m_sigma2R_notNormalised(8., method_Pk, 0., store_output, output_root, interpType, kmax, input_file, is_parameter_file, true); // normalization factor
   }
 
   return m_sigma2R_notNormalised(radius, method_Pk, redshift, store_output, output_root, interpType, kmax, input_file, is_parameter_file, unit1)*fact;

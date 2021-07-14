@@ -80,9 +80,9 @@ namespace cbl {
        *
        *  @param next the number of the extension
        *
-       *  @param fill_value if a column is not found, the column vector
-       *  is filled with the value specified in fill_value; if no column
-       *  is found, an error is raised
+       *  @param fill_value if a column is not found, the column
+       *  vector is filled with the value specified in fill_value; if
+       *  no column is found, an error is raised
        *
        *  @return vector containing the columns
        */

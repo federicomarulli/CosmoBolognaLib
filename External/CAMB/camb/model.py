@@ -399,7 +399,6 @@ class CAMBparams(F2003Class):
                 # iterate with recalculation of recombination and zstar
                 self.set_H0_for_theta(theta, theta_H0_range=theta_H0_range, est_H0=self.H0,
                                       iteration_threshold=iteration_threshold)
-
         except ValueError:
             raise CAMBParamRangeError('No solution for H0 inside of theta_H0_range')
 
@@ -663,6 +662,8 @@ class CAMBparams(F2003Class):
         :param silent: if True, don't give warnings about sort order
         :return: self
         """
+        if not len(redshifts):
+            raise CAMBError('set_matter_power redshifts list is empty')
 
         self.WantTransfer = True
         self.Transfer.high_precision = True

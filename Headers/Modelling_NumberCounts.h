@@ -240,34 +240,7 @@ namespace cbl {
 	 *  the weight derived from the selection function (see e.g. Lesci et al. 2021),
 	 *  and \f$\Omega\f$ is the survey effective area.
 	 *
-	 *  The distirbution \f$P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\f$ is expressed as:
-	 *
-	 *  \f$P(\lambda_{\rm tr}|M_{\rm tr},z_{\rm tr})= 
-	 *  P(M_{\rm tr}|\lambda_{\rm tr},z_{\rm tr})\,
-	 *  P(\lambda_{\rm tr}|z_{\rm tr})\,/\,P( M_{\rm tr}|z_{\rm tr}),\f$
-	 *
-	 *  where \f$P(M_{\rm tr}|\lambda_{\rm tr},z_{\rm tr})\f$ is
-	 *  a log-normal whose mean is given by the mass-mass proxy
-	 *  relation, i.e. 
-	 *
-	 *  \f$\log M = \alpha + \beta 
-	 *  \log (\lambda/\lambda_{\rm piv}) + \gamma \log (f(z)),\f$
-	 *
-	 *  and whose mean is given by the intrinsic scatter, \f$ \sigma_{\rm intr} \f$, expressed as:
-	 *
-	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{\lambda} 
-	 *  \log (\lambda/\lambda_{\rm piv})^{e_{\lambda}} + \sigma_z \log (f(z))^{e_z}.\f$
-	 *
-	 *  The distribution \f$ P(\lambda_{\rm tr}|z_{\rm tr}) \f$ is derived
-	 *  from mock catalogues, and it has the functional form of a power-law
-	 *  with an exponential cut-off, i.e.:
-	 *  \f$ P(\lambda_{\rm tr}|z_{\rm tr}) = a \, \lambda_{\rm tr}^{-b} \, e^{-c\lambda_{\rm tr}} \f$.
-	 *
-	 *  Furthermore, \f$P( M_{\rm tr}|z_{\rm tr}) = \int_{0}^{\infty}
-	 *  {\rm d} \lambda_{\rm tr}\, 
-	 *  P(M_{\rm tr}|\lambda_{\rm tr},z_{\rm tr})\,P(\lambda_{\rm tr}|z_{\rm tr}).\f$
-	 *
-	 *  Finally, \f$P(z_{\rm ob}|z_{\rm tr})\f$ and \f$P(\lambda_{\rm ob}|\lambda_{\rm tr})\f$
+	 *  Furthermore, \f$P(z_{\rm ob}|z_{\rm tr})\f$ and \f$P(\lambda_{\rm ob}|\lambda_{\rm tr})\f$
 	 *  are Gaussian distributions.
 	 *  
 	 *  @param cosmology the cosmological model
@@ -277,12 +250,6 @@ namespace cbl {
 	 *  @param SF_weights the counts weights derived from the selection
 	 *  function (see e.g. Lesci et al. 2021)
 	 *
-	 *  @param z_error the absolute error on the redshifts, defining
-	 *  the width of \f$ P(z_{\rm ob}|z_{\rm tr}) \f$
-	 *
-	 *  @param proxy_relative_error the relative error on the mass proxies, defining
-	 *  the width of \f$ P(\lambda_{\rm ob}|\lambda_{\rm tr}) \f$
-	 *
 	 *  @param z_pivot the redshift pivot in the scaling relation
 	 *
 	 *  @param proxy_pivot the mass proxy pivot in the scaling relation
@@ -291,11 +258,6 @@ namespace cbl {
 	 *  is written as \f$ \log [M/(10^{14}M_\odot /h)] = 
 	 *  \alpha+\beta \log(\lambda/\lambda_{piv})+\gamma\log f(z) \f$,
 	 *  then mass_pivot = 1.e14
-	 *
-	 *  @param scalrel_z_evo functional form of the redshift evolution
-	 *  function in the scaling relation: "E_z" \f$\rightarrow\f$ 
-	 *  \f$ f(z)=E(z)/E(z_{piv}) \f$, "direct" \f$\rightarrow\f$ 
-	 *  \f$ f(z)=(1+z)/(1+z_{piv}) \f$
 	 *
 	 *  @param log_base the base of the logarithm used in the 
 	 *  mass-mass proxy scaling relation
@@ -322,6 +284,10 @@ namespace cbl {
 	 *
 	 *  @param model_MF author(s) who proposed the mass function
 	 *
+	 *  @param model_bias author(s) who proposed the bias function,
+	 *  used for the transfer function necessary for the super-sample
+	 *  covariance
+	 *
 	 *  @param z_min minimum redshift
 	 * 
 	 *  @param z_max maximum redshift
@@ -332,7 +298,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology, const cbl::catalogue::Cluster cluster, const std::vector<double> SF_weights, const double z_error, const double proxy_relative_error, const double z_pivot, const double proxy_pivot, const double mass_pivot, const std::string scalrel_z_evo, const double log_base, const std::string method_Pk, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
+	void set_data_model (const cbl::cosmology::Cosmology cosmology, const cbl::catalogue::Cluster cluster, const std::vector<double> SF_weights, const double z_pivot, const double proxy_pivot, const double mass_pivot, const double log_base, const std::string method_Pk, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const std::string model_bias="Tinker", const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
 
 	///@}
 		

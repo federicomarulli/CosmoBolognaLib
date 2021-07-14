@@ -75,6 +75,7 @@
 #include "PriorDistribution.h"
 #include "Modelling.h"
 #include "CombinedModelling.h"
+#include "Modelling_Distribution.h"
 #include "Constants.h"
 #include "TwoPointCorrelation1D_filtered.h"
 #include "RandomObject.h"

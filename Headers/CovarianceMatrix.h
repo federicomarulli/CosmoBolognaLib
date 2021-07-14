@@ -34,6 +34,7 @@
 #define __COVMAT__
 
 #include "Func.h"
+#include "SuperSampleCovariance.h"
 
 namespace cbl {
 
@@ -85,6 +86,12 @@ namespace cbl {
       /// The hartlap factor, only set when
       // the covariance is measured from multiple dataset
       double m_hartlap_factor;
+      
+      /// pointer to the SuperSampleCovariance object
+      std::shared_ptr<cbl::statistics::SuperSampleCovariance> m_SSC = NULL;
+      
+      /// bool flagging the presence of the super-sample covariance
+      bool m_isSSC = false;
 
       /**
        * @brief set internal attributes to
@@ -154,6 +161,24 @@ namespace cbl {
        */
       CovarianceMatrix (std::vector<std::vector<double>> covariance_matrix, const double nmeasures=-1, const double prec=1.e-10) 
       { set_from_matrix(covariance_matrix, nmeasures, prec); }
+      
+      /**
+       *  @brief constructor which sets the
+       *  covariance matrix
+       *
+       *  @param covariance_matrix array containing the covariance matrix
+       *
+       *  @param SSC SuperSampleCovariance object
+       *
+       *  @param nmeasures number of measures used to compute the covariance
+       *
+       *  @param prec the precision required in the inversion of the
+       *  covariance matrix
+       *
+       *  
+       */
+      CovarianceMatrix (std::vector<std::vector<double>> covariance_matrix, std::shared_ptr<cbl::statistics::SuperSampleCovariance> SSC, const double nmeasures=-1, const double prec=1.e-10) 
+      { set_from_matrix(covariance_matrix, nmeasures, prec); m_SSC = SSC; m_isSSC = true; }
 
       /**
        *  @brief constructor which gets the data from an input vector
@@ -343,6 +368,20 @@ namespace cbl {
        *   @return the covariance matrix order 
        */
       size_t order () const { return m_order; }
+      
+      /**
+       *   @brief return true if the super-sample covariance is set
+       *
+       *   @return true if the super-sample covariance is set 
+       */
+      bool isSet_SSC () const { return m_isSSC; }
+      
+      /**
+       *  @brief return the pointer to the super-sample covariance object
+       *
+       *  @return pointer to the super-sample covariance object
+       */    
+      std::shared_ptr<cbl::statistics::SuperSampleCovariance> SSC () const;
 
       ///@}
       

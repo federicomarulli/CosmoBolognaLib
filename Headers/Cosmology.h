@@ -403,9 +403,10 @@ namespace cbl {
        *  Boltzmann solver are stored; if false the output files are
        *  removed
        *
-       *  @param output_root the output_root parameter of the
-       *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        * 
        *  @param interpType method to interpolate the power spectrum
        *
@@ -465,9 +466,10 @@ namespace cbl {
        *  Boltzmann solver are stored; if false the output files are
        *  removed
        *
-       *  @param output_root the output_root parameter of the
-       *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        * 
        *  @param interpType method to interpolate the power spectrum
        *
@@ -524,9 +526,10 @@ namespace cbl {
        *  Boltzmann solver are stored; if false the output files are
        *  removed
        *
-       *  @param output_root the output_root parameter of the
-       *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -776,8 +779,10 @@ namespace cbl {
        *  the Boltmann solver are stored; if false the output files
        *  are removed
        *
-       *  @param [in] output_root output_root of the parameter file used
-       *  to compute the power spectrum; it can be any name
+       *  @param [in] output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        *
        *  @param [in] k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -801,8 +806,10 @@ namespace cbl {
        *  the Boltmann solver are stored; if false the output files
        *  are removed
        *
-       *  @param [in] output_root output_root of the parameter file used
-       *  to compute the power spectrum; it can be any name
+       *  @param [in] output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        *
        *  @param [in] k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -822,8 +829,13 @@ namespace cbl {
        *  spectrum; true \f$\rightarrow\f$ non-linear power spectrum
        *
        *  @param redshift redshift
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        */
-      void m_remove_output_Pk_tables (const std::string code, const bool NL, const double redshift) const;
+      void m_remove_output_Pk_tables (const std::string code, const bool NL, const double redshift, const std::string output_root="test") const;
 
       /**
        *  @brief write and read the table where the dark matter power
@@ -848,8 +860,10 @@ namespace cbl {
        *
        *  @param [in] redshift redshift
        *
-       *  @param [in] output_root output_root of the parameter file
-       *  used to compute the power spectrum; it can be any name
+       *  @param [in] output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        *
        *  @warning the input output_root parameter must be the same as
        *  the one in the parameter file
@@ -1295,7 +1309,6 @@ namespace cbl {
       {
 	m_Omega_DE = Omega_DE; 
 	m_Omega_k = 1.-m_Omega_matter-m_Omega_radiation-m_Omega_DE;
-	m_Omega_CDM = m_Omega_matter-m_Omega_baryon-m_Omega_neutrinos;
       };
 
       /**
@@ -1890,9 +1903,10 @@ namespace cbl {
        *  Boltzmann solver are stored; if false the output files are
        *  removed
        *
-       *  @param output_root the output_root parameter of the
-       *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        *
        *  @param prec precision used for the resolution of the
        *  differential equation when the the normalised growth factor
@@ -1904,7 +1918,7 @@ namespace cbl {
        *  @warning The contribution of the radiation is not taken into
        *  account
        */
-      double DD_norm (const double redshift, const double redshift_norm=0., const std::string computing_method="classic", const std::string method_Pk="CAMB", const bool NL=false, const double kk=1., const bool store_output=true, const std::string output_root="test", const double prec=1.e-4) const;  
+      double DD_norm (const double redshift, const double redshift_norm=0., const std::string computing_method="classic", const std::string method_Pk="CAMB", const bool NL=false, const double kk=-1., const bool store_output=true, const std::string output_root="test", const double prec=1.e-4) const;  
 
       /**
        *  @brief &sigma;<SUB>8</SUB> at a given redshift
@@ -2131,7 +2145,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @return redshift
        */
@@ -2497,7 +2512,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *     
@@ -2564,7 +2580,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
        *  interior density relative to the background
@@ -2664,7 +2681,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. . If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
        *  interior density relative to the background
@@ -2758,7 +2776,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
        *  interior density relative to the background
@@ -2863,7 +2882,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *       
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -2957,7 +2977,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -3068,7 +3089,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -3151,7 +3173,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -3239,7 +3262,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -3329,7 +3353,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -3421,7 +3446,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -3512,7 +3538,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -3611,7 +3638,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -3735,7 +3763,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @return p(z): formation probability
        */
@@ -3792,7 +3821,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        */
       void medianzf (const double ff, const double mass, const double z0, const std::string model_model, const std::string method_SS, std::vector<double> &zf, const bool store_output=true, const std::string output_root="test") const; 
   
@@ -3822,7 +3852,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @return the conditional variable w
        */
@@ -3893,7 +3924,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_max the maximum wave vector module up to which the
        *  power spectrum is computed
@@ -3987,8 +4019,10 @@ namespace cbl {
        *  @param [in] store_output if true the output files created
        *  are stored; if false the output files created are removed
        *
-       *  @param [in] output_root output_root of the parameter file used
-       *  to compute the power spectrum; it can be any name
+       *  @param [in] output_root output_root of the parameter file
+       *  used to compute the power spectrum; it can be any name. If
+       *  this parameter is different from the default value it will
+       *  be used also in the output directory name
        *
        *  @param [in] k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -4021,8 +4055,10 @@ namespace cbl {
        *  the Boltmann solver are stored; if false the output files
        *  are removed
        *
-       *  @param [in] output_root output_root of the parameter file used
-       *  to compute the power spectrum; it can be any name
+       *  @param [in] output_root output_root of the parameter file
+       *  used to compute the power spectrum; it can be any name. If
+       *  this parameter is different from the default value it will
+       *  be used also in the output directory name
        *
        *  @param [in] k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -4054,7 +4090,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default
+       *  value it will be used also in the output directory name
        *
        *  @param k_min minimum wave vector module up to which the
        *  power spectrum is computed to estimate the power spectrum
@@ -4099,7 +4136,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default
+       *  value it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4153,7 +4191,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default
+       *  value it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4204,7 +4243,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4336,7 +4376,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4386,7 +4427,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4427,7 +4469,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -4483,7 +4526,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -4534,7 +4578,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -4590,7 +4635,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -4933,7 +4979,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -5010,7 +5057,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalize the power
        *  spectrum; 1 \f$\rightarrow\f$ normalize the power spectrum;
@@ -5124,7 +5172,8 @@ namespace cbl {
        *
        * @param output_root output_root of the parameter file used to
        * compute the power spectrum and &sigma;(mass); it can be any
-       * name
+       * name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        * @param norm 0 \f$\rightarrow\f$ don't normalize the power
        * spectrum; 1 \f$\rightarrow\f$ normalize the power spectrum;
@@ -5170,7 +5219,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -5223,7 +5273,8 @@ namespace cbl {
        *
        *  @param [in] output_root output_root of the parameter file used
        *  to compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param [in] xiType 0 \f$\rightarrow\f$ standard; 1
        *  \f$\rightarrow\f$ Chuang & Wang model
@@ -5360,7 +5411,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -5419,7 +5471,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5460,7 +5513,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *  
        *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
        *  non-linear power spectrum
@@ -5521,7 +5575,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *  
        *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
        *  non-linear power spectrum
@@ -5569,7 +5624,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -5637,7 +5693,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -5751,7 +5808,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -5849,7 +5907,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -5949,7 +6008,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6041,7 +6101,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6137,7 +6198,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6259,7 +6321,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6396,7 +6459,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6531,7 +6595,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -6654,7 +6719,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6779,7 +6845,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6899,7 +6966,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6963,6 +7031,8 @@ namespace cbl {
        *
        *  @param redshift the redshift
        *
+       *  @param kk wave vector module
+       *
        *  @param prec precision used for the resolution of the
        *  differential equation in the case w<SUB>a</SUB> different
        *  than 0
@@ -6973,7 +7043,7 @@ namespace cbl {
        *  implementation does not take into account the precence of
        *  massive neutrinos
        */
-      double linear_growth_rate (const double redshift, const double prec=1.e-4) const;
+      double linear_growth_rate (const double redshift, const double kk=-1., const double prec=1.e-4) const;
 
       /**
        *  @brief f*&sigma;<SUB>8</SUB>: the linear growth rate times
@@ -6992,11 +7062,15 @@ namespace cbl {
        *  Boltmann solver are stored; if false the output files are
        *  removed
        *
-       *  @param output_root output_root of the parameter file used to compute
-       *  the power spectrum and &sigma;(mass); it can be any name
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1
-       *  \f$\rightarrow\f$ non-linear power spectrum
+       *  @param kk wave vector module
+       *
+       *  @param NL false \f$\rightarrow\f$ linear power spectrum;
+       *  false \f$\rightarrow\f$ non-linear power spectrum
        *
        *  @param k_min minimum wave vector module up to which the
        *  power spectrum is computed in order to estimate the power
@@ -7016,26 +7090,28 @@ namespace cbl {
        *
        *  @return f*&sigma;<SUB>8</SUB>
        */
-      double fsigma8 (const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const bool NL=0, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
+      double fsigma8 (const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const double kk=-1., const bool NL=false, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
 
       /**
        *  @brief the specific growth rate &beta;
        *  @param redshift the redshift
        *  @param bias bias
+       *  @param kk wave vector module
        *  @return &beta;=f/b, where f is the linear growth rate and b is
        *  the bias
        */
-      double beta (const double redshift, const double bias) const;
+      double beta (const double redshift, const double bias, const double kk=-1.) const;
 
       /**
        *  @brief the error on the specific growth rate &beta;
        *  @param redshift the redshift
        *  @param bias bias
        *  @param err_bias error on the bias
+       *  @param kk wave vector module
        *  @return error on &beta;=f/b, where f is the linear growth rate
        *  and b is the bias
        */
-      double error_beta (const double redshift, const double bias, const double err_bias) const;
+      double error_beta (const double redshift, const double bias, const double err_bias, const double kk=-1.) const;
 
       /**
        *  @brief the error on the specific growth rate &beta;
@@ -7078,7 +7154,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -7174,7 +7251,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -7254,7 +7332,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -7335,7 +7414,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -7435,7 +7515,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -7530,7 +7611,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -7609,7 +7691,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -7679,7 +7762,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_min minimum wave vector module up to which the
        *  power spectrum is computed in order to estimate the power
@@ -7739,7 +7823,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_min minimum wave vector module up to which the
        *  power spectrum is computed in order to estimate the power
@@ -7781,7 +7866,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -7817,7 +7903,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -7868,7 +7955,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -7935,7 +8023,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param xiType 0 \f$\rightarrow\f$ standard; 1
        *  \f$\rightarrow\f$ Chuang & Wang model
@@ -8016,7 +8105,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param NL false \f$\rightarrow\f$ linear power spectrum;
        *  true \f$\rightarrow\f$ non-linear power spectrum
@@ -8093,7 +8183,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param index internal parameter used when minimizing the
        *  &chi;<SUB>2</SUB>
@@ -8170,7 +8261,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
        *
@@ -8228,7 +8320,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @return &xi;<SUB>g,nw</SUB>(s)
        */
@@ -8268,7 +8361,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
        *
@@ -8340,7 +8434,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param BAO 0 \f$\rightarrow\f$ no BAO convolution; 1
        *  \f$\rightarrow\f$ BAO convolution
@@ -8538,7 +8633,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -8583,7 +8679,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -8630,7 +8727,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -8680,7 +8778,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -8730,7 +8829,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -8799,7 +8899,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -8859,7 +8960,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -8919,7 +9021,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -8981,7 +9084,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *   
@@ -9094,7 +9198,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -9172,7 +9277,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -9263,7 +9369,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -9335,7 +9442,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta \f$\Delta\f$: the overdensity, defined as the
        *  mean interior density relative to the background
@@ -9717,7 +9825,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -9815,7 +9924,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -9912,7 +10022,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -9972,7 +10083,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10038,7 +10150,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$ non-linear
        *  power spectrum
@@ -10109,7 +10222,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can
-       *  be any name
+       *  be any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param NL false \f$\rightarrow\f$ linear power spectrum;
        *  true \f$\rightarrow\f$ non-linear power spectrum
@@ -10172,7 +10286,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10241,7 +10356,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10305,7 +10421,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10363,7 +10480,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can
-       *  be any name
+       *  be any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10435,7 +10553,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can
-       *  be any name
+       *  be any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10501,7 +10620,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10566,7 +10686,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can
-       *  be any name
+       *  be any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -11639,14 +11760,15 @@ namespace cbl {
        *
        * This function computes the quantity \f$ I_{\mathcal{L} l} (r_1, r_2)\f$:
        *
-       * \f[
-       *   I_{\mathcal{L} l} (r_1, r_2) = \sum_l_1 (-1)^{l_1+l}(2l_1+1)(2l+1) \begin{pmatrix} l_1 & l & \mathcal{L} \\ 0 & 0 & 0 \end{pmatrix}^2 
-       *   \\ \times \int r \mathrm{d} r f_{l, l_1}(r_1;r) f_{l, l_1} (r_2; r)
-       * \f]
+       * \f[ I_{\mathcal{L} l} (r_1, r_2) = \sum_{l_1}
+       *   (-1)^{l_1+l}(2l_1+1)(2l+1) \begin{pmatrix} l_1 & l &
+       *   \mathcal{L} \\ 0 & 0 & 0 \end{pmatrix}^2 \\ \times \int
+       *   \mathrm{d} r \;r\;f_{l, l_1}(r_1;r) f_{l, l_1} (r_2; r) \f]
        *
-       * where \f$ f_{l, l_1} (r_i;r) \f$ is computed by cbl::cosmology::Cosmology::eff_l_l1
-       * This quantity is  used the compute the tree-level theoretical 
-       * prediction  for the biased and redshift space the three-point correlation function, 
+       * where \f$ f_{l, l_1} (r_i;r) \f$ is computed by
+       * cbl::cosmology::Cosmology::eff_l_l1 This quantity is used the
+       * compute the tree-level theoretical prediction for the biased
+       * and redshift space the three-point correlation function,
        * following Slepian&Eisenstein, 2017
        *
        * @param II the quantity \f$ I_{\mathcal{L} l} (r_1, r_2) \f$
@@ -12003,7 +12125,8 @@ namespace cbl {
        *
        * @param output_root output_root of the parameter file used to
        * compute the power spectrum and &sigma;(mass); it can be any
-       * name
+       * name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        * @param force_RealSpace if true, force the computation to be
        * in real space

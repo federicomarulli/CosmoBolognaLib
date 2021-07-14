@@ -176,8 +176,9 @@ endif
 ifeq ($(python_version_major),3)
 	PYINC = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("INCLUDEDIR"))')
 	PYLIB = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("LIBDIR"))')
+	ABIFLAGS = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("ABIFLAGS"))')
 	SWIG_FLAG = -python -c++ -py3 -threads
-	PYVERSION = $(python_version_major).$(python_version_minor)
+	PYVERSION = $(python_version_major).$(python_version_minor)$(ABIFLAGS)
 endif
 
 PFLAGS = -I$(PYINC)/python$(PYVERSION)
@@ -314,7 +315,7 @@ OBJ_TWOP = $(dir_TWOP)Pair.o $(dir_TWOP)Pair1D.o $(dir_TWOP)Pair2D.o $(dir_TWOP)
 
 OBJ_THREEP = $(dir_THREEP)Triplet.o $(dir_THREEP)ThreePointCorrelation.o $(dir_THREEP)ThreePointCorrelation_angular_connected.o $(dir_THREEP)ThreePointCorrelation_angular_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_connected.o $(dir_THREEP)ThreePointCorrelation_comoving_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_multipoles.o $(dir_THREEP)ThreePointCorrelation_comoving_multipoles_single.o $(dir_THREEP)ThreePointCorrelation_comoving_multipoles_all.o
 
-OBJ_MODEL_GLOB = $(dir_MODEL_GLOB)Modelling.o  $(dir_MODEL_GLOB)Modelling1D.o $(dir_MODEL_GLOB)Modelling2D.o $(dir_MODEL_GLOB)CombinedModelling.o
+OBJ_MODEL_GLOB = $(dir_MODEL_GLOB)Modelling.o  $(dir_MODEL_GLOB)Modelling1D.o $(dir_MODEL_GLOB)Modelling2D.o $(dir_MODEL_GLOB)CombinedModelling.o $(dir_MODEL_GLOB)Modelling_Distribution.o
 
 OBJ_MODEL_COSM = $(dir_MODEL_COSM)ModelFunction_Cosmology.o $(dir_MODEL_COSM)Modelling_Cosmology.o
 
@@ -334,7 +335,7 @@ OBJ_PARF = $(dir_PARF)ReadParameters.o $(dir_PARF)ParameterFile.o
 
 OBJ_CBL = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_STACKPROFILE) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_MASSOBSERVABLEREL) $(OBJ_MODEL_DENSITYPROFILE) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_PARF)
 
-OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/fortran/Release/*.o $(PWD)/External/CLASS/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o $(OBJ_CBL) $(PWD)/External/CPT_Library/*.o $(PWD)/External/CAMB_SPT_private/*.o
+OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/fortran/Release/*.o $(PWD)/External/CLASS/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o $(OBJ_CBL) $(PWD)/External/CPT_Library/*.o $(PWD)/External/CAMB_SPT_private/*.o $(PWD)/External/MGCAMB/*.o
 
 
 # objects for python compilation -> if OBJ_PYTHON=OBJ_CBL then all the CBL will be converted in python modules
@@ -366,6 +367,7 @@ ALL:
 	make mangle
 	make CPT_Library
 	#make CAMB_SPT_private
+	make MGCAMB
 	$(call colorecho, "\n"Compiling the library: libKERNEL... "\n")
 	make -j3 libKERNEL
 	$(call colorecho, "\n"Compiling the library: libWRAP... "\n")
@@ -533,6 +535,8 @@ CPT_Library: $(PWD)/External/CPT_Library/read_pk_sum
 
 CAMB_SPT_private: $(PWD)/External/CAMB_SPT_private/camb
 
+MGCAMB: $(PWD)/External/MGCAMB/camb
+
 logo: $(PWD)/Logo/logo
 
 allExamples:
@@ -623,7 +627,7 @@ allExamples:
 	$(call colorecho, "\n"Compiling the example code: parameterFile.cpp ... "\n")
 	cd $(PWD)/Examples/parameterFile/ ; make CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 
-python: Eigen CUBA CCfits CAMB CLASS MPTbreeze mangle CPT_Library $(dir_Python)CBL_wrap.o $(dir_Python)CBL.i $(PWD)/Makefile
+python: Eigen CUBA CCfits CAMB CLASS MPTbreeze mangle CPT_Library MGCAMB $(dir_Python)CBL_wrap.o $(dir_Python)CBL.i $(PWD)/Makefile
 	make ALL
 	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_CosmoBolognaLib.so  $(dir_Python)CBL_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
 
@@ -649,6 +653,7 @@ cleanExamples:
 	cd $(PWD)/Examples/cosmology ; make clean && cd ../..
 	cd $(PWD)/Examples/data ; make clean && cd ../..
 	cd $(PWD)/Examples/statistics/codes ; make clean && cd ../..
+	cd $(PWD)/Examples/lognormal/codes ; make clean && cd ../..
 	cd $(PWD)/Examples/catalogue ; make clean && cd ../..
 	cd $(PWD)/Examples/numberCounts/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../../..
@@ -709,6 +714,13 @@ purgeALL:
 	cd External/CPT_Library ; make clean
 	cd External/CAMB_SPT_private ; make clean
 	rm -rf External/CAMB_SPT_private/camb
+	cd External/MGCAMB ; make clean F90C=$(F) COMPILER=$(F)
+	rm -rf External/MGCAMB/camb
+	rm -rf External/MGCAMB/test_*
+	rm -rf External/MGCAMB/output_linear/*
+	rm -rf External/MGCAMB/output_nonlinear/*
+	rm -rf External/MGCAMB/test_*
+	rm -rf External/MGCAMB/NULL*
 	rm -rf Logo/logo
 
 
@@ -1127,6 +1139,9 @@ $(dir_MODEL_GLOB)Modelling2D.o: $(dir_MODEL_GLOB)Modelling2D.cpp $(HH) $(PWD)/Ma
 $(dir_MODEL_GLOB)CombinedModelling.o: $(dir_MODEL_GLOB)CombinedModelling.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_GLOB)CombinedModelling.cpp -o $(dir_MODEL_GLOB)CombinedModelling.o
 
+$(dir_MODEL_GLOB)Modelling_Distribution.o: $(dir_MODEL_GLOB)Modelling_Distribution.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_GLOB)Modelling_Distribution.cpp -o $(dir_MODEL_GLOB)Modelling_Distribution.o
+
 
 ####################################################################
 
@@ -1423,6 +1438,9 @@ $(PWD)/External/CPT_Library/read_pk_sum:
 
 $(PWD)/External/CAMB_SPT_private/camb:
 	cd $(PWD)/External/CAMB_SPT_private ; make clean && make F90C=$(F) && make clean && cd ../..
+
+$(PWD)/External/MGCAMB/camb:
+	cd $(PWD)/External/MGCAMB ; make clean F90C=$(F) COMPILER=$(F) && make F90C=$(F) COMPILER=$(F)" -w" && make clean F90C=$(F) COMPILER=$(F) && cd ../../
 
 $(PWD)/Logo/logo:
 	$(CXX) $(PWD)/Logo/Logo.cpp -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(PWD) -L$(PWD) $(FLAGS_INC) -lKERNEL -o $(PWD)/Logo/logo ; $(PWD)/Logo/logo

@@ -70,11 +70,15 @@ namespace cbl {
        *  @brief Function used to check output of the wrapped
        *  GSL routines. 
        *  @param status the GSL routine status
-       *  @param exit true &rarr; if the routine raise an error, exit the code; 
-       *  false &rarr; show the status of the GSL routine without exiting
-       *  @param CBLfunction the name of the function using the GSL routine 
-       *  @param GSLroutine the name of the gsl routine
-       *  
+       *
+       *  @param exit true &rarr; if the routine raise an error, exit
+       *  the code; false &rarr; show the status of the GSL routine
+       *  without exiting
+       *
+       *  @param CBLfunction the name of the function using the GSL
+       *  routine
+       *
+       *  @param GSLroutine the name of the gsl routine  
        */
       void check_GSL_fail (const int status, const bool exit, const std::string CBLfunction, const std::string GSLroutine);
     

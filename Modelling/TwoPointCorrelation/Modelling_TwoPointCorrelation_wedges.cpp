@@ -804,7 +804,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_TNS 
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_eTNS (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution b1sigma8_prior, const statistics::PriorDistribution b2sigma8_prior, const statistics::PriorDistribution sigmav_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_eTNS (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution b1sigma8_prior, const statistics::PriorDistribution b2sigma8_prior, const statistics::PriorDistribution sigmav_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution N_prior, const bool DFoG, const bool compute_PkDM)
 {
   if (DFoG) m_data_model->Pk_mu_model = "eTNS_Gauss";
   else m_data_model->Pk_mu_model = "eTNS_Lorentz";
@@ -824,7 +824,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_eTNS
   m_data_model->nmultipoles = 3;
 
   // set the model parameters
-  const int nparameters = 6;
+  const int nparameters = 7;
 
   vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
 
@@ -835,8 +835,9 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_eTNS
   parameterName[3] = "sigmav";
   parameterName[4] = "alpha_perpendicular";
   parameterName[5] = "alpha_parallel";
+  parameterName[6] = "N";
   
-  vector<statistics::PriorDistribution> priors = {fsigma8_prior, b1sigma8_prior, b2sigma8_prior, sigmav_prior, alpha_perpendicular_prior, alpha_parallel_prior};
+  vector<statistics::PriorDistribution> priors = {fsigma8_prior, b1sigma8_prior, b2sigma8_prior, sigmav_prior, alpha_perpendicular_prior, alpha_parallel_prior, N_prior};
 
   //set the priors
   m_set_prior(priors);

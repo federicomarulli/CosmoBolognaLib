@@ -155,8 +155,8 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts1D::m_measureJack
   for (size_t i=0; i<var.size(); i++) {
     int bin = m_histogram->digitize(var[i]);
     for (int j=0; j<nRegions; j++)
-      if (j!=regions[i])
-	histo_JK[j]->put (bin, weight[i], var[i]);
+      if (j!=regions[i] and bin>-1)
+	histo_JK[j]->put(bin, weight[i], var[i]);
   }
 
   //Write jackknife outputs
@@ -207,9 +207,9 @@ shared_ptr<data::Data> cbl::measure::numbercounts::NumberCounts1D::m_measureBoot
 
   for (size_t i=0; i<m_data->nObjects(); i++) {
     int bin = m_histogram->digitize(var[i]);
-    for (int j=0; j<nResamplings; j++) {
-      histo_BS[j]->put (bin, weight[i]*region_weights[j][regions[i]], var[i]);
-    }
+    if (bin>-1)
+      for (int j=0; j<nResamplings; j++)
+	histo_BS[j]->put(bin, weight[i]*region_weights[j][regions[i]], var[i]);
   }
 
   vector<vector<double>> measures(histo_BS.size(), vector<double>(histo_BS[0]->nbins()));

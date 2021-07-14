@@ -76,6 +76,9 @@ namespace cbl {
 
       /// input model
       std::shared_ptr<statistics::Model> m_model = NULL;
+      
+      /// transfer function, for the computation of the super-sample covariance
+      std::shared_ptr<statistics::Model> m_transfer_func = NULL;
 
       /// likelihood
       std::shared_ptr<statistics::Likelihood> m_likelihood = NULL;
@@ -143,6 +146,20 @@ namespace cbl {
 	return m_data_fit; 
       }
 
+      /**
+       *  @brief return the transfer function, or response, used to compute the 
+       *  super-sample covariance
+       *
+       *  @return pointer to the transfer function
+       */    
+      std::shared_ptr<statistics::Model> transfer_function ();
+      
+      /**
+       *  @brief check if the response function used to compute the 
+       *  super-sample covariance is set
+       */    
+      void isSet_response ();
+      
       /**
        *  @brief return the likelihood parameters
        *  @return pointer to the likelihood parameters

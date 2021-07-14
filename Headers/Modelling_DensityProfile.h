@@ -131,13 +131,22 @@ namespace cbl {
 	Modelling_DensityProfile () = default;
 	
 	/**
-	 *  @brief constuctor for the modelling of the
-	 *  stacked density profile of clusters. Cosmological units are forced
+	 *  @brief constuctor for the modelling of
+	 *  stacked density profiles of galaxy clusters. Cosmological units are forced
 	 *  @param profile the object of stacked density profile to model
 	 *  @param _2halo if true, compute the 2-halo contribution
 	 */
 	Modelling_DensityProfile (const std::shared_ptr<cbl::measure::stackprofile::StackedDensityProfile> profile, const bool _2halo=false)
 	{ m_data = profile->dataset(); m_2halo = _2halo; }
+	
+	/**
+	 *  @brief constuctor for the modelling of
+	 *  a generic cluster density profile. Cosmological units are forced
+	 *  @param dataset cluster profile dataset
+	 *  @param _2halo if true, compute the 2-halo contribution
+	 */
+	Modelling_DensityProfile (const std::shared_ptr<cbl::data::Data> dataset, const bool _2halo=false)
+	{ m_data = dataset; m_2halo = _2halo; }
 	
 	/**
 	 *  @brief default destructor
@@ -166,7 +175,7 @@ namespace cbl {
 
 	/**
 	 *  @brief set the data used to construct generic models of
-	 *  number counts
+	 *  cluster profiles
 	 *  
 	 *  @param cosmology the cosmological model
 	 *
@@ -185,8 +194,14 @@ namespace cbl {
 	void set_data_model (const cbl::cosmology::Cosmology cosmology, const cbl::catalogue::Cluster, const double redshift, const double contrast, const double trunc_fact, const double logM_base);
 
 	/**
-	 *  @brief set the profile and cosmological parameters used to model the 
-	 *  cluster density profile function
+	 *  @brief Set the profile and cosmological parameters used to model the 
+	 *  cluster density profile. 
+	 *
+	 *  The 1-halo term has the following functional form, including the
+	 *  contribution of centered and off-centered populations
+	 *  of galaxy clusters (see Bellagamba et al. 2019):
+	 *
+	 *  \f$\Sigma_{\rm 1h}(R)=(1-f_{\rm off})\Sigma_{\rm cen}(R)+f_{\rm off}\Sigma_{\rm off}(R)\f$
 	 *
 	 *  @param cosmo_param vector of enums containing cosmological
 	 *  parameters
@@ -200,9 +215,12 @@ namespace cbl {
 	 *  expressed in \f$10^{14}\f$ M\f$_\odot\f$ \f$h^{-1}\f$). The base of
 	 *  the logarithm is set through set_data_model
 	 *
-	 *  @param f_off_prior prior on the fraction of miscentered clusters
+	 *  @param f_off_prior prior on the fraction of miscentered clusters. 
+	 *  This parameter makes sense only if the user models a stacked profile, 
+	 *  not a single cluster profile. If a single profile is modelled, set a constant prior equal
+	 *  to 0 or 1 for f_off.
 	 *
-	 *  @param sigma_off_prior prior on the rms of the miscentered cluster population
+	 *  @param sigma_off_prior prior on the rms of the miscentered cluster population.
 	 *
 	 */
 	void set_model_DensityProfile_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution concentration_prior, const statistics::PriorDistribution logM_prior, const statistics::PriorDistribution f_off_prior, const statistics::PriorDistribution sigma_off_prior);
@@ -235,7 +253,7 @@ namespace cbl {
       double nfw_1halo(cosmology::Cosmology cosmology, catalogue::Cluster cluster, const double radius, const double redshift, const double contrast, const double trunc_fact);
       
       /**
-       * @brief set the density profile model
+       * @brief set the truncated NFW density profile model
        *
        * @param radius the radius array
        *
@@ -243,10 +261,10 @@ namespace cbl {
        *
        * @param parameter model parameters
        *
-       * @return the 1-halo model in each radius bin
+       * @return the truncated NFW 1-halo model in each radial bin
        *
        */
-      std::vector<double> nfw_1halo_allBins (const std::vector<double> radius, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+      std::vector<double> model_nfw_1halo (const std::vector<double> radius, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
     
     }
   }
