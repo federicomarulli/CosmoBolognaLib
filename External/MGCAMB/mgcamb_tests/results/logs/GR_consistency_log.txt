@@ -1,0 +1,18 @@
+mkdir -p Release
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c constants.f90 -o Release/constants.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c inifile.f90 -o Release/inifile.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c mgcamb.f90 -o Release/mgcamb.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c utils.F90 -o Release/utils.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c subroutines.f90 -o Release/subroutines.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c power_tilt.f90 -o Release/power_tilt.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c recfast.f90 -o Release/recfast.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c reionization.f90 -o Release/reionization.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c modules.f90 -o Release/modules.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c bessels.f90 -o Release/bessels.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c equations_MG.f90 -o Release/equations_MG.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c halofit_ppf.f90 -o Release/halofit_ppf.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c lensing.f90 -o Release/lensing.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c SeparableBispectrum.F90 -o Release/SeparableBispectrum.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c cmbmain.f90 -o Release/cmbmain.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ -c camb.f90 -o Release/camb.o
+gfortran -O3 -fopenmp -ffast-math -fmax-errors=4 -cpp -JRelease -IRelease/ Release/constants.o Release/mgcamb.o  Release/utils.o   Release/subroutines.o Release/inifile.o  Release/power_tilt.o  Release/recfast.o Release/reionization.o Release/modules.o Release/bessels.o Release/equations_MG.o Release/halofit_ppf.o Release/lensing.o Release/SeparableBispectrum.o Release/cmbmain.o Release/camb.o inidriver_MG.F90  -o camb
