@@ -1,6 +1,0 @@
-<map id="cbl::statistics::CombinedPosterior" name="cbl::statistics::CombinedPosterior">
-<area shape="rect" id="node1" title="The class CombinedPosterior." alt="" coords="173,185,356,227"/>
-<area shape="rect" id="node2" href="$d0/d0a/classcbl_1_1statistics_1_1Posterior.html" title="The class Posterior." alt="" coords="9,89,184,115"/>
-<area shape="rect" id="node3" href="$d1/d68/classcbl_1_1statistics_1_1Likelihood.html" title="The class Likelihood." alt="" coords="5,5,188,32"/>
-<area shape="rect" id="node4" href="$d3/d38/structcbl_1_1statistics_1_1STR__DependentProbes__data__model.html" title="the structure STR_DependentProbes_data_model" alt="" coords="208,81,436,123"/>
-</map>
