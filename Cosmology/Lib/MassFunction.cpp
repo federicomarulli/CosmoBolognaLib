@@ -146,8 +146,8 @@ double cbl::cosmology::Cosmology::mass_function (const double Mass, const double
 
 double cbl::cosmology::Cosmology::m_MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const double Delta, const bool default_delta, const double delta_t) 
 { 
-  const double deltacz = (default_delta) ? deltac(redshift) : fabs(delta_t*DD_norm(redshift));
-  const double sigmaz = Sigma*DD_norm(redshift);
+  const double deltacz = (default_delta) ? deltac(redshift) : fabs(delta_t*DN(redshift));
+  const double sigmaz = Sigma*DN(redshift);
   
   const double RHO = rho_m(0., true); 
   

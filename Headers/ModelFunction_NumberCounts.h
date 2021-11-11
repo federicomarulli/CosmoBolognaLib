@@ -76,17 +76,17 @@ namespace cbl {
 	/// cosmological parameters
 	std::vector<cosmology::CosmologicalParameter> Cpar;
 	
-	/// pointer to the redshift evolution function in the scaling relation
-	double (*fz)(std::vector<double>, std::shared_ptr<void>);
+	/// the redshift evolution function in the scaling relation
+	std::function<double(const double, const double, const std::shared_ptr<void>)> fz;
 	
-	/// pointer to the multiplicative term in the transfer function
-	double (*transfer_func)(const double, const double, const double, const std::string, const double, const std::string, std::shared_ptr<void>);
+	/// pointer to the multiplicative term in the response function
+	double (*response_func)(const double, const double, const double, const std::string, const double, const std::string, std::shared_ptr<void>);
 	
-	/// pointer to the redshift error
-	double (*z_error)(std::vector<double>);
+	/// function returning the redshift error (absolute or relative)
+	std::function<double(const double, const double)> z_error;
 	
-	/// pointer to the mass proxy error
-	double (*proxy_error)(std::vector<double>);
+	/// function returning the mass proxy error (absolute or relative)
+	std::function<double(const double, const double)> proxy_error;
 
 	/// redshift
 	double redshift;
@@ -527,15 +527,6 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param k_Pk_ratio wave vector module required to compute
-       *  the growth factor (cbl::cosmology::Cosmology::DD_norm())
-       *  with the method "Pk_ratio". This parameter represents
-       *  wavenumber at which the ratio between the the power
-       *  spectra at different redshift is computed. It is
-       *  recommended to use this method when dealing with
-       *  cosmologies alternative to the LCDM. To avoid to compute
-       *  the growth factor with this method, set k_Pk_ratio=-1.
-       *
        *  @param store_output if true the output files created by the
        *  Boltzmann solver are stored; if false the output files are
        *  removed
@@ -568,7 +559,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      std::vector<double> size_function (cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="Eisensteinhu", const double k_Pk_ratio=1., const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> size_function (cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="Eisensteinhu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        * @brief compute the number counts as function
@@ -650,7 +641,8 @@ namespace cbl {
        *
        * @param proxy_error relative or absolute error on the mass proxy
        *
-       * @param transfer_func the transfer function factor for the super-sample covariance
+       * @param response_func the response function factor for the
+       * super-sample covariance
        *
        * @param redshift_min minimum redshift
        *
@@ -712,24 +704,26 @@ namespace cbl {
        * @return values of the mass function as a function of redshift
        * and mass proxy
        */
-      double counts_proxy(double (*fz)(std::vector<double>, std::shared_ptr<void>), double (*z_error)(std::vector<double>), double (*proxy_error)(std::vector<double>), double (*transfer_func)(const double, const double, const double, const std::string, const double, const std::string, std::shared_ptr<void>), const double redshift_min, const double redshift_max, const double proxy_min, const double proxy_max, cbl::cosmology::Cosmology cosmology, cbl::catalogue::Cluster cluster, const double Area, const std::string model_MF, const std::string model_bias, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const double proxy_pivot, const double z_pivot, const double mass_pivot, const double log_base, const double weight);
+      double counts_proxy (std::function<double(const double, const double, const std::shared_ptr<void>)> fz, std::function<double(const double, const double)> z_error, std::function<double(const double, const double)> proxy_error, double (*response_func)(const double, const double, const double, const std::string, const double, const std::string, std::shared_ptr<void>), const double redshift_min, const double redshift_max, const double proxy_min, const double proxy_max, cbl::cosmology::Cosmology cosmology, cbl::catalogue::Cluster cluster, const double Area, const std::string model_MF, const std::string model_bias, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const double proxy_pivot, const double z_pivot, const double mass_pivot, const double log_base, const double weight);
       
       /**
        * @brief compute the number counts as function
        * of mass proxy and redshift, with this functional
        * form:
        *
-       * \f$ \langle N(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j})\rangle 
-       *  = w(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j})\,\,\Omega 
-       *  \int_{0}^{\infty} {\rm d} z_{\rm tr}\,\,
-       *  \frac{{\rm d} V}{{\rm d} z_{\rm tr}{\rm d}\Omega}\int_{0}^{\infty} 
-       *  {\rm d} M_{\rm tr} \,\,\frac{{\rm d} n(M_{\rm tr},z_{\rm tr})}{{\rm d} M_{\rm tr}}\,\, 
-       *  \int_{0}^{\infty}{\rm d}\lambda_{\rm tr}\,\,
-       *  P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\,
-       *  \int_{\Delta z_{\text{ob},j}}{\rm d} z_{\rm ob} 
-       *  \,\,P(z_{\rm ob}|z_{\rm tr})\,
-       *  \int_{\Delta\lambda_{\text{ob},i}}{\rm d} \lambda_{\rm ob} 
-       *  \,\,P(\lambda_{\rm ob}|\lambda_{\rm tr}). \f$
+       * \f$ \langle N(\Delta{\lambda_{\text{ob},i}},\Delta
+       *  z_{\text{ob},j})\rangle =
+       *  w(\Delta{\lambda_{\text{ob},i}},\Delta
+       *  z_{\text{ob},j})\,\,\Omega \int_{0}^{\infty} {\rm d} z_{\rm
+       *  tr}\,\, \frac{{\rm d} V}{{\rm d} z_{\rm tr}{\rm
+       *  d}\Omega}\int_{0}^{\infty} {\rm d} M_{\rm tr} \,\,\frac{{\rm
+       *  d} n(M_{\rm tr},z_{\rm tr})}{{\rm d} M_{\rm tr}}\,\,
+       *  \int_{0}^{\infty}{\rm d}\lambda_{\rm tr}\,\, P(\lambda_{\rm
+       *  tr}| M_{\rm tr},z_{\rm tr})\, \int_{\Delta
+       *  z_{\text{ob},j}}{\rm d} z_{\rm ob} \,\,P(z_{\rm ob}|z_{\rm
+       *  tr})\, \int_{\Delta\lambda_{\text{ob},i}}{\rm d}
+       *  \lambda_{\rm ob} \,\,P(\lambda_{\rm ob}|\lambda_{\rm
+       *  tr}). \f$
        *
        *  The distirbution \f$P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\f$ is 
        *  a log-normal whose mean is given by the mass-mass proxy
@@ -738,7 +732,8 @@ namespace cbl {
        *  \f$\log (\lambda/\lambda_{\rm piv}) = \alpha + \beta 
        *  \log (M/M_{\rm piv}) + \gamma \log (f(z)),\f$
        *
-       *  and whose standard deviation is given by the intrinsic scatter, \f$ \sigma_{\rm intr} \f$, expressed as:
+       *  and whose standard deviation is given by the intrinsic
+       *  scatter, \f$ \sigma_{\rm intr} \f$, expressed as:
        *
        *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{M} 
        *  \log (M/M_{\rm piv})^{e_{M}} + \sigma_z \log (f(z))^{e_z}. \f$
@@ -749,7 +744,7 @@ namespace cbl {
        *
        * @param proxy_error relative or absolute error on the mass proxy
        *
-       * @param transfer_func the transfer function factor for the super-sample covariance
+       * @param response_func the reponse function factor for the super-sample covariance
        *
        * @param redshift_min minimum redshift
        *
@@ -811,7 +806,7 @@ namespace cbl {
        * @return values of the mass function as a function of redshift
        * and mass proxy
        */
-      double counts_proxy_classic(double (*fz)(std::vector<double>, std::shared_ptr<void>), double (*z_error)(std::vector<double>), double (*proxy_error)(std::vector<double>), double (*transfer_func)(const double, const double, const double, const std::string, const double, const std::string, std::shared_ptr<void>), const double redshift_min, const double redshift_max, const double proxy_min, const double proxy_max, cbl::cosmology::Cosmology cosmology, cbl::catalogue::Cluster cluster, const double Area, const std::string model_MF, const std::string model_bias, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const double proxy_pivot, const double z_pivot, const double mass_pivot, const double log_base, const double weight);
+      double counts_proxy_classic (std::function<double(const double, const double, const std::shared_ptr<void>)> fz, std::function<double(const double, const double)> z_error, std::function<double(const double, const double)> proxy_error, double (*response_func)(const double, const double, const double, const std::string, const double, const std::string, std::shared_ptr<void>), const double redshift_min, const double redshift_max, const double proxy_min, const double proxy_max, cbl::cosmology::Cosmology cosmology, cbl::catalogue::Cluster cluster, const double Area, const std::string model_MF, const std::string model_bias, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const cbl::glob::FuncGrid interp_DlnsigmaM, const double proxy_pivot, const double z_pivot, const double mass_pivot, const double log_base, const double weight);
       
     }
   }

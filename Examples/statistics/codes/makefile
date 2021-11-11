@@ -10,12 +10,12 @@ dirLib = $(PWD)/../../../
 dirH = $(dirLib)Headers/
 dir_Eigen = $(dirLib)External/Eigen/eigen-3.3.7/
 dir_CCfits = $(dirLib)External/CCfits/include
-dirCUBA = $(dirLib)External/Cuba-4.2/
+dirCUBA = $(dirLib)External/Cuba-4.2.1/
 
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
-#FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lCBL
-FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lMODEL_GLOB
+FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lCBL
+
 FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits) 
 
 FLAGS_LINK = -shared

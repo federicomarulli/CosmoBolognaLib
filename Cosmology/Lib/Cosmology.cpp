@@ -560,7 +560,7 @@ double cbl::cosmology::Cosmology::f_DE (const double redshift) const
 
 double cbl::cosmology::Cosmology::EE (const double redshift) const
 {
-  return sqrt(m_Omega_matter*pow((1.+redshift),3)+m_Omega_DE*f_DE(redshift)+m_Omega_k*pow((1.+redshift),2)+m_Omega_radiation*pow(1.+redshift,4));
+  return sqrt(m_Omega_matter*pow((1.+redshift), 3)+m_Omega_DE*f_DE(redshift)+m_Omega_k*pow((1.+redshift), 2)+m_Omega_radiation*pow(1.+redshift, 4));
 }
 
 
@@ -659,9 +659,40 @@ double cbl::cosmology::Cosmology::neutrino_mass () const
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::gg (const double redshift) const 
+double cbl::cosmology::Cosmology::linear_growth_rate (const double redshift, const double prec) const
 {
-  return DD(redshift)*(1.+redshift);
+  if (m_w0==-1. and m_wa==0. and m_Omega_neutrinos==0.)
+    return pow(OmegaM(redshift), 0.545);
+
+  else {
+    // Dodelson eq. (7.59)
+    const double a_in = 1.e-8;
+    double ff = (m_Omega_radiation==0.) ? 1. : (a_in/m_Omega_radiation*m_Omega_matter)/(a_in/m_Omega_radiation*m_Omega_matter+2./3.); 
+    
+    auto func = [&] (const double y, double &dyda, const double ln_aa)
+		{
+		  const double zz = 1./exp(ln_aa)-1.;
+		  dyda = -y*y-y*(1.-0.5*(OmegaM(zz)+OmegaR(zz)+(1.+3.*m_w0+3.*m_wa*zz/(1.+zz))*OmegaDE(zz)))+1.5*OmegaM(zz); 
+		};
+    
+    
+    typedef boost::numeric::odeint::runge_kutta_dopri5<double> stepper_type;
+    
+    boost::numeric::odeint::integrate_adaptive(make_controlled(1e-8, 1e-8, stepper_type() ),
+					       func, ff, log(a_in), log(1./(1.+redshift)), prec);
+    return ff;
+  } 
+}
+
+
+// =====================================================================================
+
+
+double cbl::cosmology::Cosmology::DN (const double redshift, const double redshift_norm, const double prec) const 
+{
+  auto func = [prec, this] (const double aa) { return linear_growth_rate(1./aa-1., prec)/aa; };
+
+  return exp(wrapper::gsl::GSL_integrate_qag(func, 1./(1.+redshift_norm), 1./(1.+redshift)));
 }
 
 
@@ -669,37 +700,26 @@ double cbl::cosmology::Cosmology::gg (const double redshift) const
 
 
 double cbl::cosmology::Cosmology::DD (const double redshift) const 
-{   
-   const double aa = 1./(1.+redshift);
+{
+  if (m_w0==-1. and m_wa==0. and m_Omega_neutrinos==0.) {
+    const double aa = 1./(1.+redshift);
+    
+    auto func = [&] (const double aa) { return pow(aa*EE(1./aa-1.),-3.); };
+    
+    return cbl::wrapper::gsl::GSL_integrate_qag(func, 0., aa)*2.5*Omega_matter()*EE(redshift);
+  }
   
-   auto func = [&] (const double aa) { return pow(aa*EE(1./aa-1.),-3.); };
-   
-   return cbl::wrapper::gsl::GSL_integrate_qag(func, 0., aa)*2.5*Omega_matter()*EE(redshift);
+  else 
+    return ErrorCBL("the current implementation is valid only for LCDM cosmologies", "DD", "Cosmology.cpp", ExitCode::_workInProgress_);
 }
 
 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::DD_norm (const double redshift, const double redshift_norm, const std::string computing_method, const std::string method_Pk, const bool NL, const double kk, const bool store_output, const std::string output_root, const double prec) const 
+double cbl::cosmology::Cosmology::gg (const double redshift) const 
 {
-  if (m_w0==-1. and m_wa==0. and computing_method=="classic")
-    return DD(redshift)/DD(redshift_norm);
-  
-  else if (m_w0!=-1. or m_wa!=0. or computing_method=="growth_rate") {
-    auto func = [kk, prec, this] (const double aa) {
-      return linear_growth_rate(1./aa-1., kk, prec)/aa;
-    };
-    
-    return exp(cbl::wrapper::gsl::GSL_integrate_qag(func, 1./(1.+redshift_norm), 1./(1.+redshift)));
-  }
-
-  else if (computing_method=="Pk_ratio" and kk>0.) {
-    cbl::cosmology::Cosmology cosm = *this;
-    return pow(cosm.Pk_DM(kk, method_Pk, NL, redshift, store_output, output_root, 0)/cosm.Pk_DM(kk, method_Pk, NL, redshift_norm, store_output, output_root, 0),0.5);
-  }
-  
-  else {ErrorCBL("Wrong computing_method!", "DD_norm", "Cosmology.cpp"); return 0;}
+  return DD(redshift)*(1.+redshift);
 }
 
 
@@ -711,7 +731,7 @@ double cbl::cosmology::Cosmology::sigma8 (const double redshift) const
   if (m_sigma8<0)
     ErrorCBL("sigma8 at z=0 is not set!", "sigma8", "Cosmology.cpp");
 
-  return m_sigma8*DD_norm(redshift);
+  return m_sigma8*DN(redshift);
 }
 
 

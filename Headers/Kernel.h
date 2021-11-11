@@ -202,8 +202,14 @@
 /**
  *  @example Pk_dynamical_DE.cpp
  *
- *  This example shows how to compute the dark matter power spectrum
- *  and growth rate
+ *  This example shows how to compute the matter power spectrum and
+ *  growth rate
+ */
+/**
+ *  @example Pk_BoltzmannSolver.cpp
+ *
+ *  This example shows how to compute the matter power spectrum with
+ *  CAMB and CLASS at different redshifts
  */
 /**
  *  @example model_cosmology.cpp
@@ -326,6 +332,12 @@
  *
  * This example shows how to model the reduced 
  * three-point correlation function
+ */
+ /**
+ * @example power_spectrum_angular.cpp
+ *
+ * This example shows how to measure the angular 
+ * power spectrum 
  */
 /**
  * @example readParameterFile.cpp
@@ -1713,8 +1725,8 @@ namespace cbl {
   }
   
   /**
-   *  @brief flatten a \f$ left( n\times m \right)  \f$ matrix
-   *  in a vector of size \f$x\times m\f$.
+   *  @brief flatten a \f$\left( n\times m \right)\f$ matrix in a
+   *  vector of size \f$x\times m\f$
    *
    *  @param matrix the input matrix
    *  
@@ -1826,12 +1838,12 @@ namespace cbl {
   template <typename T>
   bool inRange (std::vector<T> value, std::vector<T> min, std::vector<T> max, bool include_limits = true) 
   {
-    bool in_range = true;
+    int in_range = 1;
 
     for (size_t i=0; i<value.size(); i++)
-      in_range *= inRange(value[i], min[i], max[i], include_limits);
+      in_range *= int(inRange(value[i], min[i], max[i], include_limits));
 
-    return in_range;
+    return bool(in_range);
   }
 
   /**
@@ -1851,12 +1863,12 @@ namespace cbl {
   template <typename T>
   bool inRange (std::vector<T> value, std::vector<std::vector<T>> ranges, bool include_limits = true) 
   {
-    bool in_range = true;
+    int in_range = 1;
 
     for (size_t i=0; i<value.size(); i++)
-      in_range *= inRange(value[i], ranges[i][0], ranges[i][1], include_limits);
+      in_range *= int(inRange(value[i], ranges[i][0], ranges[i][1], include_limits));
 
-    return in_range;
+    return bool(in_range);
   }
 
   /**
@@ -2029,7 +2041,7 @@ namespace cbl {
    *  @param path_name the path where the file is stored
    *
    *  @param column_data vector containing the indices of the columns
-   *  to read, starting the counting from 1
+   *  to read, starting the counting from 0
    *
    *  @param delimiter the delimiter between the columns
    *

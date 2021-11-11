@@ -2,26 +2,57 @@
 ----- the list of publications that used the CosmoBolognaLib -----
 ------------------------------------------------------------------
 
-33. Lindholm et al.
-    Clustering of CODEX clusters	  
-    2020, submitted to A&A
-    	       
-32. Moresco, Veropalumbo, Marulli, Moscardini, Cimatti
+39. Borghi, Moresco, Cimatti
+    Towards a Better Understanding of Cosmic Chronometers: A new
+    measurement of H(z) at z~0.7
+    submitted to ApJL
+	       
+38. Moresco, Veropalumbo, Marulli, Moscardini, Cimatti
     C^3 -Cluster Clustering Cosmology II. First detection of the BAO
     peak in the three-point correlation function of galaxy clusters
-    2020, submitted to ApJ 
+    2021, ApJ, 919, 144
 	 
-31. Marulli, Veropalumbo, García-Farieta, Moresco, Moscardini, Cimatti
+37. Marulli, Veropalumbo, García-Farieta, Moresco, Moscardini, Cimatti
     C^3 - Cluster Clustering Cosmology I. New constraints on the
     cosmic growth rate at z~0.3 from redshift-space clustering
     anisotropies
-    2020, submitted to ApJ
+    2021, ApJ, 920, 13
 
-30. Sarpa, Veropalumbo, Schimd, Branchini, Matarrese
+36. Veropalumbo, Sáez Casares, Iñigo; Branchini, Granett, Guzzo,
+    Marulli, Moresco, Moscardini
+    A joint 2- and 3-point clustering analysis of the VIPERS PDR2
+    catalogue at z~1: breaking the degeneracy of cosmological
+    parameters
+    2021, MNRAS, 507, 1184
+
+35. Giocoli et al.
+    AMICO galaxy clusters in KiDS-DR3. Cosmological constraints from
+    large-scale stacked weak lensing profiles
+    2021, A&A, 653, 19
+    
+34. Contarini, Marulli, Moscardini, Veropalumbo, Giocoli, Baldi, 
+    Cosmic voids in modified gravity models with massive neutrinos
+    2021, MNRAS, 504, 5021
+
+33. Veronesi, Marulli, Veropalumbo, Moscardini
+    Artificial Neural Networks for Galaxy Clustering. Learning from
+    the two-point correlation function of BOSS galaxies
+    2021, submitted to A&A
+
+32. Sarpa, Veropalumbo, Schimd, Branchini, Matarrese
     Extended Fast Action Minimisation method: application to SDSS-DR12
     Combined Sample
-    2020, submitted to MNRAS
-    
+    2020, MNRAS, 503, 540
+
+31. Lindholm et al.
+    Clustering of CODEX clusters	  
+    2021, A&A, 646, 8
+
+30. Lesci et al.
+    AMICO galaxy clusters in KiDS-DR3: cosmological constraints from
+    counts and stacked weak-lensing
+    2021, submitted to A&A
+
 29. Giocoli, Monaco, Moscardini, Castro, Meneghetti, Metcalf, Baldi
     Testing the Reliability of Fast Methods for Weak Lensing
     Simulations: WL-MOKA on PINOCCHIO

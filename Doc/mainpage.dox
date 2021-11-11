@@ -28,6 +28,7 @@ Author and BDFL:
   - @b Federico @b Marulli (federico.marulli3@unibo.it)
 
 Main contributors:
+  - Sofia Contarini (voids, python, CBL logo, etc.)
   - Michele Moresco (three-point correlation)
   - Alfonso Veropalumbo (two-point angular correlation, clustering
     wedges, jackknife and bootstrap, lognormal mocks, BAO modelling,
@@ -35,7 +36,6 @@ Main contributors:
 
 Other contributors:
   - Carlo Cannarozzo (void detection)
-  - Sofia Contarini (void number counts, CBL logo)
   - Cosimo Fedeli (non-Gaussian cosmologies)
   - Giovanni Gandolfi (HOD modelling)
   - Jorge Enrique García-Farieta (two-point correlation modelling)
@@ -43,10 +43,10 @@ Other contributors:
   - Giorgio Lesci (cluster number counts and weak-lensing profiles)
   - Jacopo Neri (mass function)
   - Davide Pelliciari (probe combination)
+  - Massimiliano Romanello (angular clustering)
   - Mauro Roncarelli (fast comoving distance estimator) 
   - Tommaso Ronconi (void number counts)
-  - Elena Sarpa (code validation)
-  - Akke Viitanen (code validation)
+  - Alessandro Benati, Elena Sarpa, Akke Viitanen (code validation)
 
 
 -----------------------------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ Other contributors:
 A @b configured @b virtual @b development @b environment to use the
 CosmoBolognaLib is available here:
 \n
-https://apps.difa.unibo.it/files/people/Str957-cluster/CosmoBolognaLib_VM/Ubuntu_CBL.ova
+https://apps.difa.unibo.it/files/people/Str957-cluster/astro/CosmoBolognaLib_VM/Ubuntu_CBL.ova
 \n the password is: ilovecbl
 
 Alternatively, to @b install @b the @b CosmoBolognaLib on a custom

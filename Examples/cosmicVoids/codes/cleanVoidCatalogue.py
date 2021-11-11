@@ -7,8 +7,7 @@ import sys
 import os
 
 # import CosmoBolognaLib functions #
-import CosmoBolognaLib as cbl                                 
-from CosmoBolognaLib import ErrorCBL
+import CosmoBolognaLib as cbl
 
 
 ##########################################################

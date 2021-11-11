@@ -111,8 +111,12 @@ double cbl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const do
 
     func = glob::FuncGrid(kk, Pk, interpType, cbl::BinType::_linear_);
   }
+
+  else if (method_Pk=="EisensteinHu" && input_file!=par::defaultString)
+    ErrorCBL("in the EisensteiHu case, no input files can be read!", "m_func_sigma", "Sigma.cpp");
   
-  else ErrorCBL("the chosen method_Pk is not available!", "m_func_sigma", "Sigma.cpp");
+  else
+    ErrorCBL("the chosen method_Pk is not available!", "m_func_sigma", "Sigma.cpp");
 
   auto ff = [&] (const double kk)
     {

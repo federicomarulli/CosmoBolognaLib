@@ -15,7 +15,7 @@ cosmology = cbl.Cosmology()
 
 # compute the dark matter power spectrum
 kk = np.logspace(-4, 2, 200)
-Pk = [cosmology.Pk_DM(kk[i], "CAMB", False, 0.2) for i in range(len(kk))]
+Pk = [cosmology.Pk_matter(kk[i], "CAMB", False, 0.2) for i in range(len(kk))]
 
 # get correlation function from fftlog: dir is the transformation
 # direction, mu is the order of the Bessel function (see the

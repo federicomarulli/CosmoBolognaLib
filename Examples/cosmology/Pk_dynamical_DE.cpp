@@ -1,6 +1,6 @@
-// =====================================================================================
-// Example code: how to compute the dark matter power spectrum and growth rate with CAMB
-// =====================================================================================
+// ================================================================================
+// Example code: how to compute the matter power spectrum and growth rate with CAMB
+// ================================================================================
 
 #include "Cosmology.h"
 
@@ -48,12 +48,12 @@ int main () {
     // select a scale at which the power spectrum is computed
     const double kk = 10.;
 
-    // compute the ratio of the dark matter power spectrum computed a the two redshifts
-    const double ratio_Pk = cosm.Pk_DM(kk, "CAMB", false, redshift2)/cosm.Pk_DM(kk, "CAMB", false, redshift1);
+    // compute the ratio of the power spectrum computed a the two redshifts
+    const double ratio_Pk = cosm.Pk_matter(kk, "CAMB", false, redshift2)/cosm.Pk_matter(kk, "CAMB", false, redshift1);
     cout << endl << "P(z=" << redshift2 << ")/P(z=" << redshift1 << ") = " << ratio_Pk << endl;
 
     // compare the latter value with the squared value of the growth factor normalised at z=0
-    const double GF2 = pow(cosm.DD_norm(redshift2, redshift1), 2.);
+    const double GF2 = pow(cosm.DN(redshift2, redshift1), 2.);
     cout << "[D(z=" << redshift2 << ")/D(z=" << redshift1 << ")]^2 = " << GF2 << endl << endl;
 
   }

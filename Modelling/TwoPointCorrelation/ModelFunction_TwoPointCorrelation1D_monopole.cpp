@@ -35,6 +35,7 @@
 
 
 #include "ModelFunction_TwoPointCorrelation1D_monopole.h"
+#include "Cluster.h"
 
 using namespace std;
 
@@ -359,9 +360,11 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology (const std::vect
     for (int j = 0;j<pp->poly_order; j++)
       poly += parameter[j+3]*pow(rad[i], -j);
 
-    xi[i] = xi_ratio(fsigma8, bsigma8)*pp->cosmology->xi_DM(rad[i]*alpha, pp->method_Pk, pp->NL, pp->redshift, pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par)/pow(pp->sigma8_z, 2)+poly;
+    xi[i] = xi_ratio(fsigma8, bsigma8)*pp->cosmology->xi_matter(rad[i]*alpha, pp->method_Pk, pp->NL, pp->redshift, true, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->aa, pp->GSL, pp->prec, pp->file_par)/pow(pp->sigma8_z, 2)+poly;
   }
-
+  if (!pp->store_output)
+    pp->cosmology->remove_output_Pk_tables(pp->method_Pk, pp->NL, pp->redshift, pp->output_root);
+  
   return xi;
 }
 
@@ -400,7 +403,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_bias_cosmology (const std:
   for (size_t i=0; i<rad.size(); i++)
     new_rad[i] *= alpha;
 
-  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
+  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, false, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
 }
 
 
@@ -439,7 +442,7 @@ std::vector<double> cbl::modelling::twopt::xi0_damped_scaling_relation_sigmaz (c
 
     mass[i] = pow(10, log10_mass);
 
-    _bias[i] = pp->cosmology->bias_halo(mass[i], pp->func_sigma->operator()(mass[i]), pp->cluster_mass_proxy->xx(i), pp->model_bias, pp->store_output, par::defaultString, "Linear", pp->Delta);
+    _bias[i] = pp->cosmology->bias_halo(mass[i], pp->func_sigma->operator()(mass[i]), pp->cluster_mass_proxy->xx(i), pp->model_bias, false, par::defaultString, "Linear", pp->Delta);
   }
 
   const double bias = Average(_bias);
@@ -448,6 +451,61 @@ std::vector<double> cbl::modelling::twopt::xi0_damped_scaling_relation_sigmaz (c
   parameter[4] = bias;
 
   return modelling::twopt::damped_Xi(rad, bias, pp->linear_growth_rate_z, SigmaS, pp->kk, pp->func_Pk);
+}
+
+
+
+// ============================================================================================
+
+
+std::vector<double> cbl::modelling::twopt::xi0_damped_scaling_relation_sigmaz_cosmology (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
+{
+  // structure contaning the required input data
+  shared_ptr<STR_data_model> pp = static_pointer_cast<STR_data_model>(inputs);
+  
+  // redefine the cosmology
+  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
+
+  // set the cosmological parameters
+  for (size_t i=0; i<pp->Cpar.size(); ++i)
+    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
+
+  // damping scale
+  const double SigmaS = par::cc*parameter[parameter.size()-2]/cosmo.HH(pp->redshift);
+  
+  // scaling relation parameters
+  std::vector<double> scalRel_pars;
+  for (size_t i=0; i<pp->Cpar.size(); ++i)
+    scalRel_pars.push_back(parameter[i]);
+  for (size_t i=pp->Cpar.size(); i<parameter.size()-2; i++)
+    scalRel_pars.emplace_back(parameter[i]);
+
+  // compute the power spectrum
+  vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, pp->NL, pp->redshift, false, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
+
+  std::shared_ptr<glob::FuncGrid> Pk_interp = make_shared<glob::FuncGrid>(glob::FuncGrid(pp->kk, Pk, "Spline"));
+
+  // bias computation
+  vector<double> _bias(pp->scaling_relation->data()->xx().size());
+
+  double log_base = (pp->scaling_relation)->data_model().log_base;
+  double mass_pivot = (pp->scaling_relation)->data_model().mass_pivot;
+
+  for (size_t i=0; i<pp->scaling_relation->data()->xx().size(); i++) {    
+    double log_mass = (pp->scaling_relation)->likelihood()->get_m_model()->operator()(pp->scaling_relation->data()->xx(i), scalRel_pars);
+    double mass = pow(log_base, log_mass) * mass_pivot;
+
+    double Delta = (pp->isDelta_Vir) ? cosmo.Delta_vir(pp->Delta_input, (pp->scaling_relation)->data_model().redshift[i]) : pp->Delta_input;
+
+    _bias[i] = cosmo.bias_halo(mass, (pp->scaling_relation)->data_model().redshift[i], pp->model_bias, pp->method_Pk, false, par::defaultString, "Linear", Delta, -1, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
+  }
+
+  const double bias = Average(_bias);
+
+  // set the value of the bias
+  parameter[parameter.size()-1] = bias;
+
+  return modelling::twopt::damped_Xi(rad, bias, cosmo.linear_growth_rate(pp->redshift), SigmaS, pp->kk, Pk_interp);
 }
 
 
@@ -490,7 +548,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_sigma8_clusters (const std
   cosmo.set_sigma8(sigma8);
   
   // sigma8(z)
-  const double sigma8_z = sigma8*cosmo.DD(pp->redshift)/cosmo.DD(0.);
+  const double sigma8_z = sigma8*cosmo.DN(pp->redshift);
 
 
   // output likelihood parameters
@@ -501,11 +559,11 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_sigma8_clusters (const std
   
   for (int k=0; k<pp->cluster_mass_proxy->ndata(); k++) {
 
-    const double sigma8fid = pp->sigma8_z*cosmo.DD(0.)/cosmo.DD(pp->redshift);
+    const double sigma8fid = pp->sigma8_z/cosmo.DN(pp->redshift);
     
     const double sigma = pp->cluster_mass_proxy->extra_info(0, k)*(sigma8/sigma8fid);
     
-    bias[k] = cosmo.bias_halo(pp->cluster_mass_proxy->data(k), sigma, pp->cluster_mass_proxy->xx(k), pp->model_bias, pp->store_output, pp->output_root, "Spline", pp->Delta, 1., pp->norm, pp->k_min, pp->k_max, pp->prec, pp->method_Pk);
+    bias[k] = cosmo.bias_halo(pp->cluster_mass_proxy->data(k), sigma, pp->cluster_mass_proxy->xx(k), pp->model_bias, false, pp->output_root, "Spline", pp->Delta, 1., pp->norm, pp->k_min, pp->k_max, pp->prec, pp->method_Pk);
   }
   
   const double mean_bias = Average(bias);
@@ -565,8 +623,8 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_one_cosmo_par_clusters (co
   vector<double> new_rad = rad;
   for (size_t i=0; i<rad.size(); i++)
     new_rad[i] *= alpha;
-  
-  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
+
+  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, false, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
 }
 
 
@@ -602,7 +660,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_two_cosmo_pars_clusters (c
   for (size_t i=0; i<rad.size(); i++)
     new_rad[i] *= alpha;
   
-  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, pp->store_output, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
+  return cosmo.xi0_Kaiser(new_rad, bias, pp->method_Pk, pp->redshift, false, pp->output_root, pp->NL, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
 }
 
 
@@ -629,7 +687,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters (const 
  
   vector<double> mass_grid = logarithmic_bin_vector(pp->cluster_mass_proxy->ndata()/10, Min(pp->cluster_mass_proxy->data()), Max(pp->cluster_mass_proxy->data()));
 
-  const double bias = cosmo.bias_eff_mass(pp->cluster_mass_proxy->data(), mass_grid, pp->cluster_mass_proxy->xx(), pp->model_bias, pp->method_Pk, pp->meanType, pp->store_output, pp->output_root, pp->Delta)[0];
+  const double bias = cosmo.bias_eff_mass(pp->cluster_mass_proxy->data(), mass_grid, pp->cluster_mass_proxy->xx(), pp->model_bias, pp->method_Pk, pp->meanType, false, pp->output_root, pp->Delta)[0];
 
   
   // fixed parameters 
@@ -644,7 +702,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters (const 
 
   // return the redshift-space monopole of the two-point correlation function
   const double sigma8 = parameter[0];
-  const double sigma8_z = sigma8*pp->cosmology->DD(pp->redshift)/pp->cosmology->DD(0.);
+  const double sigma8_z = sigma8*pp->cosmology->DN(pp->redshift);
   const double fsigma8 = pp->linear_growth_rate_z*sigma8_z;
   
   vector<double> xi(rad.size(), 0);
@@ -684,7 +742,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters_selecti
 
   // set the function to estimate the linear dark matter power spectrum at z=0, by interpolating it from a grid
   
-  const vector<double> Pk_grid = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, -1, pp->k_min, pp->k_max, pp->prec, pp->file_par);
+  const vector<double> Pk_grid = cosmo.Pk_matter(pp->kk, pp->method_Pk, false, 0., false, pp->output_root, -1, pp->k_min, pp->k_max, pp->prec, pp->file_par);
   glob::FuncGrid interp_Pk(pp->kk, Pk_grid, "Spline");
 
 
@@ -723,7 +781,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters_selecti
 
   
   // compute the bias
-  const double bias = cosmo.bias_eff_selection_function(interp_sigma, interp_DnSigma, *pp->interp_SelectionFunction_cut, pp->Mass_min, pp->Mass_max, {pp->redshift}, pp->model_bias, pp->model_MF, "EisensteinHu", alpha, pp->store_output, pp->output_root, pp->Delta, -1., "Spline", pp->norm, pp->k_min, pp->k_max, pp->prec)[0]; // check!!!
+  const double bias = cosmo.bias_eff_selection_function(interp_sigma, interp_DnSigma, *pp->interp_SelectionFunction_cut, pp->Mass_min, pp->Mass_max, {pp->redshift}, pp->model_bias, pp->model_MF, "EisensteinHu", alpha, false, pp->output_root, pp->Delta, -1., "Spline", pp->norm, pp->k_min, pp->k_max, pp->prec)[0]; // check!!!
   parameter[pp->Cpar.size()+1] = bias;
   
   // set the AP factor
@@ -738,7 +796,7 @@ std::vector<double> cbl::modelling::twopt::xi0_linear_cosmology_clusters_selecti
   vector<double> xi = wrapper::fftlog::transform_FFTlog(new_rad, 1, pp->kk, Pk_grid, 0);
   
   // compute the redshift-space monopole at z=pp->redshift (scaling by D(z)/D(0) the monopole at z=0) 
-  const double fact = bias*bias*xi_ratio(cosmo.linear_growth_rate(pp->redshift, 1.)/bias)*pow(cosmo.DD(pp->redshift)/cosmo.DD(0), 2);
+  const double fact = bias*bias*xi_ratio(cosmo.linear_growth_rate(pp->redshift)/bias)*pow(cosmo.DN(pp->redshift), 2);
   for (size_t i=0; i<xi.size(); i++)
     xi[i] *= fact;
 
@@ -803,10 +861,10 @@ double cbl::modelling::twopt::bias (const double Mmin, const double sigmalgM, co
   auto func = [&] (double mass)
     {
       // halo mass function -> it depends on cosmology
-      const double dndM = pp->cosmology->mass_function(mass, pp->func_sigma->operator()(mass), pp->func_dlnsigma->operator()(mass), pp->redshift, pp->model_MF, pp->store_output, pp->output_root, pp->Delta, pp->interpType, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->method_Pk, pp->input_file, pp->is_parameter_file);
+      const double dndM = pp->cosmology->mass_function(mass, pp->func_sigma->operator()(mass), pp->func_dlnsigma->operator()(mass), pp->redshift, pp->model_MF, false, pp->output_root, pp->Delta, pp->interpType, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->method_Pk, pp->input_file, pp->is_parameter_file);
       
       // halo bias -> it depends on cosmology
-      const double bias_halo = pp->cosmology->bias_halo(mass, pp->func_sigma->operator()(mass), pp->redshift, pp->model_bias, pp->store_output, pp->output_root, pp->interpType, pp->Delta, pp->kk, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->method_Pk, pp->input_file, pp->is_parameter_file);
+      const double bias_halo = pp->cosmology->bias_halo(mass, pp->func_sigma->operator()(mass), pp->redshift, pp->model_bias, false, pp->output_root, pp->interpType, pp->Delta, pp->kk, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->method_Pk, pp->input_file, pp->is_parameter_file);
       
       // average number of galaxies in each halo -> it depends on
       // galaxy evolution
@@ -851,10 +909,15 @@ double cbl::modelling::twopt::Pk_cs (const double kk, const std::shared_ptr<void
   const double lgM1 = parameter[3];
   const double alpha = parameter[4];
 
-
+  // build a Cluster object for computing the density profile in Fourier space
+  cbl::catalogue::Cluster cluster;
+  cluster.set_profile(*pp->cosmology, 0., pp->redshift, pp->model_cM, pp->profile, pp->halo_def);
+  
+  
   auto Pk_cs_integrand = [&] (const double lgmass) {
-    return pp->interpMF(pow(10., lgmass))*NcNs(pow(10., lgmass), lgMmin, sigmalgM, lgM0, lgM1, alpha)*pp->cosmology->density_profile_FourierSpace(kk, pow(10., lgmass), pp->redshift, pp->model_cM, pp->profile, pp->halo_def)*pow(10., lgmass)*log(10.);
-  };
+			   cluster.set_mass(pow(10., lgmass));
+			   return pp->interpMF(pow(10., lgmass))*NcNs(pow(10., lgmass), lgMmin, sigmalgM, lgM0, lgM1, alpha)*cluster.density_profile_FourierSpace(kk)*pow(10., lgmass)*log(10.);
+			 };
 
   return 2./pow(ng(lgMmin, sigmalgM, lgM0, lgM1, alpha, inputs), 2)*wrapper::gsl::GSL_integrate_qag(Pk_cs_integrand, log10(pp->Mh_min), log10(pp->Mh_max));
 
@@ -875,10 +938,16 @@ double cbl::modelling::twopt::Pk_ss (const double kk, const std::shared_ptr<void
   const double lgM0 = parameter[2];
   const double lgM1 = parameter[3];
   const double alpha = parameter[4];
+
+  // build a Cluster object for computing the density profile in Fourier space
+  cbl::catalogue::Cluster cluster;
+  cluster.set_profile(*pp->cosmology, 0., pp->redshift, pp->model_cM, pp->profile, pp->halo_def);
+  
     
   auto Pk_ss_integrand = [&] (const double lgmass) {
-    return pp->interpMF(pow(10., lgmass))*NsNs1(pow(10., lgmass), parameter[0], parameter[1], parameter[2], parameter[3], parameter[4])*pow(pp->cosmology->density_profile_FourierSpace(kk, pow(10., lgmass), pp->redshift, pp->model_cM, pp->profile, pp->halo_def), 2)*pow(10., lgmass)*log(10.);
-  };
+			   cluster.set_mass(pow(10., lgmass));
+			   return pp->interpMF(pow(10., lgmass))*NsNs1(pow(10., lgmass), parameter[0], parameter[1], parameter[2], parameter[3], parameter[4])*pow(cluster.density_profile_FourierSpace(kk), 2)*pow(10., lgmass)*log(10.);
+			 };
   
   return 1./pow(ng(lgMmin, sigmalgM, lgM0, lgM1, alpha, inputs), 2)*wrapper::gsl::GSL_integrate_qag(Pk_ss_integrand, log10(pp->Mh_min), log10(pp->Mh_max));
 }
@@ -908,8 +977,14 @@ double cbl::modelling::twopt::Pk_2halo (const double kk, const std::shared_ptr<v
   const double lgM1 = parameter[3];
   const double alpha = parameter[4];
 
+  // build a Cluster object for computing the density profile in Fourier space
+  cbl::catalogue::Cluster cluster;
+  cluster.set_profile(*pp->cosmology, 0., pp->redshift, pp->model_cM, pp->profile, pp->halo_def);
+  
+
   auto Pk_2halo_integrand = [&] (const double lgmass) {
-    return pp->interpMF(pow(10., lgmass))*Navg(pow(10., lgmass), parameter[0], parameter[1], parameter[2], parameter[3], parameter[4])*pp->interpBias(pow(10., lgmass))*pp->cosmology->density_profile_FourierSpace(kk, pow(10., lgmass), pp->redshift, pp->model_cM, pp->profile, pp->halo_def)*pow(10., lgmass)*log(10.);
+			      cluster.set_mass(pow(10., lgmass));
+			      return pp->interpMF(pow(10., lgmass))*Navg(pow(10., lgmass), parameter[0], parameter[1], parameter[2], parameter[3], parameter[4])*pp->interpBias(pow(10., lgmass))*cluster.density_profile_FourierSpace(kk)*pow(10., lgmass)*log(10.);
   };
   return pp->interpPk(kk)*1./pow(ng(lgMmin, sigmalgM, lgM0, lgM1, alpha, inputs),2.)*pow(wrapper::gsl::GSL_integrate_qag(Pk_2halo_integrand, log10(pp->Mh_min), log10(pp->Mh_max)), 2.);
 }

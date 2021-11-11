@@ -74,14 +74,14 @@ namespace cbl {
 	/// Cluster object
 	std::shared_ptr<catalogue::Cluster> cluster;
 	
-	/// pointer to the redshift evolution function in the scaling relation
-	double (*fz)(std::vector<double>, std::shared_ptr<void>);
+	/// the redshift evolution function in the scaling relation
+	std::function<double(const double, const double, const std::shared_ptr<void>)> fz;
 	
-	/// pointer to the redshift error
-	double (*z_error)(std::vector<double>);
+	/// function returning the redshift error (absolute or relative)
+	std::function<double(const double, const double)> z_error;
 	
-	/// pointer to the mass proxy error
-	double (*proxy_error)(std::vector<double>);
+	/// function returning the mass proxy error (absolute or relative)
+	std::function<double(const double, const double)> proxy_error;
 	
 	/// Array of redshift values where the scaling relation is evaluated
 	std::vector<double> redshift;
@@ -95,7 +95,7 @@ namespace cbl {
 	/// Proxy pivot
 	double proxy_pivot;
 	
-	/// Mass) pivot
+	/// Mass pivot
 	double mass_pivot;
 	
 	/// logarithmic base
@@ -217,6 +217,16 @@ namespace cbl {
       ///@}
 
 	/**
+	 *  @name Public member variables
+	 */
+	///@{
+
+	/// if true, the mass is derived from the halo mass function
+	bool mass_from_HMF = false;
+	
+	///@}
+	
+	/**
 	 *  @name Member functions used to set the protected members of the class
 	 */
 	///@{
@@ -228,11 +238,21 @@ namespace cbl {
 	 */
 	STR_MOrelation_data_model data_model () { return m_data_model; }
 	
+	///@}
+	
 	
 	/**
 	 *  @name Member functions used to set the model parameters
 	 */
 	///@{
+	
+	/**
+	 *  @brief Set the mass pivot
+	 *
+	 *  @param mass_pivot the mass pivot
+	 *
+	 */	 
+	void set_mass_pivot (const double mass_pivot) { m_data_model.mass_pivot = mass_pivot; }
 
 	/**
 	 *  @brief Set the data used to construct the scaling relation,
@@ -369,9 +389,7 @@ namespace cbl {
 	 *  where the scaling relation is written, e.g., as:
 	 *
 	 *  \f$\log M = \alpha + \beta 
-	 *  \log (\lambda_{\rm eff}/\lambda_{\rm piv}) + \gamma \log (f(z_{\rm eff})),\f$
-	 *
-	 *  with the redshift evolution function \f$ f(z_{\rm eff})=E(z_{\rm eff})/E(z_{piv}) \f$.
+	 *  \log (\lambda_{\rm eff}/\lambda_{\rm piv}) + \gamma \log (f(z_{\rm eff})).\f$
 	 *
 	 *  If the input parameters z_eff_err and proxy_eff_err are provided,
 	 *  the scaling relation becomes
@@ -391,6 +409,11 @@ namespace cbl {
 	 *
 	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{\lambda} 
 	 *  \log (\lambda/\lambda_{\rm piv})^{e_{\lambda}} + \sigma_z \log (f(z))^{e_z}.\f$
+	 *
+	 *  @param z_evo functional form of the redshift evolution
+	 *  function in the scaling relation: "E_z" \f$\rightarrow\f$ 
+	 *  \f$ f(z)=E(z)/E(z_{piv}) \f$, "direct" \f$\rightarrow\f$ 
+	 *  \f$ f(z)=(1+z)/(1+z_{piv}) \f$
 	 *
 	 *  @param cosmo_param vector of enums containing cosmological
 	 *  parameters
@@ -427,66 +450,7 @@ namespace cbl {
 	 *  @param proxy_eff_err the error on the effective proxy
 	 *
 	 */
-	void set_model_MassObservableRelation_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const std::vector<double> z_eff_err={}, const std::vector<double> proxy_eff_err={});
-	
-	/**
-	 *  @brief Set the scaling relation parameters,
-	 *  where the scaling relation is written, e.g., as:
-	 *
-	 *  \f$\log M = \alpha + \beta 
-	 *  \log (\lambda_{\rm eff}/\lambda_{\rm piv}) + \gamma \log (f(z_{\rm eff})),\f$
-	 *
-	 *  with the redshift evolution function \f$ f(z_{\rm eff})=(1+z_{\rm eff})/(1+z_{piv}) \f$.
-	 *
-	 *  If the input parameters z_eff_err and proxy_eff_err are provided,
-	 *  the scaling relation becomes
-	 *
-	 *  \f$\log M = \alpha + \beta 
-	 *  \int_0^\infty {\rm d}\lambda\,\, \log (\lambda/\lambda_{\rm piv}) P(\lambda|\lambda_{\rm eff}) + 
-	 *  \gamma \int_0^\infty {\rm d}z\,\, \log (f(z))P(z|z_{\rm eff}),\f$
-	 *
-	 *  where \f$ P(\lambda|\lambda_{\rm eff}) \f$ and \f$ P(z|z_{\rm eff}) \f$ are Gaussian distributions, 
-	 *  with mean equal to \f$\lambda_{\rm eff}\f$ or \f$z_{\rm eff}\f$ and rms given by 
-	 *  z_eff_err or proxy_eff_err.
-	 *
-	 *  WARNING: the only way to have a dependency on the intrinsic scatter
-	 *  parameters is to define a user-defined likelihood, whose covariance
-	 *  depends on the intrinsic scatter. In particular the intrinsic
-	 *  scatter, \f$\sigma_{\rm intr}\f$, is expressed as
-	 *
-	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{\lambda} 
-	 *  \log (\lambda/\lambda_{\rm piv})^{e_{\lambda}} + \sigma_z \log (f(z))^{e_z}.\f$
-	 *
-	 *  @param alpha_prior prior on the scaling relation normalization
-	 *
-	 *  @param beta_prior prior on the scaling relation slope
-	 *
-	 *  @param gamma_prior prior on the redshift evolution factor of the scaling relation
-	 *
-	 *  @param scatter0_prior prior on the 
-	 *  constant term of the intrinsic scatter, \f$ \sigma_0 \f$
-	 *
-	 *  @param scatterM_prior prior on the factor in the
-	 *  proxy-dependent term of the intrinsic scatter, \f$ \sigma_{\lambda} \f$
-	 *
-	 *  @param scatterM_exponent_prior prior on the exponent in the
-	 *  proxy-dependent term of the intrinsic scatter, \f$ e_{\lambda} \f$
-	 *
-	 *  @param scatterz_prior prior on the factor in the
-	 *  redshift-dependent term of the intrinsic scatter, \f$ \sigma_z \f$
-	 *
-	 *  @param scatterz_exponent_prior prior on the exponent in the
-	 *  redshift-dependent term of the intrinsic scatter, \f$ e_z \f$
-	 *
-	 *  @param z_eff_err the error on the effective redshift, i.e. the
-	 *  redshift in the scaling relation (indeed such model is supposed to
-	 *  describe the relation between stacked masses and effective
-	 *  redshift and proxy in the stacking bin)
-	 *
-	 *  @param proxy_eff_err the error on the effective proxy
-	 *
-	 */
-	void set_model_MassObservableRelation_cosmology (const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const std::vector<double> z_eff_err={}, const std::vector<double> proxy_eff_err={});
+	void set_model_MassObservableRelation_cosmology (const std::string z_evo, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const std::vector<double> z_eff_err={}, const std::vector<double> proxy_eff_err={});
 	
 	/**
 	 *  @brief Set the cosmological parameters used to model the masses,
@@ -744,7 +708,7 @@ namespace cbl {
        * @return values of the mass function as a function of redshift
        * and mass proxy
        */
-      double mass_from_counts(double (*fz)(std::vector<double>, std::shared_ptr<void>), double (*z_error)(std::vector<double>), double (*proxy_error)(std::vector<double>), const double redshift_min, const double redshift_max, const double proxy_min, const double proxy_max, cbl::cosmology::Cosmology cosmology, cbl::catalogue::Cluster cluster, const double Area, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const double proxy_pivot, const double z_pivot, const double mass_pivot, const double log_base);
+      double mass_from_counts (std::function<double(const double, const double, const std::shared_ptr<void>)> fz, std::function<double(const double, const double)> z_error, std::function<double(const double, const double)> proxy_error, const double redshift_min, const double redshift_max, const double proxy_min, const double proxy_max, cbl::cosmology::Cosmology cosmology, cbl::catalogue::Cluster cluster, const double Area, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_vir, const cbl::glob::FuncGrid interp_sigmaM, const  cbl::glob::FuncGrid interp_DlnsigmaM, const double proxy_pivot, const double z_pivot, const double mass_pivot, const double log_base);
       
       /**
        * @brief set the cluster scaling relation model
@@ -790,52 +754,6 @@ namespace cbl {
        *
        */
       std::vector<double> model_mass_from_counts (const std::vector<double> proxy, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
-      
-      /**
-       * @brief redshift evolution function in the scaling relation, 
-       * with the functional form \f$ f(z)=E(z)/E(z_{\rm piv}) = H(z)/H(z_{\rm piv}) \f$
-       *
-       * @param x vector containing the redhsift and the redshift pivot, in this order
-       *
-       * @param cosmo the cosmological model
-       *
-       * @return the value of the redshift evolution function
-       *
-       */
-      double Fz_Ez (const std::vector<double> x, const std::shared_ptr<void> cosmo);
-      
-      /**
-       * @brief redshift evolution function in the scaling relation, 
-       * with the functional form \f$ f(z)=(1+z)/(1+z_{\rm piv})\f$
-       *
-       * @param x vector containing the redhsift and the redshift pivot, in this order
-       *
-       * @param cosmo the cosmological model
-       *
-       * @return the value of the redshift evolution function
-       *
-       */
-      double Fz_direct (const std::vector<double> x, const std::shared_ptr<void> cosmo);
-      
-      /**
-       * @brief return the absolute error
-       *
-       * @param x vector containing the absolute error
-       *
-       * @return the absolute error
-       *
-       */
-      double ReturnAbsoluteError (const std::vector<double> x);
-      
-      /**
-       * @brief return the absolute error starting from the relative error
-       *
-       * @param x vector containing the relative error and the measure
-       *
-       * @return the absolute error
-       *
-       */
-      double AbsoluteFromRelativeError (const std::vector<double> x);
       
     }
   }

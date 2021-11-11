@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileXmoJgb.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(334.102375,1.937510,334.218495,1.936895,334.218585,2.061683,334.209625,2.068429,334.114685,2.068548,334.108775,2.065359,334.104895,2.061678,334.101935,2.057122) # color=red dash=1

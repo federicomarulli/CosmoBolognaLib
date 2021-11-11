@@ -67,9 +67,9 @@ void cbl::modelling::Modelling::m_set_posterior (const int seed)
 // ============================================================================================
 
 
-shared_ptr<statistics::Model> cbl::modelling::Modelling::transfer_function ()
+shared_ptr<statistics::Model> cbl::modelling::Modelling::response_function ()
 {
-  return m_transfer_func;
+  return m_response_func;
 }
 
 
@@ -78,7 +78,7 @@ shared_ptr<statistics::Model> cbl::modelling::Modelling::transfer_function ()
 
 void cbl::modelling::Modelling::isSet_response ()
 {
-  if (m_transfer_func == NULL)
+  if (m_response_func == NULL)
     ErrorCBL("the response function is not set!", "isSet_response", "Modelling.cpp");
 }
 
@@ -138,7 +138,7 @@ shared_ptr<cbl::statistics::ModelParameters> cbl::modelling::Modelling::posterio
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type, const vector<size_t> x_index, const int w_index, const double prec, const int Nres)
+void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type, const std::vector<size_t> x_index, const int w_index, const double prec, const int Nres)
 {
   if (m_model==NULL)
     ErrorCBL("undefined model!", "set_likelihood", "Modelling.cpp");

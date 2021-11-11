@@ -96,7 +96,7 @@ int main () {
     model_twop.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_);
 
     // maximise the posterior
-    model_twop.maximize_posterior({1., 1.}, 10000, 1.e-4, 1.e-2);
+    model_twop.maximize_posterior({1., 1.}, 10000, 1.e-5);
     
     // run the MCMC method to sample the posterior
     const int chain_size = 1000; // the size the chain lenght

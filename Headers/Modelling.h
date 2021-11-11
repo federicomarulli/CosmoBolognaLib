@@ -77,8 +77,8 @@ namespace cbl {
       /// input model
       std::shared_ptr<statistics::Model> m_model = NULL;
       
-      /// transfer function, for the computation of the super-sample covariance
-      std::shared_ptr<statistics::Model> m_transfer_func = NULL;
+      /// response function for the computation of the super-sample covariance
+      std::shared_ptr<statistics::Model> m_response_func = NULL;
 
       /// likelihood
       std::shared_ptr<statistics::Likelihood> m_likelihood = NULL;
@@ -90,7 +90,7 @@ namespace cbl {
       std::shared_ptr<statistics::Posterior> m_posterior = NULL;
 
       /**
-       *  @brief set the interal variable m_parameter_priors
+       *  @brief set the internal variable m_parameter_priors
        *
        *  @param prior_distribution vector containing the prior
        *  distributions
@@ -147,12 +147,12 @@ namespace cbl {
       }
 
       /**
-       *  @brief return the transfer function, or response, used to compute the 
+       *  @brief return the response function used to compute the 
        *  super-sample covariance
        *
-       *  @return pointer to the transfer function
+       *  @return pointer to the response function
        */    
-      std::shared_ptr<statistics::Model> transfer_function ();
+      std::shared_ptr<statistics::Model> response_function ();
       
       /**
        *  @brief check if the response function used to compute the 
@@ -205,6 +205,15 @@ namespace cbl {
        */
       virtual double get_parameter_from_string (const std::string parameter) const
       { return ErrorCBL("", "get_parameter_from_string ("+parameter+")", "Modelling.h"); }
+      
+      /**
+       *  @brief get the internal variable m_parameter_priors
+       *
+       *  @param i prior index
+       *
+       *  @return i-th prior distribution
+       */
+      std::shared_ptr<statistics::PriorDistribution> get_prior (const int i) { return m_parameter_priors[i]; }
 
       ///@}
       

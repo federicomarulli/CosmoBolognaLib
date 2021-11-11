@@ -154,7 +154,7 @@ namespace cbl {
        *  All the probes (A1, A2, A3, B1, B2, B3) depend on the parameter \f$p\f$, 
        *  whose identification string is "par", and we set repeated_par = {"par"}.
        *  If we want each pair of probes {A1, B1}, {A2, B2}, {A3, B3}, to provide
-       *  a different posterior on \f$p\f$, we must set common_repeated_par = { { {0,1}, {2,3}, {4,5} } }.
+       *  a different posterior on \f$p\f$, we must set common_repeated_par = { { {0,3}, {1,4}, {2,5} } }.
        *  This is useful when different probes in the same bin provide constraints
        *  on the same parameters.
        *  If common_repeated_par is not provided, every probe depending on \f$p\f$ 

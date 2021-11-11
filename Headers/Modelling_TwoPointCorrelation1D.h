@@ -172,10 +172,6 @@ namespace cbl {
 	 *  @param output_dir the output_dir directory
 	 *  where the output of external codes are written
 	 *
-	 *  @param store_output if true the output files created by
-	 *  the Boltzmann solver are stored; if false the output files
-	 *  are removed
-	 *
 	 *  @param output_root output_root of the parameter file used
 	 *  to compute the power spectrum and &sigma;(mass); it can be
 	 *  any name
@@ -226,10 +222,93 @@ namespace cbl {
 	 *  @param redshift_source vector containing the redshifts of the
 	 *  source galaxies, in case the cluster masses are estimated from
 	 *  weak lensing
+	 */
+	void set_data_model (const cbl::cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk="CAMB", const double sigmaNL_perp=0., const double sigmaNL_par=0., const bool NL=true, const double bias=1., const double pimax=40., const double r_min=1., const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const std::string output_root="test", const int norm=-1, const double aa=0., const bool GSL=true, const double prec=1.e-3, const std::string file_par=par::defaultString, const double Delta=200., const bool isDelta_vir=true, const std::vector<double> cluster_redshift={}, const std::vector<double> cluster_mass_proxy={}, const std::vector<double> cluster_mass_proxy_error={}, const std::string model_bias="Tinker", const std::string meanType="mean_bias", const int seed=666, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
+	
+	/**
+	 *  @brief Set the data used to construct models of
+	 *  the two-point correlation function, in which the effective bias
+	 *  is computed through a mass-observable scaling relation.
 	 *
+	 *  In particular, the cluster masses are derived from the following
+	 *  scaling relation:
+	 *
+	 *  \f$ \log M = \alpha + \beta\log(\lambda/lambda_{\rm pivot})+
+	 *  \gamma \log(f(z,z_{\rm pivot})) \f$
+	 *
+	 *  @param cosmology the cosmological model used to measure
+	 *  &xi;<SUB>DM</SUB>
+	 *
+	 *  @param redshift redshift
+	 *
+	 *  @param cluster_redshift vector containing the cluster
+	 *  redshifts
+	 *
+	 *  @param cluster_mass_proxy vector containing the cluster
+	 *  mass proxies
+	 *
+	 *  @param redshift_pivot redshift pivot in the scaling relation
+	 *
+	 *  @param proxy_pivot proxy pivot in the scaling relation
+	 *
+	 *  @param mass_pivot mass pivot in the scaling relation
+	 *
+	 *  @param log_base base of the logarithms in the scaling relation
+	 *
+	 *  @param method_Pk method used to compute the power
+	 *  spectrum; valid choices for method_Pk are: CAMB
+	 *  [http://camb.info/], CLASS [http://class-code.net/],
+	 *  MPTbreeze-v1 [http://arxiv.org/abs/1207.1465],
+	 *  EisensteinHu
+	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+	 *
+	 *  @param NL 0 &rarr; linear power spectrum; 1 &rarr;
+	 *  non-linear power spectrum
+	 *
+	 *  @param r_min minimum separation up to which the binned
+	 *  dark matter correlation function is computed
+	 *
+	 *  @param r_max maximum separation up to which the binned
+	 *  dark matter correlation function is computed
+	 *    
+	 *  @param k_min minimum wave vector module up to which the
+	 *  binned dark matter power spectrum is computed
+	 *  
+	 *  @param k_max maximum wave vector module up to which the
+	 *  binned dark matter power spectrum is computed
+	 *
+	 *  @param step number of steps used to compute the binned
+	 *  dark matter correlation function
+	 *
+	 *  @param output_dir the output_dir directory
+	 *  where the output of external codes are written
+	 *
+	 *  @param output_root output_root of the parameter file used
+	 *  to compute the power spectrum and &sigma;(mass); it can be
+	 *  any name
+	 *  
+	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
+	 *  &rarr; normalize the power spectrum
+	 *  
+	 *  @param prec accuracy of the GSL integration
+	 *  
+	 *  @param file_par name of the parameter file; if a parameter
+	 *  file is provided (i.e. file_par!=NULL), it will be used,
+	 *  ignoring the cosmological parameters of the object
+	 *
+	 *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+	 *  mean interior density relative to the background
+	 *
+	 *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
+	 *  virial overdensity
+	 *
+	 *  @param model_bias author(s) who proposed the bias; valid
+	 *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+	 *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+	 *  correction of Warren 2004), Tinker (Tinker et al. 2010)
 	 *  
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double sigmaNL_perp=0., const double sigmaNL_par=0., const bool NL=true, const double bias=1., const double pimax=40., const double r_min=1., const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double aa=0., const bool GSL=true, const double prec=1.e-3, const std::string file_par=par::defaultString, const double Delta=200., const bool isDelta_vir=true, const std::vector<double> cluster_redshift={}, const std::vector<double> cluster_mass_proxy={}, const std::vector<double> cluster_mass_proxy_error={}, const std::string model_bias="Tinker", const std::string meanType="mean_bias", const int seed=666, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
+	void set_data_model (const cbl::cosmology::Cosmology cosmology, const double redshift, const std::vector<double> cluster_redshift, const std::vector<double> cluster_mass_proxy, const double redshift_pivot, const double proxy_pivot, double mass_pivot, const double log_base, const std::string method_Pk="CAMB", const bool NL=true, const double r_min=1., const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=500,  const std::string output_dir=par::defaultString, const std::string output_root="test", const int norm=-1, const double prec=1.e-3, const std::string file_par=par::defaultString, const double Delta=200., const bool isDelta_vir=true, const std::string model_bias="Tinker");
 	
 	/**
 	 *  @brief set the data used to construct the HOD model
@@ -304,10 +383,6 @@ namespace cbl {
 	 *  
 	 *  @param NL false \f$rightarrow\f$ linear power spectrum;
 	 *  true \f$rightarrow\f$ non-linear power spectrum
-	 * 
-	 *  @param store_output if true the output files created by
-	 *  the Boltzmann solver are stored; if false the output files
-	 *  are removed
 	 *
 	 *  @param output_root output_root of the parameter file used
 	 *  to compute the power spectrum and &sigma;(mass); it can be
@@ -353,7 +428,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_data_HOD (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string model_MF="Tinker", const std::string model_bias="Tinker", const double Mh_min=0., const double Mh_max=1.e16, const double pi_max=100., const double r_max_int=100., const double r_min=1.e-3, const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=200, const double m_min=1.e7, const double m_max=1.e17, const int m_step=100, const std::string method_Pk="CAMB", const bool NL=true, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=0., const std::string interpType="Linear", const int norm=-1, const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const std::string model_cM="Duffy", const std::string profile="NFW", const std::string halo_def="vir");
+	void set_data_HOD (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string model_MF="Tinker", const std::string model_bias="Tinker", const double Mh_min=0., const double Mh_max=1.e16, const double pi_max=100., const double r_max_int=100., const double r_min=1.e-3, const double r_max=350., const double k_min=1.e-4, const double k_max=100., const int step=200, const double m_min=1.e7, const double m_max=1.e17, const int m_step=100, const std::string method_Pk="CAMB", const bool NL=true, const std::string output_root="test", const double Delta=200., const double kk=0., const std::string interpType="Linear", const int norm=-1, const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const std::string model_cM="Duffy", const std::string profile="NFW", const std::string halo_def="vir");
 	
 	/**
 	 *  @brief set the data used to construct the model for
@@ -416,10 +491,6 @@ namespace cbl {
 	 *  EisensteinHu
 	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
 	 *  
-	 *  @param store_output if true the output files created by
-	 *  the Boltzmann solver are stored; if false the output files
-	 *  are removed
-	 *
 	 *  @param output_dir the output_dir directory
 	 *  where the output of external codes are written
 	 *  
@@ -437,7 +508,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_data_model_cluster_selection_function (const cbl::cosmology::Cosmology cosmology, const cbl::cosmology::Cosmology test_cosmology, const double mean_redshift, const std::string model_MF, const std::string model_bias, const std::string selection_function_file, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const std::string file_par=par::defaultString, const double Delta=200, const bool isDelta_vir=false, const std::string method_Pk="CAMB", const bool store_output=true, const std::string output_dir=par::defaultString, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const int step=200, const int mass_step=50);
+	void set_data_model_cluster_selection_function (const cbl::cosmology::Cosmology cosmology, const cbl::cosmology::Cosmology test_cosmology, const double mean_redshift, const std::string model_MF, const std::string model_bias, const std::string selection_function_file, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const std::string file_par=par::defaultString, const double Delta=200, const bool isDelta_vir=false, const std::string method_Pk="CAMB", const std::string output_dir=par::defaultString, const double k_min=1.e-4, const double k_max=100, const double prec=1.e-2, const int step=200, const int mass_step=50);
 
 	///@}
 	

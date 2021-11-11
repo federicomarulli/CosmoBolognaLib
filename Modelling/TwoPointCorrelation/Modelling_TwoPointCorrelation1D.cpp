@@ -64,7 +64,7 @@ cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::Modelling_TwoPointCorrel
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const string method_Pk, const double sigmaNL_perp, const double sigmaNL_par, const bool NL, const double bias, const double pimax, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const string output_dir, const bool store_output, const string output_root, const int norm, const double aa, const bool GSL, const double prec, const string file_par, const double Delta, const bool isDelta_vir, const std::vector<double> cluster_redshift, const std::vector<double> cluster_mass_proxy, const std::vector<double> cluster_mass_proxy_error, const string model_bias, const string meanType, const int seed, const cosmology::Cosmology cosmology_mass, const std::vector<double> redshift_source)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (const cbl::cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double sigmaNL_perp, const double sigmaNL_par, const bool NL, const double bias, const double pimax, const double r_min, const double r_max, const double k_min, const double k_max, const int step,  const std::string output_dir, const std::string output_root, const int norm, const double aa, const bool GSL, const double prec, const std::string file_par, const double Delta, const bool isDelta_vir, const std::vector<double> cluster_redshift, const std::vector<double> cluster_mass_proxy, const std::vector<double> cluster_mass_proxy_error, const std::string model_bias, const std::string meanType, const int seed, const cbl::cosmology::Cosmology cosmology_mass, const std::vector<double> redshift_source)
 {
   if (file_par!=par::defaultString)
     WarningMsgCBL("check the consistency between the parameters of the object cosmology, provided in input, and the ones in the parameter file", "set_data_model", "Modelling_TwoPointCorrelation1D.cpp");
@@ -85,7 +85,6 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (con
   m_data_model->k_max = k_max;
   m_data_model->step = step;
   m_data_model->output_dir = output_dir;
-  m_data_model->store_output = store_output;
   m_data_model->output_root = output_root;
   m_data_model->norm = norm;
   m_data_model->aa = aa;
@@ -93,6 +92,8 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (con
   m_data_model->prec = prec;
   m_data_model->file_par = file_par;
   m_data_model->bias = bias;
+  m_data_model->Delta_input = Delta;
+  m_data_model->isDelta_Vir = isDelta_vir;
   m_data_model->Delta = (isDelta_vir) ? cosmology.Delta_vir(Delta, redshift) : Delta;
   m_data_model->model_bias = model_bias;
   m_data_model->meanType = meanType;
@@ -104,7 +105,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (con
   else { 
     coutCBL << "sigma8 is not set, it will be computed from the power spectrum with " << method_Pk << endl;
     
-    m_data_model->sigma8_z = cosmology.sigma8_Pk(method_Pk, redshift, store_output, output_root, NL, k_min, k_max, prec, file_par);
+    m_data_model->sigma8_z = cosmology.sigma8_Pk(method_Pk, redshift, true, output_root, NL, k_min, k_max, prec, file_par);
     
     coutCBL << "--> sigma8(z=" << redshift << ") = " << m_data_model->sigma8_z << endl << endl;
   }
@@ -119,7 +120,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (con
     if (cluster_redshift.size()==cluster_mass_proxy.size())
       cl_zz = cluster_redshift;
     for (size_t i=0; i<cl_sigma.size(); ++i)
-      cl_sigma[i] = sqrt(cosmology.sigma2M(cluster_mass_proxy[i], method_Pk, 0., store_output, output_root, "Spline", k_max));
+      cl_sigma[i] = sqrt(cosmology.sigma2M(cluster_mass_proxy[i], method_Pk, 0., true, output_root, "Spline", k_max));
     
     m_data_model->cluster_mass_proxy = make_shared<data::Data1D_extra>(data::Data1D_extra(cl_zz, cluster_mass_proxy, cluster_mass_proxy_error, {cl_sigma}));
 
@@ -128,11 +129,65 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (con
   }
 }
 
+// ============================================================================================
+
+
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model (const cbl::cosmology::Cosmology cosmology, const double redshift, const std::vector<double> cluster_redshift, const std::vector<double> cluster_mass_proxy, const double redshift_pivot, const double proxy_pivot, double mass_pivot, const double log_base, const std::string method_Pk, const bool NL, const double r_min, const double r_max, const double k_min, const double k_max, const int step,  const std::string output_dir, const std::string output_root, const int norm, const double prec, const std::string file_par, const double Delta, const bool isDelta_vir, const std::string model_bias)
+{
+  if (file_par!=par::defaultString)
+    WarningMsgCBL("check the consistency between the parameters of the object cosmology, provided in input, and the ones in the parameter file", "set_data_model", "Modelling_TwoPointCorrelation1D.cpp");
+  
+  m_data_model = make_shared<STR_data_model>(STR_data_model());
+
+  m_data_model->cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  m_data_model->redshift = redshift;
+  m_data_model->method_Pk = method_Pk;
+  m_data_model->NL = NL;
+  m_data_model->r_min = r_min;
+  m_data_model->r_max = r_max;
+  m_data_model->k_min = k_min;
+  m_data_model->k_max = k_max;
+  m_data_model->step = step;
+  m_data_model->output_dir = output_dir;
+  m_data_model->output_root = output_root;
+  m_data_model->norm = norm;
+  m_data_model->prec = prec;
+  m_data_model->file_par = file_par;
+  m_data_model->Delta_input = Delta;
+  m_data_model->isDelta_Vir = isDelta_vir;
+  m_data_model->Delta = (isDelta_vir) ? cosmology.Delta_vir(Delta, redshift) : Delta;
+  m_data_model->model_bias = model_bias;
+  
+  if (cosmology.sigma8()>0) 
+    m_data_model->sigma8_z = cosmology.sigma8(redshift);  
+  else { 
+    coutCBL << "sigma8 is not set, it will be computed from the power spectrum with " << method_Pk << endl;    
+    m_data_model->sigma8_z = cosmology.sigma8_Pk(method_Pk, redshift, false, output_root, NL, k_min, k_max, prec, file_par);    
+    coutCBL << "--> sigma8(z=" << redshift << ") = " << m_data_model->sigma8_z << endl << endl;
+  }
+  
+  if (cluster_mass_proxy.size() == 0 || cluster_redshift.size() == 0 || cluster_mass_proxy.size() != cluster_redshift.size())
+    ErrorCBL("The mass proxy and redshift vectors must contain at least one object each, and must have the same size.", "set_data_model", "Modelling_TwoPointCorrelation1D.cpp");
+
+  // Build a dummy dataset for the scaling relation Modelling object.
+  // Only the x values of the dataset (the mass proxy values) are used in the computation
+  std::shared_ptr<cbl::data::Data> dataset = std::make_shared<cbl::data::Data1D>(cbl::data::Data1D(cluster_mass_proxy, cluster_mass_proxy, cluster_mass_proxy));
+  
+  // Build the scaling relation Modelling object
+  modelling::massobsrel::Modelling_MassObservableRelation scaling_relation (dataset);
+  m_data_model->scaling_relation = make_shared<modelling::massobsrel::Modelling_MassObservableRelation>(scaling_relation);
+
+  catalogue::Cluster cluster;
+  
+  (m_data_model->scaling_relation)->set_data_model(cosmology, cluster, cluster_redshift, redshift_pivot, proxy_pivot, log_base);
+  (m_data_model->scaling_relation)->set_mass_pivot(mass_pivot);
+}
+
 
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_HOD (const cosmology::Cosmology cosmology, const double redshift, const string model_MF, const string model_bias, const double Mh_min, const double Mh_max, const double pi_max, const double r_max_int, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const double m_min, const double m_max, const int m_step, const string method_Pk, const bool NL, const bool store_output, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double prec, const string input_file, const bool is_parameter_file, const string model_cM, const string profile, const string halo_def)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_HOD (const cosmology::Cosmology cosmology, const double redshift, const string model_MF, const string model_bias, const double Mh_min, const double Mh_max, const double pi_max, const double r_max_int, const double r_min, const double r_max, const double k_min, const double k_max, const int step, const double m_min, const double m_max, const int m_step, const string method_Pk, const bool NL, const string output_root, const double Delta, const double kk, const string interpType, const int norm, const double prec, const string input_file, const bool is_parameter_file, const string model_cM, const string profile, const string halo_def)
 {
   m_data_HOD = make_shared<STR_data_HOD>(STR_data_HOD());
   
@@ -170,9 +225,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_HOD (const
   m_data_HOD->bias_vec = bias_vec;
 
   //  creation of vector containing pk values for interpolation
-  vector<double> pk_vec;
-  for (int i=0; i<step; i++)
-    pk_vec.emplace_back(m_data_HOD->cosmology->Pk_DM(m_data_HOD->kkvec[i], method_Pk, NL, redshift));
+  vector<double> pk_vec = m_data_HOD->cosmology->Pk_matter(m_data_HOD->kkvec, method_Pk, NL, redshift, false, output_root, norm, k_min, k_max, prec, input_file); 
   
   m_data_HOD->pk_vec = pk_vec;
 
@@ -186,7 +239,6 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_HOD (const
 
   m_data_HOD->method_Pk = method_Pk;
   m_data_HOD->NL = NL;
-  m_data_HOD->store_output = store_output;
   m_data_HOD->output_root = output_root;
   m_data_HOD->Delta = Delta;
   m_data_HOD->kk = kk;
@@ -204,7 +256,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_HOD (const
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model_cluster_selection_function (const cosmology::Cosmology cosmology, const cosmology::Cosmology test_cosmology, const double mean_redshift, const string model_MF, const string model_bias, const string selection_function_file, const std::vector<int> selection_function_column, const double z_min, const double z_max, const double Mass_min, const double Mass_max, const string file_par, const double Delta, const bool isDelta_vir, const string method_Pk, const bool store_output, const string output_dir, const double k_min, const double k_max, const double prec, const int step, const int mass_step)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model_cluster_selection_function (const cosmology::Cosmology cosmology, const cosmology::Cosmology test_cosmology, const double mean_redshift, const string model_MF, const string model_bias, const string selection_function_file, const std::vector<int> selection_function_column, const double z_min, const double z_max, const double Mass_min, const double Mass_max, const string file_par, const double Delta, const bool isDelta_vir, const string method_Pk, const string output_dir, const double k_min, const double k_max, const double prec, const int step, const int mass_step)
 {
   if (file_par!=par::defaultString)
     WarningMsgCBL("check the consistency between the parameters of the object cosmology, provided in input, and the ones in the parameter file", "set_data_model_cluster_selection_function", "Modelling_TwoPointCorrelation1D.cpp");
@@ -219,7 +271,6 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set_data_model_clus
   m_data_model->k_max = k_max;
   m_data_model->step = step;
   m_data_model->prec = prec;
-  m_data_model->store_output = store_output;
   m_data_model->output_root = "test";
   m_data_model->Delta = Delta;
   m_data_model->isDelta_Vir = isDelta_vir;

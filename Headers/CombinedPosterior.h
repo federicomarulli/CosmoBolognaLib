@@ -237,7 +237,7 @@ namespace cbl {
        *  All the probes (A1, A2, A3, B1, B2, B3) depend on the parameter \f$p\f$, 
        *  whose identification string is "par", and we set repeated_par = {"par"}.
        *  If we want each pair of probes {A1, B1}, {A2, B2}, {A3, B3}, to provide
-       *  a different posterior on \f$p\f$, we must set common_repeated_par = { { {0,1}, {2,3}, {4,5} } }.
+       *  a different posterior on \f$p\f$, we must set common_repeated_par = { { {0,3}, {1,4}, {2,5} } }.
        *  This is useful when different probes in the same bin provide constraints
        *  on the same parameters.
        *  If common_repeated_par is not provided, every probe depending on \f$p\f$ 
@@ -291,14 +291,106 @@ namespace cbl {
        *
        */
       void set_weight(const std::vector<double> weightsA, const std::vector<double> weightsB);
-
-
+      
       /**
-       * @brief set all the internal variables needed for modelling
-       * independent probes
+       * @brief check the repeated parameters
+       *
+       * @param dummy_Nposteriors number of posterior objects
+       *
+       * @param posteriors pointers to Posterior objects
+       *
+       * @param repeated_par repeated parameters
        *
        */
-      void m_set_independent_probes ();
+      void m_check_repeated_par (int dummy_Nposteriors, std::vector<std::shared_ptr<Posterior>> posteriors, const std::vector<std::string> repeated_par);
+      
+      /**
+       * @brief check the common repeated parameters
+       *
+       * @param dummy_Nposteriors number of posterior objects
+       *
+       * @param posteriors vector of input Posterior objects
+       *
+       * @param repeated_par repeated parameters
+       *
+       * @param common_repeated_par indices of the common 
+       * repeated parameters
+       *
+       */
+      void m_check_common_repeated_par (int dummy_Nposteriors, std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par, std::vector<std::vector<std::vector<int>>> common_repeated_par);
+      
+      /**
+       * @brief add a prior
+       *
+       * @param par_is_repeated if true, the considered
+       * parameter is repeated
+       *
+       * @param posteriors pointer to the Posterior objects
+       *
+       * @param N index of the Posterior object
+       *
+       * @param k index of the parameter of the N-th Posterior
+       *
+       * @param prior_distributions vector containing all the Posterior objects
+       *
+       */
+      void m_add_prior (bool par_is_repeated, std::vector<std::shared_ptr<Posterior>> posteriors, const int N, const int k, std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> &prior_distributions);
+      
+      /**
+       * @brief set a common repeated parameter
+       *
+       * @param posteriors pointer to the Posterior objects
+       *
+       * @param is_in_parnames if true, the parameter is already
+       * in the vector of parameter names
+       *
+       * @param N index of the Posterior object
+       *
+       * @param k index of the parameter of the N-th Posterior
+       *
+       * @param repeated_par repeated parameter names
+       *
+       * @param common_repeated_par indices of the common 
+       * repeated parameters
+       *
+       * @param prior_distributions vector containing all the Posterior objects
+       *
+       * @param parameter_names vector containing all the parameter names
+       *
+       * @param original_names vector of original parameter names
+       *
+       * @param parameter_types vector containing all the parameter types
+       *
+       */
+      void m_set_common_repeated_par (std::vector<std::shared_ptr<Posterior>> posteriors, const bool is_in_parnames, const int N, const int k, const std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par, std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> &prior_distributions, std::vector<std::string> &parameter_names, std::vector<std::string> &original_names, std::vector<ParameterType> &parameter_types);
+      
+      /**
+       * @brief set a repeated parameter
+       *
+       * @param posteriors pointer to the Posterior objects
+       *
+       * @param is_in_parnames if true, the parameter is already
+       * in the vector of parameter names
+       *
+       * @param N index of the Posterior object
+       *
+       * @param k index of the parameter of the N-th Posterior
+       *
+       * @param repeated_par repeated parameter names
+       *
+       * @param common_repeated_par indices of the common 
+       * repeated parameters
+       *
+       * @param prior_distributions vector containing all the Posterior objects
+       *
+       * @param parameter_names vector containing all the parameter names
+       *
+       * @param original_names vector of original parameter names
+       *
+       * @param parameter_types vector containing all the parameter types
+       *
+       */
+      void m_set_repeated_par (std::vector<std::shared_ptr<Posterior>> posteriors, const bool is_in_parnames, const int N, const int k, const std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par, std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> &prior_distributions, std::vector<std::string> &parameter_names, std::vector<std::string> &original_names, std::vector<ParameterType> &parameter_types);
       
       /**
        * @brief set the parameters and the priors
@@ -332,6 +424,15 @@ namespace cbl {
        *
        */
       void m_set_parameters_priors (std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={});
+      
+      
+      /**
+       * @brief set all the internal variables needed for modelling
+       * independent probes
+       *
+       */
+      void m_set_independent_probes ();
+      
 
       /**
        * @brief do the importance sampling for two Posterior objects, which has been read externally

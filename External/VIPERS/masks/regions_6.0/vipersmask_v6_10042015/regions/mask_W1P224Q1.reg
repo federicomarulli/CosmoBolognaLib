@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileHGX5CW.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(37.51108,-5.80435,37.609815,-5.804216,37.619144,-5.803032,37.619121,-5.707765,37.616891,-5.703216,37.615347,-5.689691,37.616713,-5.685045,37.613736,-5.680206,37.61013,-5.677876,37.514786,-5.677863,37.502339,-5.6817899,37.501976,-5.689615,37.50198,-5.803048) # color=red dash=1

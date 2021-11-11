@@ -19,7 +19,7 @@
  ********************************************************************/
 
 /**
- *  \@file CosmoBolognaLib/Measure/ThreePointCorrelation/ThreePointCorrelation_comoving_multipoles_single.cpp
+ *  @file Measure/ThreePointCorrelation/ThreePointCorrelation_comoving_multipoles_single.cpp
  *
  *  @brief Methods of the class
  *  ThreePointCorrelation_comoving_multipoles_single used to compute the 

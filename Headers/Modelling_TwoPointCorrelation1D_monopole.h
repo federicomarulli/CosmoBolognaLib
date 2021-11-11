@@ -57,9 +57,8 @@ namespace cbl {
        *  @brief The class Modelling_TwoPointCorrelation1D_monopole
        *
        *  This file defines the interface of the base class
-       *  Modelling_TwoPointCorrelation1D_monopole, used for modelling the
-       *  monopole of two-point correlation function
-       *
+       *  Modelling_TwoPointCorrelation1D_monopole, used for modelling
+       *  the monopole of two-point correlation function
        */
       class Modelling_TwoPointCorrelation1D_monopole : public Modelling_TwoPointCorrelation1D {
 
@@ -706,7 +705,7 @@ namespace cbl {
 	 *  
 	 */
 	void set_model_bias_sigmaz (const statistics::PriorDistribution bias_prior={}, const statistics::PriorDistribution sigmaz_prior={});
-
+	
 	/**
 	 *  @brief set the parameters to model the monopole of the
 	 *  two-point correlation function in redshift space
@@ -739,6 +738,62 @@ namespace cbl {
 	 *  
 	 */
 	void set_model_scaling_relation_sigmaz (const statistics::PriorDistribution M0_prior={}, const statistics::PriorDistribution slope_prior={}, const statistics::PriorDistribution scatter_prior={}, const statistics::PriorDistribution sigmaz_prior={});
+	
+	/**
+	 *  @brief Set the parameters to model the monopole of the
+	 *  two-point correlation function in redshift space, where
+	 *  the masses are given by a mass-observable scaling relation.
+	 * 
+	 *  Redshift-space distorsions are modelled in the Kaiser
+	 *  limit, that is neglecting non-linearities in dynamics
+	 *  and bias; specifically, the model considered is the
+	 *  following:
+	 * 
+	 *  \f$\xi(s) = b^2 \xi'(r) + b \xi''(r) + \xi'''(r) \, ;\f$
+	 *
+	 *  where b is the linear bias and the terms \f$\xi'(r)\f$,
+	 *  \f$\xi''(r)\f$, \f$\xi'''(r)\f$ are the Fourier
+	 *  anti-transform of the power spectrum terms obtained
+	 *  integrating the redshift space 2D power spectrum along
+	 *  \f$\mu\f$ (see cbl::modelling::twopt.:damped_Pk_terms)
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param cosmo_prior vector containing the priors for
+	 *  the cosmological parameters
+	 *
+	 *  @param alpha_prior prior on the scaling relation normalization
+	 *
+	 *  @param beta_prior prior on the scaling relation slope
+	 *
+	 *  @param gamma_prior prior on the redshift evolution factor of the scaling relation
+	 *
+	 *  @param scatter0_prior prior on the 
+	 *  constant term of the intrinsic scatter, \f$ \sigma_0 \f$
+	 *
+	 *  @param scatterM_prior prior on the factor in the
+	 *  proxy-dependent term of the intrinsic scatter, \f$ \sigma_{\lambda} \f$
+	 *
+	 *  @param scatterM_exponent_prior prior on the exponent in the
+	 *  proxy-dependent term of the intrinsic scatter, \f$ e_{\lambda} \f$
+	 *
+	 *  @param scatterz_prior prior on the factor in the
+	 *  redshift-dependent term of the intrinsic scatter, \f$ \sigma_z \f$
+	 *
+	 *  @param scatterz_exponent_prior prior on the exponent in the
+	 *  redshift-dependent term of the intrinsic scatter, \f$ e_z \f$
+	 *
+	 *  @param sigmaz_prior prior for the parameter
+	 *  \f$\sigma_z(z)\f$
+	 *
+	 *  @param z_evo functional form of the redshift evolution
+	 *  function in the scaling relation: "E_z" \f$\rightarrow\f$ 
+	 *  \f$ f(z)=E(z)/E(z_{piv}) \f$, "direct" \f$\rightarrow\f$ 
+	 *  \f$ f(z)=(1+z)/(1+z_{piv}) \f$
+	 *  
+	 */
+	void set_model_scaling_relation_sigmaz_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution sigmaz_prior, const std::string z_evo);
 
 	///@}
 

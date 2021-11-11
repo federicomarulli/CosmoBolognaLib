@@ -253,136 +253,200 @@ cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::ve
 // ============================================================================================
 
 
+void cbl::statistics::CombinedPosterior::m_check_repeated_par (int dummy_Nposteriors, std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par)
+{
+  std::vector<bool> at_least_one (repeated_par.size(), false);
+  for (int i=0; i<dummy_Nposteriors; i++) {
+    std::vector<std::string> names = posteriors[i]->get_model_parameters()->name();
+    for (size_t j=0; j<repeated_par.size(); j++) {
+      if (std::count(names.begin(), names.end(), repeated_par[j]))
+	at_least_one[j] = true;
+      else
+	continue;
+    }
+  }
+  for (size_t j=0; j<repeated_par.size(); j++)
+    if (at_least_one[j] == false)
+      ErrorCBL("Wrong parameter name declaration in repeated_par! The parameter \""+repeated_par[j]+"\" does not exist or is not set.", "m_check_repeated_par", "CombinedPosterior.cpp");
+}
+
+
+// ============================================================================================
+
+
+void cbl::statistics::CombinedPosterior::m_check_common_repeated_par (int dummy_Nposteriors, std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par, std::vector<std::vector<std::vector<int>>> common_repeated_par)
+{
+  if (common_repeated_par.size() != repeated_par.size())
+    ErrorCBL("The size of common_repeated_par must match the size of repeated_par!", "m_check_common_repeated_par", "CombinedPosterior.cpp");
+  for (size_t cc=0; cc<common_repeated_par.size(); cc++) {
+    std::vector<int> indexes;
+    for (size_t dd=0; dd<common_repeated_par[cc].size(); dd++) {
+      if (common_repeated_par[cc][dd].size() < 2)
+	ErrorCBL("Error in common_repeated_par["+cbl::conv(cc, cbl::par::fINT)+"]["+cbl::conv(dd, cbl::par::fINT)+"]: the vectors must have dimension > 1!", "m_set_parameters_priors", "CombinedPosterior.cpp");
+      for (size_t ee=0; ee<common_repeated_par[cc][dd].size(); ee++) {
+	if (common_repeated_par[cc][dd][ee] > (int)(dummy_Nposteriors-1) || common_repeated_par[cc][dd][ee] < 0)
+	  ErrorCBL("Error in common_repeated_par["+cbl::conv(cc, cbl::par::fINT)+"]["+cbl::conv(dd, cbl::par::fINT)+"]: the index "+cbl::conv(common_repeated_par[cc][dd][ee], cbl::par::fINT)+" does not correspond to any probe given in input!", "m_check_common_repeated_par", "CombinedPosterior.cpp");
+	std::vector<std::string> names = posteriors[common_repeated_par[cc][dd][ee]]->get_model_parameters()->name();
+	if (std::count(names.begin(), names.end(), repeated_par[cc]) == false)
+	  ErrorCBL("Error in common_repeated_par: the parameter "+repeated_par[cc]+" is not set for the probe with index "+cbl::conv(common_repeated_par[cc][dd][ee], cbl::par::fINT)+"!", "m_check_common_repeated_par", "CombinedPosterior.cpp");
+	else
+	  indexes.emplace_back(common_repeated_par[cc][dd][ee]);
+      }
+    }
+    if (cbl::different_elements(indexes).size() != indexes.size())
+      ErrorCBL("Posterior index declared multiple times in common_repeated_par["+cbl::conv(cc, cbl::par::fINT)+"]!", "m_check_common_repeated_par", "CombinedPosterior.cpp");
+  }
+}
+
+
+// ============================================================================================
+
+
+void cbl::statistics::CombinedPosterior::m_add_prior (bool par_is_repeated, std::vector<std::shared_ptr<Posterior>> posteriors, const int N, const int k, std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> &prior_distributions)
+{
+  switch (posteriors[N]->get_model_parameters()->type(k)) {
+  case (cbl::statistics::ParameterType::_Base_):
+    prior_distributions.emplace_back(posteriors[N]->get_model_parameters()->prior_distribution(k));
+    break;
+  case (cbl::statistics::ParameterType::_Derived_):
+    break;
+  case (cbl::statistics::ParameterType::_Correlated_):
+    if (par_is_repeated)
+      ErrorCBL("For the moment, the code can manage only Base and Derived parameters (in the case of repeated parameters)!", "m_add_prior", "CombinedPosterior.cpp");
+    else
+      prior_distributions.emplace_back(posteriors[N]->get_model_parameters()->prior_distribution(k));
+    break;
+  }
+}
+
+
+// ============================================================================================
+
+
+void cbl::statistics::CombinedPosterior::m_set_common_repeated_par (std::vector<std::shared_ptr<Posterior>> posteriors, const bool is_in_parnames, const int N, const int k, const std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par, std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> &prior_distributions, std::vector<std::string> &parameter_names, std::vector<std::string> &original_names, std::vector<ParameterType> &parameter_types)
+{
+  auto itr = std::find(repeated_par.begin(), repeated_par.end(), posteriors[N]->get_model_parameters()->name(k));
+  int the_i = std::distance(repeated_par.begin(), itr);
+  if (common_repeated_par[the_i].size() == 0) {
+    if (is_in_parnames == false)
+      original_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
+    m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior_"+cbl::conv(N+1, cbl::par::fINT));
+    parameter_names.emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior_"+cbl::conv(N+1, cbl::par::fINT));
+    parameter_types.emplace_back(posteriors[N]->get_model_parameters()->type(k));
+    m_add_prior(true, posteriors, N, k, prior_distributions);
+  } else {
+    for (size_t dd=0; dd<common_repeated_par[the_i].size(); dd++) {
+      std::string posterior_name = "_Posterior_";
+      if (std::count(common_repeated_par[the_i][dd].begin(), common_repeated_par[the_i][dd].end(), N)) {
+	for (size_t ee=0; ee<common_repeated_par[the_i][dd].size(); ee++) {
+	  if (ee == common_repeated_par[the_i][dd].size()-1)
+	    posterior_name += cbl::conv(common_repeated_par[the_i][dd][ee]+1, cbl::par::fINT);
+	  else
+	    posterior_name += cbl::conv(common_repeated_par[the_i][dd][ee]+1, cbl::par::fINT)+"_";
+	}
+	m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k)+posterior_name);
+	if (N == common_repeated_par[the_i][dd][0] && std::count(common_repeated_par[the_i][dd].begin(), common_repeated_par[the_i][dd].end(), 0) == false) {
+	  if (is_in_parnames == false)
+	    original_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
+	  parameter_names.emplace_back(posteriors[N]->get_model_parameters()->name(k)+posterior_name);
+	  parameter_types.emplace_back(posteriors[N]->get_model_parameters()->type(k));
+	  m_add_prior(true, posteriors, N, k, prior_distributions);
+	}
+      } else if ( std::count(common_repeated_par[the_i][dd].begin(), common_repeated_par[the_i][dd].end(), N) == false ) {
+	bool N_in_one = false;
+	for (size_t new_dd=0; new_dd<common_repeated_par[the_i].size(); new_dd++)
+	  if (std::count(common_repeated_par[the_i][new_dd].begin(), common_repeated_par[the_i][new_dd].end(), N))
+	    N_in_one = true;
+	if (N_in_one == false && dd == 0) {
+	  if (is_in_parnames == false)
+	    original_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
+	  m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior_"+cbl::conv(N+1, cbl::par::fINT));
+	  parameter_names.emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior_"+cbl::conv(N+1, cbl::par::fINT));
+	  parameter_types.emplace_back(posteriors[N]->get_model_parameters()->type(k));
+	  m_add_prior(true, posteriors, N, k, prior_distributions);
+	} else
+	  continue;
+      }
+    } 
+  }
+}
+
+
+// ============================================================================================
+
+
+void cbl::statistics::CombinedPosterior::m_set_repeated_par (std::vector<std::shared_ptr<Posterior>> posteriors, const bool is_in_parnames, const int N, const int k, const std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par, std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> &prior_distributions, std::vector<std::string> &parameter_names, std::vector<std::string> &original_names, std::vector<ParameterType> &parameter_types)
+{
+  // First, check if there are common repeated parameters
+  if (common_repeated_par.size() > 0) {
+    m_set_common_repeated_par(posteriors, is_in_parnames, N, k, repeated_par, common_repeated_par, prior_distributions, parameter_names, original_names, parameter_types);
+  }
+  else { 
+    if (is_in_parnames == false)
+      original_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
+    m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior_"+cbl::conv(N+1, cbl::par::fINT));
+    parameter_names.emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior_"+cbl::conv(N+1, cbl::par::fINT));
+    parameter_types.emplace_back(posteriors[N]->get_model_parameters()->type(k));
+    m_add_prior(true, posteriors, N, k, prior_distributions);
+  }
+}
+
+
+// ============================================================================================
+
+
 void cbl::statistics::CombinedPosterior::m_set_parameters_priors (std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par)
 {
   const int dummy_Nposteriors = (int)(posteriors.size());
 
   // Check repeated_par
-  if (repeated_par.size() > 0) {
-    std::vector<bool> at_least_one (repeated_par.size(), false);
-    for (int i=0; i<dummy_Nposteriors; i++) {
-      std::vector<std::string> names = posteriors[i]->get_model_parameters()->name();
-      for (size_t j=0; j<repeated_par.size(); j++) {
-	if (std::count(names.begin(), names.end(), repeated_par[j]))
-	  at_least_one[j] = true;
-	else
-	  continue;
-      }
-    }
-    for (size_t j=0; j<repeated_par.size(); j++)
-      if (at_least_one[j] == false)
-	ErrorCBL("Wrong parameter name declaration in repeated_par! The parameter \""+repeated_par[j]+"\" does not exist or is not set.", "m_set_parameter_priors", "CombinedPosterior.cpp");
-  }
+  if (repeated_par.size() > 0)
+    m_check_repeated_par(dummy_Nposteriors, posteriors, repeated_par);
 
   // Check common_repeated_par
-  if (common_repeated_par.size() > 0) {
-    if (common_repeated_par.size() != repeated_par.size())
-      ErrorCBL("The size of common_repeated_par must match the size of repeated_par!", "m_set_parameters_priors", "CombinedPosterior.cpp");
-    for (size_t cc=0; cc<common_repeated_par.size(); cc++) {
-      std::vector<int> indexes;
-      for (size_t dd=0; dd<common_repeated_par[cc].size(); dd++) {
-	if (common_repeated_par[cc][dd].size() < 2)
-	  ErrorCBL("Error in common_repeated_par["+cbl::conv(cc, cbl::par::fINT)+"]["+cbl::conv(dd, cbl::par::fINT)+"]: the vectors must have dimension > 1!", "m_set_parameters_priors", "CombinedPosterior.cpp");
-	for (size_t ee=0; ee<common_repeated_par[cc][dd].size(); ee++) {
-	  if (common_repeated_par[cc][dd][ee] > (int)(posteriors.size()-1) || common_repeated_par[cc][dd][ee] < 0)
-	    ErrorCBL("Error in common_repeated_par["+cbl::conv(cc, cbl::par::fINT)+"]["+cbl::conv(dd, cbl::par::fINT)+"]: the index "+cbl::conv(common_repeated_par[cc][dd][ee], cbl::par::fINT)+" does not correspond to any probe given in input!", "m_set_parameters_priors", "CombinedPosterior.cpp");
-	  std::vector<std::string> names = posteriors[common_repeated_par[cc][dd][ee]]->get_model_parameters()->name();
-	  if (std::count(names.begin(), names.end(), repeated_par[cc]) == false)
-	    ErrorCBL("Error in common_repeated_par: the parameter "+repeated_par[cc]+" is not set for the probe with index "+cbl::conv(common_repeated_par[cc][dd][ee], cbl::par::fINT)+"!", "m_set_parameters_priors", "CombinedPosterior.cpp");
-	  else
-	    indexes.emplace_back(common_repeated_par[cc][dd][ee]);
-	}
-      }
-      if (cbl::different_elements(indexes).size() != indexes.size())
-	ErrorCBL("Posterior index declared multiple times in common_repeated_par["+cbl::conv(cc, cbl::par::fINT)+"]!", "m_set_parameters_priors", "CombinedPosterior.cpp");
-    }
-  }
+  if (common_repeated_par.size() > 0)
+    m_check_common_repeated_par(dummy_Nposteriors, posteriors, repeated_par, common_repeated_par);
   
-  // Set the parameter names and the priors
-  std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> prior_distributions = posteriors[0]->get_model_parameters()->prior_distribution();
+  // Set the parameter types, names and priors, starting from the first Posterior object
   std::vector<ParameterType> parameter_types = posteriors[0]->get_model_parameters()->type();
   std::vector<std::string> parameter_names = posteriors[0]->get_model_parameters()->name();
 
+  std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> prior_distributions;
+  for (size_t k=0; k<parameter_types.size(); k++)
+    m_add_prior(false, posteriors, 0, k, prior_distributions);
+  
   std::vector<std::string> original_names = parameter_names;
   
   m_parameter_names.resize(posteriors.size());
   m_parameter_names[0] = parameter_names;
-  
+
+  // If the number Posterior objects is >1, set the other parameters
   if (dummy_Nposteriors > 1) {
     for (int N=1; N<dummy_Nposteriors; N++) {
       for (size_t k=0; k<posteriors[N]->get_model_parameters()->name().size(); k++) {
+	
 	const bool is_in_parnames = std::count(original_names.begin(), original_names.end(), posteriors[N]->get_model_parameters()->name(k));
 	const bool is_repeated = std::count(repeated_par.begin(), repeated_par.end(), posteriors[N]->get_model_parameters()->name(k));
+
 	if (is_in_parnames && is_repeated == false) {
 	  m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k));
-	} else {
-	  if ( (is_in_parnames && is_repeated) || (is_in_parnames == false && is_repeated) ) {
-	    if (common_repeated_par.size() > 0) {
-	      auto itr = std::find(repeated_par.begin(), repeated_par.end(), posteriors[N]->get_model_parameters()->name(k));
-	      int the_i = std::distance(repeated_par.begin(), itr);
-	      if (common_repeated_par[the_i].size() == 0) {
-		if (is_in_parnames == false)
-		  original_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
-		m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior_"+cbl::conv(N+1, cbl::par::fINT));
-		parameter_names.emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior_"+cbl::conv(N+1, cbl::par::fINT));
-		parameter_types.emplace_back(posteriors[N]->get_model_parameters()->type(k));
-		prior_distributions.emplace_back(posteriors[N]->get_model_parameters()->prior_distribution(k));
-	      } else {
-		for (size_t dd=0; dd<common_repeated_par[the_i].size(); dd++) {
-		  std::string posterior_name = "_Posterior_";
-		  if (std::count(common_repeated_par[the_i][dd].begin(), common_repeated_par[the_i][dd].end(), N)) {
-		    for (size_t ee=0; ee<common_repeated_par[the_i][dd].size(); ee++) {
-		      if (ee == common_repeated_par[the_i][dd].size()-1)
-			posterior_name += cbl::conv(common_repeated_par[the_i][dd][ee]+1, cbl::par::fINT);
-		      else
-			posterior_name += cbl::conv(common_repeated_par[the_i][dd][ee]+1, cbl::par::fINT)+"_";
-		    }
-		    m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k)+posterior_name);
-		    if (N == common_repeated_par[the_i][dd][0] && std::count(common_repeated_par[the_i][dd].begin(), common_repeated_par[the_i][dd].end(), 0) == false) {
-		      if (is_in_parnames == false)
-			original_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
-		      parameter_names.emplace_back(posteriors[N]->get_model_parameters()->name(k)+posterior_name);
-		      parameter_types.emplace_back(posteriors[N]->get_model_parameters()->type(k));
-		      prior_distributions.emplace_back(posteriors[N]->get_model_parameters()->prior_distribution(k));
-		    }
-		  } else if ( std::count(common_repeated_par[the_i][dd].begin(), common_repeated_par[the_i][dd].end(), N) == false ) {
-		    bool N_in_one = false;
-		    for (size_t new_dd=0; new_dd<common_repeated_par[the_i].size(); new_dd++)
-		      if (std::count(common_repeated_par[the_i][new_dd].begin(), common_repeated_par[the_i][new_dd].end(), N))
-			N_in_one = true;
-		    if (N_in_one == false && dd == 0) {
-		      if (is_in_parnames == false)
-			original_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
-		      m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior_"+cbl::conv(N+1, cbl::par::fINT));
-		      parameter_names.emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior_"+cbl::conv(N+1, cbl::par::fINT));
-		      parameter_types.emplace_back(posteriors[N]->get_model_parameters()->type(k));
-		      prior_distributions.emplace_back(posteriors[N]->get_model_parameters()->prior_distribution(k));
-		    } else
-		      continue;
-		  }
-		} 
-	      }
-	    } else {
-	      if (is_in_parnames == false)
-		original_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
-	      m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior_"+cbl::conv(N+1, cbl::par::fINT));
-	      parameter_names.emplace_back(posteriors[N]->get_model_parameters()->name(k)+"_Posterior_"+cbl::conv(N+1, cbl::par::fINT));
-	      parameter_types.emplace_back(posteriors[N]->get_model_parameters()->type(k));
-	      prior_distributions.emplace_back(posteriors[N]->get_model_parameters()->prior_distribution(k));
-	    }
-	  } else if (is_in_parnames == false && is_repeated == false) {
-	    m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k));
-	    parameter_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
-	    original_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
-	    parameter_types.emplace_back(posteriors[N]->get_model_parameters()->type(k));
-	    prior_distributions.emplace_back(posteriors[N]->get_model_parameters()->prior_distribution(k));
-	  }
+	}
+	else if (is_in_parnames == false && is_repeated == false) {
+	  original_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
+	  
+	  m_parameter_names[N].emplace_back(posteriors[N]->get_model_parameters()->name(k));
+	  parameter_names.emplace_back(posteriors[N]->get_model_parameters()->name(k));
+	  parameter_types.emplace_back(posteriors[N]->get_model_parameters()->type(k));
+	  m_add_prior(false, posteriors, N, k, prior_distributions);
+	}
+	else if (is_repeated) {
+	  m_set_repeated_par(posteriors, is_in_parnames, N, k, repeated_par, common_repeated_par, prior_distributions, parameter_names, original_names, parameter_types);
 	}
       }
     }
   }
 
-  m_Nparameters = (int)(prior_distributions.size());
+  m_Nparameters = (int)(parameter_types.size());
   
 
   // Rename the parameters of the first probe, if necessary
@@ -438,7 +502,7 @@ void cbl::statistics::CombinedPosterior::m_set_parameters_priors (std::vector<st
     }
   }
   
-  // Set m_model_parameters  
+  // Set m_model_parameters
   cbl::statistics::PosteriorParameters posterior_par (m_Nparameters, prior_distributions, parameter_types, parameter_names);
   m_model_parameters = std::make_shared<PosteriorParameters>(posterior_par);
 
@@ -466,8 +530,7 @@ void cbl::statistics::CombinedPosterior::m_set_parameters_priors (std::vector<st
 
   
   // Find the indexes of the cosmological parameters, if any.
-  // This is useful for the super-sample covariance only.
-
+  // This is useful for the super-sample covariance.
   std::vector<std::string> cosmoNames = cbl::cosmology::CosmologicalParameterNames();
   for (size_t i=0; i<parameter_names.size(); i++)
     if (std::count(cosmoNames.begin(), cosmoNames.end(), parameter_names[i]))
@@ -476,7 +539,7 @@ void cbl::statistics::CombinedPosterior::m_set_parameters_priors (std::vector<st
   // Check if any cosmological parameter is repeated
   for (size_t i=0; i<repeated_par.size(); i++)
     if (std::count(cosmoNames.begin(), cosmoNames.end(), repeated_par[i]))
-      ErrorCBL("You can not have more than one posterior for a cosmological parameter ("+repeated_par[i]+" in this case)!", "m_set_parameters_priors", "CombinedPosterior.cpp");
+      ErrorCBL("You cannot have more than one posterior for a cosmological parameter ("+repeated_par[i]+" in this case)!", "m_set_parameters_priors", "CombinedPosterior.cpp");
 }
 
 
@@ -805,6 +868,8 @@ double cbl::statistics::CombinedPosterior::operator () (std::vector<double> &pp)
       for (size_t ii=0; ii<pp_single.size(); ii++)
 	pp_single[ii] = pp[m_parameter_indexes[N][ii]];
       val *= (m_use_grid[N]) ? m_likelihood_functions_grid[N](pp_single, m_likelihood_inputs[N]) : m_likelihood_functions[N](pp_single, m_likelihood_inputs[N]);
+      for (size_t ii=0; ii<pp_single.size(); ii++)
+	  pp[m_parameter_indexes[N][ii]] = pp_single[ii]; // this is necessary in presence of derived parameters
     }
   
   return val*prior;
@@ -816,7 +881,8 @@ double cbl::statistics::CombinedPosterior::operator () (std::vector<double> &pp)
 
 double cbl::statistics::CombinedPosterior::log (std::vector<double> &pp) const
 {
-  pp = m_model_parameters->full_parameter(pp);  
+  pp = m_model_parameters->full_parameter(pp);
+  
   const double logprior = m_model_parameters->prior()->log(pp);
 
   double val = 0.;
@@ -828,6 +894,8 @@ double cbl::statistics::CombinedPosterior::log (std::vector<double> &pp) const
 	for (size_t ii=0; ii<pp_single.size(); ii++)
 	  pp_single[ii] = pp[m_parameter_indexes[N][ii]];
 	val += (m_use_grid[N]) ? m_log_likelihood_functions_grid[N](pp_single, m_likelihood_inputs[N]) : m_log_likelihood_functions[N](pp_single, m_likelihood_inputs[N]);
+	for (size_t ii=0; ii<pp_single.size(); ii++)
+	  pp[m_parameter_indexes[N][ii]] = pp_single[ii]; // this is necessary in presence of derived parameters
       }
       else
 	{

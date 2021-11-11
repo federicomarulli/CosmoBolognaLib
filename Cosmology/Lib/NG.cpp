@@ -49,7 +49,7 @@ double cbl::cosmology::Cosmology::Am (const string method_Pk, const bool store_o
   double kk = 1.e-4;
   bool NL = false;
   double redshift = 0.;
-  return Pk_DM(kk, method_Pk, NL, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par) / pow(kk, m_n_spec);
+  return Pk_matter(kk, method_Pk, NL, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par) / pow(kk, m_n_spec);
 }
 
 
@@ -119,7 +119,7 @@ double cbl::cosmology::Cosmology::mrk (const double kk, const double mass, const
 
   double AA = Am(method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par);
   
-  double TT = sqrt(Pk_DM(kk, method_Pk, false, 0., store_output, output_root, norm, k_min, k_max, prec, file_par) / AA / pow(kk,m_n_spec));
+  double TT = sqrt(Pk_matter(kk, method_Pk, false, 0., store_output, output_root, norm, k_min, k_max, prec, file_par) / AA / pow(kk,m_n_spec));
 
   return 5.99170e6 * gsl_pow_2(kk) * TopHat_WF(xx) * TT / m_Omega_matter;
 }
@@ -550,7 +550,7 @@ double cbl::cosmology::Cosmology::dskewnessdM (const double mass, const string m
 double cbl::cosmology::Cosmology::MF_correction (const double mass, const double redshift, const string method_Pk, const bool store_output, const string output_root, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
   double dc = deltac(redshift)*sqrt(0.8);
-  double gf = DD(redshift);
+  double gf = DN(redshift); // check the normalization of D(z)!!!
   
   double SSS = sigma2M(mass, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file);
   double sm = sqrt(SSS);

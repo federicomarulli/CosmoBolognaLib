@@ -75,7 +75,7 @@ double cbl::cosmology::Cosmology::bias_halo (const double Mass, const double Sig
 double cbl::cosmology::Cosmology::m_bias_halo_generator (const double Sigma, const double redshift, const std::string author, const double Delta) const
 {
   const double deltacz = deltac(redshift);
-  const double sigmaz = Sigma*DD_norm(redshift);
+  const double sigmaz = Sigma*DN(redshift);
   
   double bias = -1000.;
 

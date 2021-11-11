@@ -115,7 +115,8 @@ check("cosmology", "cosmology", "C++")
 check("cosmology", "fsigma8", "C++")
 check("cosmology", "distances", "C++") 
 check("cosmology", "model_cosmology", "C++") 
-check("cosmology", "Pk_dynamical_DE", "C++") 
+check("cosmology", "Pk_dynamical_DE", "C++")
+check("cosmology", "Pk_BoltzmannSolver", "C++") 
 
 check("data", "data1D", "C++")
 
@@ -138,6 +139,8 @@ check("clustering/codes", "2pt_projected", "C++")
 check("clustering/codes", "2pt_angular", "C++")
 check("clustering/codes", "3pt", "C++")
 check("clustering/codes", "3pt_multipoles", "C++")
+
+check("powerSpectrum_angular/codes", "power_spectrum_angular", "C++") 
 
 check("clustering/codes", "model_2pt_monopole_BAO", "C++")
 check("clustering/codes", "model_2pt_monopole_RSD", "C++")
@@ -165,10 +168,7 @@ if not ("nopy" in sys.argv):
     if ("ALL" in sys.argv or "python" in sys.argv):
         os.system("make python PY=python2")
     elif ("python3" in sys.argv):
-        os.system("make python PY=python3")
-    else:
-        print(error_msg)
-        sys.exit(0)    
+        os.system("make python PY=python3")   
 
         
 ####################################################

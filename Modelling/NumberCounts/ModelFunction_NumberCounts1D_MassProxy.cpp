@@ -78,7 +78,7 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_proxy (const std
   cluster.set_Plambda_c(parameter[pp->Cpar.size()+14]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  std::vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
   const std::vector<cbl::glob::FuncGrid> interp = cbl::modelling::numbercounts::sigmaM_dlnsigmaM (pp->Mass_vector, cosmo, pp->kk, Pk, "Spline", pp->k_max);
 
@@ -86,7 +86,7 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_proxy (const std
   std::vector<double> number_counts(pp->edges_x.size()-1);
 
   for (size_t j=0; j<pp->edges_x.size()-1; j++) {
-    number_counts[j] = cbl::modelling::numbercounts::counts_proxy(pp->fz, pp->z_error, pp->proxy_error, pp->transfer_func, pp->z_min, pp->z_max, pp->edges_x[j], pp->edges_x[j+1], cosmo, cluster, pp->area_rad, pp->model_MF, pp->model_bias, pp->store_output, pp->Delta, pp->isDelta_Vir, interp[0], interp[1], pp->proxy_pivot, pp->z_pivot, pp->mass_pivot, pp->log_base, pp->SF_weights[j]);
+    number_counts[j] = cbl::modelling::numbercounts::counts_proxy(pp->fz, pp->z_error, pp->proxy_error, pp->response_func, pp->z_min, pp->z_max, pp->edges_x[j], pp->edges_x[j+1], cosmo, cluster, pp->area_rad, pp->model_MF, pp->model_bias, pp->store_output, pp->Delta, pp->isDelta_Vir, interp[0], interp[1], pp->proxy_pivot, pp->z_pivot, pp->mass_pivot, pp->log_base, pp->SF_weights[j]);
   }
 
   return number_counts;
@@ -129,7 +129,7 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_proxy_classic (c
   cluster.set_proxyerror(parameter[pp->Cpar.size()+11]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_DM(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  std::vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
   const std::vector<cbl::glob::FuncGrid> interp = cbl::modelling::numbercounts::sigmaM_dlnsigmaM (pp->Mass_vector, cosmo, pp->kk, Pk, "Spline", pp->k_max);
 
@@ -137,7 +137,7 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_proxy_classic (c
   std::vector<double> number_counts(pp->edges_x.size()-1);
 
   for (size_t j=0; j<pp->edges_x.size()-1; j++) {
-    number_counts[j] = cbl::modelling::numbercounts::counts_proxy_classic(pp->fz, pp->z_error, pp->proxy_error, pp->transfer_func, pp->z_min, pp->z_max, pp->edges_x[j], pp->edges_x[j+1], cosmo, cluster, pp->area_rad, pp->model_MF, pp->model_bias, pp->store_output, pp->Delta, pp->isDelta_Vir, interp[0], interp[1], pp->proxy_pivot, pp->z_pivot, pp->mass_pivot, pp->log_base, pp->SF_weights[j]);
+    number_counts[j] = cbl::modelling::numbercounts::counts_proxy_classic(pp->fz, pp->z_error, pp->proxy_error, pp->response_func, pp->z_min, pp->z_max, pp->edges_x[j], pp->edges_x[j+1], cosmo, cluster, pp->area_rad, pp->model_MF, pp->model_bias, pp->store_output, pp->Delta, pp->isDelta_Vir, interp[0], interp[1], pp->proxy_pivot, pp->z_pivot, pp->mass_pivot, pp->log_base, pp->SF_weights[j]);
   }
 
   return number_counts;
@@ -147,27 +147,7 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_proxy_classic (c
 // ===========================================================================================
 
 
-double cbl::modelling::numbercounts::fz_Ez (const std::vector<double> x, const std::shared_ptr<void> cosmo)
-{
-  cbl::cosmology::Cosmology cosmology = *std::static_pointer_cast<cbl::cosmology::Cosmology>(cosmo);
-  return cosmology.HH(x[0])/cosmology.HH(x[1]);
-}
-
-
-// ===========================================================================================
-
-
-double cbl::modelling::numbercounts::fz_direct (const std::vector<double> x, const std::shared_ptr<void> cosmo)
-{
-  (void)cosmo;
-  return (1+x[0])/(1+x[1]);
-}
-
-
-// ===========================================================================================
-
-
-double cbl::modelling::numbercounts::no_transfer (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const double Delta, const std::string method_SS, std::shared_ptr<void> cosmo)
+double cbl::modelling::numbercounts::no_response (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const double Delta, const std::string method_SS, std::shared_ptr<void> cosmo)
 {
   (void)Mass; (void)Sigma; (void)redshift; (void)model_bias; (void)Delta; (void)method_SS; (void)cosmo;
   return 1.;
@@ -177,26 +157,8 @@ double cbl::modelling::numbercounts::no_transfer (const double Mass, const doubl
 // ===========================================================================================
 
 
-double cbl::modelling::numbercounts::bias_transfer (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const double Delta, const std::string method_SS, std::shared_ptr<void> cosmo)
+double cbl::modelling::numbercounts::bias_response (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const double Delta, const std::string method_SS, std::shared_ptr<void> cosmo)
 {
   cbl::cosmology::Cosmology cosmology = *std::static_pointer_cast<cbl::cosmology::Cosmology>(cosmo);
   return cosmology.bias_halo(Mass, Sigma, redshift, model_bias, true, "test", "Linear", Delta, -1, -1, 1.e-4, 100, 1.e-2, method_SS, cbl::par::defaultString, true);
-}
-
-
-// ===========================================================================================
-
-
-double cbl::modelling::numbercounts::return_absolute_error (const std::vector<double> x)
-{
-  return x[0];
-}
-
-
-// ===========================================================================================
-
-
-double cbl::modelling::numbercounts::absolute_from_relative_error (const std::vector<double> x)
-{
-  return x[0]*x[1];
 }

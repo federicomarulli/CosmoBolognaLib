@@ -100,33 +100,33 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_MassProxy::set_model
 
   // Set the functional form for the redshift evolution in the scaling relation 
   if (scalrel_z_evo == "E_z")
-    m_data_model.fz = &fz_Ez;
+    m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo) {cbl::cosmology::Cosmology cosmology = *std::static_pointer_cast<cbl::cosmology::Cosmology>(cosmo); return cosmology.HH(z)/cosmology.HH(z_piv);};
   else if (scalrel_z_evo == "direct")
-    m_data_model.fz = &fz_direct;
+    m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo) {(void)cosmo; return (1+z)/(1+z_piv);};
   else
     cbl::ErrorCBL("Error in the input parameter scalrel_z_evo: no such a possibility for f(z)!","set_model_NumberCounts_cosmology","Modelling_NumberCounts1D_MassProxy.cpp");
 
   // Set the error types for redshift and mass proxy
   if (z_error_type == "relative")
-    m_data_model.z_error = &absolute_from_relative_error;
+    m_data_model.z_error = [] (const double z_err, const double z) { return z_err*z; };
   else if (z_error_type == "absolute")
-    m_data_model.z_error = &return_absolute_error;
+    m_data_model.z_error = [] (const double z_err, const double z) { (void)z; return z_err; };
   else
     cbl::ErrorCBL("Error in the input parameter z_error_type: choose between \"relative\" and \"absolute\"!","set_model_NumberCounts_cosmology","Modelling_NumberCounts1D_MassProxy.cpp");
 
   if (proxy_error_type == "relative")
-    m_data_model.proxy_error = &absolute_from_relative_error;
+    m_data_model.proxy_error = [] (const double proxy_err, const double proxy) { return proxy_err*proxy; };
   else if (proxy_error_type == "absolute")
-    m_data_model.proxy_error = &return_absolute_error;
+    m_data_model.proxy_error = [] (const double proxy_err, const double proxy) { (void)proxy; return proxy_err; };
   else
     cbl::ErrorCBL("Error in the input parameter proxy_error_type: choose between \"relative\" and \"absolute\"!","set_model_NumberCounts_cosmology","Modelling_NumberCounts1D_MassProxy.cpp");
 
   // input data used to construct the model
-  m_data_model.transfer_func = &no_transfer;
+  m_data_model.response_func = &no_response;
   auto inputs = make_shared<STR_NC_data_model>(m_data_model);
 
-  // input data used to construct the transfer function
-  m_data_model.transfer_func = &bias_transfer;
+  // input data used to construct the response function
+  m_data_model.response_func = &bias_response;
   auto inputs2 = make_shared<STR_NC_data_model>(m_data_model);
 
   // set prior
@@ -137,7 +137,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_MassProxy::set_model
     
   case (glob::HistogramType::_N_V_):
     m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_proxy, nParams, Par_type, Par_string, inputs));
-    m_transfer_func = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_proxy, nParams, Par_type, Par_string, inputs2));
+    m_response_func = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_proxy, nParams, Par_type, Par_string, inputs2));
     break;
     
   default:
@@ -195,33 +195,33 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_MassProxy::set_model
 
   // Set the functional form for the redshift evolution in the scaling relation 
   if (scalrel_z_evo == "E_z")
-    m_data_model.fz = &fz_Ez;
+    m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo) {cbl::cosmology::Cosmology cosmology = *std::static_pointer_cast<cbl::cosmology::Cosmology>(cosmo); return cosmology.HH(z)/cosmology.HH(z_piv);};
   else if (scalrel_z_evo == "direct")
-    m_data_model.fz = &fz_direct;
+    m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo) {(void)cosmo; return (1+z)/(1+z_piv);};
   else
     cbl::ErrorCBL("Error in the input parameter scalrel_z_evo: no such a possibility for f(z)!","set_model_NumberCounts_cosmology","Modelling_NumberCounts1D_MassProxy.cpp");
 
   // Set the error types for redshift and mass proxy
   if (z_error_type == "relative")
-    m_data_model.z_error = &absolute_from_relative_error;
+    m_data_model.z_error = [] (const double z_err, const double z) { return z_err*z; };
   else if (z_error_type == "absolute")
-    m_data_model.z_error = &return_absolute_error;
+    m_data_model.z_error = [] (const double z_err, const double z) { (void)z; return z_err; };
   else
     cbl::ErrorCBL("Error in the input parameter z_error_type: choose between \"relative\" and \"absolute\"!","set_model_NumberCounts_cosmology","Modelling_NumberCounts1D_MassProxy.cpp");
 
   if (proxy_error_type == "relative")
-    m_data_model.proxy_error = &absolute_from_relative_error;
+    m_data_model.proxy_error = [] (const double proxy_err, const double proxy) { return proxy_err*proxy; };
   else if (proxy_error_type == "absolute")
-    m_data_model.proxy_error = &return_absolute_error;
+    m_data_model.proxy_error = [] (const double proxy_err, const double proxy) { (void)proxy; return proxy_err; };
   else
     cbl::ErrorCBL("Error in the input parameter proxy_error_type: choose between \"relative\" and \"absolute\"!","set_model_NumberCounts_cosmology","Modelling_NumberCounts1D_MassProxy.cpp");
 
   // input data used to construct the model
-  m_data_model.transfer_func = &no_transfer;
+  m_data_model.response_func = &no_response;
   auto inputs = make_shared<STR_NC_data_model>(m_data_model);
 
-  // input data used to construct the transfer function
-  m_data_model.transfer_func = &bias_transfer;
+  // input data used to construct the response function
+  m_data_model.response_func = &bias_response;
   auto inputs2 = make_shared<STR_NC_data_model>(m_data_model);
 
   // set prior
@@ -232,7 +232,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_MassProxy::set_model
     
   case (glob::HistogramType::_N_V_):
     m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_proxy_classic, nParams, Par_type, Par_string, inputs));
-    m_transfer_func = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_proxy_classic, nParams, Par_type, Par_string, inputs2));
+    m_response_func = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_proxy_classic, nParams, Par_type, Par_string, inputs2));
     break;
     
   default:

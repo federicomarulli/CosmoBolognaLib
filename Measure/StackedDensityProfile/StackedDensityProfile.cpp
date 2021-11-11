@@ -33,127 +33,12 @@
  */
 
 #include "StackedDensityProfile.h"
-#include "CCfits/CCfits"
 #include "Data1D_extra.h"
+#include "CCfits/CCfits"
 #include<time.h>
 
 using namespace cbl;
 using namespace measure::stackprofile;
-
-
-// ============================================================================
-
-void cbl::measure::stackprofile::StackedDensityProfile::m_set_multiplicative_calib ()
-{
-  if (m_m_calib.size() > 0) {
-
-    if (m_m_calib.size() != m_m_calib_zEdges.size())
-      cbl::ErrorCBL("multiplicative_calibration_stats and multiplicative_calibration_zEdges must have the same size!","m_set_multiplicative_calib","StackedDensityProfile.cpp");
-    
-    for (size_t i=0; i<m_m_calib.size(); i++) {
-      if (m_m_calib[i].size() != 2)
-	cbl::ErrorCBL("All the vectors in multiplicative_calibration_stats must have size = 2","m_set_multiplicative_calib","StackedDensityProfile.cpp");
-      if (m_m_calib_zEdges[i].size() != 2)
-	cbl::ErrorCBL("All the vectors in multiplicative_calibration_zEdges must have size = 2","m_set_multiplicative_calib","StackedDensityProfile.cpp");
-    }
-
-    coutCBL<<"I'm setting the m parameter for each galaxy by extracting values from Gaussian distributions..."<<std::endl;
-    std::vector<double> m_values((int)(m_galData->nObjects()));
-    for (size_t j=0; j<m_galData->nObjects(); j++) {
-      for (size_t k=0; k<m_m_calib_zEdges.size(); k++) {
-	if (m_galData->redshift(j) >= m_m_calib_zEdges[k][0] && m_galData->redshift(j) <= m_m_calib_zEdges[k][1]) {
-	  
-	  srand(time(0));
-	  cbl::random::NormalRandomNumbers random(m_m_calib[k][0], m_m_calib[k][1], rand());
-	  m_values[j] = random();
-	    
-	}
-      }
-    }
-    
-    m_galData->set_var(cbl::catalogue::Var::_LensingCalib_, m_values);
-    
-  } else {
-    if (m_galData->isSetVar(cbl::catalogue::Var::_LensingCalib_) != true)
-      cbl::ErrorCBL("You must set the galaxy catalogue variable LensingCalib","m_set_multiplicative_calib","StackedDensityProfile.cpp");
-  }
-}
-  
-
-// ============================================================================
-
-bool cbl::measure::stackprofile::StackedDensityProfile::m_colourSelection_Oguri (const int i_gal)
-{
-  bool is_good_gri = ((m_galData->magnitudeG(i_gal)-m_galData->magnitudeR(i_gal) < 0.3 || m_galData->magnitudeR(i_gal)-m_galData->magnitudeI(i_gal) > 1.3 || m_galData->magnitudeR(i_gal)-m_galData->magnitudeI(i_gal) > m_galData->magnitudeG(i_gal)-m_galData->magnitudeR(i_gal)) && m_galData->redshift(i_gal)>=0.2);
-  return is_good_gri;
-}
-
-// ============================================================================
-
-bool cbl::measure::stackprofile::StackedDensityProfile::m_zphotSelection_ODDS (const std::vector<int> x)
-{
-  // x[0] is the cluster index, while x[1] is the galaxy index
-  bool is_good_photz = (m_galData->redshiftMin(x[1]) > m_cluData->redshift(x[0])+m_zphot_sel_pars[0] && m_galData->redshift(x[1])>=m_zphot_sel_pars[1] && m_galData->redshift(x[1])<=m_zphot_sel_pars[2] && m_galData->odds(x[1]) > m_zphot_sel_pars[3]);
-  return is_good_photz;
-}
-
-// ============================================================================
-
-bool cbl::measure::stackprofile::StackedDensityProfile::m_zphotSelection_noODDS (const std::vector<int> x)
-{
-  // x[0] is the cluster index, while x[1] is the galaxy index
-  bool is_good_photz = (m_galData->redshiftMin(x[1]) > m_cluData->redshift(x[0])+m_zphot_sel_pars[0] && m_galData->redshift(x[1])>=m_zphot_sel_pars[1] && m_galData->redshift(x[1])<=m_zphot_sel_pars[2]);
-  return is_good_photz;
-}
-
-// ============================================================================
-
-void cbl::measure::stackprofile::StackedDensityProfile::m_set_logicSelection (const std::string sel)
-{
-  std::function<bool(const std::vector<bool>)> returned_fc;
-
-  std::function<bool(const std::vector<bool>)> logicSelection_and = [] (const std::vector<bool> x){
-								      // x[0]->colour selection, x[1]->photz selection
-								      bool thebool = (x[0] && x[1]);
-								      return thebool;
-								    };
-
-  std::function<bool(const std::vector<bool>)> logicSelection_or = [] (const std::vector<bool> x){
-								     // x[0]->colour selection, x[1]->photz selection
-								     bool thebool = (x[0] || x[1]);
-								     return thebool;
-								   };
-  if (sel=="and"){
-    returned_fc = logicSelection_and;
-  }else if (sel=="or"){
-    returned_fc = logicSelection_or;
-  }else{
-    cbl::ErrorCBL("The chosen logic operator between the selection criteria is not valid! Choose \'and\' or \'or\'.","StackedDensityProfile","StackedDensityProfile.cpp");
-  }
-  m_logicSelection = returned_fc;
-}
-
-// ============================================================================
-
-void cbl::measure::stackprofile::StackedDensityProfile::m_set_selections ()
-{    
-  if (m_colour_sel=="Oguri"){
-    m_colourSel = &cbl::measure::stackprofile::StackedDensityProfile::m_colourSelection_Oguri;
-  }else{
-    cbl::ErrorCBL("The chosen colour selection is not valid!","StackedDensityProfile","StackedDensityProfile.cpp");
-  }
-  if (m_zphot_sel=="Odds"){
-    if (m_galData->isSetVar(cbl::catalogue::Var::_ODDS_) != true)
-      cbl::ErrorCBL("You must set the ODDS galaxy catalogue variable!","m_set_selections","StackedDensityProfile.cpp");
-    else
-      m_photzSel = &cbl::measure::stackprofile::StackedDensityProfile::m_zphotSelection_ODDS;
-  }else if (m_zphot_sel=="noOdds"){
-    m_photzSel = &cbl::measure::stackprofile::StackedDensityProfile::m_zphotSelection_noODDS;
-  }else{
-    cbl::ErrorCBL("The chosen photo-z selection is not valid!","StackedDensityProfile","StackedDensityProfile.cpp");
-  }    
-  m_set_logicSelection(m_logic_sel);
-}
 
 
 // ============================================================================
@@ -173,6 +58,18 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_resize (const double r
 {
   if (m_z_binEdges.size()-1 != m_proxy_binEdges.size())
       cbl::ErrorCBL("The number of proxy binnings must be equal to the number of redshift bins!","StackedDensityProfile","StackedDensityProfile.cpp");
+
+  m_colourSel.resize(m_z_binEdges.size()-1);
+  m_photzSel.resize(m_z_binEdges.size()-1);
+  m_logicSel.resize(m_z_binEdges.size()-1);
+  
+  m_isSet_colourSel.resize(m_z_binEdges.size()-1, false);
+  m_isSet_photzSel.resize(m_z_binEdges.size()-1, false);
+  m_isSet_logicSel.resize(m_z_binEdges.size()-1, false);
+
+  m_colour_sel_pars.resize(m_z_binEdges.size()-1);
+  m_zphot_sel_pars.resize(m_z_binEdges.size()-1);
+  m_logic_sel_par.resize(m_z_binEdges.size()-1);
   
   m_rad_arr.resize(nRad+1);
   if (log_rad == false){
@@ -271,6 +168,71 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_resize (const double r
 
 // ============================================================================
 
+void cbl::measure::stackprofile::StackedDensityProfile::m_set_multiplicative_calib ()
+{
+  if (m_m_calib.size() > 0) {
+
+    if (m_m_calib.size() != m_m_calib_zEdges.size())
+      cbl::ErrorCBL("multiplicative_calibration_stats and multiplicative_calibration_zEdges must have the same size!","m_set_multiplicative_calib","StackedDensityProfile.cpp");
+    
+    for (size_t i=0; i<m_m_calib.size(); i++) {
+      if (m_m_calib[i].size() != 2)
+	cbl::ErrorCBL("All the vectors in multiplicative_calibration_stats must have size = 2","m_set_multiplicative_calib","StackedDensityProfile.cpp");
+      if (m_m_calib_zEdges[i].size() != 2)
+	cbl::ErrorCBL("All the vectors in multiplicative_calibration_zEdges must have size = 2","m_set_multiplicative_calib","StackedDensityProfile.cpp");
+    }
+
+    coutCBL<<"I'm setting the m parameter for each galaxy by extracting values from Gaussian distributions..."<<std::endl;
+    std::vector<double> m_values((int)(m_galData->nObjects()));
+    for (size_t j=0; j<m_galData->nObjects(); j++) {
+      for (size_t k=0; k<m_m_calib_zEdges.size(); k++) {
+	if (m_galData->redshift(j) >= m_m_calib_zEdges[k][0] && m_galData->redshift(j) <= m_m_calib_zEdges[k][1]) {
+	  
+	  srand(time(0));
+	  cbl::random::NormalRandomNumbers random(m_m_calib[k][0], m_m_calib[k][1], rand());
+	  m_values[j] = random();
+	    
+	}
+      }
+    }
+    
+    m_galData->set_var(cbl::catalogue::Var::_LensingCalib_, m_values);
+    
+  } else {
+    if (m_galData->isSetVar(cbl::catalogue::Var::_LensingCalib_) != true)
+      cbl::ErrorCBL("You must set the galaxy catalogue variable LensingCalib","m_set_multiplicative_calib","StackedDensityProfile.cpp");
+  }
+}
+
+// ============================================================================
+
+bool cbl::measure::stackprofile::StackedDensityProfile::m_colourSelection_gri (const int i_gal, const int clu_zbin)
+{
+  bool cond1 = m_galData->magnitudeG(i_gal)-m_galData->magnitudeR(i_gal) < m_colour_sel_pars[clu_zbin][0];
+  bool cond2 = m_galData->magnitudeR(i_gal)-m_galData->magnitudeI(i_gal) > m_colour_sel_pars[clu_zbin][1];
+  bool cond3 = m_galData->magnitudeR(i_gal)-m_galData->magnitudeI(i_gal) > m_colour_sel_pars[clu_zbin][2]*(m_galData->magnitudeG(i_gal)-m_galData->magnitudeR(i_gal))+m_colour_sel_pars[clu_zbin][3];
+  
+  bool is_good_colour = (cond1 || cond2 || cond3) && m_galData->redshift(i_gal)>=m_colour_sel_pars[clu_zbin][4];
+						
+  return is_good_colour;
+}
+
+// ============================================================================
+
+bool cbl::measure::stackprofile::StackedDensityProfile::m_photzSelection (const int i_clu, const int i_gal, const int clu_zbin)
+{
+  bool cond1 = m_galData->redshiftMin(i_gal) > m_cluData->redshift(i_clu)+m_zphot_sel_pars[clu_zbin][0];
+  bool cond2 = m_galData->redshift(i_gal)>=m_zphot_sel_pars[clu_zbin][1];
+  bool cond3 = m_galData->redshift(i_gal)<=m_zphot_sel_pars[clu_zbin][2];
+  bool cond4 = m_galData->odds(i_gal) > m_zphot_sel_pars[clu_zbin][3];
+  
+  bool is_good_photz = (cond1 && cond2 && cond3 && cond4);
+							    
+  return is_good_photz;
+}
+
+// ============================================================================
+
 void cbl::measure::stackprofile::StackedDensityProfile::m_linked_list ()
 {
   std::vector<double> ra_limits = {1000,-1000}, dec_limits = {1000,-1000};
@@ -315,29 +277,44 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_linked_list ()
 // ============================================================================
 
 void cbl::measure::stackprofile::StackedDensityProfile::m_add_galaxy (const int i_gal, const int clu_index, const double coscludec, const double clu_dist)
-{ 
-  std::vector<double> ang_dist(2);
-  ang_dist[0] = (m_cluData->ra(clu_index)-m_galData->ra(i_gal))*coscludec;
-  ang_dist[1] = m_galData->dec(i_gal)-m_cluData->dec(clu_index);
-
-  double alpha1 = m_cluData->ra(clu_index)/180.*cbl::par::pi;
-  double delta1 = m_cluData->dec(clu_index)/180.*cbl::par::pi;
-  double alpha2 = m_galData->ra(i_gal)/180.*cbl::par::pi;
-  double delta2 = m_galData->dec(i_gal)/180.*cbl::par::pi;
-
+{
   // Consider a spherical triangle with sides a, b, c. We want to find c, the angular distance between two sources.
   // The law of haversines is: cos(c) = cos(a)cos(b) + sin(a)sin(b)cos(C), where C is the angle of the corner opposite c.
   // Suppose also that a and b intersect in the north pole of a unit sphere, so that a = 90°-dec1, b = 90°-dec2, and C = ra1-ra2. Thus the formula becomes:
   // cos(c) = sin(dec1)sin(dec2) + cos(dec1)cos(dec2)cos(ra1-ra2)
-  // NOTE: this formula is valid only if c is small!
+  
+  std::vector<double> ang_dist(2);
+  ang_dist[0] = (m_cluData->ra(clu_index)-m_galData->ra(i_gal))*coscludec;
+  ang_dist[1] = m_galData->dec(i_gal)-m_cluData->dec(clu_index); // If ra1=ra2 -> cos(c) = sin(dec1)sin(dec2) + cos(dec1)cos(dec2) = cos(dec1-dec2)
+
+  double alpha1 = m_cluData->ra(clu_index);
+  double delta1 = m_cluData->dec(clu_index);
+  double alpha2 = m_galData->ra(i_gal);
+  double delta2 = m_galData->dec(i_gal);
+
   double dist = acos(sin(delta1)*sin(delta2)+cos(delta1)*cos(delta2)*cos(alpha1-alpha2))*clu_dist/1.e+6;
   double dist2 = dist*dist;
 
-  if (dist2 < m_rad_arr[m_rad_arr.size()-1]*m_rad_arr[m_rad_arr.size()-1] && dist2 >= m_rad_arr[0]*m_rad_arr[0] && m_galData->redshift(i_gal) > m_cluData->redshift(clu_index)+0.05){
-    std::vector<int> idxs = {clu_index, i_gal};
-    std::vector<bool> single_selections = { (this->*m_colourSel)(i_gal), (this->*m_photzSel)(idxs) };
-    bool selection = m_logicSelection(single_selections);      
+  if (dist2 < m_rad_arr[m_rad_arr.size()-1]*m_rad_arr[m_rad_arr.size()-1] && dist2 >= m_rad_arr[0]*m_rad_arr[0] && m_galData->redshift(i_gal) > m_cluData->redshift(clu_index)+m_delta_redshift){
+
+    // Find the cluster redshift bin
+    int candidate_cluster_zbin = 0;
+    for (size_t z_clu_idx=0; z_clu_idx<m_z_binEdges.size()-1; z_clu_idx++)
+      if (m_cluData->redshift(clu_index) == m_z_binEdges[0])
+	candidate_cluster_zbin = z_clu_idx;
+      else if (m_z_binEdges[z_clu_idx] < m_cluData->redshift(clu_index) && m_cluData->redshift(clu_index) <= m_z_binEdges[z_clu_idx+1])
+	candidate_cluster_zbin = z_clu_idx;
+
+    const int cluster_zbin = candidate_cluster_zbin;
+    
+    // Check if the galaxy is a good background candidate
+    std::vector<bool> single_selections = { (this->*m_colourSel[cluster_zbin])(i_gal, cluster_zbin), (this->*m_photzSel[cluster_zbin])(clu_index, i_gal, cluster_zbin) };
+    bool selection = m_logicSel[cluster_zbin](single_selections);
+
     if (selection){
+      // Fill the vector of indices of the selected lensed galaxies (used to write files)
+      m_background_idx.emplace_back(i_gal);
+      
       // locate correct annulus
       std::vector<double>::iterator it = upper_bound(m_rad_arr.begin(), m_rad_arr.end(), dist);
       int p = it-m_rad_arr.begin()-1;
@@ -373,10 +350,10 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_profile (const int clu
     m_ngal_arr[i]=0; m_deltasigma_t[i]=0; m_deltasigma_x[i]=0; m_deltasigma_err[i]=0; m_wetasquareSum[i]=0; m_rad_eff_arr[i]=0; m_rad_sigma_arr[i]=0; m_wSum[i]=0; m_wetaSum[i]=0; m_deltasigmaSum[i]=0;
   }
   
-  const double clu_dist = 2.99792e+09*m_cosm->D_A(0.,m_cluData->redshift(clu_index))/cbl::par::cc*100; // in pc/h
-  const double coscludec = cos(m_cluData->dec(clu_index)*cbl::par::pi/180.); // by multiplying by pi/180, we convert degrees to radians
+  const double clu_dist = m_cosm->D_A(0.,m_cluData->redshift(clu_index)) * 1.e6; // in pc/h
+  const double coscludec = cos(m_cluData->dec(clu_index));
   std::vector<double> clu_pix = {std::floor((m_cluData->ra(clu_index)-m_ra_start)/m_pix_size), std::floor((m_cluData->dec(clu_index)-m_dec_start)/m_pix_size)};
-  double max_rad = m_rad_arr[m_rad_arr.size()-1]/clu_dist*1.e+6*180/cbl::par::pi;
+  double max_rad = m_rad_arr[m_rad_arr.size()-1]/clu_dist*1.e+6;
 
   // limits of relevant pixels
   std::vector<int> pix_ra_lim(2); std::vector<int> pix_dec_lim(2);
@@ -415,7 +392,6 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_stacker ()
   m_set_multiplicative_calib();
   
   std::cout<<std::endl; coutCBL<<"Performing the stacking..."<<std::endl;
-  cbl::WarningMsgCBL("If you do not set \'radians\' as the coordinate units in the galaxy and cluster catalogues, the code is much slower! If not already done, set \'radians\'.","m_stacker","StackedDensityProfile.cpp");
   
   // This is the inverse of Fac_eta_ToInv_Sigma_Cr in Mauro Sereno's code
   m_sigma_fac = 1.6628e+12; // c^2/(4piG) in Msun/pc
@@ -568,6 +544,8 @@ bool cbl::measure::stackprofile::StackedDensityProfile::m_check_file (const std:
   m_inputs_to_str.emplace_back(cbl::conv(m_galData->nObjects(),cbl::par::fINT));
   m_inputs_to_str.emplace_back(cbl::conv(m_cluData->nObjects(),cbl::par::fINT));
 
+  m_inputs_to_str.emplace_back(cbl::conv(m_delta_redshift,cbl::par::fDP5));
+
   for (size_t i=0; i<m_m_calib.size(); i++) {
     m_inputs_to_str.emplace_back(cbl::conv(m_m_calib[i][0],cbl::par::fDP5));
     m_inputs_to_str.emplace_back(cbl::conv(m_m_calib[i][1],cbl::par::fDP5));
@@ -575,12 +553,18 @@ bool cbl::measure::stackprofile::StackedDensityProfile::m_check_file (const std:
     m_inputs_to_str.emplace_back(cbl::conv(m_m_calib_zEdges[i][1],cbl::par::fDP5));
   }
   
-  m_inputs_to_str.emplace_back(m_colour_sel);
-  m_inputs_to_str.emplace_back(m_zphot_sel);
-  for (size_t j=0; j<m_zphot_sel_pars.size(); j++){
-    m_inputs_to_str.emplace_back(cbl::conv(m_zphot_sel_pars[j],cbl::par::fDP5));
-  }
-  m_inputs_to_str.emplace_back(m_logic_sel);
+  for (size_t j=0; j<m_zphot_sel_pars.size(); j++)
+    for (size_t jj=0; jj<m_zphot_sel_pars[j].size(); jj++)
+      m_inputs_to_str.emplace_back(cbl::conv(m_zphot_sel_pars[j][jj],cbl::par::fDP5));  
+
+  for (size_t j=0; j<m_colour_sel_pars.size(); j++)
+    for (size_t jj=0; jj<m_colour_sel_pars[j].size(); jj++)
+      m_inputs_to_str.emplace_back(cbl::conv(m_colour_sel_pars[j][jj],cbl::par::fDP5));
+
+  for (size_t j=0; j<m_logic_sel_par.size(); j++)
+    for (size_t jj=0; jj<m_logic_sel_par[j].size(); jj++)
+      m_inputs_to_str.emplace_back(m_logic_sel_par[j][jj]);  
+
   for (size_t j=0; j<m_z_binEdges.size(); j++){
     m_inputs_to_str.emplace_back(cbl::conv(m_z_binEdges[j],cbl::par::fDP5));
   }
@@ -642,7 +626,7 @@ bool cbl::measure::stackprofile::StackedDensityProfile::m_check_file (const std:
 
 void cbl::measure::stackprofile::StackedDensityProfile::m_write(const std::string output_dir, const std::string output_file)
 {
-  const string mkdir = "mkdir -p "+output_dir; if (system(mkdir.c_str())) {}
+  const std::string mkdir = "mkdir -p "+output_dir; if (system(mkdir.c_str())) {}
 
   std::ofstream out_stack (output_dir+"/"+output_file+".dat",std::ios::out);
   
@@ -693,15 +677,135 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_write(const std::strin
     }
   }
   out_stack.clear(); out_stack.close(); coutCBL << "I wrote the file: " << output_dir+"/"+output_file+".dat" << std::endl << std::endl;
+
+  
+  // Write the covariance matrix files
+
+  for (size_t i=0; i<m_z_binEdges.size()-1; i++){
+    for (size_t j=0; j<m_proxy_binEdges[i].size()-1; j++){
+      
+      std::string file_path = output_dir+"/covariance_"+cbl::conv(i,cbl::par::fINT)+cbl::conv(j,cbl::par::fINT)+".dat";
+      std::ofstream cov_file (file_path,std::ios::out);
+  
+      for (size_t r=0; r<m_rad_arr.size()-1; r++)
+	for (size_t r2=0; r2<m_rad_arr.size()-1; r2++)
+	  if (r2 < m_rad_arr.size()-2)
+	    cov_file << m_deltasigma_cov_matr[i][j][r][r2] << "  ";
+	  else
+	    cov_file << m_deltasigma_cov_matr[i][j][r][r2] << std::endl;
+  
+      cov_file.clear(); cov_file.close(); coutCBL << "I wrote the file: " << file_path << std::endl << std::endl;
+    }
+  }
+  
 }
 
 // ============================================================================
 
-void cbl::measure::stackprofile::StackedDensityProfile::measure (const std::vector<int> z_proxy_bin, const std::string output_dir, const std::string output_file, const ErrorType errorType)
+void cbl::measure::stackprofile::StackedDensityProfile::set_colour_selection (const std::string colour_space, const int z_bin, const double C1, const double C2, const double C3, const double C4, const double z_min)
 {
-  bool file_exists = m_check_file(output_dir+"/"+output_file+".dat", z_proxy_bin);
+  if (z_bin > (int)(m_z_binEdges.size()-1))
+    cbl::ErrorCBL("The chosen cluster z bin index is outside the z bin index range!","set_colour_selection_gri","StackedDensityProfile.cpp");
+  
+  if (colour_space == "ri_gr")
+    m_colourSel[z_bin] = &cbl::measure::stackprofile::StackedDensityProfile::m_colourSelection_gri;
+  else
+    cbl::ErrorCBL("The selected colour selection is not available!","set_colour_selection","StackedDensityProfile.cpp");
+
+  m_colour_sel_pars[z_bin] = {C1, C2, C3, C4, z_min};
+  m_isSet_colourSel[z_bin] = true;
+
+  coutCBL << "I've set the colour selection in the redshift bin " << z_bin << std::endl; 
+}
+
+// ============================================================================
+
+void cbl::measure::stackprofile::StackedDensityProfile::set_colour_selection (const std::string colour_space, const double C1, const double C2, const double C3, const double C4, const double z_min)
+{
+  for (size_t i=0; i<m_z_binEdges.size()-1; i++)
+    this->set_colour_selection(colour_space, i, C1, C2, C3, C4, z_min);
+}
+
+// ============================================================================
+
+void cbl::measure::stackprofile::StackedDensityProfile::set_zphot_selection (const int z_bin, const double deltaz, const double zgal_min, const double zgal_max, const double ODDS_min)
+{
+  if (z_bin > (int)(m_z_binEdges.size()-1))
+    cbl::ErrorCBL("The chosen cluster z bin index is outside the z bin index range!","set_zphot_selection","StackedDensityProfile.cpp");
+  
+  m_zphot_sel_pars[z_bin] = {deltaz, zgal_min, zgal_max, ODDS_min};
+  m_photzSel[z_bin] = &cbl::measure::stackprofile::StackedDensityProfile::m_photzSelection;
+  m_isSet_photzSel[z_bin] = true;
+
+  coutCBL << "I've set the redshift selection in the redshift bin " << z_bin << std::endl; 
+}
+
+// ============================================================================
+
+void cbl::measure::stackprofile::StackedDensityProfile::set_zphot_selection (const double deltaz, const double zgal_min, const double zgal_max, const double ODDS_min)
+{
+  for (size_t i=0; i<m_z_binEdges.size()-1; i++)
+    this->set_zphot_selection(i, deltaz, zgal_min, zgal_max, ODDS_min);
+}
+
+// ============================================================================
+
+void cbl::measure::stackprofile::StackedDensityProfile::set_logic_selection (const int z_bin, const std::string sel)
+{
+  if (z_bin > (int)(m_z_binEdges.size()-1))
+    cbl::ErrorCBL("The chosen cluster z bin index is outside the z bin index range!","set_logic_selection","StackedDensityProfile.cpp");
+
+  std::function<bool(const std::vector<bool>)> logicSelection_and = [] (const std::vector<bool> x){
+								      // x[0]->colour selection, x[1]->photz selection
+								      bool thebool = (x[0] && x[1]);
+								      return thebool;
+								    };
+
+  std::function<bool(const std::vector<bool>)> logicSelection_or = [] (const std::vector<bool> x){
+								     // x[0]->colour selection, x[1]->photz selection
+								     bool thebool = (x[0] || x[1]);
+								     return thebool;
+								   };
+  if (sel=="and")
+    m_logicSel[z_bin] = logicSelection_and;
+  else if (sel=="or")
+    m_logicSel[z_bin] = logicSelection_or;
+  else
+    cbl::ErrorCBL("The chosen logic operator between the selection criteria is not valid! Choose \'and\' or \'or\'.","set_logic_selection","StackedDensityProfile.cpp");
+  
+  m_isSet_logicSel[z_bin] = true;
+  m_logic_sel_par[z_bin] = {sel};
+
+  coutCBL << "I've set the logic selection in the redshift bin " << z_bin << std::endl; 
+}
+
+// ============================================================================
+
+void cbl::measure::stackprofile::StackedDensityProfile::set_logic_selection (const std::string sel)
+{
+  for (size_t i=0; i<m_z_binEdges.size()-1; i++)
+    this->set_logic_selection(i, sel);
+}
+
+// ============================================================================
+
+void cbl::measure::stackprofile::StackedDensityProfile::measure (const std::vector<int> z_proxy_bin, const std::string output_dir, const std::string output_file_root, const ErrorType errorType, const int n_resampling)
+{
+  for (size_t i=0; i<m_z_binEdges.size()-1; i++) {
+    if (m_isSet_colourSel[i] == false)
+      cbl::ErrorCBL("The colour selection for the redshift bin "+cbl::conv(i,cbl::par::fINT)+" is not set!","measure","StackedDensityProfile.cpp");
+    if (m_isSet_photzSel[i] == false)
+      cbl::ErrorCBL("The redshift selection for the redshift bin "+cbl::conv(i,cbl::par::fINT)+" is not set!","measure","StackedDensityProfile.cpp");
+    if (m_isSet_logicSel[i] == false)
+      cbl::ErrorCBL("The logic selection for the redshift bin "+cbl::conv(i,cbl::par::fINT)+" is not set!","measure","StackedDensityProfile.cpp");
+  }
+
+  m_n_resampling = n_resampling;
+  
+  bool file_exists = m_check_file(output_dir+"/"+output_file_root+".dat", z_proxy_bin);
 
   if (file_exists){
+    m_measure_is_read = true;
     coutCBL << "I've just read the already existing stacking file!" << std::endl; 
   }else{
     switch (errorType){
@@ -711,7 +815,7 @@ void cbl::measure::stackprofile::StackedDensityProfile::measure (const std::vect
     default:
       ErrorCBL("The input ErrorType is not allowed!", "measure", "StackedDensityProfile.cpp");
     }
-    m_write(output_dir, output_file);
+    m_write(output_dir, output_file_root);
   }
 }
 
@@ -723,34 +827,87 @@ void cbl::measure::stackprofile::StackedDensityProfile::write (const std::string
   if (system(mkdir.c_str())) {}
   
   std::string header = "bin_center  profile  error  mean_redshift  mean_redshift_error  mean_mass_proxy  mean_mass_proxy_error";
-  m_dataset->write(dir, file, header, 4, 8);
+  m_dataset->write(dir, file, header, 4, 8);  
 }
 
 // ============================================================================
 
-cbl::measure::stackprofile::StackedDensityProfile::StackedDensityProfile (cosmology::Cosmology cosm, const catalogue::Catalogue gal_cat, const catalogue::Catalogue clu_cat, const std::string colour_sel, const std::string zphot_sel, std::vector<double> zphot_sel_pars, const std::string logic_sel, std::vector<double> z_binEdges, std::vector<std::vector<double>> proxy_binEdges, const double rad_min, const double rad_max, const int nRad, const bool log_rad, const double SN_min, const double pix_size, const std::vector<std::vector<double>> multiplicative_calibration_stats, const std::vector<std::vector<double>> multiplicative_calibration_zEdges, const int n_resampling, const double rad_alpha, const double obs_gamma)
+void cbl::measure::stackprofile::StackedDensityProfile::write_background_properties (const std::string out_dir, const std::string out_file_root, const std::string ID_file, const int ID_column, const int skip_lines)
+{
+  if (m_measure_is_read)
+    m_make_bootstrap({0,0});
+  
+  std::ifstream fin(ID_file.c_str()); checkIO(fin, ID_file);
+  string line;
+  
+  unsigned int n_lines = 0;
+  while(getline(fin, line)) n_lines++;
+  n_lines-=skip_lines;
+  fin.clear(); fin.close();  
+
+  if ((int)(n_lines) != (int)(m_galData->nObjects()))
+    ErrorCBL("The number of rows in the ID file ("+cbl::conv((int)(n_lines),cbl::par::fINT)+") must match the total number of input sources ("+cbl::conv((int)(m_galData->nObjects()),cbl::par::fINT)+").", "write_background_properties", "StackedDensityProfile.cpp");
+    
+  std::vector<std::string> ID (n_lines);
+  
+  std::ifstream Fin (ID_file);
+  std::string Line;
+  
+  if (skip_lines>0)
+    for (int i=0; i<skip_lines; ++i)
+      getline(Fin, Line); 
+  
+  for (unsigned int nn=0; nn<n_lines; ++nn) {
+  
+    getline(Fin, Line);
+    std::stringstream ss(Line);
+    std::vector<std::string> num; std::string NUM;
+    while (ss>>NUM) num.emplace_back(NUM);
+  
+    ID[nn] = num[ID_column-1];
+  }  
+  Fin.clear(); Fin.close();
+
+  // Since multiple clusters may share the same sources, build a vector of unique elements and sort it
+  std::vector<int> indices = cbl::different_elements(m_background_idx);
+  std::sort(indices.begin(), indices.end());
+  
+  // Write the output file
+  std::string mkdir = "mkdir -p "+out_dir; if (system(mkdir.c_str())) {}
+  std::ofstream out_stack (out_dir+"/"+out_file_root+".dat",std::ios::out);
+  
+  out_stack << "# index    ID    RA    Dec    z";
+  out_stack << std::endl;
+  for (size_t i=0; i<indices.size(); i++)
+    out_stack << indices[i] << "  " << ID[indices[i]] << "  " << m_galData->ra(indices[i]) << "  " << m_galData->dec(indices[i]) << "  " << m_galData->redshift(indices[i]) << "  " << std::endl;
+  
+  out_stack.clear(); out_stack.close(); coutCBL << "I wrote the file: " << out_dir+"/"+out_file_root+".dat" << std::endl << std::endl;  
+}
+
+// ============================================================================
+
+cbl::measure::stackprofile::StackedDensityProfile::StackedDensityProfile (cosmology::Cosmology cosm, const catalogue::Catalogue gal_cat, const catalogue::Catalogue clu_cat, const double delta_redshift, std::vector<double> z_binEdges, std::vector<std::vector<double>> proxy_binEdges, const double rad_min, const double rad_max, const int nRad, const bool log_rad, const double SN_min, const double pix_size, const std::vector<std::vector<double>> multiplicative_calibration_stats, const std::vector<std::vector<double>> multiplicative_calibration_zEdges, const double rad_alpha, const double obs_gamma)
 {
   // WARNING: if you change the arguments of this constructor, you must edit m_check_file !!!
 
   m_cosm = std::make_shared<cosmology::Cosmology>(cosmology::Cosmology(std::move(cosm)));
   m_cosm->set_unit(true); // Force cosmological units
+  
   m_galData = std::make_shared<catalogue::Catalogue>(catalogue::Catalogue(std::move(gal_cat)));
   m_cluData = std::make_shared<catalogue::Catalogue>(catalogue::Catalogue(std::move(clu_cat)));
-  m_rad_alpha = rad_alpha;
-  m_obs_gamma = obs_gamma;
-  m_SN_min = SN_min;
-  m_pix_size = pix_size;
-  m_m_calib = multiplicative_calibration_stats;
-  m_m_calib_zEdges = multiplicative_calibration_zEdges;
-  m_n_resampling = n_resampling;
+
+  m_delta_redshift = delta_redshift;
   m_z_binEdges = z_binEdges;
   m_proxy_binEdges = proxy_binEdges;
-  m_colour_sel = colour_sel;
-  m_zphot_sel = zphot_sel;
-  m_zphot_sel_pars = zphot_sel_pars;
-  m_logic_sel = logic_sel;
+  m_SN_min = SN_min;
+  m_pix_size = pix_size * (cbl::par::pi/180.);
+  m_m_calib = multiplicative_calibration_stats;
+  m_m_calib_zEdges = multiplicative_calibration_zEdges;
+  m_rad_alpha = rad_alpha;
+  m_obs_gamma = obs_gamma;
 
   m_check_catalogue_variables();
   m_resize(rad_min,rad_max,nRad,log_rad);
-  m_set_selections();
+  
+  m_measure_is_read = false;
 }

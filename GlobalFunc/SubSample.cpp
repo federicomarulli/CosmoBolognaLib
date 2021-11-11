@@ -41,6 +41,431 @@ using namespace cbl;
 // ============================================================================
 
 
+void cbl::set_ObjectRegion_Tiles_Redshift (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nz)
+{  
+  coutCBL << "I'm putting data and random objects in regions given by R.A.-Dec tiles." << endl;
+
+  if (nz <= 0)
+    ErrorCBL("nz must be >0.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+
+  // Check if the necessary quantities are properly set 
+  for (size_t i=0; i<data.nObjects(); i++) {
+
+    if (data.isSetVar(i, catalogue::Var::_Region_) == false)
+      ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the data catalogue is not set.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+    if (data.var(i, catalogue::Var::_Region_) < 0)
+      ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the data catalogue is <0. The tile numbers must be all the integers between 0 and N, where N is the highest tile number.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+
+  }
+  
+  for (size_t i=0; i<random.nObjects(); i++) {
+
+    if (random.isSetVar(i, catalogue::Var::_Region_) == false)
+      ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the random catalogue is not set.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+    if (random.var(i, catalogue::Var::_Region_) < 0)
+      ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the random catalogue is <0. The tile numbers must be all the integers between 0 and N, where N is the highest tile number.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+
+  }
+
+  // Re-set the region numbers, so that they become
+  // all the integers between 0 and N, where N is the
+  // highest number among the regions
+
+  std::vector<long int> observedRegions (data.nObjects(), -1);
+  std::vector<long int> randomRegions (random.nObjects(), -1);
+
+  std::vector<bool> ok_data_tile (data.nObjects(), false);
+  std::vector<bool> ok_random_tile (random.nObjects(), false);
+
+  long int value = 0;
+  
+  for (size_t i=0; i<data.nObjects(); i++) {
+
+    bool update_value = false;
+
+    for (size_t j=0; j<data.nObjects(); j++)
+      if (data.region(j) == data.region(i) && ok_data_tile[j] == false) {
+	observedRegions[j] = value;
+	ok_data_tile[j] = true;
+
+	update_value = true;
+      }
+    
+    for (size_t j=0; j<random.nObjects(); j++)
+      if (random.region(j) == data.region(i) && ok_random_tile[j] == false) {
+	randomRegions[j] = value;
+	ok_random_tile[j] = true;
+      }
+
+    if (update_value)
+      value ++;
+    
+  }
+
+  for (size_t i=0; i<random.nObjects(); i++)
+    
+    if (ok_random_tile[i] == false) {
+      
+      const long int new_value = cbl::Max(randomRegions)+1;
+      
+      for (size_t j=0; j<random.nObjects(); j++)
+	if (random.region(j) == random.region(i)) {
+	  randomRegions[j] = new_value;
+	  ok_random_tile[j] = true;
+	}
+    }
+
+  // If the number of random regions is higher
+  // than the number of data regions, remove the
+  // random objects in excess
+  
+  if (cbl::Max(randomRegions) > cbl::Max(observedRegions)) {
+
+    const int original_nObj = random.nObjects();
+    
+    for (size_t i=0; i<random.nObjects(); i++) {
+
+      const int idx = original_nObj-1-i;
+      
+      if ((int)(randomRegions[idx]) > (int)(cbl::Max(observedRegions))) {
+	random.remove_object(idx);
+	randomRegions.erase(randomRegions.begin()+idx);
+      }
+      
+    }
+  }
+
+  // Divide the samples in redshift sub-regions, by separating
+  // the objects in the same tile but in different redshift regions.
+
+  if (nz > 1) {
+  
+    const double zMin = data.Min(catalogue::Var::_Redshift_);
+    const double Cell_z = (data.Max(catalogue::Var::_Redshift_)-zMin)/nz;
+
+    int next_max_tile_number = cbl::Max(observedRegions)+1;
+    std::vector<std::vector<long int>> tile_z_idx (cbl::Max(observedRegions)+1, std::vector<long int>(nz, -1));
+
+    std::vector<long int> dummy_observedRegions = observedRegions;
+  
+    for (size_t i=0; i<observedRegions.size(); i++) {
+
+      int z_idx = min(int((data.redshift(i)-zMin)/Cell_z), nz-1);
+    
+      if (z_idx != 0) {
+      
+	if (tile_z_idx[dummy_observedRegions[i]][z_idx] != -1)
+	  observedRegions[i] = tile_z_idx[dummy_observedRegions[i]][z_idx];
+      
+	else {
+	  observedRegions[i] = next_max_tile_number; // Given the same tile number, if the z cell is different also the region number is different.
+	  tile_z_idx[dummy_observedRegions[i]][z_idx] = next_max_tile_number;
+	  next_max_tile_number ++;	
+	}
+      
+      }
+    
+    }
+
+    // Reassign the regions to the random objects
+    
+    std::vector<long int> dummy_randomRegions = randomRegions;
+  
+    for (size_t i=0; i<randomRegions.size(); i++) {
+      int z_idx = min(int((random.redshift(i)-zMin)/Cell_z), nz-1);
+      randomRegions[i] = tile_z_idx[dummy_randomRegions[i]][z_idx];    
+    }
+
+    // It might happen that, given a tile, no objects lie in
+    // the first redshift bin. In this way, indices are lost.
+    // In the loop below we recover such indices, i.e. we
+    // "fill the gaps" by changing the existing indices.
+
+    std::vector<long int> sorted_regions = cbl::different_elements(observedRegions);
+    std::sort(sorted_regions.begin(), sorted_regions.end());
+
+    std::vector<long int> missed_index;
+    int idx = -1;
+    
+    for (size_t i=0; i<sorted_regions.size(); i++) {
+      idx ++;
+      if ((size_t)(sorted_regions[idx]) != i) {
+	missed_index.emplace_back(i);
+	idx --;
+      }
+    }
+    
+    for (size_t i=0; i<missed_index.size(); i++) {
+
+      const long int max_idx = sorted_regions[sorted_regions.size()-1];
+    
+      for (size_t j=0; j<observedRegions.size(); j++)
+	if (observedRegions[j] == max_idx)
+	  observedRegions[j] = missed_index[i];
+
+      for (size_t j=0; j<randomRegions.size(); j++)
+	if (randomRegions[j] == max_idx)
+	  randomRegions[j] = missed_index[i];
+
+      sorted_regions.erase(sorted_regions.end()-1);
+      
+    }
+    
+  }
+
+  for (size_t i=0; i<random.nObjects(); i++)
+    if (randomRegions[i] == -1)
+      ErrorCBL("Some random objects fall in redshift bins that are not populated by any data object!", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");  
+
+  // Set the regions
+  const int nRegions_data = (int)((cbl::different_elements(observedRegions)).size());
+  const int nRegions_random = (int)((cbl::different_elements(randomRegions)).size());
+  
+  data.set_region(observedRegions, nRegions_data);
+  random.set_region(randomRegions, nRegions_random);
+
+  cbl::check_regions(data, random);
+
+  coutCBL << "Done!" << endl;
+}
+
+
+// ============================================================================
+
+
+void cbl::set_ObjectRegion_Tiles_Redshift (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nz, const double tile_width_RA, const double tile_width_Dec, const bool write_tiles, const std::string dir_tiles, const std::string file_tiles)
+{
+  ErrorCBL("Work in progress!", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+  
+  coutCBL << "I'm putting data and random objects in regions given by R.A.-Dec tiles." << endl;
+
+  if (nz <= 0)
+    ErrorCBL("nz must be >0.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+
+  const double RA_hw = 0.5 * tile_width_RA * (par::pi/180.); // half tile width in radians along R.A.
+  const double Dec_hw = 0.5 * tile_width_Dec * (par::pi/180.);
+
+  // Set the vector of tile numbers
+  std::vector<long int> dummy_tiles = data.region();
+  std::sort(dummy_tiles.begin(), dummy_tiles.end());
+  std::vector<long int> unique_tile_numbers = cbl::different_elements (dummy_tiles);
+  const int n_tiles = (int)(unique_tile_numbers.size());
+
+  cout<<endl; coutCBL << "I'm setting the regions in " << n_tiles << " tiles and " << nz << " redshift sub-sample(s)." << endl;
+
+  // Define the vectors of min/max R.A./Dec,
+  // and check if the internal variables are properly set
+  std::vector<double> RA_min (n_tiles);
+  std::vector<double> RA_max (n_tiles);
+  std::vector<double> Dec_min (n_tiles);
+  std::vector<double> Dec_max (n_tiles);
+
+  std::vector<bool> isSet_region (n_tiles);
+  
+  for (size_t i=0; i<data.nObjects(); i++) {
+
+    if (data.isSetVar(i, catalogue::Var::_TileRA_) == false)
+      ErrorCBL("The tile central R.A. for the object "+cbl::conv(i,cbl::par::fINT)+" in the original catalogue (data) is not set.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+    if (data.isSetVar(i, catalogue::Var::_TileDec_) == false)
+      ErrorCBL("The tile central Dec for the object "+cbl::conv(i,cbl::par::fINT)+" in the original catalogue (data) is not set.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+    if (data.isSetVar(i, catalogue::Var::_Region_) == false)
+      ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the original catalogue (data) is not set.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+    if (data.var(i, catalogue::Var::_Region_) < 0)
+      ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the original catalogue (data) is <0. The tile numbers must be all the integers between 0 and N, where N is the highest tile number.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+
+    if (data.region(i) < n_tiles)
+      isSet_region[data.region(i)] = true;
+    else
+      ErrorCBL("The tile number "+cbl::conv(i,cbl::par::fINT)+" in the original catalogue (data) is greater than the number of tiles. The tile numbers must be all the integers between 0 and N, where N is the highest tile number.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp"); 
+
+    // Set min/max R.A./Dec
+    double candidate_RA_min = data.ra_tile(i) - RA_hw/cos(std::abs(data.dec_tile(i)));
+    if (candidate_RA_min < 0)
+      candidate_RA_min = 2*cbl::par::pi + candidate_RA_min;
+
+    double candidate_RA_max = data.ra_tile(i) + RA_hw/cos(std::abs(data.dec_tile(i)));
+    if (candidate_RA_max > 2*cbl::par::pi)
+      candidate_RA_max = candidate_RA_max - 2*cbl::par::pi;
+    
+    double candidate_Dec_min = data.dec_tile(i) - Dec_hw;
+    //if (candidate_Dec_min < - 0.5*cbl::par::pi)
+    //  candidate_Dec_min = - 0.5*cbl::par::pi + (candidate_Dec_min - 0.5*cbl::par::pi);
+    
+    double candidate_Dec_max = data.dec_tile(i) + Dec_hw;
+    //if (candidate_Dec_max > 0.5*cbl::par::pi)
+    //  candidate_Dec_max = 0.5*cbl::par::pi - (candidate_Dec_max - 0.5*cbl::par::pi);
+    
+    RA_min[data.region(i)] = candidate_RA_min;
+    RA_max[data.region(i)] = candidate_RA_max;
+    Dec_min[data.region(i)] = candidate_Dec_min;
+    Dec_max[data.region(i)] = candidate_Dec_max;
+
+  }
+
+  for (int i=0; i<n_tiles; i++)
+    if (isSet_region[i] == false)
+      ErrorCBL("The tile number "+cbl::conv(i,cbl::par::fINT)+" in the original catalogue (data) is missing. The tile numbers must be all the integers between 0 and N, where N is the highest tile number.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp"); 
+
+  std::vector<bool>().swap(isSet_region);
+
+  // Write the tiles file
+  if (write_tiles) {
+    std::string mkdir = "mkdir -p "+dir_tiles; if (system(mkdir.c_str())) {}
+    std::ofstream myfile; myfile.open(dir_tiles+file_tiles);
+    myfile << "RA_min   RA_max   Dec_min   Dec_max   [all in degrees]" <<std::endl;
+    for (int i=0; i<n_tiles; i++)
+      myfile << RA_min[i]*(180./cbl::par::pi) << std::setw(20) << RA_max[i]*(180./cbl::par::pi) << std::setw(20) << Dec_min[i]*(180./cbl::par::pi) << std::setw(20) << Dec_max[i]*(180./cbl::par::pi) << std::endl;
+    myfile.close();
+    coutCBL<<"I wrote the file "+dir_tiles+file_tiles<<std::endl;
+  }
+
+  // Divide the observed sample in redshift sub-regions, by separating
+  // the objects in the same tile but in different redshift regions.  
+  const double zMin = data.Min(catalogue::Var::_Redshift_);
+  const double Cell_z = (data.Max(catalogue::Var::_Redshift_)-zMin)/nz;
+  
+  std::vector<long int> observedRegions (data.nObjects());
+  int next_max_tile_number = data.Max(catalogue::Var::_Region_) + 1;
+
+  std::vector<std::vector<long int>> tile_z_idx (data.Max(catalogue::Var::_Region_)+1, std::vector<long int>(nz, -1));
+    
+  for (size_t i=0; i<data.nObjects(); i++) {   
+
+    if (RA_max[data.region(i)] > RA_min[data.region(i)]) {
+      
+      if (RA_min[data.region(i)] < data.ra(i) && RA_max[data.region(i)] > data.ra(i) && Dec_min[data.region(i)] < data.dec(i) && Dec_max[data.region(i)] > data.dec(i))
+	continue;
+      else
+	ErrorCBL("The data object "+cbl::conv(i,cbl::par::fINT)+", with R.A.="+cbl::conv(data.ra(i)*(180./cbl::par::pi),cbl::par::fDP5)+" deg and Dec="+cbl::conv(data.dec(i)*(180./cbl::par::pi),cbl::par::fDP5)+" deg, does not fall within its original tile with central R.A.="+cbl::conv(data.ra_tile(i)*(180./cbl::par::pi),cbl::par::fDP5)+" deg and central Dec="+cbl::conv(data.dec_tile(i)*(180./cbl::par::pi),cbl::par::fDP5)+" deg (the candidate tile has R.A.=["+cbl::conv(RA_min[data.region(i)]*(180./cbl::par::pi),cbl::par::fDP5)+","+cbl::conv(RA_max[data.region(i)]*(180./cbl::par::pi),cbl::par::fDP5)+"] and Dec=["+cbl::conv(Dec_min[data.region(i)]*(180./cbl::par::pi),cbl::par::fDP5)+","+cbl::conv(Dec_max[data.region(i)]*(180./cbl::par::pi),cbl::par::fDP5)+"]). Try to set another value for the tile width.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+
+    } else {
+      
+      if ( (RA_min[data.region(i)] < data.ra(i) || RA_max[data.region(i)] > data.ra(i)) && (Dec_min[data.region(i)] < data.dec(i) && Dec_max[data.region(i)] > data.dec(i)) )
+	continue;
+      else
+        ErrorCBL("The data object "+cbl::conv(i,cbl::par::fINT)+", with R.A.="+cbl::conv(data.ra(i)*(180./cbl::par::pi),cbl::par::fDP5)+" deg and Dec="+cbl::conv(data.dec(i)*(180./cbl::par::pi),cbl::par::fDP5)+" deg, does not fall within its original tile with central R.A.="+cbl::conv(data.ra_tile(i)*(180./cbl::par::pi),cbl::par::fDP5)+" deg and central Dec="+cbl::conv(data.dec_tile(i)*(180./cbl::par::pi),cbl::par::fDP5)+" deg (the candidate tile has R.A.=["+cbl::conv(RA_min[data.region(i)]*(180./cbl::par::pi),cbl::par::fDP5)+","+cbl::conv(RA_max[data.region(i)]*(180./cbl::par::pi),cbl::par::fDP5)+"] and Dec=["+cbl::conv(Dec_min[data.region(i)]*(180./cbl::par::pi),cbl::par::fDP5)+","+cbl::conv(Dec_max[data.region(i)]*(180./cbl::par::pi),cbl::par::fDP5)+"]). Try to set another value for the tile width.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+      
+    }
+
+    int z_idx = min(int((data.redshift(i)-zMin)/Cell_z), nz-1);
+    
+    if (z_idx == 0)
+      observedRegions[i] = data.region(i);
+    
+    else {
+      
+      if (tile_z_idx[data.region(i)][z_idx] != -1)
+	observedRegions[i] = tile_z_idx[data.region(i)][z_idx];
+      
+      else {
+	observedRegions[i] = next_max_tile_number; // Given the same tile number, if the z cell is different also the region number is different.
+	tile_z_idx[data.region(i)][z_idx] = next_max_tile_number;
+	next_max_tile_number ++;	
+      }
+      
+    }
+    
+  }
+
+  std::vector<std::vector<long int>>().swap(tile_z_idx);
+  
+  // Define the number of regions
+  std::vector<long int> unique_region_numbers = cbl::different_elements (observedRegions);
+  const int nRegions = unique_region_numbers.size();
+
+  std::vector<long int>().swap(unique_region_numbers);
+
+  // Define the random catalogue regions  
+  std::vector<long int> randomRegions (random.nObjects());
+  
+  std::vector<bool> isSet_random_region (random.nObjects());
+
+  next_max_tile_number = data.Max(catalogue::Var::_Region_) + 1; // Set it equal to the original value
+  
+  std::vector<std::vector<long int>> tile_z_idx_random (cbl::Max(unique_tile_numbers)+1, std::vector<long int>(nz, -1));
+  
+  for (size_t i=0; i<random.nObjects(); i++) {
+
+    for (int j=0; j<n_tiles; j++) {
+
+      if (Dec_min[j] < random.dec(i) && Dec_max[j] > random.dec(i)) {
+
+	int z_idx = min(int((random.redshift(i)-zMin)/Cell_z), nz-1);
+
+	if (RA_max[j] > RA_min[j]) { // To manage the cases in which a tile lies at the zero of R.A.
+
+	  if (RA_min[j] < random.ra(i) && RA_max[j] > random.ra(i)) {
+
+	    if (isSet_random_region[i])
+	      WarningMsgCBL("The region of the "+cbl::conv((int)(i),cbl::par::fINT)+"-th random object, with R.A.="+cbl::conv(random.ra(i)*(180./cbl::par::pi),cbl::par::fDP5)+" deg and Dec="+cbl::conv(random.dec(i)*(180./cbl::par::pi),cbl::par::fDP5)+" deg, is already set!", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+
+	    if (z_idx == 0)
+	      randomRegions[i] = unique_tile_numbers[j];
+    
+	    else {
+      
+	      if (tile_z_idx_random[j][z_idx] != -1)
+		randomRegions[i] = tile_z_idx_random[j][z_idx];
+      
+	      else {
+		randomRegions[i] = next_max_tile_number;
+		tile_z_idx_random[j][z_idx] = next_max_tile_number;
+		next_max_tile_number ++;	
+	      }      
+	    }
+	    isSet_random_region[i] = true;
+	  }
+	}
+	else {
+
+	  if (RA_min[j] < random.ra(i) || RA_max[j] > random.ra(i)) { // To manage the cases in which a tile lies at the zero of R.A.
+
+	    if (isSet_random_region[i])
+	      WarningMsgCBL("The region of the "+cbl::conv((int)(i),cbl::par::fINT)+"-th random object, with R.A.="+cbl::conv(random.ra(i)*(180./cbl::par::pi),cbl::par::fDP5)+" deg and Dec="+cbl::conv(random.dec(i)*(180./cbl::par::pi),cbl::par::fDP5)+" deg, is already set!", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+
+	    if (z_idx == 0)
+	      randomRegions[i] = unique_tile_numbers[j];
+    
+	    else {
+      
+	      if (tile_z_idx_random[j][z_idx] != -1)
+		randomRegions[i] = tile_z_idx_random[j][z_idx];
+      
+	      else {
+		randomRegions[i] = next_max_tile_number;
+		tile_z_idx_random[j][z_idx] = next_max_tile_number;
+		next_max_tile_number ++;	
+	      }      
+	    }
+	    isSet_random_region[i] = true;
+	  }
+	}
+      }
+    }
+  }
+
+  for (size_t i=0; i<random.nObjects(); i++)
+    if (isSet_random_region[i] == false)
+    ErrorCBL("Region not assigned for the random object "+cbl::conv((int)(i),cbl::par::fINT)+". The random catalogue must account for the survey masks.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+
+  const int n1 = (int)(cbl::different_elements(observedRegions).size());
+  const int n2 = (int)(cbl::different_elements(randomRegions).size());
+  if (n1 < n2)
+    ErrorCBL("", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+
+  // Set the regions
+  data.set_region(observedRegions, nRegions);
+  random.set_region(randomRegions, nRegions);
+
+  cbl::check_regions(data, random);
+
+  coutCBL << "Done!" << endl;
+}
+
+
+// ============================================================================
+
+
 void cbl::set_ObjectRegion_SubBoxes (catalogue::Catalogue &data, const int nx, const int ny, const int nz)
 {
   const double xMin = data.Min(catalogue::Var::_X_);

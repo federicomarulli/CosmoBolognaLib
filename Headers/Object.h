@@ -143,7 +143,13 @@ namespace cbl {
       double m_ra = cbl::par::defaultDouble; 
 
       /// Declination 
-      double m_dec = cbl::par::defaultDouble;  
+      double m_dec = cbl::par::defaultDouble;
+      
+      /// Tile central Right Ascension 
+      double m_ra_tile = cbl::par::defaultDouble; 
+
+      /// Tile central Declination 
+      double m_dec_tile = cbl::par::defaultDouble;  
 
       /// redshift
       double m_redshift = cbl::par::defaultDouble;
@@ -481,16 +487,10 @@ namespace cbl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  @param redshiftMin minimum redshift
-       *
-       *  @param redshiftMax maximum redshift
-       *
-       *  @param sn signal-to-noise
        * 
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
       
       /**
        *  @brief static factory used to construct objects of any type,
@@ -524,15 +524,9 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @param redshiftMin minimum redshift
-       *
-       *  @param redshiftMax maximum redshift
-       *
-       *  @param sn signal-to-noise
-       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -558,15 +552,9 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @param redshiftMin minimum redshift
-       *
-       *  @param redshiftMax maximum redshift
-       *
-       *  @param sn signal-to-noise
-       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -594,15 +582,9 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @param redshiftMin minimum redshift
-       *
-       *  @param redshiftMax maximum redshift
-       *
-       *  @param sn signal-to-noise
-       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -632,15 +614,9 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @param redshiftMin minimum redshift
-       *
-       *  @param redshiftMax maximum redshift
-       *
-       *  @param sn signal-to-noise
-       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -672,15 +648,9 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @param redshiftMin minimum redshift
-       *
-       *  @param redshiftMax maximum redshift
-       *
-       *  @param sn signal-to-noise
-       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -716,16 +686,10 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @param redshiftMin minimum redshift
-       *
-       *  @param redshiftMax maximum redshift
-       *
-       *  @param sn signal-to-noise
-       *
        *  @return object of a given type
        *
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       ///@}
 
@@ -776,6 +740,20 @@ namespace cbl {
        */
       double dec () const
       { return (cbl::isSet(m_dec)) ? m_dec : ErrorCBL("the m_dec variable is not defined!", "dec", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_ra_tile
+       *  @return the central Right Ascension of the object's tile
+       */
+      double ra_tile () const
+      { return (cbl::isSet(m_ra_tile)) ? m_ra_tile : ErrorCBL("the m_ra_tile variable is not defined!", "ra_tile", "Object.h"); } 
+    
+      /**
+       *  @brief get the member \e m_dec_tile
+       *  @return the central Declination of the object's tile
+       */
+      double dec_tile () const
+      { return (cbl::isSet(m_dec_tile)) ? m_dec_tile : ErrorCBL("the m_dec_tile variable is not defined!", "dec_tile", "Object.h"); }
       
       /**
        *  @brief get the member \e m_sn
@@ -1378,6 +1356,26 @@ namespace cbl {
       {
 	m_dec = radians(dec, inputUnits);
 	if (m_dc>par::defaultDouble) cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
+      }
+      
+      /**
+       *  @brief set the member \e m_ra_tile
+       *  @param ra the central Right Ascension of the object's tile
+       *  @param inputUnits the units of the input coordinates
+       */
+      void set_ra_tile (const double ra, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
+      {
+	m_ra_tile = radians(ra, inputUnits);
+      }
+    
+      /**
+       *  @brief set the member \e m_dec_tile
+       *  @param dec the Declination of the object
+       *  @param inputUnits the units of the input coordinates
+       */
+      void set_dec_tile (const double dec, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
+      {
+	m_dec_tile = radians(dec, inputUnits);
       }
       
       /**
@@ -2070,6 +2068,22 @@ namespace cbl {
        */
       bool isSet_dec ()
       { return (cbl::isSet(m_dec)) ? true : false; }
+      
+      /**
+       *  @brief check if the member \e m_ra_tile is set
+       *  
+       *  @return true if the coordinate RA is set; false otherwise
+       */
+      bool isSet_ra_tile ()
+      { return (cbl::isSet(m_ra_tile)) ? true : false; }
+    
+      /**
+       *  @brief check if the member \e m_dec_tile is set
+       *  
+       *  @return true if the coordinate Dec is set; false otherwise
+       */
+      bool isSet_dec_tile ()
+      { return (cbl::isSet(m_dec_tile)) ? true : false; }
       
       /**
        *  @brief check if the member \e m_sn is set

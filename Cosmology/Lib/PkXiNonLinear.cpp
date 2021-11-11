@@ -161,7 +161,7 @@ double cbl::cosmology::Cosmology::Pk_ThetaTheta (const double kk, const std::sha
 
 std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
 {
-  vector<double> pkLin = Pk_DM(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
+  vector<double> pkLin = Pk_matter(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
 
   for (size_t i=0; i<kk.size(); i++)
     pkLin[i] /= pow(2*par::pi, 3);
@@ -182,7 +182,7 @@ std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaDelta (const std::vector<
 
 std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
 {
-  vector<double> pkLin = Pk_DM(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
+  vector<double> pkLin = Pk_matter(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
 
   for (size_t i=0; i<kk.size(); i++)
     pkLin[i] /= pow(2*par::pi, 3);
@@ -202,7 +202,7 @@ std::vector<double> cbl::cosmology::Cosmology::Pk_DeltaTheta (const std::vector<
 
 std::vector<double> cbl::cosmology::Cosmology::Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par, const bool unit1)
 {
-  vector<double> pkLin = Pk_DM(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
+  vector<double> pkLin = Pk_matter(kk, method_Pk, false, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par, unit1);
 
   for (size_t i=0; i<kk.size(); i++)
     pkLin[i] /= pow(2*par::pi, 3);
@@ -229,7 +229,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_AB_multipoles
   double sigma8_z0 = sigma8_Pk(method, 0., store_output, output_root);
 
   // Pklin_z0
-  const vector<double> Pklin = Pk_DM(kk, method, false, 0., store_output, output_root, norm, k_min, k_max, prec);
+  const vector<double> Pklin = Pk_matter(kk, method, false, 0., store_output, output_root, norm, k_min, k_max, prec);
   string file = "Pklin.dat";
   ofstream File_Pklin(output_tmpCPT + file);
   for (size_t nn=0; nn<kk.size(); ++nn)
@@ -326,7 +326,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_AB_terms_1loo
   double sigma8_z0 = sigma8_Pk(method, 0., store_output, output_root);
 
   // input Pklin_z0
-  const vector<double> Pklin = Pk_DM(kk, method, false, 0., store_output, output_root, norm, k_min, k_max, prec);
+  const vector<double> Pklin = Pk_matter(kk, method, false, 0., store_output, output_root, norm, k_min, k_max, prec);
   string file = "Pklin.dat";
   ofstream File_Pklin(output_tmpCPT + file);
   for (size_t nn=0; nn<kk.size(); ++nn)
@@ -424,7 +424,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_AB_terms_1loo
     const double RR = 8.;
     glob::FuncGrid interpPk(kk, Pklin, "Spline");
     auto func_sigma = [&] (double _k) { return pow(TopHat_WF(_k*RR)*_k, 2)*interpPk(_k); };
-    sigma8 = sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))/DD_norm(redshift, 0.);
+    sigma8 = sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))/DN(redshift, 0.);
     m_Pk0_CAMB = pow(m_sigma8/sigma8,2);
   }
   else { m_Pk0_CAMB = 1.;}
@@ -482,7 +482,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_dd_dt_tt (std
   double sigma8_z0 = sigma8_Pk(method, 0., store_output, output_root);
 
   // input Pklin_z0
-  const vector<double> Pklin = Pk_DM(kk, method, false, 0., store_output, output_root, norm, k_min, k_max, prec);
+  const vector<double> Pklin = Pk_matter(kk, method, false, 0., store_output, output_root, norm, k_min, k_max, prec);
   string file = "Pklin.dat";
   ofstream File_Pklin(output_tmpCPT + file);
   for (size_t nn=0; nn<kk.size(); ++nn)
@@ -547,7 +547,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_dd_dt_tt (std
     const double RR = 8.;
     glob::FuncGrid interpPk(kk, Pklin_new, "Spline");
     auto func_sigma = [&] (double _k) { return pow(TopHat_WF(_k*RR)*_k, 2)*interpPk(_k); };
-    sigma8 = sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))/DD_norm(redshift, 0.);
+    sigma8 = sqrt(1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag (func_sigma, k_min, k_max, 1.e-5))/DN(redshift, 0.);
     m_Pk0_CAMB = pow(m_sigma8/sigma8, 2);
   }
   else { m_Pk0_CAMB = 1.; }
@@ -575,7 +575,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_eTNS_terms_1loop 
   double HH0 = m_hh*100.;
 
   // input Pklin_z0
-  const vector<double> Pklin = Pk_DM(kk, method, false, 0., store_output, output_root, norm, k_min, k_max, prec);
+  const vector<double> Pklin = Pk_matter(kk, method, false, 0., store_output, output_root, norm, k_min, k_max, prec);
   string file = "Pklin.dat";
   ofstream File_Pklin(output_tmpCPT + file);
   for (size_t nn=0; nn<kk.size(); ++nn)

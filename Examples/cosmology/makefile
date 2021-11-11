@@ -7,7 +7,7 @@ dirLib = $(PWD)/../../
 dirH = $(dirLib)Headers/
 dir_Eigen = $(dirLib)External/Eigen/eigen-3.3.7/
 dir_CCfits = $(dirLib)External/CCfits/include
-dirCUBA = $(dirLib)External/Cuba-4.2/
+dirCUBA = $(dirLib)External/Cuba-4.2.1/
 
 varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
@@ -19,6 +19,7 @@ OBJ2 = fsigma8.o
 OBJ3 = distances.o 
 OBJ4 = model_cosmology.o
 OBJ5 = Pk_dynamical_DE.o
+OBJ6 = Pk_BoltzmannSolver.o
 
 ES = so
 
@@ -43,8 +44,11 @@ model_cosmology: $(OBJ4)
 Pk_dynamical_DE: $(OBJ5) 
 	$(CXX) $(OBJ5) -o Pk_dynamical_DE $(FLAGS_LIB)
 
+Pk_BoltzmannSolver: $(OBJ6) 
+	$(CXX) $(OBJ6) -o Pk_BoltzmannSolver $(FLAGS_LIB)
+
 clean:
-	rm -f *.o cosmology fsigma8 distances model_cosmology Pk_dynamical_DE *~ \#* temp* core*
+	rm -f *.o cosmology fsigma8 distances model_cosmology Pk_dynamical_DE Pk_BoltzmannSolver *~ \#* temp* core*
 
 cosmology.o: cosmology.cpp makefile $(dirLib)*.$(ES)
 	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c cosmology.cpp
@@ -60,3 +64,6 @@ model_cosmology.o: model_cosmology.cpp makefile $(dirLib)*.$(ES)
 
 Pk_dynamical_DE.o: Pk_dynamical_DE.cpp makefile $(dirLib)*.$(ES)
 	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c Pk_dynamical_DE.cpp
+
+Pk_BoltzmannSolver.o: Pk_BoltzmannSolver.cpp makefile $(dirLib)*.$(ES)
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c Pk_BoltzmannSolver.cpp

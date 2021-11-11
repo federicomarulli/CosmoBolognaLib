@@ -237,7 +237,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const int seed) 
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const char delimiter, const int seed) 
 {
   // preliminary check on vector sizes
   size_t nvar;
@@ -282,6 +282,14 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 	else ErrorCBL("CoordinateType is not valid!", "Catalogue", "Catalogue.cpp");
 	
 	stringstream ss(line);
+	
+	if (delimiter!='\t') {
+	  string temp_string;
+	  stringstream temp(line);
+	  ss.clear();
+	  while (getline(temp, temp_string, delimiter)) 
+	    ss << temp_string+" ";
+	}
 	
 	double Value_d;
 	int Value_i;
@@ -445,6 +453,14 @@ double cbl::catalogue::Catalogue::var (int index, Var var_name) const
 
   case Var::_Dec_:
     vv = m_object[index]->dec();
+    break;
+
+  case Var::_TileRA_:
+    vv = m_object[index]->ra_tile();
+    break;
+
+  case Var::_TileDec_:
+    vv = m_object[index]->dec_tile();
     break;
     
   case Var::_SN_:
@@ -679,6 +695,12 @@ bool cbl::catalogue::Catalogue::isSetVar (int index, Var var_name) const
 
   else if (var_name==Var::_Dec_)
     return m_object[index]->isSet_dec();
+
+  else if (var_name==Var::_TileRA_)
+    return m_object[index]->isSet_ra_tile();
+
+  else if (var_name==Var::_TileDec_)
+    return m_object[index]->isSet_dec_tile();
     
   else if (var_name==Var::_SN_)
     return m_object[index]->isSet_sn();
@@ -859,6 +881,18 @@ void cbl::catalogue::Catalogue::set_region_number (const size_t nRegions)
       ErrorCBL("region index for object "+conv(i, par::fINT)+" is larger than input number of regions! "+conv(m_object[i]->region(), par::fINT)+" >= "+conv(nRegions, par::fINT), "set_region_number", "Catalogue.cpp");
 
   m_nRegions = nRegions;
+}
+
+
+// ============================================================================
+
+
+void cbl::catalogue::Catalogue::set_ra_dec_tile (const std::vector<double> RA_tile, const std::vector<double> Dec_tile, const CoordinateUnits inputUnits)
+{
+  for (size_t i=0; i<m_object.size(); i++) {
+    m_object[i]->set_ra_tile(RA_tile[i], inputUnits);
+    m_object[i]->set_dec_tile(Dec_tile[i], inputUnits);
+  }
 }
 
 

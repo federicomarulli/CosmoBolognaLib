@@ -125,7 +125,7 @@ void cbl::lognormal::LogNormal::generate (const int n_lognormal_mocks, const std
   vector<double> kG = logarithmic_bin_vector(500, 1.e-4, 1.e2), PkG;
     
   for (auto &&kg : kG)
-    PkG.emplace_back(fact*m_cosmology.Pk_DM(kg, m_method_Pk, m_NL, m_redshift));
+    PkG.emplace_back(fact*m_cosmology.Pk_matter(kg, m_method_Pk, m_NL, m_redshift));
 
 
   cbl::glob::FuncGrid interpPk(kG, PkG, "Spline");

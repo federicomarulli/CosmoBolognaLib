@@ -19,7 +19,7 @@
  *******************************************************************/
 
 /**
- *  \@file CosmoBolognaLib/Func/Func.cpp
+ *  @file CosmoBolognaLib/Func/Func.cpp
  *
  *  @brief Useful generic functions
  *

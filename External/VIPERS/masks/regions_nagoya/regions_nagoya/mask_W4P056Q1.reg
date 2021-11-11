@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: /tmp/file1thvut.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(334.16045,1.639709,334.26065,1.639402,334.26868,1.641968,334.26869,1.7554,334.2687,1.7612382,334.25964,1.766466,334.16495,1.766473,334.15209,1.755406,334.15206,1.637474) # color=red dash=1

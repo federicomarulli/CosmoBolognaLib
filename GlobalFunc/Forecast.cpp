@@ -77,14 +77,14 @@ std::vector<double> cbl::fit_covariance_matrix_2PCF_monopole (const std::vector<
 
   if (sigma_NL==0 or NL==true) {
     for (size_t i=0; i<kk.size(); i++) {
-      double pkDM = cosmo.Pk_DM(kk[i], method_Pk, NL, redshift);
+      double pkDM = cosmo.Pk_matter(kk[i], method_Pk, NL, redshift);
       Pk0[i] = pkDM*pk0_fact;
       Pk2[i] = pkDM*pk2_fact;
       Pk4[i] = pkDM*pk4_fact;
     }
   }
   else {
-    vector<double> PkDM = cosmo.Pk_DM_DeWiggled(method_Pk, "EisensteinHu", kk, redshift, sigma_NL);
+    vector<double> PkDM = cosmo.Pk_matter_DeWiggled(method_Pk, "EisensteinHu", kk, redshift, sigma_NL);
     for (size_t i=0; i<kk.size(); i++) {
       Pk0[i] = PkDM[i]*pk0_fact;
       Pk2[i] = PkDM[i]*pk2_fact;
@@ -176,14 +176,14 @@ std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_multipoles (const cbl::
 
   if (sigma_NL==0 or NL==true) {
     for (size_t i=0; i<kk.size(); i++) {
-      double pkDM = cosmo.Pk_DM(kk[i], method_Pk, NL, redshift);
+      double pkDM = cosmo.Pk_matter(kk[i], method_Pk, NL, redshift);
       Pk0[i] = pkDM*pk0_fact;
       Pk2[i] = pkDM*pk2_fact;
       Pk4[i] = pkDM*pk4_fact;
     }
   }
   else {
-    vector<double> PkDM = cosmo.Pk_DM_DeWiggled(method_Pk, "EisensteinHu", kk, redshift, sigma_NL);
+    vector<double> PkDM = cosmo.Pk_matter_DeWiggled(method_Pk, "EisensteinHu", kk, redshift, sigma_NL);
     for (size_t i=0; i<kk.size(); i++) {
       Pk0[i] = PkDM[i]*pk0_fact;
       Pk2[i] = PkDM[i]*pk2_fact;

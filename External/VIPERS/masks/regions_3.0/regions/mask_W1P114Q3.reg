@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: data/W1P114/W1P114Q3.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(34.623909,-5.076608,34.718965,-5.076353,34.728015,-5.069534,34.728095,-5.006087,34.728096,-4.992478,34.728094,-4.946049,34.677227,-4.946273,34.669625,-4.946175,34.611095,-4.946293,34.611094,-4.960747,34.611089,-4.983411,34.611046,-5.06967) # color=red dash=1

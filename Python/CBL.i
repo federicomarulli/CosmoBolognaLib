@@ -24,6 +24,7 @@
 %include Lib/StackedDensityProfile.i
 %include Lib/TwoPointCorrelation.i
 %include Lib/ThreePointCorrelation.i
+%include Lib/PowerSpectrumAngular.i
 %include Lib/Modelling.i
 %include Lib/Modelling_Cosmology.i
 %include Lib/Modelling_DensityProfile.i

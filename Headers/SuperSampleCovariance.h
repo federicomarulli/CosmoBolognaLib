@@ -80,8 +80,8 @@ namespace cbl {
       
     protected:
     
-      /// pointer to the transfer function, or response, of the probe
-      std::vector<std::shared_ptr<statistics::Model>> m_transfer_func;
+      /// pointer to the response function of the probe
+      std::vector<std::shared_ptr<statistics::Model>> m_response_func;
     
       /// pointer to the Cosmology object
       std::shared_ptr<cosmology::Cosmology> m_cosmo;
@@ -298,7 +298,7 @@ namespace cbl {
       std::vector<std::vector<double>> operator () (std::vector<double> &parameter) const;
       
       /**
-       *  @brief get the response, or the transfer function, of all the probes
+       *  @brief get the response function of all the probes
        *
        *  @param xx the points where the response is evaluated
        *
@@ -309,7 +309,7 @@ namespace cbl {
       std::vector<std::vector<double>> get_response (std::vector<std::vector<double>> xx, std::vector<double> &parameter) const;
       
       /**
-       *  @brief get the response, or the transfer function, of the i-th probe
+       *  @brief get the response function of the i-th probe
        *
        *  @param i index of the probe
        *

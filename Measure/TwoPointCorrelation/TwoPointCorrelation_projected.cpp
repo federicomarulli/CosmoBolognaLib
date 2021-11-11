@@ -115,7 +115,7 @@ std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_projected::
     ww[i] = 0.;
     error[i] = 0.;
     
-    for (int j=0; j<pim; j++) {  
+    for (int j=0; j<pim*1.000001; j++) {  
       ww[i] = ww[i]+2.*binSize*xi[i][j];
       if (ww[i]>-1.) error[i] += pow(2.*binSize*error_xi[i][j], 2); // check!!!!
     }

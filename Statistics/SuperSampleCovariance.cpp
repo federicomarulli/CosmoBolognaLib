@@ -41,7 +41,7 @@ cbl::statistics::SuperSampleCovariance::SuperSampleCovariance (std::vector<std::
 {
   for (size_t i=0; i<modelling.size(); i++) {
     modelling[i]->isSet_response();
-    m_transfer_func.emplace_back(modelling[i]->transfer_function());
+    m_response_func.emplace_back(modelling[i]->response_function());
   }
 }
 
@@ -65,7 +65,7 @@ void cbl::statistics::SuperSampleCovariance::set_SSC (cbl::cosmology::Cosmology 
   
   m_compute_topHat_window(delta_z, redshift_edges);
 
-  if (m_nbins != (int)(m_transfer_func.size()))
+  if (m_nbins != (int)(m_response_func.size()))
     cbl::ErrorCBL("Different number of redshift bins and input models!","set_SSC","SuperSampleCovariance");
 }
 
@@ -89,7 +89,7 @@ void cbl::statistics::SuperSampleCovariance::set_SSC (cbl::cosmology::Cosmology 
   
   m_compute_gaussian_window(delta_z, W_mean, W_std);
 
-  if (m_nbins != (int)(m_transfer_func.size()))
+  if (m_nbins != (int)(m_response_func.size()))
     cbl::ErrorCBL("Different number of redshift bins and input models!","set_SSC","SuperSampleCovariance");
 }
 
@@ -154,7 +154,7 @@ std::vector<std::vector<double>> cbl::statistics::SuperSampleCovariance::compute
   for (int i=0; i<m_nsteps; i++){
     comov_dist[i] = cosmo.D_C(m_redshifts[i]);
     dV[i] = comov_dist[i] * comov_dist[i] * cosmo.D_H() * cosmo.EE_inv(m_redshifts[i]); // D_H()*EE_inv(z) is the D_C normalized derivative
-    growthf[i] = cosmo.gg(m_redshifts[i])/cosmo.gg(0)/(1+m_redshifts[i]);               // normalized scale-independent growth factor
+    growthf[i] = cosmo.DN(m_redshifts[i]); // normalized scale-independent growth factor
   }
   
   // Compute normalizations
@@ -196,7 +196,7 @@ std::vector<std::vector<double>> cbl::statistics::SuperSampleCovariance::compute
     kk[i]=exp(logk[i]);
   }
   
-  std::vector<double> Pk_new = cosmo.Pk_DM(kk, m_method_Pk, m_NL, 0., m_store_output, "test", -1, 0.0001, 100, 1.e-2, cbl::par::defaultString, false);
+  std::vector<double> Pk_new = cosmo.Pk_matter(kk, m_method_Pk, m_NL, 0., m_store_output, "test", -1, 0.0001, 100, 1.e-2, cbl::par::defaultString, false);
   std::vector<std::vector<double>> Uarr(m_nbins, std::vector<double>(logk.size()));
   std::vector<double> kr(m_nsteps);
   std::vector<std::vector<double>> integrand2(m_nbins, std::vector<double>(m_nsteps));  
@@ -270,10 +270,10 @@ std::vector<std::vector<double>> cbl::statistics::SuperSampleCovariance::operato
 
 std::vector<std::vector<double>> cbl::statistics::SuperSampleCovariance::get_response (std::vector<std::vector<double>> xx, std::vector<double> &parameter) const
 {
-  std::vector<std::vector<double>> response (m_transfer_func.size(), std::vector<double>());
+  std::vector<std::vector<double>> response (m_response_func.size(), std::vector<double>());
 
-  for (size_t i=0; i<m_transfer_func.size(); i++)
-    response[i] = m_transfer_func[i]->operator()(xx[i], parameter);
+  for (size_t i=0; i<m_response_func.size(); i++)
+    response[i] = m_response_func[i]->operator()(xx[i], parameter);
   
   return response;
 }
@@ -284,7 +284,7 @@ std::vector<std::vector<double>> cbl::statistics::SuperSampleCovariance::get_res
 
 std::vector<double> cbl::statistics::SuperSampleCovariance::get_response (int i, std::vector<double> xx, std::vector<double> &parameter) const
 { 
-  return m_transfer_func[i]->operator()(xx, parameter);
+  return m_response_func[i]->operator()(xx, parameter);
 }
 
 

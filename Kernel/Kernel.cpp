@@ -19,7 +19,7 @@
  *******************************************************************/
 
 /**
- *  \@file CosmoBolognaLib/Kernel/Kernel.cpp
+ *  @file Kernel/Kernel.cpp
  *
  *  @brief Useful generic functions
  *
@@ -482,7 +482,7 @@ std::vector<std::vector<double>> cbl::read_file (const std::string file_name, co
 
 std::vector<std::vector<double>> cbl::read_file (const std::string file_name, const std::string path_name, const std::vector<int> column_data, const std::string delimiter, const char comment)
 {
-  std::ifstream file_input(path_name+file_name.c_str(),std::ios::in);
+  std::ifstream file_input(path_name+file_name.c_str(),std::ios::in); checkIO(file_input, path_name+file_name);
   std::string line;
   int line_count = 0;
   while (!file_input.eof())

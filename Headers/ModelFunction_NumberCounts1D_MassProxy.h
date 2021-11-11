@@ -117,32 +117,6 @@ namespace cbl {
       std::vector<double> number_counts_proxy_classic (const std::vector<double> proxy, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
       
       /**
-       * @brief redshift evolution function in the scaling relation, 
-       * with the functional form \f$ f(z)=E(z)/E(z_{\rm piv}) = H(z)/H(z_{\rm piv}) \f$
-       *
-       * @param x vector containing the redhsift and the redshift pivot, in this order
-       *
-       * @param cosmo the cosmological model
-       *
-       * @return the value of the redshift evolution function
-       *
-       */
-      double fz_Ez (const std::vector<double> x, const std::shared_ptr<void> cosmo);
-      
-      /**
-       * @brief redshift evolution function in the scaling relation, 
-       * with the functional form \f$ f(z)=(1+z)/(1+z_{\rm piv})\f$
-       *
-       * @param x vector containing the redhsift and the redshift pivot, in this order
-       *
-       * @param cosmo the cosmological model
-       *
-       * @return the value of the redshift evolution function
-       *
-       */
-      double fz_direct (const std::vector<double> x, const std::shared_ptr<void> cosmo);
-      
-      /**
        * @brief make the counts model a simple model describing the observed counts, 
        * i.e. this function returns 1
        *
@@ -160,14 +134,14 @@ namespace cbl {
        *
        * @param cosmo cosmological model
        *
-       * @return the transfer function factor
+       * @return return 1
        *
        */
-      double no_transfer (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const double Delta, const std::string method_SS, std::shared_ptr<void> cosmo);
+      double no_response (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const double Delta, const std::string method_SS, std::shared_ptr<void> cosmo);
       
       /**
        * @brief introduce the halo bias in the model, making the counts model
-       * a transfer function for computing the super-sample covariance
+       * a response function for computing the super-sample covariance
        *
        * @param Mass halo mass
        *
@@ -183,31 +157,10 @@ namespace cbl {
        *
        * @param cosmo cosmological model
        *
-       * @return the transfer function factor, i.e. the halo bias
+       * @return the response function factor, i.e. the halo bias
        *
        */
-      double bias_transfer (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const double Delta, const std::string method_SS, std::shared_ptr<void> cosmo);
-      
-      
-      /**
-       * @brief return the absolute error
-       *
-       * @param x vector containing the absolute error
-       *
-       * @return the absolute error
-       *
-       */
-      double return_absolute_error (const std::vector<double> x);
-      
-      /**
-       * @brief return the absolute error starting from the relative error
-       *
-       * @param x vector containing the relative error and the measure
-       *
-       * @return the absolute error
-       *
-       */
-      double absolute_from_relative_error (const std::vector<double> x);
+      double bias_response (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const double Delta, const std::string method_SS, std::shared_ptr<void> cosmo);
       
     }
   }

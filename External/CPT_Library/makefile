@@ -1,6 +1,12 @@
 F90C = gfortran
 switch = -O3
 
+GCCVERSION := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 10)
+FLAGS =  
+ifeq "$(GCCVERSION)" "1"
+    FLAGS += -fallow-argument-mismatch
+endif
+
 OBJ1  = read_pk_sum.o
 OBJ2  = fit_pkred.o
 OBJ3  = read_pk2.o
@@ -66,7 +72,7 @@ fit_pkred.o: fit_pkred.f makefile
 	$(F90C) -c $(switch) fit_pkred.f
 
 read_pk2.o: read_pk2.f makefile 
-	$(F90C) -c $(switch) read_pk2.f
+	$(F90C) -c $(FLAGS) $(switch) read_pk2.f
 
 stdPT2.o: stdPT2.f makefile 
 	$(F90C) -c $(switch) stdPT2.f
@@ -75,16 +81,16 @@ fit_pkred3.o: fit_pkred3.f makefile
 	$(F90C) -c $(switch) fit_pkred3.f
 
 LPTred.o: LPTred.f makefile 
-	$(F90C) -c $(switch) LPTred.f
+	$(F90C) -c $(FLAGS) $(switch) LPTred.f
 
 LPTreal.o: LPTreal.f makefile 
 	$(F90C) -c $(switch) LPTreal.f
 
 read_pk_real.o: read_pk_real.f makefile 
-	$(F90C) -c $(switch) read_pk_real.f
+	$(F90C) -c $(FLAGS) $(switch) read_pk_real.f
 
 stdPTred.o: stdPTred.f makefile 
-	$(F90C) -c $(switch) stdPTred.f
+	$(F90C) -c $(FLAGS) $(switch) stdPTred.f
 
 stdPTreal.o: stdPTreal.f makefile 
 	$(F90C) -c $(switch) stdPTreal.f
@@ -93,8 +99,8 @@ fit_pkred4.o: fit_pkred4.f makefile
 	$(F90C) -c $(switch) fit_pkred4.f
 
 calc_pk_correction.o: calc_pk_correction.f makefile 
-	$(F90C) -c $(switch) calc_pk_correction.f
+	$(F90C) -c $(FLAGS) $(switch) calc_pk_correction.f
 
 calc_pk_correction2.o: calc_pk_correction2.f makefile 
-	$(F90C) -c $(switch) calc_pk_correction2.f
+	$(F90C) -c $(FLAGS) $(switch) calc_pk_correction2.f
 

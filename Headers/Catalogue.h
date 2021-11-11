@@ -84,6 +84,12 @@ namespace cbl {
       /// Declination
       _Dec_, 
       
+      /// Central value of the tile Right Ascension
+      _TileRA_, 
+
+      /// Central value of the tile Declination
+      _TileDec_, 
+      
       /// Signal-to-noise ratio
       _SN_,
 
@@ -888,7 +894,7 @@ namespace cbl {
        * 
        *  @param seed the seed for random number generation
        *
-       *  
+       *  @param delimiter the delimiter between the columns
        *
        *  @warning The vector column must be sorted in ascending
        *  order. The column datas will be read as double types, unless
@@ -896,7 +902,7 @@ namespace cbl {
        *  the values will be read as int)
        *
        */
-      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments=0, const double nSub=1.1, const double fact=1, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
+      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments=0, const double nSub=1.1, const double fact=1, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const char delimiter='\t', const int seed=3213);
 
       /**
        *  @brief constructor, reading a file in FITS format
@@ -939,6 +945,46 @@ namespace cbl {
        *  
        */
       Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const bool read_weights, const bool read_regions, const double nSub, const double fact, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
+
+            /**
+       *  @brief constructor, reading a file in FITS format
+       *
+       *  This constructor reads a FITS file and associates each
+       *  column name to a specific Catalogue variable
+       *
+       *  @param objectType the object type, specified in the
+       *  cbl::catalogue::ObjectType enumeration
+       *
+       *  @param coordinateType the coordinate type, specified in the
+       *  cbl::CoordinateType enumeration
+       *
+       *  @param file vector containing the files where the input
+       *  catalogues are stored
+       *
+       *  @param column_names vector containing the column names to
+       *  read
+       *
+       *  @param attribute vector containing the list of attributes
+       *  contained in the file, which corresponds to each element of
+       *  the vector 'column_names' (in the same order) and is
+       *  specified in the cbl::catalogue::Var enumeration
+       *  
+       *  @param nSub the fracton of objects that will be randomly
+       *  selected (nSub=1 \f$ \rightarrow \f$ all objects are selected)
+       *
+       *  @param fact a factor used to multiply the coordinates,
+       *  i.e. coordinate_i=coordinate_i*fact
+       *
+       *  @param cosm object of class Cosmology 
+       *
+       *  @param inputUnits the units of the input coordinates
+       *
+       *  @param seed the seed for random number generation
+       *
+       *  
+       */
+      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const std::vector<Var> attribute, const double nSub, const double fact, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
+
       
       /**
        *  @brief constructor, using vectors of generic objects
@@ -1701,6 +1747,20 @@ namespace cbl {
       double dec (const int i) const { return m_object[i]->dec(); };
       
       /**
+       * @brief get the private member Catalogue::m_object[i]->m_ra_tile
+       * @param i the object index
+       * @return the Right Ascension of the i-th object
+       */
+      double ra_tile (const int i) const { return m_object[i]->ra_tile(); };
+    
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_dec_tile
+       * @param i the object index
+       * @return the Declination of the i-th object
+       */
+      double dec_tile (const int i) const { return m_object[i]->dec_tile(); };
+      
+      /**
        * @brief get the private member Catalogue::m_object[i]->m_sn
        * @param i the object index
        * @return the signal-to-noise ratio of the i-th object
@@ -2142,6 +2202,18 @@ namespace cbl {
        * @param nRegions the total number of regions
        */
       void set_region_number (const size_t nRegions);
+      
+      /**
+       * @brief set the central R.A. and Dec of the tiles
+       *
+       * @param RA_tile tile central R.A.
+       *
+       * @param Dec_tile tile central Dec
+       *
+       * @param inputUnits input units of R.A. and Dec
+       *
+       */
+      void set_ra_dec_tile (const std::vector<double> RA_tile, const std::vector<double> Dec_tile, const CoordinateUnits inputUnits=CoordinateUnits::_degrees_);
 
       /**
        * @brief set a private variable

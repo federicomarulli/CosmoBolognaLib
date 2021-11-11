@@ -87,3 +87,69 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
     }
   }
 }
+
+// ============================================================================
+
+
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const std::vector<Var> attribute, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const int seed)
+{
+  // preliminary check on vector sizes
+  size_t nvar;
+  if (attribute.size()==column_names.size()) nvar = attribute.size();
+  else ErrorCBL("Column_names vector and attribute vector must have equal size!", "Catalogue", "FITSCatalogue.cpp");
+
+  const int num_threads = (nvar>size_t(omp_get_max_threads())) ? omp_get_max_threads() : nvar;
+  
+  unordered_map<int, Var> varMap;
+  for (size_t ii=0; ii<nvar; ii++)
+    varMap.insert({ii, attribute[ii]});
+
+  // parameters for random numbers used in case nSub!=1
+  random::UniformRandomNumbers ran(0., 1., seed);
+  
+  // read the input catalogue files
+
+  for (size_t dd=0; dd<file.size(); ++dd) {
+
+    coutCBL << "I'm reading the catalogue: " << file[dd] << endl;
+
+    // read the columns from the table searching by names
+    vector<vector<double>> table = wrapper::ccfits::read_table_fits(file[dd], column_names, 1, 1.);
+    
+    // prepare default coordinates
+    comovingCoordinates defaultComovingCoord = {par::defaultDouble, par::defaultDouble, par::defaultDouble};
+    observedCoordinates defaultObservedCoord = {par::defaultDouble, -1., 0.1};
+    
+    // include the objects in the catalogue
+    
+    for (size_t i=0; i<table[0].size(); ++i) {
+
+      size_t prev_nObj = nObjects();
+ 
+      if (ran()<nSub) { // extract a subsample
+	
+	if (coordinateType==cbl::CoordinateType::_comoving_) 
+	  m_object.push_back(move(Object::Create(objectType, defaultComovingCoord, 1.)));
+	
+	else if (coordinateType==cbl::CoordinateType::_observed_)
+	  m_object.push_back(move(Object::Create(objectType, defaultObservedCoord, inputUnits, cosm, 1.)));
+
+	
+#pragma omp parallel num_threads(num_threads)
+	{	    
+#pragma omp for schedule(dynamic)
+	  for (size_t i=0; i<nvar; ++i) {
+	
+	    for (size_t ii=prev_nObj; ii<nObjects(); ii++) {
+	      double temp = ((varMap[i]==Var::_RA_) || (varMap[i]==Var::_Dec_)) ? radians(table[i][ii], inputUnits) : table[i][ii];
+	      set_var(ii, varMap[i], ((varMap[i]==Var::_X_) || (varMap[i]==Var::_Y_) || (varMap[i]==Var::_Z_)) ? temp*fact : temp, cosm);
+	    }
+	    
+	  }
+	}
+  
+            
+      }
+    }
+  }
+}
