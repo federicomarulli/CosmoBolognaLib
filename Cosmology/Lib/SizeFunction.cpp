@@ -111,6 +111,7 @@ vector<double> cbl::cosmology::Cosmology::AP_corr(const cbl::cosmology::Cosmolog
 
 double cbl::cosmology::Cosmology::size_function (const double RV, const double redshift, const std::string model, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file) const
 {
+  
   double del_v = deltav_L(deltav_NL, b_eff, slope, offset);
   double RL;
 
@@ -133,6 +134,7 @@ double cbl::cosmology::Cosmology::size_function (const double RV, const double r
 
   if (model == "Vdn") return f_nu(sigmaRz, del_v, del_c)/volume_sphere(RV)*fabs(Dln_SigmaR);
   else return f_nu(sigmaRz, del_v, del_c)/volume_sphere(RL)*fabs(Dln_SigmaR);
+  
 }
 
 
@@ -141,6 +143,7 @@ double cbl::cosmology::Cosmology::size_function (const double RV, const double r
 
 std::vector<double> cbl::cosmology::Cosmology::size_function (const std::vector<double> RV, const double redshift, const std::string model, const double b_eff, double slope, double offset, const double deltav_NL, const double del_c, const std::string method_Pk, const bool store_output, const std::string output_root, const std::string interpType, const double k_max, const std::string input_file, const bool is_parameter_file) const
 {
+  
   double del_v = deltav_L(deltav_NL, b_eff, slope, offset);
 
   std::vector<double> RL (RV.size());

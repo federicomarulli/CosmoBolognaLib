@@ -129,7 +129,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
          
     if (charEncode==CharEncode::_ascii_) {
 	  
-      coutCBL << "I'm reading the catalogue: " << file_in << endl;
+      coutCBL << "Reading the catalogue: " << file_in << endl;
       ifstream finr(file_in.c_str()); checkIO(finr, file_in);
       
       double Weight, Value; long Region;
@@ -186,7 +186,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
             
       // read the input catalogue files
 	
-      coutCBL << "I'm reading the catalogue: " << file_in << endl;
+      coutCBL << "Reading the catalogue: " << file_in << endl;
 
       short num_bin;
       float val;
@@ -239,6 +239,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 
 cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const char delimiter, const int seed) 
 {
+
   // preliminary check on vector sizes
   size_t nvar;
   if (attribute.size()==column.size()) nvar = attribute.size();
@@ -260,17 +261,17 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 
     string line, file_in = file[dd];
 	  
-    coutCBL << "I'm reading the catalogue: " << file_in << endl;
+    coutCBL << "Reading the catalogue: " << file_in << endl;
     ifstream finr(file_in.c_str()); checkIO(finr, file_in);
 
     // prepare default coordinates
-    comovingCoordinates defaultComovingCoord = { par::defaultDouble, par::defaultDouble, par::defaultDouble};
-    observedCoordinates defaultObservedCoord = { par::defaultDouble, -1., 0.1};
+    comovingCoordinates defaultComovingCoord = {par::defaultDouble, par::defaultDouble, par::defaultDouble};
+    observedCoordinates defaultObservedCoord = {par::defaultDouble, -1., 0.1};
   
     for (int cc=0; cc<comments; cc++) getline(finr, line); // ignore commented lines at the beginning of file
       
     while (getline(finr, line)) { // read the lines
-
+      
       if (ran()<nSub) { // extract a subsample
 	  
 	if (coordinateType==cbl::CoordinateType::_comoving_) 
@@ -293,23 +294,34 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 	
 	double Value_d;
 	int Value_i;
+	//std::string Value_s;
 	size_t ii = nObjects()-1;
 	int index = 0;
 
 	for (int jj=1; jj<=cbl::Max(column); jj++) {
-	  if (varMap[column[index]]==Var::_ID_) {
+	  if (varMap[column[index]]==Var::_ID_ || varMap[column[index]]==Var::_IDHOST_) {
+	 
 	    ss>>Value_i;
 	    if (std::find(column.begin(), column.end(), jj)!=column.end()) {
 	      set_var(ii, varMap[column[index]], Value_i);
 	      index++;
+	    
+	    }
+	    
+	  }
+	  else if (varMap[column[index]]==Var::_GalaxyTag_) {
+	    ss>>Value_d;
+	    if (std::find(column.begin(), column.end(), jj)!=column.end()) {
+	      set_var(ii, varMap[column[index]], Value_d);
+	      index++;
+	     
 	    }
 	  }
 	  else {
 	    ss>>Value_d;
 	    if (std::find(column.begin(), column.end(), jj)!=column.end()) {
 	      if ((varMap[column[index]]==Var::_RA_) || (varMap[column[index]]==Var::_Dec_)) Value_d = radians(Value_d, inputUnits);
-	      set_var(ii,
-		      varMap[column[index]],
+	      set_var(ii, varMap[column[index]],
 		      ((varMap[column[index]]==Var::_X_) || (varMap[column[index]]==Var::_Y_) || (varMap[column[index]]==Var::_Z_)) ?
 		      Value_d*fact : Value_d,
 		      cosm);
@@ -340,7 +352,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const std::ve
 
     string line, file_in = file[dd];
 
-    coutCBL << "I'm reading the catalogue: " << file_in << endl;
+    coutCBL << "Reading the catalogue: " << file_in << endl;
     ifstream finr(file_in.c_str()); checkIO(finr, file_in);
 
     // start reading catalogue
@@ -547,6 +559,14 @@ double cbl::catalogue::Catalogue::var (int index, Var var_name) const
     vv = m_object[index]->mass_proxy_error();
     break;
 
+  case Var::_Mstar_:
+    vv = m_object[index]->mstar();
+    break;
+
+  case Var::_MassInfall_:
+    vv = m_object[index]->massinfall();
+    break;
+
   case Var::_Vx_:
     vv = m_object[index]->vx();
     break;
@@ -653,6 +673,10 @@ double cbl::catalogue::Catalogue::var (int index, Var var_name) const
     
   case Var::_Parent_:
     vv = m_object[index]->parent();
+    break;
+  
+  case Var::_GalaxyTag_:
+    vv = m_object[index]->galaxyTag();
     break;
 
   default:
@@ -765,6 +789,12 @@ bool cbl::catalogue::Catalogue::isSetVar (int index, Var var_name) const
   else if (var_name==Var::_MassProxyError_)
     return m_object[index]->isSet_mass_proxy_error();
 
+  else if (var_name==Var::_Mstar_)
+    return m_object[index]->isSet_mstar();
+
+  else if (var_name==Var::_MassInfall_)
+    return m_object[index]->isSet_massinfall();
+
   else if (var_name==Var::_Vx_)
     return m_object[index]->isSet_vx();
 
@@ -839,6 +869,9 @@ bool cbl::catalogue::Catalogue::isSetVar (int index, Var var_name) const
 
   else if (var_name==Var::_ID_)
     return m_object[index]->isSet_ID();
+
+  if (var_name==Var::_GalaxyTag_)
+    return m_object[index]->isSet_galaxyTag();
 
   else
     return ErrorCBL("no such a variable in the list!", "isSetVar", "Catalogue.cpp");
@@ -1016,6 +1049,14 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
     m_object[index]->set_mass_proxy_error(value);
     break;
 
+  case Var::_Mstar_:
+    m_object[index]->set_mstar(value);
+    break;
+
+  case Var::_MassInfall_:
+    m_object[index]->set_massinfall(value);
+    break;
+    
   case Var::_Vx_:
     m_object[index]->set_vx(value);
     break;
@@ -1111,6 +1152,10 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
   case Var::_TotMass_:
     m_object[index]->set_tot_mass(value);
     break;
+  
+  case Var::_GalaxyTag_:
+    m_object[index]->set_galaxyTag(value);
+    break;
     
   default:
     ErrorCBL("no such a variable in the list!", "set_var", "Catalogue.cpp");
@@ -1130,13 +1175,36 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
     m_object[index]->set_ID(value);
     (void)cosmology;
     break;
+
+  case Var::_IDHOST_:
+    m_object[index]->set_IDHost(value);
+    (void)cosmology;
+    break;
     
   default:
     ErrorCBL("no such a variable in the list!", "set_var", "Catalogue.cpp");
   }
 
 }
+
+// ============================================================================
+
+
+// void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, const double value, const cosmology::Cosmology cosmology)
+// {
+//   switch (var_name) {
+
+//   case Var::_GalaxyTag_:
+//     m_object[index]->set_galaxyTag(value);
+//     (void)cosmology;
+//     break;
+
     
+//   default:
+//     ErrorCBL("no such a variable in the list!", "set_var", "Catalogue.cpp");
+//   }
+
+// }
 
 // ============================================================================
 
@@ -1250,6 +1318,14 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<d
   case Var::_MassProxyError_:
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_mass_proxy_error(var[i]);
     break;
+    
+  case Var::_Mstar_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_mstar(var[i]);
+    break;
+
+  case Var::_MassInfall_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_massinfall(var[i]);
+    break;
 
   case Var::_Vx_:
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_vx(var[i]);
@@ -1351,6 +1427,10 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<d
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_tot_mass(var[i]);
     break;
 
+  case Var::_GalaxyTag_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_galaxyTag(var[i]);
+    break;
+  
   default:
     ErrorCBL("no such a variable in the list!", "set_var", "Catalogue.cpp");
   }
@@ -1371,11 +1451,35 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<i
     (void)cosmology;
     break;
 
+  case Var::_IDHOST_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_IDHost(var[i]);
+    (void)cosmology;
+    
+    break;
   default:
     ErrorCBL("no such a variable in the list!", "set_var", "Catalogue.cpp");
   }
-
 }
+
+//==============================================================================
+
+
+// void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<std::string> var, const cosmology::Cosmology cosmology)
+// {
+//   if (m_object.size()!=var.size()) ErrorCBL("m_object.size()!=var.size()!", "set_var", "Catalogue.cpp");
+  
+//   switch (var_name) {
+    
+//   case Var::_GalaxyTag_:
+//     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_galaxyTag(var[i]);
+//     (void)cosmology;
+//     break;
+
+//   default:
+//     ErrorCBL("no such a variable in the list!", "set_var", "Catalogue.cpp");
+//   }
+
+// }
 
 // ============================================================================
 
@@ -1676,23 +1780,27 @@ void cbl::catalogue::Catalogue::write_obs_coordinates (const std::string outputF
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::write_data (const std::string outputFile, const std::vector<Var> var_name) const 
+void cbl::catalogue::Catalogue::write_data (const std::string outputFile, const std::vector<Var> var_name, const std::string sep, const std::string header) const 
 {
-  coutCBL << "I'm writing the file: " << outputFile << "..." << endl;
-  
+  coutCBL << "Writing the file: " << outputFile << "..." << endl;
+
   ofstream fout(outputFile.c_str()); checkIO(fout, outputFile);
+
+  if (header != "") {
+    fout << header << endl;
+  }
 
   if (var_name.size()==0) {
     
     if (!isSet(ra(0)) || !isSet(dec(0)) || !isSet(redshift(0)) || !isSet(dc(0)))
-      ErrorCBL("polar coordinates are not set!", "write_data", "Catalogue.cpp");
+      ErrorCBL("Polar coordinates are not set!", "write_data", "Catalogue.cpp");
     
     if (!isSet(region(0)))
       for (size_t i=0; i<nObjects(); ++i) 
-	fout << xx(i) << "   " << yy(i) << "   " << zz(i) << "   " << ra(i) << "   " << dec(i) << "   " << redshift(i) << "   " << dc(i) << endl;
+	fout << xx(i) << sep << yy(i) << sep << zz(i) << sep << ra(i) << sep << dec(i) << sep << redshift(i) << sep << dc(i) << endl;
     else
       for (size_t i=0; i<nObjects(); ++i) 
-	fout << xx(i) << "   " << yy(i) << "   " << zz(i) << "   " << ra(i) << "   " << dec(i) << "   " << redshift(i) << "   " << dc(i) << "   " << region(i) <<endl;
+	fout << xx(i) << sep << yy(i) << sep << zz(i) << sep << ra(i) << sep << dec(i) << sep << redshift(i) << sep << dc(i) << sep << region(i) << endl;
 
   }
 
@@ -1703,7 +1811,7 @@ void cbl::catalogue::Catalogue::write_data (const std::string outputFile, const 
 
     for (size_t i=0; i<nObjects(); ++i) {
       for (size_t j=0; j<data.size(); j++)
-	fout << data[j][i] << "   ";
+	fout << data[j][i] << sep;
       fout << endl;
     }
     

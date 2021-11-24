@@ -227,7 +227,7 @@ void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_model_Mas
   param_prior[cosmo_param.size()+7] = scatterz_exponent_prior;
 
   // set the redshift evolution function
-  if (z_evo == "Ez")
+  if (z_evo == "E_z")
     m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo) {cbl::cosmology::Cosmology cosmology = *std::static_pointer_cast<cbl::cosmology::Cosmology>(cosmo); return cosmology.HH(z)/cosmology.HH(z_piv);};
   else if (z_evo == "direct")
     m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo) {(void)cosmo; return (1+z)/(1+z_piv);};

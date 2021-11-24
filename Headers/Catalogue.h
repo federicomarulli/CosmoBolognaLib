@@ -108,7 +108,11 @@ namespace cbl {
       /// second component of the shear signal
       _Shear2_,
       
-      /// the ODDS parameter quantifies which fraction of the redshift distribution, p(z), is concentrated around the peak value, allowing the construction of a threshold useful in excluding distributions with significant secondary  solutions or wide tails (Coe  et  al.  2006;  Bellagamba  et  al.  2012)
+      /// the ODDS parameter quantifies which fraction of the redshift
+      /// distribution, p(z), is concentrated around the peak value,
+      /// allowing the construction of a threshold useful in excluding
+      /// distributions with significant secondary solutions or wide
+      /// tails (Coe et al.  2006; Bellagamba et al.  2012)
       _ODDS_,
       
       /// lensing weight
@@ -146,13 +150,25 @@ namespace cbl {
 
       /// specific star formation rate
       _sSFR_, 
-      
+
       /// mass proxy
       _MassProxy_,
       
       /// mass proxy error
       _MassProxyError_,
+
+      /// stellar mass
+      _Mstar_,
+
+      /// Infall mass of substructures
+      _MassInfall_,
+	
+      /// unique identification number of the halo that host galaxy
+      _IDHOST_, 
       
+      /// tag of galaxy "central" or "satellite"
+      _GalaxyTag_, 
+
       /// velocity along the x direction
       _Vx_, 
 
@@ -284,7 +300,7 @@ namespace cbl {
      * Var names
      */
     inline std::vector<std::string> VarNames ()
-    { return {"X", "Y", "Z", "RA", "Dec", "SN", "Redshift", "RedshiftMin", "RedshiftMax", "Shear1", "Shear2", "ODDS", "LensingWeight", "LensingCalib", "Dc", "Weight", "Mass", "Magnitude", "MagnitudeU", "MagnitudeG", "MagnitudeR", "MagnitudeI", "SFR", "sSFR", "MassProxy", "MassProxyError", "Vx", "Vy", "Vz", "Region", "Radius", "DensityContrast", "CentralDensity", "X_displacement", "Y_displacement", "Z_displacement", "MassGas", "MassHalo", "MassDisk", "MassBulge", "MassStars", "MassBndry", "MassEstimate", "RadiusEstimate", "VeldispEstimate", "XCM", "YCM", "ZCM", "XSpin", "YSpin", "ZSpin", "VelDisp", "Vmax", "VmaxRad", "TotMass", "Generic"}; }
+    { return {"X", "Y", "Z", "RA", "Dec", "SN", "Redshift", "RedshiftMin", "RedshiftMax", "Shear1", "Shear2", "ODDS", "LensingWeight", "LensingCalib", "Dc", "Weight", "Mass", "Magnitude", "MagnitudeU", "MagnitudeG", "MagnitudeR", "MagnitudeI", "SFR", "sSFR", "MassProxy", "MassProxyError", "Mstar", "MassInfall", "IDHOST", "GalaxyTag", "Vx", "Vy", "Vz", "Region", "Radius", "DensityContrast", "CentralDensity", "X_displacement", "Y_displacement", "Z_displacement", "MassGas", "MassHalo", "MassDisk", "MassBulge", "MassStars", "MassBndry", "MassEstimate", "RadiusEstimate", "VeldispEstimate", "XCM", "YCM", "ZCM", "XSpin", "YSpin", "ZSpin", "VelDisp", "Vmax", "VmaxRad", "TotMass", "Generic"}; }
 
     /**
      * @brief cast an enum of type Var
@@ -398,7 +414,32 @@ namespace cbl {
     inline std::vector<RandomType> RandomTypeCast (const std::vector<std::string> randomTypeNames)
     { return castFromNames<RandomType>(randomTypeNames, RandomTypeNames()); }
 
+    /**
+     *  @enum HODType catalogue
+     *  @brief type of HOD catalogue which correspond to the author of the calibrated HOD model
+     */
+    enum class HODType {
+ 
+     /// Author for HOD model see article Zehavi et al. 2005
+     _Zehavi05_,
+     
+     /// Author for HOD model see article Zehavi et al. 2011 
+     _Zehavi11_,
 
+     /// Author for HOD model see article Moster et al. 2010
+     _Moster10_,
+
+    };
+
+    /**
+     * @brief return a vector containing the
+     * HODTypes names
+     * @return a vector containing the
+     * HODTypes names
+     */
+    inline std::vector<std::string> HODTypeNames ()
+    { return {"Zehavi05", "Zehavi11", "Moster10"}; }
+    
     /**
      *  @enum VoidAlgorithm
      *  @brief the algorithm used to look for Voids
@@ -946,7 +987,7 @@ namespace cbl {
        */
       Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const bool read_weights, const bool read_regions, const double nSub, const double fact, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
 
-            /**
+      /**
        *  @brief constructor, reading a file in FITS format
        *
        *  This constructor reads a FITS file and associates each
@@ -1079,6 +1120,67 @@ namespace cbl {
        *  
        */
       Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const cbl::catalogue::Var var_name1, const int nbin1, const cbl::catalogue::Var var_name2, const int nbin2, const int seed=3213);
+      
+      /**
+       *  @brief constructor that creates a catalogue of galaxies using an HOD model to popolate the haloes.
+       *
+       *  @param halo_catalogue object of class catalogue, is the catalogue of haloes. The constructor needs a obbject of class Catalogue.
+       *
+       *  @param cosm object of class cosmology that define cosmology used to read the input halo catalogue.
+       *
+       *  @param HOD_Type selects the HOD model used for the mean occupation number of galaxies per halo.
+       *
+       *  @param threshold defines the threshold above which the constructor generates galaxies 
+       *  It is espressed in stellar mass if HODType is _Moster10_, or in magnitude if HODType is _Zehavi05_ or _Zehavi11_, the available magnitude threshold 
+       *  are \f${-18,-18.5,-19,-19.5,-20,-20.5,-21,-21.5,-22}\f$ .  
+       *
+       *  @param substructures if true the halo catalogue is populated with galaxies and substructure. If it is set false the halo returns a catalogue of galaxies only.
+       *
+       *  @param parameters  vector of double which contain the parameters for the HOD. An empty vector takes the defaul values reported in the articles Zehavi et al. 2005, Zehavi et al. 2011 and 
+       *  Moster et al. 2010.
+       *  When HODType is _Moster10_ only the first 11 parameters are used, they are referrend to mean occupation numbers and to the conditional stellar mass function.
+       *  The first five are refferred to the central galaxies, while the other are referred to the satellite galaxies. 
+       *   They are respectively \f${k_c,M_{1c},\beta_c,\gamma_c,k_s,M_{1s},\beta_s,\gamma_s,\phi_s,\alpha_s}\f$. The mean occupation numbers are:
+       *
+       *  \f[\bigl \langle N_{c} (>M_{*,min},M)\bigl \rangle=\frac{1}{2}\left[1-erf\left(\frac{\log M_{*,min}/\bar M_{*,c}}{\sqrt{2}\sigma_c}\right)\right] \f]
+       * 
+       *  \f[ \bigl \langle N_{s} (>M_{*,min},M)\bigl \rangle=\frac{\phi_s^*}{2}\Gamma\left[\frac{\alpha_s}{2}+\frac{1}{2},\left(\frac{M_{*,min}}{\bar M_{*,s}}\right)^2\right]\f]
+       *
+       *  where the subscripts "c" and "s" refer to central and satellite galaxies respectively, and \f$\bar M_{*} \f$ is the mean stellar mass for galaxies inside an halo of mass \f$M\f$
+       *
+       *  \f[\bar M_{*}=2Mk\left[\left(\frac{M}{M_{1}}\right)^{-\beta}+\left(\frac{M}{M_{1}}\right)^{\gamma}\right]^{-1}\f]
+       *
+       *  When HODType is _Zehavi05_ or _Zehavi11_ the length of the parameters vector is 14 and 16 respectively. In _Zehavi05_ the first 3 are referred to the mean occupation numbers, 
+       *  while with _Zehavi11_ the first five are referred to the mean occupation number. While the other parameters are used to extract the stellar mass of each galaxy. 
+       *  The parameters vector with _Zehavi05_ is: \f${M_{min},M_1,\alpha,k_c,M_{1c},\beta_c,\gamma_c,k_s,M_{1s},\beta_s,\gamma_s,\phi_s,\alpha_s}\f$. The mean occupation number for central and
+       *  satellite galaxies respectively are the follow:
+       *
+       *  \f[\bigl \langle N_c(M) \bigl \rangle = \begin{cases}
+       *   0  \ \ \ \text{if $M<M_{min}$} \\
+       *   1 \ \ \  \hfill  \text{if $M>M_{min}$} \\
+       *   \end{cases}\f]
+       *  
+       *   \f[\bigl \langle N_s (M)\bigl \rangle =\begin{cases}
+       *   0  \ \ \  \text{if $M<M_{min}$} \\
+       *   (\frac{M-M_{min}}{M_1})^{\alpha} \ \ \  \text{if $M>M_{min}$} \\
+       *   \end{cases}\f]
+       *
+       *  The parameters vector with _Zehavi11_ is: \f${logM_{min},\sigma_{logM},M_0,M_1,\alpha,k_c,M_{1c},\beta_c,\gamma_c,k_s,M_{1s},\beta_s,\gamma_s,\phi_s,\alpha_s}\f$ The mean occupation number
+       *  for central and satellite galaxies respectively are the follow:
+       *
+       *   \f[\bigl \langle N_c (M)\bigl \rangle =\frac{1}{2}\left[1+erf \left(\frac{\log M-\log M_{min}}{\sigma_{logM}}\right)\right] \f]
+       *
+       *   \f[\bigl \langle N_s (M)\bigl \rangle= \frac{1}{2}\left[1+\left(\frac{M-M_0}{M'_1}\right)^\alpha\right]\f] 
+       *
+       *   The stellar masses for central and satellite galaxies are extracted from the following conditional stellar mass function: 
+       *
+       *   \f[\Phi_{c}(M_*|M)=\frac{1}{\sqrt{2\pi}\ln10 M_* \sigma_c}\exp\left[-\frac{\log^2\left(M_* /\bar M_{*,c}\right)}{2\sigma_c^2}\right] \f]
+       *
+       *   \f[ \Phi_{s}(M_*|M)=\frac{\phi^*_s}{\bar M_{*,s}}\left(\frac{m_*}{m_{*,s}}\right)^{\alpha_s}\exp\left[-\left(\frac{M_*}{\bar M_{*,s}}\right)^2\right] \f]
+       *  @return an object of class Catalogue
+       */
+      
+      Catalogue (const Catalogue halo_catalogue, const cosmology::Cosmology &cosm, const HODType HOD_Type, const double threshold, const bool substructures=1, std::vector<double> parameters={});
 
       /**
        * @brief default destructor
@@ -1986,6 +2088,34 @@ namespace cbl {
       double mass_proxy_error (const int i) const { return m_object[i]->mass_proxy_error(); }
 
       /**
+       * @brief get the private member Catalogue::m_object[i]->m_IDHost
+       * @param i the object index
+       * @return ID of the Host halo i-th object
+       */
+      int IDHost (const int i) const { return m_object[i]->IDHost(); }
+      
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_galaxyTag
+       * @param i the object index
+       * @return tag of a galaxy
+       */
+      double galaxyTag (const int i) const { return m_object[i]->galaxyTag(); }
+
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_mstar
+       * @param i the object index
+       * @return the stellar mass of the i-th object
+       */
+      double mstar (const int i) const { return m_object[i]->mstar(); }
+
+      /**
+       * @brief get the private member Catalogue::m_object[i]->m_minfall
+       * @param i the object index
+       * @return the infall mass of the i-th object
+       */
+      double massinfall (const int i) const { return m_object[i]->massinfall(); }
+
+      /**
        * @brief get the private member Catalogue::m_object[i]->m_generic
        * @param i the object index
        * @return generic properties of the i-th object
@@ -2239,9 +2369,20 @@ namespace cbl {
        * @param index index of the variable to set
        * @param var_name name of the variable
        * @param value variable value
-       * @param cosmology object of class Cosmology   
+       * @param cosmology object of class Cosmology
+       * @return none
        */
       void set_var (const int index, const Var var_name, const int value, const cosmology::Cosmology cosmology={});
+
+//      /**
+//       * @brief set a private variable
+//       * @param index index of the variable to set
+//       * @param var_name name of the variable
+//       * @param value variable value       
+//       * @param cosmology object of class Cosmology
+//       * @return none
+//       */
+//        void set_var (const int index, const Var var_name, const double value, const cosmology::Cosmology cosmology={});
       
       /**
        * @brief set a private variable
@@ -2260,25 +2401,37 @@ namespace cbl {
        * @param var_name name of the variable
        * @param var vector of variables
        * @param cosmology object of class Cosmology
+       * @return none
        */
       void set_var (const Var var_name, const std::vector<int> var, const cosmology::Cosmology cosmology={});
 
+//      /**
+//       * @brief set a private variable
+//       * @param var_name name of the variable
+//       * @param var vector of variables
+//       * @param cosmology object of class Cosmology
+//       * @return none
+//      */
+//       void set_var (const Var var_name, const std::vector<std::string> var, const cosmology::Cosmology cosmology={});
+      
       /**
        *  @brief set the private member HostHalo::m_satellites
        *  @param index index of the variable to set
        *  @param satellite the vector of shared pointers to satellite objects
+       * @return none
        */
       void set_satellite (const int index, const std::shared_ptr<Object> satellite={}) {
-	m_object[index]->set_satellite(satellite);
+	      m_object[index]->set_satellite(satellite);
       }
 
       /**
        *  @brief set the private member HostHalo::m_satellites
        *  @param index index of the variable to set
        *  @param satellites the vector of shared pointers to satellite objects
+       * @return none
        */
       void set_satellites (const int index, const std::vector<std::shared_ptr<Object>> satellites={}) {
-	m_object[index]->set_satellites(satellites);
+	      m_object[index]->set_satellites(satellites);
       }
 
       /**
@@ -2570,8 +2723,13 @@ namespace cbl {
        *
        *  @param var_name vector containing the variable names to be
        *  written
+       * 
+       *  @param sep [optional parameter] specifies the file separator, default is "   " for retrocompatibility.
+       * Is strongly raccomanded to use standard values like: "\t" or ",".
+       * 
+       *  @param header [optional parameter] string with the header of the file. Default is "".
        */
-      void write_data (const std::string outputFile, const std::vector<Var> var_name={}) const;
+      void write_data (const std::string outputFile, const std::vector<Var> var_name={}, const std::string sep="   ", const std::string header="") const;
       
       /**
        * @brief get the distrance between the i-th object of the
@@ -2750,6 +2908,42 @@ namespace cbl {
       ///@}
       
     };
+    
+    /**
+     * @brief return the average number of central galaies inside an halo of mass x
+     * @param x the halo mass
+     * @param logMmin logarithmic value of minimum halo mass that host a central galaxy
+     * @param logsigma_c logarithmic value of sigma in the lognormal distribution
+     * @return the mean occupation number of central galaxy
+     */
+    double Average_c_Zehavi_2011 (double x, const double logMmin, const double logsigma_c);
+
+    /**documentazione
+     * @brief return the average number of satellite galaies per halo of mass x
+     * @param x the halo mass
+     * @param M0 HOD parameter
+     * @param M1 HOD parameter
+     * @param alpha exponent of the power law
+     * @return the mean occupation number of central galaxy
+     */
+    double Average_s_Zehavi_2011 (double x, const double M0, const double M1, const double alpha);
+        
+    /**
+     * @brief return the average number of central galaies inside an halo of mass x
+     * @param x the halo mass
+     * @param Mmin is the value of the minimum halo mass that host a central galaxy
+     * @return the mean occupation number of central galaxy
+     */
+    double Average_c_Zehavi_2005 (double x, const double Mmin);
+
+    /**documentazione
+     * @brief return the average number of satellite galaies per halo of mass x
+     * @param x the halo mass
+     * @param M1 is the halo mass that host at least a satellite galaxy
+     * @param alpha exponent of the power law
+     * @return the mean occupation number of central galaxy
+     */
+    double Average_s_Zehavi_2005 (double x, const double alpha, const double M1);
     
   }
 }

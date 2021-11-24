@@ -1468,3 +1468,40 @@ double cbl::cosmology::Cosmology::m_serf_dz (const double yy) const
 {
   return (1.+yy*(0.32216878+yy*(0.18693909+yy*(0.12921048+yy*(0.097305732+yy*(0.077131543+yy*0.063267775+yy*(0.053185339+yy*(0.045545557+yy*0.039573617))))))));
 }
+
+
+// =====================================================================================
+
+
+double cbl::cosmology::Cosmology::concentration_NFW_Duffy (const double Mass, const double redshift, const string halo_def) const
+{
+  double AA, BB, CC;
+
+  if (redshift>2) ErrorCBL("The concentration-mass relation by Duffy et al. has been tested only at z<2", "concentration_NFW_Duffy", "Cosmology.cpp");
+
+  if (halo_def=="200") {
+    AA = 5.71;
+    BB = -0.084;
+    CC = -0.47;
+  }
+
+  else if (halo_def=="vir") {
+    AA = 7.85;
+    BB = -0.081;
+    CC = -0.71;
+  }
+
+  else if (halo_def=="mean") {
+    AA = 10.14;
+    BB = -0.081;
+    CC = -1.01;
+  }
+    else return ErrorCBL("halo_def not allowed!", "concentration_NFW_Duffy", "Cosmology.cpp");
+
+  const double Mpivot = 2.e12; // in [Msun/h]
+  
+  return AA*pow(Mass/Mpivot, BB)*pow(1.+redshift, CC);
+}
+
+
+// ============================================================================================

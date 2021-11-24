@@ -67,7 +67,6 @@ int main () {
     TwoP->measure(cbl::measure::ErrorType::_Poisson_, dir);
 
     TwoP->write(dir, file);
-
   }
 
   catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }

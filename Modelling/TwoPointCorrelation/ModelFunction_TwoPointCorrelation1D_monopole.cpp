@@ -490,9 +490,18 @@ std::vector<double> cbl::modelling::twopt::xi0_damped_scaling_relation_sigmaz_co
 
   double log_base = (pp->scaling_relation)->data_model().log_base;
   double mass_pivot = (pp->scaling_relation)->data_model().mass_pivot;
+  double proxy_pivot = (pp->scaling_relation)->data_model().proxy_or_mass_pivot;
+  double redshift_pivot = (pp->scaling_relation)->data_model().redshift_pivot;
 
-  for (size_t i=0; i<pp->scaling_relation->data()->xx().size(); i++) {    
-    double log_mass = (pp->scaling_relation)->likelihood()->get_m_model()->operator()(pp->scaling_relation->data()->xx(i), scalRel_pars);
+  auto cosmo_ptr = std::make_shared<cbl::cosmology::Cosmology>(cosmo);
+
+  for (size_t i=0; i<pp->scaling_relation->data()->xx().size(); i++) {
+    double log_lambda = log(pp->scaling_relation->data()->xx(i)/proxy_pivot)/log(log_base);
+    double log_fz = log( (pp->scaling_relation)->data_model().fz((pp->scaling_relation)->data_model().redshift[i],redshift_pivot,cosmo_ptr) )/log(log_base);
+    
+    double sigma_intr = scalRel_pars[scalRel_pars.size()-5] + scalRel_pars[scalRel_pars.size()-4]*pow(log_lambda, scalRel_pars[scalRel_pars.size()-3]) + scalRel_pars[scalRel_pars.size()-2]*pow(log_fz, scalRel_pars[scalRel_pars.size()-1]);
+    
+    double log_mass = (pp->scaling_relation)->likelihood()->get_m_model()->operator()(pp->scaling_relation->data()->xx(i), scalRel_pars) + sigma_intr;
     double mass = pow(log_base, log_mass) * mass_pivot;
 
     double Delta = (pp->isDelta_Vir) ? cosmo.Delta_vir(pp->Delta_input, (pp->scaling_relation)->data_model().redshift[i]) : pp->Delta_input;

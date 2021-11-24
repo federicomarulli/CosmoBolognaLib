@@ -20,7 +20,7 @@ int main () {
   try {
 
     // the input file
-    const string file = cbl::par::DirLoc+"data.dat";
+    const string file = cbl::par::DirLoc + "data.dat";
     
     // header lines to skip
     const int n_lines_header = 2;

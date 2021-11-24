@@ -5,7 +5,7 @@ FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 
 dirLib = $(PWD)/../../
 dirH = $(dirLib)Headers/
-dir_Eigen = $(dirLib)External/Eigen/eigen-3.3.7/
+dir_Eigen = $(dirLib)External/Eigen/eigen-3.4.0/
 dir_CCfits = $(dirLib)External/CCfits/include
 dirCUBA = $(dirLib)External/Cuba-4.2.1/
 

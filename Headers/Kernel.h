@@ -34,6 +34,14 @@
 #ifndef __KERNEL__
 #define __KERNEL__
 
+// Save compiler switches
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+#pragma GCC diagnostic ignored "-Wparentheses"
+#pragma GCC diagnostic ignored "-Wmisleading-indentation"
+#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+
 #include <iostream>
 #include <sstream>
 #include <unordered_map>
@@ -112,6 +120,9 @@
 /// @cond FFTWinc
 #include <Eigen/Dense>
 /// @endcond
+
+// Restore compiler switches
+#pragma GCC diagnostic pop
 
 #include "Constants.h"
 #include "EnumCast.h"

@@ -233,8 +233,8 @@ namespace cbl {
 	 *  In particular, the cluster masses are derived from the following
 	 *  scaling relation:
 	 *
-	 *  \f$ \log M = \alpha + \beta\log(\lambda/lambda_{\rm pivot})+
-	 *  \gamma \log(f(z,z_{\rm pivot})) \f$
+	 *  \f$ \log (M/M_{\rm piv}) = \alpha + \beta\log(\lambda/lambda_{\rm pivot})+
+	 *  \gamma \logf(z) \f$
 	 *
 	 *  @param cosmology the cosmological model used to measure
 	 *  &xi;<SUB>DM</SUB>

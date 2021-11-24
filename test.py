@@ -125,6 +125,7 @@ check("statistics/codes", "fit", "C++")
 check("statistics/codes", "sampler", "C++")
 
 check("catalogue", "catalogue", "C++") 
+check("HOD/codes", "catalogueHOD", "C++")
 
 check("lognormal/codes", "lognormal", "C++") 
 

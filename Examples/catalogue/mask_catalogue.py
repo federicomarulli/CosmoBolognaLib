@@ -38,5 +38,3 @@ cat3 = catalogue.sub_catalogue(cbl.Var__X_, -70, 10)
 print("Full sample: ", catalogue.nObjects())
 print("User-defined mask: ", cat2.nObjects())
 print("Min-Max cut:  ", cat3.nObjects())
-
-

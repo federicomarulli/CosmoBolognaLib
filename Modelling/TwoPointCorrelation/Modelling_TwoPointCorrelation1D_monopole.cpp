@@ -674,7 +674,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_scaling_relation_sigmaz_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution sigmaz_prior, const std::string z_evo)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_scaling_relation_sigmaz_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution sigmaz_prior, const std::string z_evo, const std::vector<double> z_err, const std::vector<double> proxy_err)
 {
   // compute the fiducial dark matter two-point correlation function
   set_fiducial_xiDM();
@@ -686,7 +686,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
   if ((m_data_model->scaling_relation)->data()->xx().size() == 0)
     ErrorCBL("The mass-observable relation is not set! Use the correct set_data_model().", "set_model_scaling_relation_sigmaz_cosmology", "Modelling_TwoPointCorrelation1D_monopole.cpp");
 
-  (m_data_model->scaling_relation)->set_model_MassObservableRelation_cosmology(z_evo, cosmo_param, cosmo_prior, alpha_prior, beta_prior, gamma_prior, scatter0_prior, scatterM_prior, scatterM_exponent_prior, scatterz_prior, scatterz_exponent_prior);
+  (m_data_model->scaling_relation)->set_model_MassObservableRelation_cosmology(z_evo, cosmo_param, cosmo_prior, alpha_prior, beta_prior, gamma_prior, scatter0_prior, scatterM_prior, scatterM_exponent_prior, scatterz_prior, scatterz_exponent_prior, z_err, proxy_err);
 
   (m_data_model->scaling_relation)->set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_, {}); // Set the likelihood for the scaling relation (only to avoid internal errors, of course it is not used)
     

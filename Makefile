@@ -30,7 +30,7 @@ dir_INC_cfitsio =
 dir_LIB_cfitsio =
 
 # boost installation directories
-dir_INC_BOOST =
+dir_INC_BOOST = $(shell $(PY) -c 'from distutils import sysconfig; print(sysconfig.get_config_var("INCLUDEDIR"))')
 dir_LIB_BOOST =
 
 
@@ -38,7 +38,7 @@ dir_LIB_BOOST =
 ### hopefully, the user would never modify the makefile after this point ###
 ############################################################################
 
-EIGEN_VERSION = 3.3.7
+EIGEN_VERSION = 3.4.0
 
 Dir_H = Headers/
 Dir_CCfits = External/CCfits/
@@ -66,7 +66,7 @@ FLAGS0 = -std=c++11 -fopenmp
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 FLAGST = $(FLAGS0) $(FLAGS)
 
-FLAGS_INC = -isystem$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H)
+FLAGS_INC = -I$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H)
 
 FLAGS_LINK = -shared
 
@@ -139,7 +139,7 @@ endif
 # add in FLAGS_INC
 ifeq ($(dir_INC_BOOST),)
   else
-  FLAGS_INC :=  $(FLAGS_INC) -isystem$(dir_INC_BOOST)
+  FLAGS_INC :=  $(FLAGS_INC) -I$(dir_INC_BOOST)
 endif
 
 ####################
@@ -147,7 +147,7 @@ endif
 ####################
 
 GCCVERSION := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 10)
-FLAGS_FFTLOG = -fPIC -w 
+FLAGS_FFTLOG = -fPIC -w
 ifeq "$(GCCVERSION)" "1"
     FLAGS_FFTLOG += -fallow-argument-mismatch
 endif
@@ -304,13 +304,13 @@ OBJ_FIELD = $(dir_FIELD)Field3D.o
 
 OBJ_HIST = $(dir_HIST)Histogram.o
 
-OBJ_DISTR = $(dir_DISTR)Distribution.o $(dir_DISTR)CombinedDistribution.o 
+OBJ_DISTR = $(dir_DISTR)Distribution.o $(dir_DISTR)CombinedDistribution.o
 
-OBJ_COSM = $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)PkXiNonLinear.o $(dir_COSM)MassFunction.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)SizeFunction.o  $(dir_COSM)3PCF.o $(OBJ_RECfast)
+OBJ_COSM = $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)PkXiNonLinear.o $(dir_COSM)MassFunction.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)SizeFunction.o  $(dir_COSM)3PCF.o $(OBJ_RECfast) $(dir_COSM)MassFunction_vector.o $(dir_COSM)Bias_vector.o
 
 OBJ_STAT =  $(dir_STAT)Prior.o $(dir_STAT)ModelParameters.o $(dir_STAT)LikelihoodParameters.o $(dir_STAT)PosteriorParameters.o $(dir_STAT)Model.o $(dir_STAT)Model1D.o $(dir_STAT)Model2D.o $(dir_STAT)LikelihoodFunction.o $(dir_STAT)Likelihood.o $(dir_STAT)Chi2.o $(dir_STAT)Sampler.o $(dir_STAT)Posterior.o $(dir_STAT)SuperSampleCovariance.o $(dir_STAT)CombinedPosterior.o
 
-OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $(dir_CAT)ChainMesh_Catalogue.o $(dir_CAT)RandomCatalogueVIPERS.o $(dir_CAT)VoidCatalogue.o $(dir_CAT)GadgetCatalogue.o $(dir_CAT)FITSCatalogue.o $(dir_CAT)Cluster.o
+OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $(dir_CAT)ChainMesh_Catalogue.o $(dir_CAT)RandomCatalogueVIPERS.o $(dir_CAT)VoidCatalogue.o $(dir_CAT)GadgetCatalogue.o $(dir_CAT)FITSCatalogue.o $(dir_CAT)Cluster.o $(dir_CAT)HODCatalogue.o
 
 OBJ_LN = $(dir_LN)LogNormal.o $(dir_LN)LogNormalFull.o
 
@@ -322,7 +322,7 @@ OBJ_TWOP = $(dir_TWOP)Pair.o $(dir_TWOP)Pair1D.o $(dir_TWOP)Pair2D.o $(dir_TWOP)
 
 OBJ_THREEP = $(dir_THREEP)Triplet.o $(dir_THREEP)ThreePointCorrelation.o $(dir_THREEP)ThreePointCorrelation_angular_connected.o $(dir_THREEP)ThreePointCorrelation_angular_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_connected.o $(dir_THREEP)ThreePointCorrelation_comoving_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_multipoles.o $(dir_THREEP)ThreePointCorrelation_comoving_multipoles_single.o $(dir_THREEP)ThreePointCorrelation_comoving_multipoles_all.o
 
-OBJ_ANGPOW = $(dir_ANGPOW)Celle.o  
+OBJ_ANGPOW = $(dir_ANGPOW)Celle.o
 
 OBJ_MODEL_GLOB = $(dir_MODEL_GLOB)Modelling.o  $(dir_MODEL_GLOB)Modelling1D.o $(dir_MODEL_GLOB)Modelling2D.o $(dir_MODEL_GLOB)CombinedModelling.o $(dir_MODEL_GLOB)Modelling_Distribution.o
 
@@ -437,10 +437,10 @@ ALL:
 	make -j3 libPARF
 	$(call colorecho, "\n"Compiling the full library: libCBL... "\n")
 	make -j3 libCBL
-	make logo	
+	make logo
 
 libKERNEL: $(OBJ_KERNEL) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libKERNEL.$(ES) $(OBJ_KERNEL) -lgfortran -lgomp 
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libKERNEL.$(ES) $(OBJ_KERNEL) -lgfortran -lgomp
 
 libWRAP: $(OBJ_WRAP) $(PWD)/Makefile
 	$(CXX) $(FLAGS_LINK) -o $(PWD)/libWRAP.$(ES) $(OBJ_WRAP) $(CUBA_LIB) $(FLAGS_CCFITS) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL
@@ -595,7 +595,7 @@ allExamples:
 	$(call colorecho, "\n"Compiling the example code: fit.cpp ... "\n")
 	cd $(PWD)/Examples/statistics/codes ; make fit CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the wrapper for the example code: fit.py ... "\n")
-	cd $(PWD)/Examples/statistics/codes ; make modelpy CXX=$(CXX) SWIG=$(SWIG) PY=$(PY) FLAGS_INC='$(FLAGS_INC)'
+	cd $(PWD)/Examples/statistics/codes ; make modelpy CXX=$(CXX) SWIG=$(SWIG) PY=python3 FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: sampler.cpp ... "\n")
 	cd $(PWD)/Examples/statistics/codes ; make sampler CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: catalogue.cpp ... "\n")
@@ -644,6 +644,8 @@ allExamples:
 	cd $(PWD)/Examples/cosmicVoids/codes ; make modelling_VoidAbundances CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: parameterFile.cpp ... "\n")
 	cd $(PWD)/Examples/parameterFile/ ; make CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
+	$(call colorecho, "\n"Compiling the example code: catalogueHOD.cpp ... "\n")
+	cd $(PWD)/Examples/HOD/codes ; make catalogueHOD CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 
 python: Eigen CUBA CCfits CAMB CLASS MPTbreeze mangle CPT_Library MGCAMB $(dir_Python)CBL_wrap.o $(dir_Python)CBL.i $(PWD)/Makefile
 	make ALL
@@ -673,6 +675,7 @@ cleanExamples:
 	cd $(PWD)/Examples/statistics/codes ; make clean && cd ../..
 	cd $(PWD)/Examples/lognormal/codes ; make clean && cd ../..
 	cd $(PWD)/Examples/catalogue ; make clean && cd ../..
+	cd $(PWD)/Examples/HOD/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/numberCounts/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/clustering/codes ; make clean && cd ../../..
 	cd $(PWD)/Examples/powerSpectrum_angular/codes ; make clean && cd ../../..
@@ -682,7 +685,7 @@ cleanExamples:
 
 
 cleanpy:
-	rm -f $(dir_Python)*~ $(dir_Python)CBL_wrap.o $(dir_Python)CBL_wrap.cxx $(dir_Python)CosmoBolognaLib.py*
+	rm -f $(dir_Python)*~ $(dir_Python)CBL_wrap.h $(dir_Python)CBL_wrap.o $(dir_Python)CBL_wrap.cxx $(dir_Python)CosmoBolognaLib.py*
 	rm -f $(dir_Python)Lib/*~ $(dir_Python)Lib/*.o $(dir_Python)Lib/*.cxx $(dir_Python)Lib/*.py
 	rm -f $(dir_Python)CosmoBolognaLib/*CosmoBolognaLib* $(dir_Python)CosmoBolognaLib/*~ $(dir_Python)CosmoBolognaLib/*.pyc
 	rm -f $(dir_Python)_CosmoBolognaLib.so $(dir_Python)CosmoBolognaLib.py
@@ -878,6 +881,9 @@ $(dir_COSM)Cosmology.o: $(dir_COSM)Cosmology.cpp $(HH) $(PWD)/Makefile
 $(dir_COSM)MassFunction.o: $(dir_COSM)MassFunction.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)MassFunction.cpp -o $(dir_COSM)MassFunction.o
 
+$(dir_COSM)MassFunction_vector.o: $(dir_COSM)MassFunction_vector.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)MassFunction_vector.cpp -o $(dir_COSM)MassFunction_vector.o
+
 $(dir_COSM)SizeFunction.o: $(dir_COSM)SizeFunction.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)SizeFunction.cpp -o $(dir_COSM)SizeFunction.o
 
@@ -892,6 +898,9 @@ $(dir_COSM)PkXiNonLinear.o: $(dir_COSM)PkXiNonLinear.cpp $(HH) $(PWD)/Makefile
 
 $(dir_COSM)Bias.o: $(dir_COSM)Bias.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)Bias.cpp -o $(dir_COSM)Bias.o
+
+$(dir_COSM)Bias_vector.o: $(dir_COSM)Bias_vector.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)Bias_vector.cpp -o $(dir_COSM)Bias_vector.o
 
 $(dir_COSM)RSD.o: $(dir_COSM)RSD.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)RSD.cpp -o $(dir_COSM)RSD.o
@@ -991,8 +1000,11 @@ $(dir_CAT)FITSCatalogue.o: $(dir_CAT)FITSCatalogue.cpp $(HH) $(PWD)/Makefile
 $(dir_CAT)Cluster.o: $(dir_CAT)Cluster.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)Cluster.cpp -o $(dir_CAT)Cluster.o
 
+$(dir_CAT)HODCatalogue.o: $(dir_CAT)HODCatalogue.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)HODCatalogue.cpp -o $(dir_CAT)HODCatalogue.o
 
-####################################################################
+
+####################################################################################################
 
 
 $(dir_LN)LogNormal.o: $(dir_LN)LogNormal.cpp $(HH) $(PWD)/Makefile
@@ -1002,7 +1014,7 @@ $(dir_LN)LogNormalFull.o: $(dir_LN)LogNormalFull.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_LN)LogNormalFull.cpp -o $(dir_LN)LogNormalFull.o
 
 
-####################################################################
+##################################################################################################
 
 
 $(dir_NC)NumberCounts.o: $(dir_NC)NumberCounts.cpp $(HH) $(PWD)/Makefile
@@ -1470,4 +1482,3 @@ $(PWD)/External/MGCAMB/camb:
 
 $(PWD)/Logo/logo:
 	$(CXX) $(PWD)/Logo/Logo.cpp -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(PWD) -L$(PWD) $(FLAGS_INC) -lKERNEL -o $(PWD)/Logo/logo ; $(PWD)/Logo/logo
-

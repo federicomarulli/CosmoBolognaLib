@@ -248,16 +248,9 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_linked_list ()
   m_nPix[1] = (dec_limits[1]-m_dec_start)/m_pix_size +1;
 
   m_last.resize(m_nPix[0], std::vector<int>(m_nPix[1]));
-  m_first.resize(m_nPix[0], std::vector<int>(m_nPix[1]));
+  m_first.resize(m_nPix[0], std::vector<int>(m_nPix[1],-1));
   m_next.resize(m_galData->nObjects(),-1);
-
-  for (size_t i=0; i<m_next.size(); i++)
-    m_next[i] = -1;
-  for (size_t i=0; i<m_first.size(); i++){
-    for (size_t j=0; j<m_first[i].size(); j++){
-      m_first[i][j] = -1;
-    }
-  }
+  
   int pix[2];
   for (size_t i=0; i<m_next.size(); i++){
     // Pixel position
@@ -415,12 +408,16 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_stacker ()
 	std::vector<double>::iterator it_q = std::upper_bound(m_proxy_binEdges[p].begin(), m_proxy_binEdges[p].end(), m_cluData->mass_proxy(i));
 	int q = it_q-m_proxy_binEdges[p].begin()-1;
 	  
-	if (p>=0 && p < (int)(m_z_binEdges.size()) && q>=0 && q < (int)(m_proxy_binEdges[p].size())){
-	  m_nClu_inBin[p][q] ++;
-
+	if (p>=0 && p < (int)(m_z_binEdges.size()) && q>=0 && q < (int)(m_proxy_binEdges[p].size())) {
+	  
+	  bool cluster_has_background = false;
 	  m_profile(i);
+	  
 	  for (size_t j=0; j<m_rad_arr.size()-1; j++){
 	    if (m_ngal_arr[j] > 0){
+
+	      cluster_has_background = true;
+	      
 	      double err = m_deltasigma_err[j]; double wei = 1./err/err;
 	      m_stacked_deltasigma_t[p][q][j] += m_deltasigma_t[j]*wei; m_stacked_deltasigma_x[p][q][j] += m_deltasigma_x[j]*wei;
 	      m_stacked_deltasigma_wei[p][q][j] += wei; m_stacked_ngal_arr[p][q][j] += m_ngal_arr[j];
@@ -432,12 +429,18 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_stacker ()
 	      if (m_ngal_arr[j] > 1) m_stacked_rad_sigma_arr[p][q][j] += pow(m_rad_sigma_arr[j],m_obs_gamma*2.)*m_wetasquareSum[j];
 	    }
 	  }
-	  m_proxy_eff[p][q] += pow(m_cluData->mass_proxy(i),m_obs_gamma)*wetasquareSum_j[p][q]; // wetasquaresum = \Sum (weight * (sigma_crit / (c*c/4/pi/G))^-2)
-	  m_proxy_sigma[p][q] += pow(m_cluData->mass_proxy(i),2*m_obs_gamma)*wetasquareSum_j[p][q]; 
-	  m_z_eff[p][q] += pow(m_cluData->redshift(i),m_obs_gamma)*wetasquareSum_j[p][q];
-	  m_z_sigma[p][q] += pow(m_cluData->redshift(i),2*m_obs_gamma)*wetasquareSum_j[p][q];
-	  wetasquareSum_tot[p][q] += wetasquareSum_j[p][q];
-	  wetasquareSum_j[p][q] = 0;
+
+	  if (cluster_has_background) {
+	    m_nClu_inBin[p][q] ++;
+	    
+	    m_proxy_eff[p][q] += pow(m_cluData->mass_proxy(i),m_obs_gamma)*wetasquareSum_j[p][q]; // wetasquaresum = \Sum (weight * (sigma_crit / (c*c/4/pi/G))^-2)
+	    m_proxy_sigma[p][q] += pow(m_cluData->mass_proxy(i),2*m_obs_gamma)*wetasquareSum_j[p][q]; 
+	    m_z_eff[p][q] += pow(m_cluData->redshift(i),m_obs_gamma)*wetasquareSum_j[p][q];
+	    m_z_sigma[p][q] += pow(m_cluData->redshift(i),2*m_obs_gamma)*wetasquareSum_j[p][q];
+	    wetasquareSum_tot[p][q] += wetasquareSum_j[p][q];
+	    wetasquareSum_j[p][q] = 0;
+	  }
+	  
 	}
       }
     }

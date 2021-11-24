@@ -742,7 +742,33 @@ namespace cbl {
 	/**
 	 *  @brief Set the parameters to model the monopole of the
 	 *  two-point correlation function in redshift space, where
-	 *  the masses are given by a mass-observable scaling relation.
+	 *  the masses are given by a mass-observable scaling relation
+	 *  with the following functional form:
+	 *
+	 *  \f[ \log \frac{M}{M_{\rm piv}} = \alpha+
+	 *  \beta  \log \frac{\lambda}{\lambda_{\rm piv}}+
+	 *  \gamma  \log f(z) + \sigma_{\rm intr}, \f]
+	 *
+	 *  where \f$\lambda\f$ is the mass proxy and
+	 *  the intrinsic scatter, \f$\sigma_{\rm intr}\f$, should
+	 *  be set as both negative and positive and it has the 
+	 *  following functional form:
+	 *
+	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{M} 
+	 *  \log (M/M_{\rm piv})^{e_{M}} + \sigma_z \log (f(z))^{e_z}. \f$
+	 *
+	 *  If the input parameters z_err and proxy_err are given,
+	 *  then the scaling relation has the follwing 
+	 *  functional form:
+	 *
+	 *  \f[\log \frac{M}{M_{\rm piv}} = \alpha + \beta 
+	 *  \int_0^\infty {\rm d}\lambda\,\, \log \frac{\lambda}{\lambda_{\rm piv}}
+	 *   P(\lambda|\lambda_{\rm obs}) + 
+	 *  \gamma \int_0^\infty {\rm d}z\,\, \log (f(z))P(z|z_{\rm obs}).\f]
+	 *
+	 *  where \f$ P(\lambda|\lambda_{\rm obs}) \f$ and \f$ P(z|z_{\rm obs}) \f$ are Gaussian distributions, 
+	 *  with mean equal to \f$\lambda_{\rm obs}\f$ or \f$z_{\rm obs}\f$ and rms given by 
+	 *  z_err or proxy_err.
 	 * 
 	 *  Redshift-space distorsions are modelled in the Kaiser
 	 *  limit, that is neglecting non-linearities in dynamics
@@ -788,12 +814,15 @@ namespace cbl {
 	 *  \f$\sigma_z(z)\f$
 	 *
 	 *  @param z_evo functional form of the redshift evolution
-	 *  function in the scaling relation: "E_z" \f$\rightarrow\f$ 
-	 *  \f$ f(z)=E(z)/E(z_{piv}) \f$, "direct" \f$\rightarrow\f$ 
-	 *  \f$ f(z)=(1+z)/(1+z_{piv}) \f$
+	 *  function in the scaling relation. See the documentation
+	 *  of cbl::modelling::massobsrel::Modelling_MassObservableRelation
+	 *
+	 *  @param z_err the error on the redshift
+	 *
+	 *  @param proxy_err the error on the effective proxy
 	 *  
 	 */
-	void set_model_scaling_relation_sigmaz_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution sigmaz_prior, const std::string z_evo);
+	void set_model_scaling_relation_sigmaz_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution sigmaz_prior, const std::string z_evo, const std::vector<double> z_err={}, const std::vector<double> proxy_err={});
 
 	///@}
 

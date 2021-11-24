@@ -359,41 +359,47 @@ vector<double> cbl::cosmology::Cosmology::bias_eff_mass (const std::vector<doubl
 
 vector<double> cbl::cosmology::Cosmology::bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DlnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha, const bool store_output, const std::string output_root, const double Delta_crit, const double kk, const std::string interpType, const int norm, const double k_min, const double k_max, const double prec, const std::string input_file, const bool is_parameter_file)
 { 
-  vector<double> Bias_eff(redshift.size(), 0.);
 
+  vector<double> Bias_eff(redshift.size(), 0.);
+  
+  vector<double> mass_vec = logarithmic_bin_vector(50, Mass_min, Mass_max);
+  
   for (size_t i=0; i<redshift.size(); ++i) {
 
-    auto integrand_num = [&] (const double mass)
+    const double DD = Delta_vir(Delta_crit, redshift[i]);
+    vector<double> sigma = interp_sigma.eval_func(mass_vec);
+    vector<double> dlnsigma = interp_DlnSigma.eval_func(mass_vec);
+    vector<double> mass_func = mass_function(mass_vec, sigma, dlnsigma, redshift[i], model_MF, store_output, output_root, DD, interpType, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
+    vector<double> bias_func = bias_halo(mass_vec, sigma, redshift[i], model_bias, store_output, output_root, interpType, DD, kk, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
+
+    cbl::glob::FuncGrid interp_MF(mass_vec, mass_func, "Spline");
+    cbl::glob::FuncGrid interp_BH(mass_vec, bias_func, "Spline");
+
+    auto integrand_num = [&] (const double lg_mass)
       {
-	const double sigma = interp_sigma(mass);
-	const double dlnsigma = interp_DlnSigma(mass);
-	
+	const double mass = exp(lg_mass);
+
 	const double SF = interp_SF(mass/alpha);
 	
-	const double DD = Delta_vir(Delta_crit, redshift[i]);
-
-	const double BH = bias_halo(mass, sigma, redshift[i], model_bias, store_output, output_root, interpType, DD, kk, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
+	const double BH = interp_BH(mass);
 	
-	const double MF = mass_function(mass, sigma, dlnsigma, redshift[i], model_MF, store_output, output_root, DD, interpType, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
+	const double MF = interp_MF(mass);
 	
-	return SF*BH*MF;
+	return SF*BH*MF*mass;
       };
 
-    auto integrand_denom = [&] (const double mass)
+    auto integrand_denom = [&] (const double lg_mass)
       {
-	const double sigma = interp_sigma(mass);
-	const double dlnsigma = interp_DlnSigma(mass);
-	
-	const double SF = interp_SF(mass/alpha); 
-	
-	const double DD = Delta_vir(Delta_crit, redshift[i]);
-	
-	const double MF = mass_function(mass, sigma, dlnsigma, redshift[i], model_MF, store_output, output_root, DD, interpType, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
+	const double mass = exp(lg_mass);
 
-	return SF*MF;
+	const double SF = interp_SF(mass/alpha); 
+
+	const double MF = interp_MF(mass);
+
+	return SF*MF*mass;
       };
 
-    Bias_eff[i] = wrapper::gsl::GSL_integrate_qag(integrand_num, Mass_min, Mass_max)/wrapper::gsl::GSL_integrate_qag(integrand_denom, Mass_min, Mass_max);
+    Bias_eff[i] = wrapper::gsl::GSL_integrate_qag(integrand_num, log(Mass_min), log(Mass_max))/wrapper::gsl::GSL_integrate_qag(integrand_denom, log(Mass_min), log(Mass_max));
   }
 
 
@@ -410,14 +416,14 @@ vector<double> cbl::cosmology::Cosmology::bias_eff_selection_function (const glo
 
   for (size_t i=0; i<redshift.size(); ++i) {
 
+    const double DD = Delta_vir(Delta_crit, redshift[i]);
+
     auto integrand_num = [&] (const double mass)
       {
 	const double sigma = interp_sigma(mass);
 	const double dlnsigma = interp_DlnSigma(mass);
 	
 	const double SF = interp_SF(mass/alpha, redshift[i]);
-	
-	const double DD = Delta_vir(Delta_crit, redshift[i]);
 
 	const double BH = bias_halo(mass, sigma, redshift[i], model_bias, store_output, output_root, interpType, DD, kk, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
 	
@@ -432,8 +438,6 @@ vector<double> cbl::cosmology::Cosmology::bias_eff_selection_function (const glo
 	const double dlnsigma = interp_DlnSigma(mass);
 	
 	const double SF = interp_SF(mass/alpha, redshift[i]); 
-	
-	const double DD = Delta_vir(Delta_crit, redshift[i]);
 	
 	const double MF = mass_function(mass, sigma, dlnsigma, redshift[i], model_MF, store_output, output_root, DD, interpType, norm, k_min, k_max, prec, method_SS, input_file, is_parameter_file);
 

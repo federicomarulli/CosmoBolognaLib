@@ -1137,6 +1137,38 @@ namespace cbl {
        */
       virtual double mass_proxy_error () const
       { return cbl::ErrorCBL("", "mass_proxy_error", "Object.h"); }
+     
+      /**
+       *  @brief get the member \e m_IDHost
+       *  @return the IDHost of the derived object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual int IDHost () const
+      { return cbl::ErrorCBL("", "IDHost", "Object.h"); } 
+      
+      /**
+       *  @brief get the member \e m_galaxyTag
+       *  @return the galaxyTag of the derived object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double galaxyTag () const
+      { cbl::ErrorCBL("", "galaxyTag", "Object.h"); return {}; }
+
+      /**
+       *  @brief get the member \e m_mstar
+       *  @return the mstar of the derived object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double mstar () const
+      { return cbl::ErrorCBL("", "mstar", "Object.h"); }
+
+      /**
+       *  @brief get the member \e m_massinfall
+       *  @return the massinfall of the derived object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double massinfall () const
+      { return cbl::ErrorCBL("", "massinfall", "Object.h"); } 
       
       /**
        *  @brief get the member \e m_bias
@@ -1562,6 +1594,40 @@ namespace cbl {
        */
       virtual void set_mass (const double mass)
       { (void)mass; cbl::ErrorCBL("", "set_mass", "Object.h"); }
+
+      /**
+       *  @brief set the member \e m_IDHost
+       *  @param IDHost the ID of host halo 
+       *  @return none
+       */
+      virtual void set_IDHost (const int IDHost)
+      { (void)IDHost; cbl::ErrorCBL("", "set_IDHost", "Object.h"); }
+
+      /**
+       *  @brief set the member \e m_galaxyTag
+       *  @param galaxyTag the tag of the galaxy indeed "central" or "satellite" 
+       *  @return none
+       */
+      virtual void set_galaxyTag (const double galaxyTag)
+      { (void)galaxyTag; cbl::ErrorCBL("", "set_galaxyTag", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_mstar
+       *  @param mstar the stellar mass
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_mstar (const double mstar)
+      { (void)mstar; cbl::ErrorCBL("", "set_mstar", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_massinfall
+       *  @param massinfall the infall mass of the substructure
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_massinfall (const double massinfall)
+      { (void)massinfall; cbl::ErrorCBL("", "set_massinfall", "Object.h"); }
       
       /**
        *  @brief set the member \e m_logM
@@ -2496,7 +2562,7 @@ namespace cbl {
        */
       virtual bool isSet_radius_estimate ()
       { return cbl::ErrorCBL("", "isSet_radius_estimate", "Object.h"); }
-    
+
       /**
        *  @brief check if the member \e m_veldisp_estimate is set
        *  
@@ -2636,6 +2702,42 @@ namespace cbl {
        */
       virtual bool isSet_ID ()
       { return cbl::ErrorCBL("", "isSet_ID", "Object.h"); }
+
+      /**
+       *  @brief get the member \e m_IDHost
+       *  @return the IDHost of the derived object, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual bool isSet_IDHost ()
+      { return cbl::ErrorCBL("", "isSet_IDHost", "Object.h"); } 
+   
+      /**
+       *  @brief get the member \e m_galaxyTag
+       *  @return the galaxyTag of the derived object, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual bool isSet_galaxyTag ()
+      { return cbl::ErrorCBL("", "isSet_galaxyTag", "Object.h"); }   
+
+      /**
+       *  @brief check if the member \e m_mstar is set
+       *  
+       *  @return true if the mstar is set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_mstar ()
+      { return cbl::ErrorCBL("", "isSet_mstar", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_massinfall is set
+       *  
+       *  @return true if the massinfall is set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_massinfall ()
+      { return cbl::ErrorCBL("", "isSet_massinfall", "Object.h"); }
       
       ///@}      
       

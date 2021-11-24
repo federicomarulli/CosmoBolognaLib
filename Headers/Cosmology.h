@@ -634,6 +634,65 @@ namespace cbl {
       double m_MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const double Delta=200., const bool default_delta=true, const double delta_t=1.686); 
 
       /**
+       *  @brief auxiliary function to compute the mass function
+       *
+       *  @author Alfonso Veropalumbo, Jacopo Neri (and Federico
+       *  Marulli)
+       *
+       *  @author alfonso.veropalumbo@unibo.it, jacopo.neri6@gmail.com
+       *  (and federico.marulli3@unibo.it)
+       *
+       *  @param Mass mass
+       *
+       *  @param Sigma &sigma;(mass): the mass variance
+       *
+       *  @param Dln_Sigma dln&sigma;/dM: the derivative of the mass
+       *  variance
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
+       *
+       *  @param D_N the growth factor, precomputed. 
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background
+       *
+       *  @param default_delta true = using function
+       *  cbl::cosmology::deltac; false = using delta_t*growth
+       *  factor
+       *  
+       *  @param delta_t user defined density contrast at \f$z = 0\f$
+       *
+       *  @return the mass function, d&Phi;/dM=dn(M)/dM
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; the function
+       *  cbl::Cosmology::Delta_vir can be used to convert
+       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *
+       *  @warning the mass function by Manera et al. (2010) has been
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
+       */
+      double m_MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const double D_N, const std::string model_MF, const double Delta=200., const bool default_delta=true, const double delta_t=1.686); 
+
+      /**
        *  @brief auxiliary function to compute the halo bias
        *
        *  @param Sigma &sigma;(mass, z=0): the mass variance at z=0
@@ -657,6 +716,31 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
       double m_bias_halo_generator (const double Sigma, const double redshift, const std::string author, const double Delta=200.) const;    
+
+      /**
+       *  @brief auxiliary function to compute the halo bias
+       *
+       *  @param Sigma &sigma;(mass, z=0): the mass variance at z=0
+       *
+       *  @param redshift the redshift
+       *
+       *  @param author author(s) who proposed the bias; valid authors
+       *  are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo & Tormen
+       *  2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the correction
+       *  of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background
+       *
+       *  @return the halo bias
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; the function
+       *  cbl::Cosmology::Delta_vir can be used to convert
+       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       */
+      double m_bias_halo_generator (const double Sigma, const double redshift, const double D_N, const std::string author, const double Delta=200.) const;  
 
       /**
        *  @brief the incomplete elliptic integral 
@@ -2879,6 +2963,107 @@ namespace cbl {
        *  masses and at \f$z<1.25\f$
        */
       double mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+
+      /**
+       *  @brief the mass function of dark matter haloes (filaments and
+       *  sheets) computed quickly passing directly the mass variance
+       *  and its derivative as inputs. This function takes vector in input
+       *  and compute the mass function for the input masses
+       *
+       *  @author Alfonso Veropalumbo, Jacopo Neri (and Federico
+       *  Marulli)
+       *
+       *  @author alfonso.veropalumbo@unibo.it, jacopo.neri6@gmail.com
+       *  (and federico.marulli3@unibo.it)
+       *
+       *  @param Mass mass
+       *
+       *  @param Sigma &sigma;(mass): the mass variance
+       *
+       *  @param Dln_Sigma dln&sigma;/dM: the derivative of the mass
+       *  variance
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
+       * 
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
+       *  interior density relative to the background
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed to estimate the power spectrum
+       *  normalisation; this parameter is used only if norm=1
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], CLASS [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return the mass function, d&Phi;/dM=dn(M)/dM
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; the function
+       *  cbl::Cosmology::Delta_vir can be used to convert
+       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *
+       *  @warning the mass function by Manera et al. (2010) has been
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
+       */
+      std::vector<double> mass_function (const std::vector<double> Mass, const std::vector<double> Sigma, const std::vector<double> Dln_Sigma, const double redshift, const std::string model_MF, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
     
       /**
        *  @brief number of dark matter haloes per steradian or square
@@ -4835,6 +5020,39 @@ namespace cbl {
        */
       ///@{
       
+      /**
+       *  @brief the halo concentration-mass relation for NFW
+       * prfile and Duffy model
+       * 
+       *  This function computes the concentration of a dark matter
+       *  halo of a given a mass, at a given redshift following 
+       *  Duffy et al. 2008 model:
+       *  \f[c(M_h, z) = A(M_h/M_{pivot})^B\,(1+z)^C\f]
+       *
+       *  @param Mass the halo mass.
+       *
+       *  @param redshift the redshift (must be < 2).
+       *
+       *  @param halo_def the halo definition; available options are:
+       *  "vir" \f$\rightarrow\f$ all matter withing the radius
+       *  \f$r_{vir}\f$ for which the mean internal density is
+       *  \f$\Delta\f$ times the critical density
+       *  \f$\rho_{crit}=3H^2/8\pi G\f$; "200" \f$\rightarrow\f$ all
+       *  matter withing the radius \f$r_{200}\f$ for which the mean
+       *  internal density is 200 times the critical density; "mean"
+       *  \f$\rightarrow\f$ all matter withing the radius
+       *  \f$r_{200}\f$ for which the mean internal density is 200
+       *  times the critical mean background density.
+       *
+       *  @return the halo concentration for NFW profile and Duffy model.
+       *
+       *  @warning the Duffy et al. concentrantion-mass relation
+       *  refers to the 0<z<2 redshift range, obtained from their full
+       *  samples (see Table 1 of Duffy et al. 2008); actually, the
+       *  current implementation does not depend on cosmology.
+       */
+      double concentration_NFW_Duffy (const double Mass, const double redshift, const std::string halo_def="vir") const;
+
 
       /**
        *  @brief virial halo concentration given \f$c_{200}\f$
@@ -4861,10 +5079,10 @@ namespace cbl {
        *  @return \f$c_{vir}\f$
        */
       double c_vir (const double c200, const double redshift, const std::string author="BryanNorman") const;
-      
+
       ///@}
 
- 
+
       /**
        *  @name Functions to estimate the two-point correlation function, bias and related quantities
        */
@@ -5665,7 +5883,83 @@ namespace cbl {
        *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
        */
       double bias_halo (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+
+       /**
+       *  @brief bias of dark matter haloes, for a vector of masses
+       *
+       *  @param Mass halo mass
+       *
+       *  @param Sigma &sigma;(mass, z=0): the mass variance at z=0
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_bias author(s) who proposed the bias; valid
+       *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+       *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+       *  correction of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
+       *  mean interior density relative to the background
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], CLASS [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *    
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return b<SUB>halo</SUB>: the dark matter bias
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; the function
+       *  cbl::Cosmology::Delta_vir can be used to convert
+       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       */
+      std::vector<double> bias_halo (const std::vector<double> Mass, const std::vector<double> Sigma, const double redshift, const std::string model_bias, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true);
   
+
       /**
        *  @brief the effective bias of dark matter haloes, with masses
        *  in a given range and at a given mean redshift
