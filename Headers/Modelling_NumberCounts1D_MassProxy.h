@@ -232,6 +232,107 @@ namespace cbl {
 	 *  
 	 */
 	void set_model_NumberCounts_cosmology (const std::string scalrel_z_evo, const std::string z_error_type, const std::string proxy_error_type, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution z_bias_prior, const statistics::PriorDistribution proxy_bias_prior, const statistics::PriorDistribution z_error_prior, const statistics::PriorDistribution proxy_error_prior, const std::vector<statistics::PriorDistribution> Plambda_prior);
+	
+	/**
+	 *  @brief Set the cosmological parameters used to model the 
+	 *  number counts as a function of a mass proxy, here written
+	 *  as \f$\lambda\f$, with the model expressed as follows:
+	 *
+	 *  \f$ \langle N(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j})\rangle 
+	 *  = w(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j})\,\,\Omega 
+	 *  \int_{0}^{\infty} {\rm d} z_{\rm tr}\,\,
+	 *  \frac{{\rm d} V}{{\rm d} z_{\rm tr}{\rm d}\Omega}\int_{0}^{\infty} 
+	 *  {\rm d} M_{\rm tr} \,\,\frac{{\rm d} n(M_{\rm tr},z_{\rm tr})}{{\rm d} M_{\rm tr}}\,\, 
+	 *  \int_{0}^{\infty}{\rm d}\lambda_{\rm tr}\,\,
+	 *  P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\,
+	 *  \int_{\Delta z_{\text{ob},j}}{\rm d} z_{\rm ob} 
+	 *  \,\,P(z_{\rm ob}|z_{\rm tr})\,
+	 *  \int_{\Delta\lambda_{\text{ob},i}}{\rm d} \lambda_{\rm ob} 
+	 *  \,\,P(\lambda_{\rm ob}|\lambda_{\rm tr}), \f$
+	 *
+	 *  where \f$ w(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j}) \f$ is
+	 *  the weight derived from the selection function (see e.g. Lesci et al. 2021),
+	 *  and \f$\Omega\f$ is the survey effective area.
+	 *
+	 *  The distirbution \f$P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\f$ is 
+	 *  a log-normal whose mean is given by the mass-mass proxy
+	 *  relation, i.e. 
+	 *
+	 *  \f$\log (\lambda/\lambda_{\rm piv}) = \alpha + \beta 
+	 *  \log (M/M_{\rm piv}) + \gamma \log (f(z)),\f$
+	 *
+	 *  and whose standard deviation is given by the intrinsic scatter, \f$ \sigma_{\rm intr} \f$, expressed as:
+	 *
+	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{M} 
+	 *  \log (M/M_{\rm piv})^{e_{M}} + \sigma_z \log (f(z))^{e_z}. \f$
+	 *
+	 *  Finally, \f$P(z_{\rm ob}|z_{\rm tr})\f$ and \f$P(\lambda_{\rm ob}|\lambda_{\rm tr})\f$
+	 *  are Gaussian distributions.
+	 *
+	 *
+	 *  @param scalrel_z_evo functional form of the redshift evolution
+	 *  function in the scaling relation: "E_z" \f$\rightarrow\f$ 
+	 *  \f$ f(z)=E(z)/E(z_{piv}) \f$, "direct" \f$\rightarrow\f$ 
+	 *  \f$ f(z)=(1+z)/(1+z_{piv}) \f$
+	 *
+	 *  @param z_error_type if "absolute", set the absolute error
+	 *  on redshift in the model; if "relative", set the relative error
+	 *
+	 *  @param proxy_error_type if "absolute", set the absolute error
+	 *  on the mass proxy in the model; if "relative", set the relative error
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param cosmo_param_prior vector containing the priors for
+	 *  the cosmological parameters
+	 *
+	 *  @param alpha_prior prior on the normalization 
+	 *  of the mass-mass proxy scaling relation, \f$\alpha\f$
+	 *
+	 *  @param beta_prior prior on the slope 
+	 *  of the mass-mass proxy scaling relation, \f$\beta\f$
+	 *
+	 *  @param gamma_prior prior on the redshift evolution factor 
+	 *  of the mass-mass proxy scaling relation, \f$\gamma\f$
+	 *
+	 *  @param scatter0_prior prior on the 
+	 *  constant term of the intrinsic scatter, \f$ \sigma_0 \f$
+	 *
+	 *  @param scatterM_prior prior on the factor in the
+	 *  proxy-dependent term of the intrinsic scatter, \f$ \sigma_{\lambda} \f$
+	 *
+	 *  @param scatterM_exponent_prior prior on the exponent in the
+	 *  proxy-dependent term of the intrinsic scatter, \f$ e_{\lambda} \f$
+	 *
+	 *  @param scatterz_prior prior on the factor in the
+	 *  redshift-dependent term of the intrinsic scatter, \f$ \sigma_z \f$
+	 *
+	 *  @param scatterz_exponent_prior prior on the exponent in the
+	 *  redshift-dependent term of the intrinsic scatter, \f$ e_z \f$
+	 *
+	 *  @param z_bias_prior prior on the redshif bias,
+	 *  governing the position of the mean of the Gaussian \f$ P(z_{\rm ob}|z_{\rm tr}) \f$.
+	 *  For example, let's say that the redshift bias in the data is \f$\Delta z=0.02\f$:
+	 *  the data redshifts would be corrected as \f$z_{\rm corr} = z - 0.02 (1+z)\f$, 
+	 *  where \f$z\f$ is the not corrected redshift. If you correct the data in this way,
+	 *  set this prior as constant and equal to zero. Otherwise you can choose to not
+	 *  correct the data and set a non-zero prior on the redshift bias: in this case,
+	 *  the mean of \f$ P(z_{\rm ob}|z_{\rm tr}) \f$ will be given by 
+	 *  \f$z_{\rm corr} = z + \Delta z (1+z)\f$.
+	 *
+	 *  @param proxy_bias_prior prior on the mass proxy bias, analogous to z_bias_prior
+	 *
+	 *  @param z_error_prior prior on the redshift error, governing the distribution
+	 *  \f$ P(z_{\rm ob}|z_{\rm tr}) \f$. Depending on the input parameter
+	 *  z_error_type, this prior is related to the absolute error or to the relative error
+	 *
+	 *  @param proxy_error_prior prior on the mass proxy error, governing the distribution
+	 *  \f$ P(\lambda_{\rm ob}|\lambda_{\rm tr}) \f$. Depending on the input parameter
+	 *  proxy_error_type, this prior is related to the absolute error or to the relative error
+	 *  
+	 */
+	void set_model_NumberCounts_cosmology (const std::string scalrel_z_evo, const std::string z_error_type, const std::string proxy_error_type, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution z_bias_prior, const statistics::PriorDistribution proxy_bias_prior, const statistics::PriorDistribution z_error_prior, const statistics::PriorDistribution proxy_error_prior);
 
 	///@}
 

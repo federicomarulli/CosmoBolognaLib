@@ -6,12 +6,21 @@
 
 using namespace std;
 
+// these two variables contain the name of the CosmoBolognaLib
+// directory and the name of the current directory (useful when
+// launching the code on remote systems)
+string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
+
+
+// =====================================================================
+
+
 int main () {
 
   try {
 
     // the input file
-    const string file = "data.dat";
+    const string file = cbl::par::DirLoc+"data.dat";
     
     // header lines to skip
     const int n_lines_header = 2;

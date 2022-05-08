@@ -61,7 +61,7 @@ std::vector<double> cbl::modelling::threept::zeta_RSD (const std::vector<double>
   //beta
   double beta = parameter[3];
 
-  vector<double> model = pp->cosmology->zeta_RSD (pp->r1, pp->r2, theta.size(), b1, b2, bt, beta, pp->rr, pp->kk, pp->Pk_matter, false, pp->max_ll, pp->use_k);
+  vector<double> model = pp->cosmology->zeta_RSD (pp->r1, pp->r2, theta.size(), b1, b2, bt, beta, pp->rr, pp->kk, pp->Pk_DM, false, pp->max_ll, pp->use_k);
   return model;
   /*
   double theta_binSize = 1./theta.size();
@@ -76,5 +76,5 @@ std::vector<double> cbl::modelling::threept::zeta_RSD (const std::vector<double>
 
   return zeta;
   */
-  //return pp->cosmology->zeta_RSD (pp->r1, pp->r2, theta.size(), b1, b2, bt, beta, pp->rr, pp->kk, pp->Pk_matter, false, pp->max_ll, pp->use_k);
+  //return pp->cosmology->zeta_RSD (pp->r1, pp->r2, theta.size(), b1, b2, bt, beta, pp->rr, pp->kk, pp->Pk_DM, false, pp->max_ll, pp->use_k);
 }

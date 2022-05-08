@@ -147,15 +147,6 @@ size_t cbl::statistics::ModelParameters::nparameters_derived () const
 // ============================================================================================
 
 
-size_t cbl::statistics::ModelParameters::nparameters_correlated () const
-{
-  return m_nparameters_correlated;
-}
-
-
-// ============================================================================================
-
-
 void cbl::statistics::ModelParameters::set_parameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames)
 {
   if (nparameters==0)

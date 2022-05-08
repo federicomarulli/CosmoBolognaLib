@@ -5,6 +5,12 @@
 #include "NumberCounts1D_Redshift.h"
 #include "GlobalFunc.h"
 
+// these two variables contain the name of the CosmoBolognaLib
+// directory and the name of the current directory (useful when
+// launching the code on remote systems)
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
+
+
 int main () {
 
   try {
@@ -20,7 +26,7 @@ int main () {
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
   
-    const std::string file_catalogue = "../input/cat.dat";
+    const std::string file_catalogue = cbl::par::DirLoc+"../input/cat.dat";
 
     cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -40,7 +46,7 @@ int main () {
     // binning parameters and output data
 
     const int nbin = 10;
-    const std::string dir = "../output/";
+    const std::string dir = cbl::par::DirLoc+"../output/";
 
     
     // measure the redshift distribution anc compute Poisson errors

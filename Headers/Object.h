@@ -69,10 +69,7 @@ namespace cbl {
       _Void_,
     
       /// host halo
-      _HostHalo_,
-      
-      // chain Mesh cell
-      _ChainMeshCell_
+      _HostHalo_
     
     };
 
@@ -83,7 +80,7 @@ namespace cbl {
      * ObjectType names
      */
     inline std::vector<std::string> ObjectTypeNames ()
-    { return {"Random", "Mock", "Halo", "Galaxy", "Cluster", "Void", "HostHalo", "ChainMeshCell"}; }
+    { return {"Random", "Mock", "Halo", "Galaxy", "Cluster", "Void", "HostHalo"}; }
 
     /**
      * @brief cast an enum of type ObjectType
@@ -146,13 +143,7 @@ namespace cbl {
       double m_ra = cbl::par::defaultDouble; 
 
       /// Declination 
-      double m_dec = cbl::par::defaultDouble;
-      
-      /// Tile central Right Ascension 
-      double m_ra_tile = cbl::par::defaultDouble; 
-
-      /// Tile central Declination 
-      double m_dec_tile = cbl::par::defaultDouble;  
+      double m_dec = cbl::par::defaultDouble;  
 
       /// redshift
       double m_redshift = cbl::par::defaultDouble;
@@ -203,17 +194,6 @@ namespace cbl {
        *  
        */
       Object () = default;
-      
-       /**
-       *  @brief constructor that uses comoving coordinates (specific for ChainMeshCell)
-       * 
-       *  @param coo comoving coordinate
-       * 
-       *  @param ID the object ID
-       *  
-       */
-      Object (const comovingCoordinates coo, const int ID) 
-  : m_xx(coo.xx), m_yy(coo.yy), m_zz(coo.zz), m_ID(ID) {}
       
       /**
        *  @brief constructor that uses comoving coordinates
@@ -454,18 +434,6 @@ namespace cbl {
       : m_xx(xx), m_yy(yy), m_zz(zz), m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(sqrt(xx*xx+yy*yy+zz*zz)), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn)
       {}   
 
-
-      /**
-       * @brief function that allows copying private variables of the class 
-       * when an object of class Catalogue is copied
-       * 
-       * @return a shared pointer to the Object
-       *
-       */
-      virtual std::shared_ptr<Object> getShared() {
-        return std::make_shared<Object>(*this);
-      }
-
       /**
        *  @brief default destructor
        */
@@ -484,7 +452,7 @@ namespace cbl {
        *  providing in input comoving coordinates
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo, ChainMeshCell
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
        * 
        *  @return object of a given type
        */
@@ -513,10 +481,16 @@ namespace cbl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
+       *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
        * 
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
       
       /**
        *  @brief static factory used to construct objects of any type,
@@ -550,9 +524,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -578,9 +558,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -608,9 +594,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -640,9 +632,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -674,9 +672,15 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
+       *  @param redshiftMin minimum redshift
+       *
+       *  @param redshiftMax maximum redshift
+       *
+       *  @param sn signal-to-noise
+       *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -712,28 +716,17 @@ namespace cbl {
        *
        *  @param z_displacement the displacement along the z-axis
        *
-       *  @return object of a given type
+       *  @param redshiftMin minimum redshift
        *
-       */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
-
-
-      /**
-       *  @brief static factory used to construct objects of ChainMeshCell type,
-       *  providing in input comoving coordinates
+       *  @param redshiftMax maximum redshift
        *
-       *  @param coord comoving coordinate
-       * 
-       *  @param ID the object ID
-       *
-       *  @param part the particles in the cell
-       *
-       *  @param nearCells the cells near the object, sorted for distance
+       *  @param sn signal-to-noise
        *
        *  @return object of a given type
        *
        */
-      static std::shared_ptr<Object> Create (const comovingCoordinates coord, const int ID=par::defaultInt, const std::vector<unsigned int> part={}, std::vector<std::vector<unsigned int>> nearCells={});
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble);
+
       ///@}
 
     
@@ -785,20 +778,6 @@ namespace cbl {
       { return (cbl::isSet(m_dec)) ? m_dec : ErrorCBL("the m_dec variable is not defined!", "dec", "Object.h"); }
       
       /**
-       *  @brief get the member \e m_ra_tile
-       *  @return the central Right Ascension of the object's tile
-       */
-      double ra_tile () const
-      { return (cbl::isSet(m_ra_tile)) ? m_ra_tile : ErrorCBL("the m_ra_tile variable is not defined!", "ra_tile", "Object.h"); } 
-    
-      /**
-       *  @brief get the member \e m_dec_tile
-       *  @return the central Declination of the object's tile
-       */
-      double dec_tile () const
-      { return (cbl::isSet(m_dec_tile)) ? m_dec_tile : ErrorCBL("the m_dec_tile variable is not defined!", "dec_tile", "Object.h"); }
-      
-      /**
        *  @brief get the member \e m_sn
        *  @return the signal-to-noise of the object
        */
@@ -831,7 +810,7 @@ namespace cbl {
        *  @return the weight of the object
        */
       double weight () const
-      { return (cbl::isSet(m_weight)) ? m_weight : ErrorCBL("the m_weight variable is not defined!", "weight", "Object.h"); }
+      { return (cbl::isSet(m_weight)) ? m_weight : ErrorCBL("the m_region variable is not defined!", "weight", "Object.h"); }
 
       /**
        *  @brief get the member \e m_region
@@ -926,11 +905,155 @@ namespace cbl {
       { return cbl::ErrorCBL("", "mass", "Object.h"); }
       
       /**
+       *  @brief get the member \e m_logM
+       *  @return the log-mass of the derived object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double logM () const
+      { return cbl::ErrorCBL("", "logM", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_concentration
+       *  @return the concentration of the derived cluster object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double concentration () const
+      { return cbl::ErrorCBL("", "concentration", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_f_off
+       *  @return the fraction of miscentered clusters of the derived cluster object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double f_off () const
+      { return cbl::ErrorCBL("", "f_off", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_sigma_off
+       *  @return the rms of the miscentered population of the derived cluster object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double sigma_off () const
+      { return cbl::ErrorCBL("", "sigma_off", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_alpha_scaling_rel
+       *  @return the scaling relation normalization of the derived cluster object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double alpha_scaling_rel () const
+      { return cbl::ErrorCBL("", "alpha_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_beta_scaling_rel
+       *  @return the scaling relation slope of the derived cluster object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double beta_scaling_rel () const
+      { return cbl::ErrorCBL("", "beta_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_gamma_scaling_rel
+       *  @return the scaling relation z evolution factor of the derived cluster object, or an error message if
+       *  the derived object does not have this member
+       */
+      virtual double gamma_scaling_rel () const
+      { return cbl::ErrorCBL("", "gamma_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_scatter0_scaling_rel
+       *  @return constant term of the intrinsic scatter of 
+       *  the mass-observable cluster scaling relation
+       */
+      virtual double scatter0_scaling_rel () const
+      { return cbl::ErrorCBL("", "scatter0_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_scatterM_scaling_rel
+       *  @return multiplicative factor in the mass/mass proxy dependent 
+       *  term in the intrinsic scatter of the mass-observable scaling relation
+       */
+      virtual double scatterM_scaling_rel () const
+      { return cbl::ErrorCBL("", "scatterM_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_scatterM_exponent_scaling_rel
+       *  @return exponent in the mass/mass proxy dependent 
+       *  term in the intrinsic scatter of the mass-observable scaling relation
+       */
+      virtual double scatterM_exponent_scaling_rel () const
+      { return cbl::ErrorCBL("", "scatterM_exponent_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_scatterz_scaling_rel
+       *  @return multiplicative factor in the redshift dependent
+       *  term in the intrinsic scatter of the mass-observable scaling relation
+       */
+      virtual double scatterz_scaling_rel () const
+      { return cbl::ErrorCBL("", "scatterz_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_scatterz_exponent_scaling_rel
+       *  @return exponent in the redshift dependent 
+       *  term in the intrinsic scatter of the mass-observable scaling relation
+       */
+      virtual double scatterz_exponent_scaling_rel () const
+      { return cbl::ErrorCBL("", "scatterz_exponent_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_zbias
+       *  @return the cluster redshift bias
+       */
+      virtual double zbias () const
+      { return cbl::ErrorCBL("", "zbias", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_proxybias
+       *  @return the cluster mass proxy bias
+       */
+      virtual double proxybias () const
+      { return cbl::ErrorCBL("", "proxybias", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_zerror
+       *  @return the cluster redshift error
+       */
+      virtual double zerror () const
+      { return cbl::ErrorCBL("", "zerror", "Object.h"); }
+      
+      /**
        *  @brief get the member \e m_proxyerror
        *  @return the cluster mass proxy error
        */
       virtual double proxyerror () const
       { return cbl::ErrorCBL("", "proxyerror", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_Plambda_a
+       *  @return \f$ a \f$ term in the function describing the 
+       *  cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, 
+       *  where \f$\lambda\f$ is a mass proxy
+       */
+      virtual double Plambda_a () const
+      { return cbl::ErrorCBL("", "Plambda_a", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_Plambda_b
+       *  @return \f$ b \f$ term in the function describing the 
+       *  cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, 
+       *  where \f$\lambda\f$ is a mass proxy
+       */
+      virtual double Plambda_b () const
+      { return cbl::ErrorCBL("", "Plambda_b", "Object.h"); }
+      
+      /**
+       *  @brief get the member \e m_Plambda_c
+       *  @return \f$ c \f$ term in the function describing the 
+       *  cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, 
+       *  where \f$\lambda\f$ is a mass proxy
+       */
+      virtual double Plambda_c () const
+      { return cbl::ErrorCBL("", "Plambda_c", "Object.h"); }
     
       /**
        *  @brief get the member \e m_magnitude
@@ -1036,38 +1159,6 @@ namespace cbl {
        */
       virtual double mass_proxy_error () const
       { return cbl::ErrorCBL("", "mass_proxy_error", "Object.h"); }
-     
-      /**
-       *  @brief get the member \e m_IDHost
-       *  @return the IDHost of the derived object, or an error message if
-       *  the derived object does not have this member
-       */
-      virtual int IDHost () const
-      { return cbl::ErrorCBL("", "IDHost", "Object.h"); } 
-      
-      /**
-       *  @brief get the member \e m_galaxyTag
-       *  @return the galaxyTag of the derived object, or an error message if
-       *  the derived object does not have this member
-       */
-      virtual double galaxyTag () const
-      { cbl::ErrorCBL("", "galaxyTag", "Object.h"); return {}; }
-
-      /**
-       *  @brief get the member \e m_mstar
-       *  @return the mstar of the derived object, or an error message if
-       *  the derived object does not have this member
-       */
-      virtual double mstar () const
-      { return cbl::ErrorCBL("", "mstar", "Object.h"); }
-
-      /**
-       *  @brief get the member \e m_massinfall
-       *  @return the massinfall of the derived object, or an error message if
-       *  the derived object does not have this member
-       */
-      virtual double massinfall () const
-      { return cbl::ErrorCBL("", "massinfall", "Object.h"); } 
       
       /**
        *  @brief get the member \e m_bias
@@ -1236,21 +1327,6 @@ namespace cbl {
       virtual std::vector<std::shared_ptr<Object>> satellites () const
       { cbl::ErrorCBL("", "satellites", "Object.h"); return {}; }
 
-      /**
-       *  @brief get the virtual member \e m_part, member of ChainMeshCell
-       *  @return the particles on the selected cell, or an
-       *  error message if the derived object does not have this member
-       */
-      virtual std::vector<unsigned int> part () const
-      { return {}; }
-
-      /**
-       *  @brief get the virtual member \e m_nearCells, member of ChainMeshCell
-       *  @return the cells near the selected one (sorted for distance), or an
-       *  error message if the derived object does not have this member
-       */
-      virtual std::vector<std::vector<unsigned int>> nearCells () const  
-      { return {}; }
       ///@}
 
     
@@ -1302,26 +1378,6 @@ namespace cbl {
       {
 	m_dec = radians(dec, inputUnits);
 	if (m_dc>par::defaultDouble) cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
-      }
-      
-      /**
-       *  @brief set the member \e m_ra_tile
-       *  @param ra the central Right Ascension of the object's tile
-       *  @param inputUnits the units of the input coordinates
-       */
-      void set_ra_tile (const double ra, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
-      {
-	m_ra_tile = radians(ra, inputUnits);
-      }
-    
-      /**
-       *  @brief set the member \e m_dec_tile
-       *  @param dec the Declination of the object
-       *  @param inputUnits the units of the input coordinates
-       */
-      void set_dec_tile (const double dec, const CoordinateUnits inputUnits=CoordinateUnits::_radians_)
-      {
-	m_dec_tile = radians(dec, inputUnits);
       }
       
       /**
@@ -1508,40 +1564,141 @@ namespace cbl {
        */
       virtual void set_mass (const double mass)
       { (void)mass; cbl::ErrorCBL("", "set_mass", "Object.h"); }
-
-      /**
-       *  @brief set the member \e m_IDHost
-       *  @param IDHost the ID of host halo 
-       *  @return none
-       */
-      virtual void set_IDHost (const int IDHost)
-      { (void)IDHost; cbl::ErrorCBL("", "set_IDHost", "Object.h"); }
-
-      /**
-       *  @brief set the member \e m_galaxyTag
-       *  @param galaxyTag the tag of the galaxy indeed "central" or "satellite" 
-       *  @return none
-       */
-      virtual void set_galaxyTag (const double galaxyTag)
-      { (void)galaxyTag; cbl::ErrorCBL("", "set_galaxyTag", "Object.h"); }
       
       /**
-       *  @brief set the member \e m_mstar
-       *  @param mstar the stellar mass
+       *  @brief set the member \e m_logM
+       *  @param logM the log-mass
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_mstar (const double mstar)
-      { (void)mstar; cbl::ErrorCBL("", "set_mstar", "Object.h"); }
+      virtual void set_logM (const double logM)
+      { (void)logM; cbl::ErrorCBL("", "set_logM", "Object.h"); }
       
       /**
-       *  @brief set the member \e m_massinfall
-       *  @param massinfall the infall mass of the substructure
+       *  @brief set the member \e m_concentration
+       *  @param conc the cluster concentration
        *  @return none, or an error message if the derived object does
        *  not have this member
        */
-      virtual void set_massinfall (const double massinfall)
-      { (void)massinfall; cbl::ErrorCBL("", "set_massinfall", "Object.h"); }
+      virtual void set_concentration (const double conc)
+      { (void)conc; cbl::ErrorCBL("", "set_concentration", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_f_off
+       *  @param f_off the f_off parameter
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_f_off (const double f_off)
+      { (void)f_off; cbl::ErrorCBL("", "set_f_off", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_sigma_off
+       *  @param sigma_off the sigma_off parameter
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_sigma_off (const double sigma_off)
+      { (void)sigma_off; cbl::ErrorCBL("", "set_sigma_off", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_alpha_scaling_rel
+       *  @param alpha_scaling_rel the alpha_scaling_rel parameter
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_alpha_scaling_rel (const double alpha_scaling_rel)
+      { (void)alpha_scaling_rel; cbl::ErrorCBL("", "set_alpha_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_beta_scaling_rel
+       *  @param beta_scaling_rel the beta_scaling_rel parameter
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_beta_scaling_rel (const double beta_scaling_rel)
+      { (void)beta_scaling_rel; cbl::ErrorCBL("", "set_beta_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_gamma_scaling_rel
+       *  @param gamma_scaling_rel the gamma_scaling_rel parameter
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_gamma_scaling_rel (const double gamma_scaling_rel)
+      { (void)gamma_scaling_rel; cbl::ErrorCBL("", "set_gamma_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_scatter0_scaling_rel
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_scatter0_scaling_rel (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_scatter0_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_scatterM_scaling_rel
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_scatterM_scaling_rel (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_scatterM_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_scatterM_exponent_scaling_rel
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_scatterM_exponent_scaling_rel (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_scatterM_exponent_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_scatterz_scaling_rel
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_scatterz_scaling_rel (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_scatterz_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_scatterz_exponent_scaling_rel
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_scatterz_exponent_scaling_rel (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_scatterz_exponent_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_zbias
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_zbias (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_zbias", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_proxybias
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_proxybias (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_proxybias", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_zerror
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_zerror (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_zerror", "Object.h"); }
       
       /**
        *  @brief set the member \e m_proxyerror
@@ -1551,6 +1708,33 @@ namespace cbl {
        */
       virtual void set_proxyerror (const double value)
       { (void)value; cbl::ErrorCBL("", "set_proxyerror", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_Plambda_a
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_Plambda_a (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_Plambda_a", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_Plambda_b
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_Plambda_b (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_Plambda_b", "Object.h"); }
+      
+      /**
+       *  @brief set the member \e m_Plambda_c
+       *  @param value argument value
+       *  @return none, or an error message if the derived object does
+       *  not have this member
+       */
+      virtual void set_Plambda_c (const double value)
+      { (void)value; cbl::ErrorCBL("", "set_Plambda_c", "Object.h"); }
     
       /**
        *  @brief set the member \e m_magnitude
@@ -1838,24 +2022,6 @@ namespace cbl {
        */
       virtual void set_satellites (const std::vector<std::shared_ptr<Object>> satellites)
       {	(void)satellites; cbl::ErrorCBL("", "set_satellites", "Object.h"); }
-
-      /**
-       *  @brief set the virtual private member \em m_part (member of ChainMeshCell)
-       *  @param part the vector to be replaced to the particles vector
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_part (const std::vector<unsigned int> part)
-      {	(void)part; cbl::ErrorCBL("", "set_part", "Object.h"); }
-
-      /**
-       *  @brief set the virtual private member \em m_nearCells (member of ChainMeshCell)
-       *  @param nearCells the matrix of near cells to be set 
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_nearCells (const std::vector<std::vector<unsigned int>> nearCells)
-      {	(void)nearCells; cbl::ErrorCBL("", "set_nearCells", "Object.h"); }
       
       ///@}
 
@@ -1904,22 +2070,6 @@ namespace cbl {
        */
       bool isSet_dec ()
       { return (cbl::isSet(m_dec)) ? true : false; }
-      
-      /**
-       *  @brief check if the member \e m_ra_tile is set
-       *  
-       *  @return true if the coordinate RA is set; false otherwise
-       */
-      bool isSet_ra_tile ()
-      { return (cbl::isSet(m_ra_tile)) ? true : false; }
-    
-      /**
-       *  @brief check if the member \e m_dec_tile is set
-       *  
-       *  @return true if the coordinate Dec is set; false otherwise
-       */
-      bool isSet_dec_tile ()
-      { return (cbl::isSet(m_dec_tile)) ? true : false; }
       
       /**
        *  @brief check if the member \e m_sn is set
@@ -2103,6 +2253,76 @@ namespace cbl {
        */
       virtual bool isSet_mass ()
       { return cbl::ErrorCBL("", "isSet_mass", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_logM is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_logM ()
+      { return cbl::ErrorCBL("", "isSet_logM", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_concentration is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_concentration ()
+      { return cbl::ErrorCBL("", "isSet_concentration", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_f_off is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_f_off ()
+      { return cbl::ErrorCBL("", "isSet_f_off", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_sigma_off is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_sigma_off ()
+      { return cbl::ErrorCBL("", "isSet_sigma_off", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_alpha_scaling_rel is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_alpha_scaling_rel ()
+      { return cbl::ErrorCBL("", "isSet_alpha_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_beta_scaling_rel is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_beta_scaling_rel ()
+      { return cbl::ErrorCBL("", "isSet_beta_scaling_rel", "Object.h"); }
+      
+      /**
+       *  @brief check if the member \e m_gamma_scaling_rel is set
+       *  
+       *  @return true if the set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_gamma_scaling_rel ()
+      { return cbl::ErrorCBL("", "isSet_gamma_scaling_rel", "Object.h"); }
     
       /**
        *  @brief check if the member \e m_magnitude is set
@@ -2262,7 +2482,7 @@ namespace cbl {
        */
       virtual bool isSet_radius_estimate ()
       { return cbl::ErrorCBL("", "isSet_radius_estimate", "Object.h"); }
-
+    
       /**
        *  @brief check if the member \e m_veldisp_estimate is set
        *  
@@ -2402,42 +2622,6 @@ namespace cbl {
        */
       virtual bool isSet_ID ()
       { return cbl::ErrorCBL("", "isSet_ID", "Object.h"); }
-
-      /**
-       *  @brief get the member \e m_IDHost
-       *  @return the IDHost of the derived object, or an
-       *  error message if the derived object does not have this member
-       */
-      virtual bool isSet_IDHost ()
-      { return cbl::ErrorCBL("", "isSet_IDHost", "Object.h"); } 
-   
-      /**
-       *  @brief get the member \e m_galaxyTag
-       *  @return the galaxyTag of the derived object, or an
-       *  error message if the derived object does not have this member
-       */
-      virtual bool isSet_galaxyTag ()
-      { return cbl::ErrorCBL("", "isSet_galaxyTag", "Object.h"); }   
-
-      /**
-       *  @brief check if the member \e m_mstar is set
-       *  
-       *  @return true if the mstar is set; false otherwise, or an
-       *  error message if the derived object does not have this
-       *  member
-       */
-      virtual bool isSet_mstar ()
-      { return cbl::ErrorCBL("", "isSet_mstar", "Object.h"); }
-      
-      /**
-       *  @brief check if the member \e m_massinfall is set
-       *  
-       *  @return true if the massinfall is set; false otherwise, or an
-       *  error message if the derived object does not have this
-       *  member
-       */
-      virtual bool isSet_massinfall ()
-      { return cbl::ErrorCBL("", "isSet_massinfall", "Object.h"); }
       
       ///@}      
       

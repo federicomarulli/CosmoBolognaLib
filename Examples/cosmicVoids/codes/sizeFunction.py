@@ -10,6 +10,9 @@ import CosmoBolognaLib as cbl
 import numpy as np
 import os
 
+# set the CosmoBolognaLib and the current directories
+cbl.SetDirs(os.getcwd()+"/../../../", os.getcwd()+"/")
+
 # define a cosmological model, using default parameters #
 cosm = cbl.Cosmology()
 

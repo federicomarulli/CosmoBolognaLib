@@ -16,8 +16,9 @@ import CosmoBolognaLib as cbl
 cosmology = cbl.Cosmology(cbl.CosmologicalModel__Planck15_)
 
 # Input/Output files and directories 
-file_catalogue = ("../input/cat.dat",)
-dir_output = "../output/"
+HOME = os.getenv("HOME")
+file_catalogue = (HOME+"/CosmoBolognaLib/Examples/clustering/input/cat.dat",)
+dir_output = HOME+"/CosmoBolognaLib/Examples/clustering/output/"
 dir_triplets = dir_output+"triplets/"
 dir_random_cat = dir_output
 os.system("mkdir -p "+dir_output+" "+dir_triplets)

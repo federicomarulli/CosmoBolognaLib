@@ -330,7 +330,7 @@ namespace cbl {
 
 	ns = n_spec;
 
-	//double norm = 2.*par::pi*par::pi*m_scalar_amp*pow(2.*pow(par::cc/100.,2)/(5*m_Omega_matter)*DN(redshift),2)*pow(k/m_scalar_pivot, m_n_spec-1)*k_ov_h*pow(fact, -3);
+	//double norm = 2.*par::pi*par::pi*m_scalar_amp*pow(2.*pow(par::cc/100.,2)/(5*m_Omega_matter)*DD(redshift),2)*pow(k/m_scalar_pivot, m_n_spec-1)*k_ov_h*pow(fact, -3);
 	pk_normalization = 2.*par::pi*par::pi*As*pow(2.*pow(par::cc/100.,2)/(5*omega_matter)*growth_z,2)*pow(1./k_pivot, ns-1);
 
 	return qwarn;

@@ -359,9 +359,9 @@ double cbl::multipole_xi0_model (const double beta, const double xi_real)
 // ============================================================================
 
 
-double cbl::multipole_xi0_model (const double f_sigma8, const double bias_sigma8, const double sigma8z, const double xi_matter) 
+double cbl::multipole_xi0_model (const double f_sigma8, const double bias_sigma8, const double sigma8z, const double xi_DM) 
 { 
-  return xi_ratio(f_sigma8, bias_sigma8)*xi_matter*pow(bias_sigma8/sigma8z, 2);
+  return xi_ratio(f_sigma8, bias_sigma8)*xi_DM*pow(bias_sigma8/sigma8z, 2);
 }
 
 
@@ -375,7 +375,7 @@ double cbl::multipole_xi0_model (double xx, shared_ptr<void> pp, std::vector<dou
 
   shared_ptr<cbl::glob::STR_xi0_model> vec = static_pointer_cast<cbl::glob::STR_xi0_model>(pp);
 
-  if (par.size()==2) return multipole_xi0_model(par[0], vec->bias_sigma8, vec->sigma8z, vec->xi_matter[par[par.size()-1]]); 
+  if (par.size()==2) return multipole_xi0_model(par[0], vec->bias_sigma8, vec->sigma8z, vec->xi_DM[par[par.size()-1]]); 
 
   else return ErrorCBL("par.size()!=2", "multipole_xi0_model", "FuncMultipoles.cpp");
 }

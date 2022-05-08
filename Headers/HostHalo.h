@@ -123,17 +123,6 @@ namespace cbl {
 	: Halo(), m_tot_mass(par::defaultDouble), m_mass_estimate(par::defaultDouble), m_radius_estimate(par::defaultDouble), m_veldisp_estimate(par::defaultDouble), m_xcm(par::defaultDouble), m_ycm(par::defaultDouble), m_zcm(par::defaultDouble), m_spin_x(par::defaultDouble), m_spin_y(par::defaultDouble), m_spin_z(par::defaultDouble), m_veldisp(par::defaultDouble), m_vmax(par::defaultDouble), m_vmax_rad(par::defaultDouble), m_radius(par::defaultDouble), m_parent(par::defaultInt), m_nsub(par::defaultInt), m_satellites({}) {}
       
       /**
-       * @brief function that allows copying private variables of the class 
-       * when an object of class Catalogue is copied
-       * 
-       * @return a shared pointer to the Object
-       *
-       */
-      std::shared_ptr<Object> getShared() {
-        return std::make_shared<HostHalo>(*this);
-      }
-
-      /**
        *  @brief constructor that uses comoving coordinates
        *
        *  @param coord structure containing the comoving coordinates

@@ -71,17 +71,6 @@ namespace cbl {
        */
       Mock ()
 	: Halo(), m_generic(par::defaultDouble) {}
-	
-      /**
-       * @brief function that allows copying private variables of the class 
-       * when an object of class Catalogue is copied
-       * 
-       * @return a shared pointer to the Object
-       *
-       */
-      std::shared_ptr<Object> getShared() {
-        return std::make_shared<Mock>(*this);
-      }
 
       /**
        *  @brief constructor that uses comoving coordinates

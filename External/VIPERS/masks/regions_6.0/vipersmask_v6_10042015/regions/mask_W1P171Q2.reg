@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/filebcGcJE.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(31.886387,-5.504884,31.89617,-5.504932,31.900005,-5.506095,31.949488,-5.505968,31.964761,-5.505915,31.983354,-5.50606,31.990927,-5.509671,31.990842,-5.387187,31.980235,-5.378511,31.97621,-5.376764,31.887955,-5.375926,31.879034,-5.382674,31.875716,-5.387171,31.87569,-5.500603) # color=red dash=1

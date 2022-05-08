@@ -36,7 +36,6 @@
 #define __MODFUNCTWOP__
 
 #include "Cosmology.h"
-#include "Modelling_MassObservableRelation.h"
 
 
 // ============================================================================
@@ -65,15 +64,6 @@ namespace cbl {
 
 	/// test cosmology
 	std::shared_ptr<cosmology::Cosmology> test_cosmology;
-	
-	/// mass-observable scaling relation
-	std::shared_ptr<modelling::massobsrel::Modelling_MassObservableRelation> scaling_relation;
-	
-	/// typical absolute error on redshift
-	double z_abs_err = -1;
-	
-	/// typical relative error on mass proxy
-	double proxy_rel_err = -1;
 
 	/// redshift
 	double redshift;
@@ -318,14 +308,11 @@ namespace cbl {
 	/// fiducial \f$H(z)\f$
 	double HHfid;
 
-	/// &Delta;, the overdensity
+	/// &Delta;: the overdensity, defined as the mean interior density relative to the background
 	double Delta;
-	
-	/// the input overdensity
-	double Delta_input;
 
-	/// isDelta_critical
-	bool isDelta_critical;
+	/// isDelta_Vir
+	bool isDelta_Vir;
 
 	/// Pointer to normal random numbers generator
 	std::shared_ptr<cbl::random::NormalRandomNumbers> gau_ran;
@@ -977,7 +964,7 @@ namespace cbl {
        *  linear galaxy bias, \f$\mu\f$ is the cosine of the angle
        *  between the line-of-sight and the comoving separation,
        *  \f$P^{lin}(k')\f$ is the real-space matter power spectrum,
-       *  which is computed by cbl::cosmology::Cosmology::Pk_matter, and
+       *  which is computed by cbl::cosmology::Cosmology::Pk_DM, and
        *  \f$D_{FoG}\f$ is a damping factor used to model the random
        *  peculiar motions at small scales, which can be either
        *  Gaussian:
@@ -1120,7 +1107,7 @@ namespace cbl {
        *
        *  where both the linear power spectrum \f$P^{lin}(k)\f$, and
        *  the non-linear power spectrum \f$P_{\delta\delta}(k)\f$ are
-       *  computed by cbl::cosmology::Cosmology::Pk_matter, and
+       *  computed by cbl::cosmology::Cosmology::Pk_DM, and
        *  \f$k_\delta\f$, \f$k_\theta\f$ are free parameters.
        *
        *  @author J.E. Garcia-Farieta
@@ -1196,7 +1183,7 @@ namespace cbl {
        *
        *  where both the linear power spectrum \f$P^{lin}(k)\f$, and
        *  the non-linear power spectrum \f$P_{\delta\delta}(k)\f$ are
-       *  computed by cbl::cosmology::Cosmology::Pk_matter, and
+       *  computed by cbl::cosmology::Cosmology::Pk_DM, and
        *  \f$k_\delta\f$, \f$a_0\f$, \f$a_1\f$, \f$a_2\f$, \f$a_3\f$
        *  are free parameters.
        *

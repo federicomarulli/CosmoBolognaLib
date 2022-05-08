@@ -353,6 +353,24 @@ namespace cbl {
     
     // ============================================================================================
 
+  
+    /**
+     *  @defgroup dir useful directories
+     *
+     *  @brief Useful directories of general use
+     *
+     *  @{
+     */
+  
+    /// directory where the CosmoBolognaLib are stored
+    extern std::string DirCosmo;
+    
+    /// local directory of the main code
+    extern std::string DirLoc;
+    
+    /**
+     *  @} */
+
     
     /**
      *  @defgroup msg internal messages

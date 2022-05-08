@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/fileX7cRtj.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(37.25856,-5.203571,37.264388,-5.202964,37.268218,-5.204735,37.363172,-5.204473,37.363085,-5.085852,37.361887,-5.081433,37.351966,-5.075467,37.256804,-5.07542,37.253081,-5.077514,37.249639,-5.081376,37.247786,-5.085839,37.247907,-5.2027545) # color=red dash=1

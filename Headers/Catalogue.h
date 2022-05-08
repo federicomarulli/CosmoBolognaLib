@@ -46,7 +46,7 @@
 #include "Cluster.h"
 #include "Void.h"
 #include "HostHalo.h"
-#include "ChainMeshCell.h"
+
 
 // ============================================================================================
 
@@ -69,186 +69,164 @@ namespace cbl {
      */
     enum class Var {
     
-		    /// coordinate x
-		    _X_,
+      /// coordinate x
+      _X_,
     
-		    /// coordinate y
-		    _Y_, 
+      /// coordinate y
+      _Y_, 
 
-		    /// coordinate z
-		    _Z_,
+      /// coordinate z
+      _Z_,
 
-		    /// Right Ascension
-		    _RA_, 
+      /// Right Ascension
+      _RA_, 
 
-		    /// Declination
-		    _Dec_, 
+      /// Declination
+      _Dec_, 
       
-		    /// Central value of the tile Right Ascension
-		    _TileRA_, 
+      /// Signal-to-noise ratio
+      _SN_,
 
-		    /// Central value of the tile Declination
-		    _TileDec_, 
+      /// redshift
+      _Redshift_, 
       
-		    /// Signal-to-noise ratio
-		    _SN_,
-
-		    /// redshift
-		    _Redshift_, 
+      /// minimum redshift
+      _RedshiftMin_,
       
-		    /// minimum redshift
-		    _RedshiftMin_,
+      /// maximum redshift
+      _RedshiftMax_,
       
-		    /// maximum redshift
-		    _RedshiftMax_,
+      /// first component of the shear signal
+      _Shear1_,
       
-		    /// first component of the shear signal
-		    _Shear1_,
+      /// second component of the shear signal
+      _Shear2_,
       
-		    /// second component of the shear signal
-		    _Shear2_,
+      /// the ODDS parameter quantifies which fraction of the redshift distribution, p(z), is concentrated around the peak value, allowing the construction of a threshold useful in excluding distributions with significant secondary  solutions or wide tails (Coe  et  al.  2006;  Bellagamba  et  al.  2012)
+      _ODDS_,
       
-		    /// the ODDS parameter quantifies which fraction of the redshift
-		    /// distribution, p(z), is concentrated around the peak value,
-		    /// allowing the construction of a threshold useful in excluding
-		    /// distributions with significant secondary solutions or wide
-		    /// tails (Coe et al.  2006; Bellagamba et al.  2012)
-		    _ODDS_,
+      /// lensing weight
+      _LensingWeight_,
       
-		    /// lensing weight
-		    _LensingWeight_,
+      /// lensing calibration factor
+      _LensingCalib_,
+
+      /// comoving distance
+      _Dc_, 
+
+      /// weight
+      _Weight_,
+
+      /// mass
+      _Mass_, 
+
+      /// magnitude
+      _Magnitude_,
       
-		    /// lensing calibration factor
-		    _LensingCalib_,
-
-		    /// comoving distance
-		    _Dc_, 
-
-		    /// weight
-		    _Weight_,
-
-		    /// mass
-		    _Mass_, 
-
-		    /// magnitude
-		    _Magnitude_,
+      /// u-band magnitude
+      _MagnitudeU_,
       
-		    /// u-band magnitude
-		    _MagnitudeU_,
+      /// g-band magnitude
+      _MagnitudeG_,
       
-		    /// g-band magnitude
-		    _MagnitudeG_,
+      /// r-band magnitude
+      _MagnitudeR_,
       
-		    /// r-band magnitude
-		    _MagnitudeR_,
+      /// i-band magnitude
+      _MagnitudeI_,
+
+      /// star formation rate
+      _SFR_,
+
+      /// specific star formation rate
+      _sSFR_, 
       
-		    /// i-band magnitude
-		    _MagnitudeI_,
-
-		    /// star formation rate
-		    _SFR_,
-
-		    /// specific star formation rate
-		    _sSFR_, 
-
-		    /// mass proxy
-		    _MassProxy_,
+      /// mass proxy
+      _MassProxy_,
       
-		    /// mass proxy error
-		    _MassProxyError_,
-
-		    /// stellar mass
-		    _Mstar_,
-
-		    /// Infall mass of substructures
-		    _MassInfall_,
-	
-		    /// unique identification number of the halo that host galaxy
-		    _IDHOST_, 
+      /// mass proxy error
+      _MassProxyError_,
       
-		    /// tag of galaxy "central" or "satellite"
-		    _GalaxyTag_, 
+      /// velocity along the x direction
+      _Vx_, 
 
-		    /// velocity along the x direction
-		    _Vx_, 
+      /// velocity along the y direction
+      _Vy_, 
 
-		    /// velocity along the y direction
-		    _Vy_, 
+      /// velocity along the z direction
+      _Vz_, 
 
-		    /// velocity along the z direction
-		    _Vz_, 
-
-		    /// region
-		    _Region_,
+      /// region
+      _Region_,
       
-		    /// radius 
-		    _Radius_,
+      /// radius 
+      _Radius_,
 
-		    /// densityContrast
-		    _DensityContrast_,
+      /// densityContrast
+      _DensityContrast_,
 
-		    /// centralDensity
-		    _CentralDensity_,
+      /// centralDensity
+      _CentralDensity_,
       
-		    /// xx displacement
-		    _X_displacement_,
+      /// xx displacement
+      _X_displacement_,
 
-		    /// yy displacement
-		    _Y_displacement_,   
+      /// yy displacement
+      _Y_displacement_,   
    
-		    /// zz displacement
-		    _Z_displacement_,
+      /// zz displacement
+      _Z_displacement_,
 
-		    /// mass estimate
-		    _MassEstimate_,
+      /// mass estimate
+      _MassEstimate_,
 
-		    /// radius estimate
-		    _RadiusEstimate_,
+      /// radius estimate
+      _RadiusEstimate_,
 
-		    /// velocity dispersion estimate
-		    _VeldispEstimate_,
+      /// velocity dispersion estimate
+      _VeldispEstimate_,
 
-		    /// centre of mass x-coordinate
-		    _XCM_,
+      /// centre of mass x-coordinate
+      _XCM_,
 
-		    /// centre of mass y-coordinate
-		    _YCM_,
+      /// centre of mass y-coordinate
+      _YCM_,
 
-		    /// centre of mass z-coordinate
-		    _ZCM_,
+      /// centre of mass z-coordinate
+      _ZCM_,
 
-		    /// spin x-coordinate
-		    _XSpin_,
+      /// spin x-coordinate
+      _XSpin_,
 
-		    /// spin y-coordinate
-		    _YSpin_,
+      /// spin y-coordinate
+      _YSpin_,
 
-		    /// spin z-coordinate
-		    _ZSpin_,
+      /// spin z-coordinate
+      _ZSpin_,
 
-		    /// velocity dispersion
-		    _VelDisp_,
+      /// velocity dispersion
+      _VelDisp_,
 
-		    /// maximum velocity
-		    _Vmax_,
+      /// maximum velocity
+      _Vmax_,
 
-		    /// maximum radial velocity
-		    _VmaxRad_,
+      /// maximum radial velocity
+      _VmaxRad_,
 
-		    /// total halo mass
-		    _TotMass_,
+      /// total halo mass
+      _TotMass_,
 
-		    /// unique identification number
-		    _ID_,
+      /// unique identification number
+      _ID_,
 
-		    /// number of sub-groups
-		    _Nsub_,
+      /// number of sub-groups
+      _Nsub_,
 
-		    /// parent unique identification number
-		    _Parent_,
+      /// parent unique identification number
+      _Parent_,
 	
-		    /// generic property
-		    _Generic_
+      /// generic property
+      _Generic_
       
     };
 
@@ -300,7 +278,7 @@ namespace cbl {
      * Var names
      */
     inline std::vector<std::string> VarNames ()
-    { return {"X", "Y", "Z", "RA", "Dec", "SN", "Redshift", "RedshiftMin", "RedshiftMax", "Shear1", "Shear2", "ODDS", "LensingWeight", "LensingCalib", "Dc", "Weight", "Mass", "Magnitude", "MagnitudeU", "MagnitudeG", "MagnitudeR", "MagnitudeI", "SFR", "sSFR", "MassProxy", "MassProxyError", "Mstar", "MassInfall", "IDHOST", "GalaxyTag", "Vx", "Vy", "Vz", "Region", "Radius", "DensityContrast", "CentralDensity", "X_displacement", "Y_displacement", "Z_displacement", "MassGas", "MassHalo", "MassDisk", "MassBulge", "MassStars", "MassBndry", "MassEstimate", "RadiusEstimate", "VeldispEstimate", "XCM", "YCM", "ZCM", "XSpin", "YSpin", "ZSpin", "VelDisp", "Vmax", "VmaxRad", "TotMass", "Generic"}; }
+    { return {"X", "Y", "Z", "RA", "Dec", "SN", "Redshift", "RedshiftMin", "RedshiftMax", "Shear1", "Shear2", "ODDS", "LensingWeight", "LensingCalib", "Dc", "Weight", "Mass", "Magnitude", "MagnitudeU", "MagnitudeG", "MagnitudeR", "MagnitudeI", "SFR", "sSFR", "MassProxy", "MassProxyError", "Vx", "Vy", "Vz", "Region", "Radius", "DensityContrast", "CentralDensity", "X_displacement", "Y_displacement", "Z_displacement", "MassGas", "MassHalo", "MassDisk", "MassBulge", "MassStars", "MassBndry", "MassEstimate", "RadiusEstimate", "VeldispEstimate", "XCM", "YCM", "ZCM", "XSpin", "YSpin", "ZSpin", "VelDisp", "Vmax", "VmaxRad", "TotMass", "Generic"}; }
 
     /**
      * @brief cast an enum of type Var
@@ -344,32 +322,29 @@ namespace cbl {
      */
     enum class RandomType {
 
-			/// random catalogue with cubic geometry (or parallelepiped) in comoving coordinates
-			_createRandom_box_,   		
+      /// random catalogue with cubic geometry (or parallelepiped) in comoving coordinates
+      _createRandom_box_,
 
-			/// random catalogue with square geometry in observed coordinates (R.A., Dec)
-			_createRandom_square_,   
+      /// random catalogue with square geometry in observed coordinates (R.A., Dec)
+      _createRandom_square_,   
 
-			/// random catalogue obtained with shuffling in observed coordinates (R.A., Dec)
-			_createRandom_shuffle_,   
+      /// random catalogue obtained with shuffling in observed coordinates (R.A., Dec)
+      _createRandom_shuffle_,
 
-			/// random catalogue obtained with shuffling in observed coordinates (R.A., Dec) and redshift 
-			_createRandom_shuffleTOT_,	
+      /// random catalogue obtained with shuffling in observed coordinates (R.A., Dec) and redshift 
+      _createRandom_shuffleTOT_,
+      
+      /// random catalogue with conic geometry
+      _createRandom_cone_,
 
-			/// random catalogue with conic geometry
-			_createRandom_cone_,      	
+      /// random catalogue using mangle
+      _createRandom_MANGLE_,
 
-			/// random catalogue using mangle
-			_createRandom_MANGLE_,    
-
-			/// random catalogue for VIPERS
-			_createRandom_VIPERS_,		
-
-			/// create random for SDSS, using stripes
-			_createRandom_SDSS_stripes_, 
-
-			/// homogeneous random catalogue in ra and dec with redshift dependent density
-			_createRandom_homogeneous_LC_ 
+      /// random catalogue for VIPERS
+      _createRandom_VIPERS_,
+	
+     /// create random for SDSS, using stripes
+      _createRandom_SDSS_stripes_    
     };
 
     /**
@@ -417,45 +392,18 @@ namespace cbl {
     inline std::vector<RandomType> RandomTypeCast (const std::vector<std::string> randomTypeNames)
     { return castFromNames<RandomType>(randomTypeNames, RandomTypeNames()); }
 
-    /**
-     *  @enum HODType catalogue
-     *
-     *  @brief type of HOD catalogue, which corresponds to the authors
-     *  of the calibrated HOD model
-     */
-    enum class HODType {
- 
-			/// Zehavi et al. (2005)
-			_Zehavi05_,
-     
-			/// Zehavi et al. (2011) 
-			_Zehavi11_,
 
-			/// Moster et al. (2010)
-			_Moster10_,
-
-    };
-
-    /**
-     * @brief return a vector containing the
-     * HODTypes names
-     * @return a vector containing the
-     * HODTypes names
-     */
-    inline std::vector<std::string> HODTypeNames ()
-    { return {"Zehavi05", "Zehavi11", "Moster10"}; }
-    
     /**
      *  @enum VoidAlgorithm
      *  @brief the algorithm used to look for Voids
      */
     enum class VoidAlgorithm {
        
-			/// Lagrangian Zel'dovich approximation Void algorithm used to move particles
-			_LaZeVo_,
+      /// Lagrangian Zel'dovich approximation Void algorithm used to move particles
+      _LaZeVo_,
 
-			/// Random Induced walk Void Algorithm used to move particles
-			_RIVA_      
+      /// Random Induced walk Void Algorithm used to move particles
+      _RIVA_      
       
     };
 
@@ -474,11 +422,11 @@ namespace cbl {
      */
     enum class CharEncode {
     
-			/// Format ASCII file
-			_ascii_,
-  		
-			/// Format binary file
-			_binary_
+      /// Format ASCII file
+      _ascii_,
+      
+      /// Format binary file
+      _binary_
       
     };
 
@@ -497,14 +445,14 @@ namespace cbl {
      */
     enum class EstimateCriterion {
     
-			/// 
-			_m200_,
-    
-			/// 
-			_c200_,
+      /// 
+      _m200_,
+      
+      /// 
+      _c200_,
 
-			///
-			_t200_
+      ///
+      _t200_
       
     };
 
@@ -660,6 +608,15 @@ namespace cbl {
       /// vector containing the object indexes
       std::vector<int> m_index;
 
+      /// catalogue's comoving volume
+      double m_volume;
+
+      /// catalogue number density
+      double m_numdensity;
+
+      /// catalogue mean particle separation
+      double m_mps;
+
       /// number of regions
       size_t m_nRegions = 0;
       
@@ -738,86 +695,27 @@ namespace cbl {
       Catalogue () = default;
 
       /**
-       *  @brief Copy constructor for the Catalogue class
-			 *  @param obj catalogue to be copied
-			 *
+       *  @brief default copy constructor
+       *  
        */
-      Catalogue (const Catalogue& obj)
-			{
-				// the copied object is emptied to avoid conflicts 
-				// (e.g. for the subCatalogue function)
-  			std::vector<bool> mask(m_object.size(), true);	
-				remove_objects(mask);
-				// m_objects is copied through the use of the getShared() 
-				// function that allows to copy also the variables of the derived Object classes
-				for (size_t i=0; i<obj.m_object.size(); ++i) {
-					m_object.emplace_back(obj.m_object[i]->getShared());
-				}
-				m_nRegions = obj.m_nRegions;
-			}
+      Catalogue (const Catalogue&) = default;
 
-			/**
-			 *  @brief move constructor for the Catalogue class
-			 * 	@param obj catalogue to be moved
-			 * 
-			 */
-			Catalogue (Catalogue&& obj) 
-			{
-				// the copied object is emptied to avoid conflicts 
-				// (e.g. for the subCatalogue function)
-				std::vector<bool> mask(m_object.size(), true);
-				remove_objects(mask);
-				// m_objects is copied through the use of the getShared() 
-				// function that allows to copy also the variables of the derived Object classes
-				for (size_t i=0; i<obj.m_object.size(); ++i) {
-					m_object.emplace_back(obj.m_object[i]->getShared());
-					// Original object pointers are reset
-					obj.m_object[i].reset();
-				}
-				m_nRegions = std::move(obj.m_nRegions);
-			}
+      /**
+       *  @brief default move constructor
+       */
+      Catalogue (Catalogue&&) = default;
 
-			/**
-			 *	@brief copy assignment for the Catalogue class
-			 *  @param obj catalogue to be copied
-			 *	@return object of type Catalogue 
-			 */
-			Catalogue& operator=(const Catalogue& obj) 
-			{
-				// the copied object is emptied to avoid conflicts 
-				// (e.g. for the subCatalogue function)
-				std::vector<bool> mask(m_object.size(), true);
-				remove_objects(mask);
-				// m_objects is copied through the use of the getShared() 
-				// function that allows to copy also the variables of the derived Object classes			
-				for (size_t i=0; i<obj.m_object.size(); ++i)
-					m_object.emplace_back(obj.m_object[i]->getShared());
-				m_nRegions = obj.m_nRegions;         
-				return *this;
-			}
+      /**
+       *  @brief default copy assignment
+       *  @return object of type Catalogue 
+       */
+      Catalogue& operator=(const Catalogue&) = default;
 
-			/**
-			 *  @brief move assignment for the Catalogue class
-			 *  @param obj catalogue to be moved
-			 *  @return object of type Catalogue  
-			 */
-			Catalogue& operator=(Catalogue&& obj) noexcept
-			{
-				if (this == &obj) return *this;
-				// the copied object is emptied to avoid conflicts 
-				// (e.g. for the subCatalogue function)
-				std::vector<bool> mask(m_object.size(), true);
-				remove_objects(mask);
-				// m_objects is copied through the use of the getShared() 
-				// function that allows to copy also the variables of the derived Object classes	
-				for (size_t i=0; i<obj.m_object.size(); ++i) {
-				// Original object pointers are reset
-					m_object.emplace_back(obj.m_object[i]->getShared());
-					obj.m_object[i].reset();
-				}
-				m_nRegions = std::move(obj.m_nRegions);         
-				return *this;
-			}
+      /**
+       *  @brief default move assignment
+       *  @return object of type Catalogue  
+       */
+      Catalogue& operator=(Catalogue&&) = default;
       
       /**
        *  @brief constructor
@@ -990,7 +888,7 @@ namespace cbl {
        * 
        *  @param seed the seed for random number generation
        *
-       *  @param delimiter the delimiter between the columns
+       *  
        *
        *  @warning The vector column must be sorted in ascending
        *  order. The column datas will be read as double types, unless
@@ -998,7 +896,7 @@ namespace cbl {
        *  the values will be read as int)
        *
        */
-      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments=0, const double nSub=1.1, const double fact=1, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const char delimiter='\t', const int seed=3213);
+      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments=0, const double nSub=1.1, const double fact=1, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
 
       /**
        *  @brief constructor, reading a file in FITS format
@@ -1041,54 +939,14 @@ namespace cbl {
        *  
        */
       Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const bool read_weights, const bool read_regions, const double nSub, const double fact, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
-
-      /**
-       *  @brief constructor, reading a file in FITS format
-       *
-       *  This constructor reads a FITS file and associates each
-       *  column name to a specific Catalogue variable
-       *
-       *  @param objectType the object type, specified in the
-       *  cbl::catalogue::ObjectType enumeration
-       *
-       *  @param coordinateType the coordinate type, specified in the
-       *  cbl::CoordinateType enumeration
-       *
-       *  @param file vector containing the files where the input
-       *  catalogues are stored
-       *
-       *  @param column_names vector containing the column names to
-       *  read
-       *
-       *  @param attribute vector containing the list of attributes
-       *  contained in the file, which corresponds to each element of
-       *  the vector 'column_names' (in the same order) and is
-       *  specified in the cbl::catalogue::Var enumeration
-       *  
-       *  @param nSub the fracton of objects that will be randomly
-       *  selected (nSub=1 \f$ \rightarrow \f$ all objects are selected)
-       *
-       *  @param fact a factor used to multiply the coordinates,
-       *  i.e. coordinate_i=coordinate_i*fact
-       *
-       *  @param cosm object of class Cosmology 
-       *
-       *  @param inputUnits the units of the input coordinates
-       *
-       *  @param seed the seed for random number generation
-       *
-       *  
-       */
-      Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const std::vector<Var> attribute, const double nSub, const double fact, const cosmology::Cosmology &cosm={}, const CoordinateUnits inputUnits=CoordinateUnits::_radians_, const int seed=3213);
-
       
       /**
        *  @brief constructor, using vectors of generic objects
        *  @param object objects of class T, specified in the
        *  cbl::catalogue::ObjectType enumeration
+       *  
        */ 
-      template<typename T> Catalogue (std::vector<T> object)
-      {
+      template<typename T> Catalogue (std::vector<T> object) {
 	for (size_t i=0; i<object.size(); i++)
 	  m_object.push_back(move(std::make_shared<T>(T(object[i]))));
       }
@@ -1098,6 +956,7 @@ namespace cbl {
        *  objects
        *  @param sample vector of objects of type \e Object, specified
        *  in the cbl::catalogue::ObjectType enumeration
+       *  
        */
       Catalogue (std::vector<std::shared_ptr<Object> > sample) {
 	for (auto &&i : sample)
@@ -1127,6 +986,8 @@ namespace cbl {
        *  selected (nSub=1 \f$ \rightarrow \f$ all objects are selected)
        * 
        *  @param seed the seed for random number generation
+       *
+       *  
        */
       Catalogue (const ObjectType objectType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments=0, const double nSub=1.1, const int seed=3213);
 
@@ -1144,6 +1005,8 @@ namespace cbl {
        *  @param nbin the binning for the variable
        *
        *  @param seed the seed for random number generation
+       *
+       *  
        */
       Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const Var var_name, const int nbin, const int seed=3213);
 
@@ -1166,105 +1029,10 @@ namespace cbl {
        *  @param nbin2 the binning for the variable
        *
        *  @param seed the seed for random number generation
+       *
+       *  
        */
       Catalogue (const Catalogue input_catalogue, const Catalogue target_catalogue, const cbl::catalogue::Var var_name1, const int nbin1, const cbl::catalogue::Var var_name2, const int nbin2, const int seed=3213);
-      
-      /**
-       *  @brief constructor that creates a catalogue of galaxies
-       *  using an HOD model to popolate the haloes
-       *
-       *  @param halo_catalogue the halo catalogue
-       *
-       *  @param cosm the cosmology used to convert redshifts into
-       *  coordinates
-       *
-       *  @param HOD_Type the HOD model used to populate haloes with
-       *  galaxies
-       *
-       *  @param threshold the threshold above which the haloes are
-       *  populated with galaxies. It is espressed in stellar mass if
-       *  HODType is _Moster10_, or in magnitude if HODType is
-       *  _Zehavi05_ or _Zehavi11_, the available magnitude threshold
-       *  are \f${-18,-18.5,-19,-19.5,-20,-20.5,-21,-21.5,-22}\f$ .
-       *
-       *  @param substructures if true the halo catalogue is populated
-       *  with galaxies and substructures; if false only with galaxies
-       *
-       *  @param parameter vector of double which contains the
-       *  parameters for the HOD. An empty vector takes the defaul
-       *  values of the HOD model considered adopted. When HODType is
-       *  _Moster10_ only the first 11 parameters are used, that are
-       *  referrend to mean occupation numbers and to the conditional
-       *  stellar mass function. The first five refer to the central
-       *  galaxies, while the other refer to the satellite galaxies.
-       *  They are respectively \f${k_c,M_{1c}, \beta_c, \gamma_c,
-       *  k_s, M_{1s}, \beta_s, \gamma_s, \phi_s, \alpha_s}\f$. The
-       *  mean occupation numbers are: 
-       *
-       *  \f[\bigl \langle N_{c} (>M_{*,min},M)\bigl \rangle =
-       *  \frac{1}{2}\left[1-erf\left(\frac{\log M_{*,min}/\bar
-       *  M_{*,c}}{\sqrt{2}\sigma_c}\right)\right] \f]
-       * 
-       *  \f[ \bigl \langle N_{s} (>M_{*,min},M)\bigl \rangle =
-       *  \frac{\phi_s^*}{2}\Gamma\left[\frac{\alpha_s}{2} +
-       *  \frac{1}{2},\left(\frac{M_{*,min}}{\bar
-       *  M_{*,s}}\right)^2\right]\f]
-       *
-       *  where the subscripts "c" and "s" refer to central and
-       *  satellite galaxies, respectively, and \f$\bar M_{*} \f$ is
-       *  the mean stellar mass for galaxies inside an halo of mass
-       *  \f$M\f$
-       *
-       *  \f[\bar M_{*} =
-       *  2Mk\left[\left(\frac{M}{M_{1}}\right)^{-\beta}+\left(\frac{M}{M_{1}}\right)^{\gamma}\right]^{-1}\f]
-       *
-       *  When HODType is _Zehavi05_ or _Zehavi11_ the length of the
-       *  parameters vector is 14 and 16 respectively. In _Zehavi05_
-       *  the first 3 are referred to the mean occupation numbers,
-       *  while with _Zehavi11_ the first five are referred to the
-       *  mean occupation number. While the other parameters are used
-       *  to extract the stellar mass of each galaxy.  The parameters
-       *  vector with _Zehavi05_ is: \f${M_{min},M_1,\alpha,k_c,
-       *  M_{1c}, \beta_c,
-       *  \gamma_c,k_s,M_{1s},\beta_s,\gamma_s,\phi_s,\alpha_s}\f$. The
-       *  mean occupation number for central and satellite galaxies
-       *  respectively are the follow:
-       *
-       *  \f[\bigl \langle N_c(M) \bigl \rangle = \begin{cases} 0 \ \
-       *   \ \text{if $M<M_{min}$} \\ 1 \ \ \ \hfill \text{if
-       *   $M>M_{min}$} \\ \end{cases}\f]
-       *  
-       *   \f[\bigl \langle N_s (M)\bigl \rangle =\begin{cases} 0 \ \
-       *   \ \text{if $M<M_{min}$} \\ (\frac{M-M_{min}}{M_1})^{\alpha}
-       *   \ \ \ \text{if $M>M_{min}$} \\ \end{cases}\f]
-       *
-       *  The parameters vector with _Zehavi11_ is:
-       *  \f${logM_{min},\sigma_{logM},M_0,M_1,\alpha,k_c,M_{1c},
-       *  \beta_c,\gamma_c,k_s,M_{1s},\beta_s,\gamma_s,\phi_s,\alpha_s}\f$
-       *  The mean occupation number for central and satellite
-       *  galaxies respectively are the follow:
-       *
-       *   \f[\bigl \langle N_c (M)\bigl \rangle
-       *   =\frac{1}{2}\left[1+erf \left(\frac{\log M-\log
-       *   M_{min}}{\sigma_{logM}}\right)\right] \f]
-       *
-       *   \f[\bigl \langle N_s (M)\bigl \rangle=
-       *   \frac{1}{2}\left[1+\left(\frac{M-M_0}{M'_1}\right)^\alpha\right]\f]
-       *
-       *   The stellar masses for central and satellite galaxies are
-       *   extracted from the following conditional stellar mass
-       *   function:
-       *
-       *   \f[\Phi_{c}(M_*|M)=\frac{1}{\sqrt{2\pi}\ln10 M_*
-       *   \sigma_c}\exp\left[-\frac{\log^2\left(M_* /\bar
-       *   M_{*,c}\right)}{2\sigma_c^2}\right] \f]
-       *
-       *  \f[ \Phi_{s}(M_*|M)=\frac{\phi^*_s}{\bar
-       *  M_{*,s}}\left(\frac{m_*}{m_{*,s}}\right)^{\alpha_s}
-       *  \exp\left[-\left(\frac{M_*}{\bar M_{*,s}}\right)^2\right]
-       *  \f]
-       */
-      Catalogue (const Catalogue halo_catalogue, const cosmology::Cosmology &cosm, const HODType HOD_Type, const double threshold, const bool substructures=true, std::vector<double> parameter={});
 
       /**
        * @brief default destructor
@@ -1302,6 +1070,8 @@ namespace cbl {
        *  @param Zguess_min minimum redshift used to search the redshift
        *
        *  @param Zguess_max maximum redshift used to search the redshift
+       *
+       *  
        *
        *  @warning the input parameter \e type is used only to make
        *  the constructor type explicit
@@ -1470,140 +1240,148 @@ namespace cbl {
        */
       Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const bool dndz_per_stripe, const int nbin, const cosmology::Cosmology cosm, const bool conv=false, const double sigma=0, const int seed=3213);
 	
-
-      /**
-       *  @brief constructor that creates a random catalogue for light cones 
-       *  homogeneous in RA and Dec and with redshift dependent density.
-       * 
-       *  @param type the type of random catalogue, that must be
-       *  set to \_createRandom_homogeneous_LC\_
-       *
-       *  @param catalogue object of class Catalogue
-       *
-       *  @param N_R fraction of random objects, i.e.
-       *  N<SUB>R</SUB>=N<SUB>random</SUB>/N<SUB>objects</SUB>
-       * 
-       *  @param cosm object of class Cosmology
-       * 
-       *  @param RA_range range in RA [RA_min, RA_max]
-       * 
-       *  @param DEC_range range in DEC [DEC_min, DEC_max]
-       * 
-       *  @param nbin number of redshift bins used to compute the
-       *  redshift distribution
-       * 
-       *  @param seed the seed for random number generation
-       * 
-       */
-      Catalogue (const RandomType type, Catalogue catalogue, const double N_R, const cosmology::Cosmology cosm, const std::vector<double> RA_range, const std::vector<double> DEC_range, const unsigned int nbin, const int seed);
-
       /// @cond extrandom
       
       Catalogue (const RandomType type, const std::string WField, const bool isSpectroscopic, const Catalogue catalogue, const Catalogue catalogue_for_nz, const double N_R, const cosmology::Cosmology &cosm, const int step_redshift, const std::vector<double> lim, const double redshift_min, const double redshift_max, const bool do_convol, const double sigma, const bool use_venice, const bool do_zdistr_with_venice, const std::string file_random, const std::string mask, const std::string pointing_file, const std::string dir_venice, const int seed); 
       
-			/// @endcond			
-			///@}
+      /// @endcond
 
-			/**
-			 *  @name Constructor of Void catalogues 
-			 */
-			///@{
-			
-			/**
-			 * @brief constructor that creates a void catalogue extracting
-			 * cosmic voids from a catalogue of tracers, for COMOVING coordinates.
-			 * This void finder is based on dynamical criteria: the density field is
-			 * reconstructed from the displacement field generated by the
-			 * back-in-time evolution of the tracers. Voids are therefore
-			 * classified as regions of negative velocity divergence.
-			 *
-			 * @param algorithm the type of algorithm on which the
-			 * reconstruction of the density field is based (_LaZeVo_ or
-			 * _RIVA_)
-			 *
-			 * @param tracer_catalogue the input tracer catalogue
-			 *      
-			 * @param random_catalogue Random catalogues. 
-			 * Simply declears as empty (={}) if the random catalogue is not available: 
-			 * a new random catalogue will be created with the same objects
-			 * and geometry of the tracer catalogue
-			 *
-			 * @param dir_output path of the output directory where to store
-			 * the different reconstructions, the divergence field, the
-			 * subvoid and void catalogues
-			 *
-			 * @param output name of the output files
-			 *
-			 * @param cellsize minimum radius used for the chain mesh
-			 *
-			 * @param n_rec number of reconstructions of the density field:
-			 * number of random catalogue used or generated
-			 *
-			 * @param step_size dimension of the grid cells used for the
-			 * identification of subvoids, in units of the mean
-			 * interparticle separation of the tracer catalogue. It is
-			 * strongly recommended to keep this value greater than 0.75
-			 * (cell sizes too small compared to the resolution of the
-			 * catalogue)
-			 * 
-			 * @param threshold number of minimum couplings between a certain halo 
-			 * and a certain random particle necessary to couple them in a 
-			 * definitive way
-			 * 
-			 */
-			Catalogue (const VoidAlgorithm algorithm, Catalogue tracer_catalogue, Catalogue random_catalogue, const std::string dir_output, const std::string output, const double cellsize, const int n_rec=1, const double step_size=2.5/3., const double threshold = 0.);   
-
-			/**
-			 * @brief constructor that creates a void catalogue extracting
-			 * cosmic voids from a catalogue of tracers for OBSERVED COORDINATES. 
-			 * This void finder is based on dynamical criteria: the density field is
-			 * reconstructed from the displacement field generated by the
-			 * back-in-time evolution of the tracers. Voids are therefore
-			 * classified as regions of negative velocity divergence.
-			 *
-			 * @param algorithm the type of algorithm on which the
-			 * reconstruction of the density field is based (_LaZeVo_ or
-			 * _RIVA_)
-			 *
-			 * @param tracer_catalogue the input tracer catalogue
-			 *
-			 * @param random_catalogue Random catalogue. 
-			 * Simply declears as void (={}) if the random catalogue is not available: 
-			 * a new random catalogue will be created with the same objects
-			 * and geometry of the tracer catalogue
-			 *
-			 * @param dir_output path of the output directory where to store
-			 * the different reconstructions, the divergence field, the
-			 * subvoid and void catalogues
-			 *
-			 * @param output name of the output files
-			 *
-			 * @param cellsize minimum radius used for the chain mesh
-			 * 
-			 * @param cosm cosmology
-			 * 
-			 * @param RA_range range of coordinate RA of the catalogue (from -pi/2 to pi/2)
-			 * 
-			 * @param DEC_range range of coordinate Dec of the catalogue (from 0 to 2pi).
-			 * if the catalog is located across the zero meridian, the minimum must be negative 
-			 * (e.g. [1.5pi, 0.5pi] -> [-0.5pi, 0.5pi]).
-			 *
-			 * @param n_rec number of reconstructions of the density field:
-			 * number of random catalogue used or generated
-			 *
-			 * @param step_size dimension of the grid cells used for the
-			 * identification of subvoids, in units of the mean
-			 * interparticle separation of the tracer catalogue. It is
-			 * strongly recommended to keep this value greater than 0.75
-			 * (cell sizes too small compared to the resolution of the
-			 * catalogue)
-			 * 
-			 * @param threshold number of minimum couplings between a certain halo 
-			 * and a certain random particle necessary to couple them in a 
-			 * definitive way
-			 * 
-			 */
-			Catalogue (const VoidAlgorithm algorithm, Catalogue tracer_catalogue, Catalogue random_catalogue, const std::string dir_output, const std::string output, const double cellsize, const cbl::cosmology::Cosmology cosm,  const std::vector<double> RA_range, const std::vector<double> DEC_range, const int n_rec=1, const double step_size=2.5/3., const double threshold = 0.);   
+      ///@}
+      
+      /**
+       *  @name Constructor of Void catalogues 
+       */
+      ///@{
+      
+      /**
+       * @brief constructor that creates a void catalogue extracting
+       * cosmic voids from a catalogue of tracers. This void finder is
+       * based on dynamical criteria: the density field is
+       * reconstructed from the displacement field generated by the
+       * back-in-time evolution of the tracers. Voids are therefore
+       * classified as regions of negative velocity divergence.
+       *
+       * @param algorithm the type of algorithm on which the
+       * reconstruction of the density field is based (_LaZeVo_ or
+       * _RIVA_)
+       *
+       * @param tracer_catalogue the input tracer catalogue
+       *      
+       * @param nSub factor for the dilution of the tracer
+       * catalogue. nSub=1 to not subsample
+       *
+       * @param random_catalogue_vector vector of strings with the
+       * path to the random catalogues to be used. Simply insert
+       * "not_provided" if the random catalogue is not available: a
+       * new random catalogue will be created with the same objects
+       * and geometry of the tracer catalogue
+       *
+       * @param dir_output path of the output directory where to store
+       * the different reconstructions, the divergence field, the
+       * subvoid and void catalogues
+       *
+       * @param output name of the output files
+       *
+       * @param r_max maximum radius used for the chain mesh
+       *
+       * @param cellsize minimum radius used for the chain mesh
+       *
+       * @param n_rec number of reconstructions of the density field:
+       * number of random catalogue used or generated
+       *
+       * @param n_iter the number of iterations performed by the
+       * shuffle function of the LaZeVo method
+       *
+       * @param swapping if true the swapping procedure is performed
+       * (to minimise the distance between the pairs of tracers and
+       * random particles, including also the objects previously
+       * unpaired)
+       *
+       * @param add_unpaired if true the objects that were not paired
+       * during the first phase of coupling are added in the computing
+       * of the displacement field (if the swapping procedure is
+       * performed). In particular, these objects are first paired
+       * randomly, decreasing the total distance between the pairs
+       * through the swapping. Secondly these pairs are added to the
+       * ones obtained in the first phase, repeating then the swapping
+       * procedure once again. Attention: if the convergence factor is
+       * low, adding the previously unpaired objects can compromise the
+       * reconstruction of the displacement field
+       *
+       * @param convergence_fact factor to choose the level of
+       * convergence of the swapping procedure. It is equal to the
+       * number of attempts (in units of the number of objects) to
+       * swap each particle of the catalogue with another
+       * one. Example: convergence_fact=1. \f$\rightarrow\f$ the
+       * algorithm tries to swap each pair of particles with every
+       * other pairs (with possible repetitions) of the catalogue
+       *
+       * @param step_size dimension of the grid cells used for the
+       * identification of subvoids, in units of the mean
+       * interparticle separation of the tracer catalogue. It is
+       * strongly recommended to keep this value greater than 0.75
+       * (cell sizes too small compared to the resolution of the
+       * catalogue)
+       *
+       * @param gaussian_smoothing factor used to smooth the
+       * displacement field in oder to create a continuous vector
+       * field, in units of the mean interparticle separation of the
+       * tracer catalogue
+       *
+       * @param protovoid_distance parameter used to choose the
+       * distance within which the grid cell with negative divergence
+       * are included in a unique proto-void, in units of the mean
+       * interparticle separation of the tracer catalogue. Around this
+       * initial void, other cells with negative divergence will be
+       * added later
+       *
+       * 
+       */
+      Catalogue (const VoidAlgorithm algorithm, const Catalogue tracer_catalogue, const double nSub, const std::vector<std::string> random_catalogue_vector, const std::string dir_output, const std::string output, const double r_max, const double cellsize, const int n_rec=1, const int n_iter=1, const bool swapping=true, const bool add_unpaired=true, const double convergence_fact=1., const double step_size=0.9, const double gaussian_smoothing=1., const double protovoid_distance=2.);
+      
+      /**
+       *  @brief constructor that modifies an input void catalogue
+       *  according to a set of user selected criteria. If all the 
+       *  steps are selected the final result is a catalogue of spherical,
+       *  not-overlapped voids.
+       * 
+       *  @param input_voidCatalogue the input void catalogue to be modified
+       *
+       *  @param clean a 3 element bool vector. clean[0] = true, erase
+       *  voids outside a given interval; clean[1] = true, erase voids
+       *  with voids higher than a given threshold; clean[2] = true,
+       *  erase voids with density contrast lower than a given value
+       *
+       *  @param delta_r the interval of accepted radii
+       *
+       *  @param threshold the density threshold
+       *
+       *  @param statistical_relevance the minimum accepted density contrast
+       *
+       *  @param rescale true = for each void finds the larger radius enclosing
+       *  density = threshold, false = skip the step
+       *
+       *  @param tracers_catalogue object of class Catalogue with the tracers defining
+       *  the void distribution (necessary if rescale = true)
+       *
+       *  @param ChM object of ChainMesh3D class
+       *
+       *  @param ratio distance from the void centre at which the
+       *  density contrast is evaluated in units of the void
+       *  radius. Ex: ratio = 0.1 \f$\rightarrow\f$ 10% of the void
+       *  radius lenght
+       *
+       *  @param checkoverlap true \f$\rightarrow\f$ erase all the
+       *  voids wrt a given criterion, false \f$\rightarrow\f$ skip
+       *  the step
+       *
+       *  @param ol_criterion the criterion for the overlap step
+       *  (valid criteria: Var::_DensityContrast_,
+       *  Var::_CentralDensity_)
+       * 
+       *  
+       */
+      Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
 
       /**
        *  @brief constructor that modifies an input void catalogue
@@ -1653,7 +1431,7 @@ namespace cbl {
        */
       Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const double Volume, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
 
-      /**
+            /**
        *  @brief constructor that modifies an input void catalogue
        *  according to a set of user selected criteria. If all the
        *  steps are selected the final result is a catalogue of
@@ -1706,7 +1484,7 @@ namespace cbl {
       Catalogue (const std::shared_ptr<Catalogue> input_voidCatalogue, const std::vector<double> par_numdensity, const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=1., const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.1, const bool checkoverlap=false, const Var ol_criterion=Var::_DensityContrast_);
 
 
-      /**
+            /**
        *  @brief constructor that modifies an input void catalogue
        *  according to a set of user selected criteria. If all the
        *  steps are selected the final result is a catalogue of
@@ -1797,11 +1575,11 @@ namespace cbl {
        *  @param component_to_read which component to be read from the snapshot.
        *  "ALL" = read all the components positions, else select one of the following:
        *  "Gas", "Halo", "Disk", "Bulge", "Stars", "Boundary".
-			 * 
-       *  @param edges edges of the subcatalogue, 
-       *  format: [ [x_min, x_max], [y_min, y_max], [z_min, z_max] ]
+       *
+       *  
        */
-      Catalogue (const ObjectType objectType, const std::string file_cn=par::defaultString, const bool snapformat=false, const bool swap=false, const double fact=0.001, const bool read_catalogue=true, const double nSub=1.1, const std::string component_to_read="ALL", const std::vector<std::vector<double>> edges={{par::defaultDouble,par::defaultDouble},{par::defaultDouble,par::defaultDouble},{par::defaultDouble,par::defaultDouble}});
+      Catalogue (const ObjectType objectType, const std::string file_cn=par::defaultString, const bool snapformat=false, const bool swap=false, const double fact=0.001, const bool read_catalogue=true, const double nSub=1.1, const std::string component_to_read="ALL");
+
       
       /**
        *  @brief constructor that reads objects of class HostHalo with satellite dependencies
@@ -1852,6 +1630,12 @@ namespace cbl {
        *  @return the vector containing the objects of the catalogue
        */
       std::vector<std::shared_ptr<Object> > sample () const { return m_object; };
+      
+      /**
+       *  @brief get the private member Catalogue::m_index
+       *  @return the vector containing the object indexes
+       */
+      std::vector<int> index () const { return m_index; };
       
       /**
        * @brief get the private member Catalogue::m_object[i]->m_xx
@@ -1915,20 +1699,6 @@ namespace cbl {
        * @return the Declination of the i-th object
        */
       double dec (const int i) const { return m_object[i]->dec(); };
-      
-      /**
-       * @brief get the private member Catalogue::m_object[i]->m_ra_tile
-       * @param i the object index
-       * @return the Right Ascension of the i-th object
-       */
-      double ra_tile (const int i) const { return m_object[i]->ra_tile(); };
-    
-      /**
-       * @brief get the private member Catalogue::m_object[i]->m_dec_tile
-       * @param i the object index
-       * @return the Declination of the i-th object
-       */
-      double dec_tile (const int i) const { return m_object[i]->dec_tile(); };
       
       /**
        * @brief get the private member Catalogue::m_object[i]->m_sn
@@ -2156,34 +1926,6 @@ namespace cbl {
       double mass_proxy_error (const int i) const { return m_object[i]->mass_proxy_error(); }
 
       /**
-       * @brief get the private member Catalogue::m_object[i]->m_IDHost
-       * @param i the object index
-       * @return ID of the Host halo i-th object
-       */
-      int IDHost (const int i) const { return m_object[i]->IDHost(); }
-      
-      /**
-       * @brief get the private member Catalogue::m_object[i]->m_galaxyTag
-       * @param i the object index
-       * @return tag of a galaxy
-       */
-      double galaxyTag (const int i) const { return m_object[i]->galaxyTag(); }
-
-      /**
-       * @brief get the private member Catalogue::m_object[i]->m_mstar
-       * @param i the object index
-       * @return the stellar mass of the i-th object
-       */
-      double mstar (const int i) const { return m_object[i]->mstar(); }
-
-      /**
-       * @brief get the private member Catalogue::m_object[i]->m_minfall
-       * @param i the object index
-       * @return the infall mass of the i-th object
-       */
-      double massinfall (const int i) const { return m_object[i]->massinfall(); }
-
-      /**
        * @brief get the private member Catalogue::m_object[i]->m_generic
        * @param i the object index
        * @return generic properties of the i-th object
@@ -2215,20 +1957,6 @@ namespace cbl {
        *  @return the vector of pointers to the satellite objects of the i-th object
        */
       std::vector<std::shared_ptr<Object>> satellites (const int index) const { return m_object[index]->satellites(); }
-
-      /**
-       *  @brief get the private member Catalogue::m_object[index]->m_part of ChainMeshCell
-       *  @param index the object index
-       *  @return the vector of particles of the i-th object
-       */
-      std::vector<unsigned int> part (const int index) const { return m_object[index]->part(); }
-
-      /**
-       *  @brief get the private member Catalogue::m_object[index]->m_nearCells of ChainMeshCell
-       *  @param index the object index
-       *  @return the matrix of the cells near the i-th object
-       */
-      std::vector<std::vector<unsigned int>> nearCells (const int index) const { return m_object[index]->nearCells(); }
       
       /**
        * @brief get the value of the i-th object variable  
@@ -2301,21 +2029,6 @@ namespace cbl {
        * @return the number of objects
        */
       size_t nObjects () const { return m_object.size(); }
-
-      /**
-       * @brief get the number of objects of the catalogue for Light Cones
-			 * @param nbin bins in redshift (number of centres: so, if 100 bins are requested, insert 100)
-       * @return the number of objects in each shell
-       */
-      std::vector<size_t> nObjects_lightCone (const int nbin) const { 
-        std::vector<double> bin_limits = linear_bin_vector(nbin+1, cbl::Min(var(Var::_Redshift_)), cbl::Max(var(Var::_Redshift_)));
-        std::vector<size_t> numobjects(nbin);
-        for (int i=0; i<(int)nbin; i++) {
-          auto temp_cat = sub_catalogue(Var::_Redshift_, bin_limits[i], bin_limits[i+1]);
-          numobjects.emplace_back(temp_cat.nObjects());
-        }
-        return numobjects; 
-      }
   
       /**
        * @brief get the minimum value of a variable of the catalogue
@@ -2337,27 +2050,24 @@ namespace cbl {
        * @brief get the mean, the median, the standard deviation, and
        * the difference between the third and first quartiles of a
        * variable
-       *
-       * @param var_name the variable name
-       *
-       * @return vector containing the mean, the median, the standard
-       * deviation and the difference between the third and first
-       * quartiles of the variable
+       * @param [in] var_name the variable name
+       * @param [out] stats 4 dimensional vector containing the mean,
+       * the median, the standard deviation, and the difference between
+       * the third and first quartiles of the variable
        */
-      std::vector<double> stats_var (const Var var_name) const;
+      void stats_var (const Var var_name, std::vector<double> & stats) const;
 
       /**
        * @brief get the mean, the median, the standard deviation, and
        * the difference between the third and first quartiles of a
-       * vector of variables
-       *
-       * @param var_name the variable name
-       *
-       * @return vector of vectors containing the mean, the median,
-       * the standard deviation and the difference between the third
-       * and first quartiles of the input vector of variables
+       * variable
+       * @param [in] var_name vector of variable names
+       * @param [out] stats vector of 4 dimensional vector containing
+       * the mean, the median, the standard deviation, and the
+       * difference between the third and first quartiles of the
+       * variable 
        */
-      std::vector<std::vector<double>> stats_var (const std::vector<Var> var_name) const;
+      void stats_var (const std::vector<Var> var_name, std::vector<std::vector<double>> &stats) const;
   
       /**
        * @brief get the distribution of a variable
@@ -2391,69 +2101,22 @@ namespace cbl {
       double weightedN () const;
 
       /**
-       * @brief compute the catalogue's comoving volume
-			 * @param boxside length of the side of the box
-       * @return volume of the box
+       * @brief get the catalogue's comoving volume
+       * @return private variable m_volume
        */
-      double volume (const double boxside=par::defaultDouble) const { 
-        double vol = (boxside > 0.) ? pow(boxside, 3.) :
-          (cbl::Max(var(Var::_X_)) - cbl::Min(var(Var::_X_)))*
-          (cbl::Max(var(Var::_Y_)) - cbl::Min(var(Var::_Y_)))*
-          (cbl::Max(var(Var::_Z_)) - cbl::Min(var(Var::_Z_))); 
-        return vol; 
-      }
+      double volume () const { return m_volume; }
 
       /**
-       * @brief compute the catalogue's number density
-			 * @param boxside length of the side of the box
-       * @return numdensity of the box
+       * @brief get the catalogue's number density
+       * @return private variable m_numdensity
        */
-      double numdensity (const double boxside=par::defaultDouble) const { 
-        double ndens = m_object.size()/volume(boxside);
-        return ndens;
-      }
+      double numdensity () const { return m_numdensity; }
 
       /**
-       * @brief compute the catalogue's number density error
-			 * @param boxside length of the side of the box
-       * @return error of the numdensity of the box
+       * @brief get the catalogue's mean particle separation
+       * @return private variable m_mps
        */
-      double numdensity_error (const double boxside=par::defaultDouble) const { 
-        double error = pow(m_object.size(), 1./2)/volume(boxside);
-        return error;
-      }
-
-      /**
-       * @brief compute the catalogue's mean particle separation
-			 * @param boxside length of the side of the box
-       * @return mps of the box
-       */
-      double mps (const double boxside=par::defaultDouble) const { 
-        double mps = pow(numdensity(boxside), -1./3.);
-        return mps; 
-      }
-
-      /**
-       * @brief compute the catalogue's mean particle separation error
-			 * @param boxside length of the side of the box
-       * @return error of the mps of the box
-       */
-      double mps_error (const double boxside=par::defaultDouble) const { 
-        double error = mps(boxside)*(1./3)*(numdensity_error()/numdensity());
-        return error; 
-      }
-
-      /**
-       * @brief get the catalogue's redshift bins
-			 * @param nbin number of bins on which to fit the redshift
-       * @return private variable z_bins
-       */
-      std::vector<double> z_bins (const int nbin ) const {
-        std::vector<double> b = linear_bin_vector(nbin+1, cbl::Min(var(Var::_Redshift_)), cbl::Max(var(Var::_Redshift_)));
-        std::vector<double> bins(nbin);
-        for (int i=0; i<nbin; i++) bins[i] = (b[i]+b[i+1])/2;
-        return bins; 
-      }
+      double mps () const { return m_mps; }
     
       ///@}
   
@@ -2479,18 +2142,6 @@ namespace cbl {
        * @param nRegions the total number of regions
        */
       void set_region_number (const size_t nRegions);
-      
-      /**
-       * @brief set the central R.A. and Dec of the tiles
-       *
-       * @param RA_tile tile central R.A.
-       *
-       * @param Dec_tile tile central Dec
-       *
-       * @param inputUnits input units of R.A. and Dec
-       *
-       */
-      void set_ra_dec_tile (const std::vector<double> RA_tile, const std::vector<double> Dec_tile, const CoordinateUnits inputUnits=CoordinateUnits::_degrees_);
 
       /**
        * @brief set a private variable
@@ -2516,7 +2167,7 @@ namespace cbl {
        * @param index index of the variable to set
        * @param var_name name of the variable
        * @param value variable value
-       * @param cosmology object of class Cosmology
+       * @param cosmology object of class Cosmology   
        */
       void set_var (const int index, const Var var_name, const int value, const cosmology::Cosmology cosmology={});
       
@@ -2545,8 +2196,7 @@ namespace cbl {
        *  @param index index of the variable to set
        *  @param satellite the vector of shared pointers to satellite objects
        */
-      void set_satellite (const int index, const std::shared_ptr<Object> satellite={})
-      {
+      void set_satellite (const int index, const std::shared_ptr<Object> satellite={}) {
 	m_object[index]->set_satellite(satellite);
       }
 
@@ -2555,26 +2205,9 @@ namespace cbl {
        *  @param index index of the variable to set
        *  @param satellites the vector of shared pointers to satellite objects
        */
-      void set_satellites (const int index, const std::vector<std::shared_ptr<Object>> satellites={})
-      {
+      void set_satellites (const int index, const std::vector<std::shared_ptr<Object>> satellites={}) {
 	m_object[index]->set_satellites(satellites);
       }
-      
-      /**
-       *  @brief set the private member ChainMeshCell::m_part
-       *  @param index index of the variable to set
-       *  @param part the vector of particles of the i-th object
-       */
-      void set_part (const int index, const std::vector<unsigned int> part={}) 
-      {m_object[index]->set_part(part); }
-
-      /**
-       *  @brief set the private member ChainMeshCell::m_nearCells
-       *  @param index index of the variable to set
-       *  @param nearCells the matrix of the cells near the i-th object
-       */
-      void set_nearCells (const int index, const std::vector<std::vector<unsigned int>> nearCells={}) 
-      {m_object[index]->set_nearCells(nearCells); }
 
       /**
        *  @brief compute the central density of each object in a void catalogue.
@@ -2590,8 +2223,12 @@ namespace cbl {
        *
        *  @param ChM a 3D chain mesh object, used to speed-up the
        *  search of close pairs
+       *
+       *  @param Volume the volume of the tracer catalogue in \f$ Mpc^{3} h^{-3} \f$
+       *
+       *  @param ratio the ratio \f$r\f$
        */
-      void compute_centralDensity (const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM);
+      void compute_centralDensity (const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const double Volume, const double ratio=0.1);
 
       /**
        *  @brief compute the central density of each object in a void catalogue.
@@ -2624,7 +2261,7 @@ namespace cbl {
        */
       void compute_centralDensity (const std::shared_ptr<Catalogue> tracers_catalogue, chainmesh::ChainMesh3D ChM, const std::vector<std::vector<double>> data_numdensity, const std::string method_interpolation, const double ratio=0.1);
 
-      /**
+            /**
        *  @brief compute the central density of each object in a void catalogue.
        *  The central density is defined as \f$ n_0=\frac{r\,N_v}{V(R_0)} \f$,
        *  \f$r\f$ is the ratio between the number of particle around the centre
@@ -2690,7 +2327,7 @@ namespace cbl {
        * @param object object of type \e T
        */
       template<typename T>
-      void add_object (T object) { m_object.push_back(move(std::make_shared<T>(T(object)))); }
+	void add_object (T object) { m_object.push_back(move(std::make_shared<T>(T(object)))); }
 
       /**
        * @brief add some objects to the catalogue
@@ -2706,7 +2343,7 @@ namespace cbl {
        * @param sample vector of objects of type \e T
        */
       template<typename T>
-      void add_objects (std::vector<T> sample) { 
+	void add_objects (std::vector<T> sample) { 
 	for (auto &&i : sample)
 	  add_object(i);
       }
@@ -2716,7 +2353,7 @@ namespace cbl {
        * @param sample vector of objects of type \e T
        */
       template<typename T>
-      void replace_objects(std::vector<T> sample) {
+	void replace_objects(std::vector<T> sample) {
 	m_object.erase(m_object.begin(), m_object.end());
 	add_objects(sample);
       }
@@ -2832,7 +2469,7 @@ namespace cbl {
        * @param vv vector used to order the catalogue
        */
       void Order (const std::vector<int> vv); 
-      
+
       /**
        * @brief restore the original vector (i.e. the opposite of
        * Order(std::vector<int>))
@@ -2861,13 +2498,8 @@ namespace cbl {
        *
        *  @param var_name vector containing the variable names to be
        *  written
-       * 
-       *  @param sep [optional parameter] specifies the file separator, default is "   " for retrocompatibility.
-       * Is strongly raccomanded to use standard values like: "\t" or ",".
-       * 
-       *  @param header [optional parameter] string with the header of the file. Default is "".
        */
-      void write_data (const std::string outputFile, const std::vector<Var> var_name={}, const std::string sep="   ", const std::string header="") const;
+      void write_data (const std::string outputFile, const std::vector<Var> var_name={}) const;
       
       /**
        * @brief get the distrance between the i-th object of the
@@ -2941,68 +2573,6 @@ namespace cbl {
        *  @return object of class Catalogue
        */
       Catalogue sub_catalogue (const MaskObject &mask, const bool excl=false) const;
-      
-      /**
-       *  @brief find the Catalogue objects falling in the 
-       *  tiles of an input data catalogue,
-       *  given the tiles R.A.-Dec.
-       *
-       *  The user must set in the input data catalogue
-       *  the identification number of the tiles (cbl::catalogue::Var::\_Region\_) 
-       *  with cbl::catalogue::Catalogue::set\_region()
-       *  and the central R.A. and Dec (cbl::catalogue::Var::\_TileRA\_ / \_TileDec\_)
-       *  of the tiles with cbl::catalogue::Catalogue::set\_ra\_dec\_tile().
-       *
-       *  If requested, this function writes on file the coordinates of the edges
-       *  of the tiles (in degrees). The tiles can be easily plotted with the
-       *  plot function of matplotlib, e.g.:
-       *
-       *  @code 
-       *  import matplotlib.pyplot as plt
-       *
-       *  fig, ax = plt.subplots() 
-       *
-       *  for i in range(len(ra_min)):
-       *  	ax.plot([ra_min[i],ra_min[i]], [dec_min[i],dec_max[i]], color="k")
-       *  	ax.plot([ra_max[i],ra_max[i]], [dec_min[i],dec_max[i]], color="k")
-       *  	
-       *  	if (ra_min[i] < ra_max[i]):
-       *  		ax.plot([ra_min[i],ra_max[i]], [dec_min[i],dec_min[i]], color="k")
-       *  		ax.plot([ra_min[i],ra_max[i]], [dec_max[i],dec_max[i]], color="k")
-       *  	else:
-       *  		ax.plot([ra_max[i],0], [dec_min[i],dec_min[i]], color="k")
-       *  		ax.plot([ra_max[i],0], [dec_max[i],dec_max[i]], color="k")
-       *  		ax.plot([360,ra_min[i]], [dec_min[i],dec_min[i]], color="k")
-       *  		ax.plot([360,ra_min[i]], [dec_max[i],dec_max[i]], color="k")
-       *  @endcode
-       *
-       *
-       *
-       *  @author Giorgio Lesci (giorgio.lesci2@unibo.it)
-       *
-       *  @param data input catalogue
-       *
-       *  @param tile_width_RA the width of each tile, in degrees
-       *  (from side to side), along R.A. direction
-       *
-       *  @param tile_width_Dec the width of each tile, in degrees
-       *  (from side to side), along Dec direction
-       *
-       *  @param write_tiles if true, write RA and Dec edges of
-       *  the tiles on file (in degrees)
-       *
-       *  @param dir_tiles directory of the tile edges file
-       *
-       *  @param file_tiles tile edges file
-       *
-       *  @return object of class Catalogue
-       *
-       *  @warning This function cannot manage the situations in
-       *  which a tile crosses one of the poles, i.e. if it has
-       *  a side after the pole and the opposite side in the other
-       *  side.
-       */
-      Catalogue sub_catalogue (catalogue::Catalogue &data, const double tile_width_RA, const double tile_width_Dec, const bool write_tiles=false, const std::string dir_tiles="./", const std::string file_tiles="tiles_coordinates.txt");
 
       /**
        *  @brief create a sub-catalogue
@@ -3070,21 +2640,8 @@ namespace cbl {
       /**
        * @brief compute catalogue volume, number density and mean particle separation
        * @param boxside side lenght of the cubic catalogue box
-       * @return vector with 5 elements: volume, numdensity, mps, numdensity_error, mps_error;
        */
-      std::vector<double> compute_catalogueProperties_box (const double boxside);
-      
-      /**
-       * @brief compute catalogue volume, number density and mean particle separation in light cones
-       * @param cosmology the cosmology used to compute the comoving distances 
-       * @param RA_range range of coordinate RA of the catalogue (from -pi/2 to pi/2)
-       * @param DEC_range range of coordinate Dec of the catalogue (from 0 to 2pi).
-       * if the catalog is located across the zero meridian, the minimum must be negative 
-       * (e.g. [1.5pi, 0.5pi] -> [-0.5pi, 0.5pi]).
-       * @param nbin number of bin in redshift
-       * @return 7 vector of nbin elements. One for each of these properties: zbin, nObj, volume, numdensity, mps, numdensity_error, mps_error;
-       */
-      std::vector<std::vector<double>> compute_catalogueProperties_lightCone (cbl::cosmology::Cosmology cosmology, const std::vector<double> RA_range, const std::vector<double> DEC_range, const unsigned int nbin);
+      void compute_catalogueProperties (const double boxside=par::defaultDouble);
 
       /**
        *  @brief return the density field from object positions
@@ -3118,130 +2675,12 @@ namespace cbl {
        */
       data::ScalarField3D density_field (const double cell_size, const Catalogue mask_catalogue, const int interpolation_type=0, const double kernel_radius=0., const bool useMass=false) const;
 
-      /**
-       *  @brief equalize the number of objects in two Light Cones catalogues
-       *  @param tracer_catalogue input catalogue
-       *  @param cosm the cosmology
-       *  @param RA_range range of coordinate RA of the catalogue (from -pi/2 to pi/2)
-       *  @param DEC_range range of coordinate Dec of the catalogue (from 0 to 2pi).
-       *  @param seed seed for generating random numbers
-       */
-      void equalize_random_lightCone (cbl::catalogue::Catalogue tracer_catalogue, cbl::cosmology::Cosmology cosm, const std::vector<double> RA_range, const std::vector<double> DEC_range, const int seed);
-
-      /**
-       *  @brief equalize the number of objects in two Box catalogues
-       *  @param tracer_catalogue input catalogue
-       *  @param seed seed for generating random numbers
-       */
-      void equalize_random_box (cbl::catalogue::Catalogue tracer_catalogue, const int seed);
-			
-      /**
-       *  @brief function that modifies a void catalogue
-       *  according to a set of user selected criteria. If all the 
-       *  steps are selected the final result is a catalogue of spherical,
-       *  not-overlapped voids.
-       *
-       *  @param clean a 3 element bool vector. clean[0] = true, erase
-       *  voids outside a given interval; clean[1] = true, erase voids
-       *  with voids higher than a given threshold; clean[2] = true,
-       *  erase voids with density contrast lower than a given value
-       *
-       *  @param delta_r the interval of accepted radii
-       *
-       *  @param threshold the density threshold
-       *
-       *  @param statistical_relevance the minimum accepted density contrast
-       *
-       *  @param rescale true = for each void finds the larger radius enclosing
-       *  density = threshold, false = skip the step
-       *
-       *  @param tracers_catalogue object of class Catalogue with the tracers defining
-       *  the void distribution (necessary if rescale = true)
-       *
-       *  @param ChM object of ChainMesh3D class
-       *
-       *  @param ratio distance from the void centre at which the
-       *  density contrast is evaluated in units of the void
-       *  radius. Ex: ratio = 0.1 \f$\rightarrow\f$ 10% of the void
-       *  radius lenght
-       *
-       *  @param checkoverlap true \f$\rightarrow\f$ erase all the
-       *  voids wrt a given criterion, false \f$\rightarrow\f$ skip
-       *  the step
-       *
-       *  @param ol_criterion the criterion for the overlap step
-       *  (valid criteria: Var::_DensityContrast_,
-       *  Var::_CentralDensity_)
-       * 
-       *  
-       */
-      void clean_void_catalogue (const std::vector<bool> clean={false, false, false}, const std::vector<double> delta_r={-1, 1000}, const double threshold=0.3, const double statistical_relevance=1., const bool rescale=false, const std::shared_ptr<Catalogue> tracers_catalogue={}, chainmesh::ChainMesh3D ChM={}, const double ratio=0.8, const bool checkoverlap=false, const Var ol_criterion=Var::_CentralDensity_);
-     
-		 ///@}
-
+      ///@}
+      
     };
-    
-    /**
-     * @brief return the average number of central galaies inside an
-     * halo of mass x
-     *
-     * @param x the halo mass
-     *
-     * @param logMmin logarithmic value of minimum halo mass that host
-     * a central galaxy
-     *
-     * @param logsigma_c logarithmic value of sigma in the lognormal
-     * distribution
-     *
-     * @return the mean occupation number of central galaxy
-     */
-    double Average_c_Zehavi_2011 (const double x, const double logMmin, const double logsigma_c);
-
-    /**
-     * @brief return the average number of satellite galaies per halo
-     * of mass x
-     *
-     * @param x the halo mass
-     *
-     * @param M0 HOD parameter
-     *
-     * @param M1 HOD parameter
-     *
-     * @param alpha exponent of the power law
-     *
-     * @return the mean occupation number of central galaxy
-     */
-    double Average_s_Zehavi_2011 (const double x, const double M0, const double M1, const double alpha);
-        
-    /**
-     * @brief return the average number of central galaies inside an
-     * halo of mass x
-     *
-     * @param x the halo mass
-     *
-     * @param Mmin is the value of the minimum halo mass that host a
-     * central galaxy
-     *
-     * @return the mean occupation number of central galaxy
-     */
-    double Average_c_Zehavi_2005 (const double x, const double Mmin);
-
-    /**
-     * @brief return the average number of satellite galaies per halo
-     * of mass x
-     *
-     * @param x the halo mass
-     *
-     * @param M1 is the halo mass that host at least a satellite
-     * galaxy
-     *
-     * @param alpha exponent of the power law
-     *
-     * @return the mean occupation number of central galaxy
-     */
-    double Average_s_Zehavi_2005 (const double x, const double alpha, const double M1);
     
   }
 }
 
 #endif
+

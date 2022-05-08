@@ -77,8 +77,8 @@ namespace cbl {
       /// input model
       std::shared_ptr<statistics::Model> m_model = NULL;
       
-      /// response function for the computation of the super-sample covariance
-      std::shared_ptr<statistics::Model> m_response_func = NULL;
+      /// transfer function, for the computation of the super-sample covariance
+      std::shared_ptr<statistics::Model> m_transfer_func = NULL;
 
       /// likelihood
       std::shared_ptr<statistics::Likelihood> m_likelihood = NULL;
@@ -90,18 +90,12 @@ namespace cbl {
       std::shared_ptr<statistics::Posterior> m_posterior = NULL;
 
       /**
-       *  @brief set the internal variable m_parameter_priors
+       *  @brief set the interal variable m_parameter_priors
        *
        *  @param prior_distribution vector containing the prior
        *  distributions
        */
       void m_set_prior (std::vector<statistics::PriorDistribution> prior_distribution);
-      
-      /**
-       *  @brief check if the response function used to compute the 
-       *  super-sample covariance is set
-       */    
-      void m_isSet_response () {if (m_response_func == NULL) ErrorCBL("the response function for the SSC is not set!", "m_isSet_response", "Modelling.h");};
 
     public:
 
@@ -151,6 +145,20 @@ namespace cbl {
 
 	return m_data_fit; 
       }
+
+      /**
+       *  @brief return the transfer function, or response, used to compute the 
+       *  super-sample covariance
+       *
+       *  @return pointer to the transfer function
+       */    
+      std::shared_ptr<statistics::Model> transfer_function ();
+      
+      /**
+       *  @brief check if the response function used to compute the 
+       *  super-sample covariance is set
+       */    
+      void isSet_response ();
       
       /**
        *  @brief return the likelihood parameters
@@ -197,23 +205,6 @@ namespace cbl {
        */
       virtual double get_parameter_from_string (const std::string parameter) const
       { return ErrorCBL("", "get_parameter_from_string ("+parameter+")", "Modelling.h"); }
-      
-      /**
-       *  @brief get the internal variable m_parameter_priors
-       *
-       *  @param i prior index
-       *
-       *  @return i-th prior distribution
-       */
-      std::shared_ptr<statistics::PriorDistribution> get_prior (const int i) { return m_parameter_priors[i]; }
-
-      /**
-       *  @brief return the response function used to compute the 
-       *  super-sample covariance
-       *
-       *  @return pointer to the response function
-       */    
-      std::shared_ptr<statistics::Model> get_response_function () {m_isSet_response(); return m_response_func;};
 
       ///@}
       

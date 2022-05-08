@@ -11,6 +11,9 @@ import matplotlib.pyplot as plt
 # import the CosmoBolognaLib
 import CosmoBolognaLib as cbl
 
+# set the CosmoBolognaLib and the current directories
+cbl.SetDirs(os.getcwd()+"/../../../", os.getcwd()+"/")
+
 # create an object of class Cosmology
 cosmo = cbl.Cosmology(cbl.CosmologicalModel__Planck15_)
 
@@ -19,10 +22,10 @@ kk = np.logspace(-3, 0, 100)
 rr = np.linspace(1., 100, 50)
 
 # compute the power spectrum using CAMB
-PkCAMB = cosmo.Pk_matter(kk, "CAMB", False, 0.2)
+PkCAMB = np.asarray([cosmo.Pk_DM(kk[i], "CAMB", False, 0.2) for i in range(len(kk))])
 
 # compute the two point correlation function using CAMB
-xiCAMB = np.asarray([cosmo.xi_matter(rr[i], "CAMB", False, 0.2) for i in range(len(rr))])
+xiCAMB = np.asarray([cosmo.xi_DM(rr[i], "CAMB", False, 0.2) for i in range(len(rr))])
 
 
 # plot the results

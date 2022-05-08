@@ -5,9 +5,11 @@ FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 
 dirLib = $(PWD)/../../
 dirH = $(dirLib)Headers/
-dir_Eigen = $(dirLib)External/Eigen/eigen-3.4.0/
+dir_Eigen = $(dirLib)External/Eigen/eigen-3.3.7/
 dir_CCfits = $(dirLib)External/CCfits/include
-dirCUBA = $(dirLib)External/Cuba-4.2.1/
+dirCUBA = $(dirLib)External/Cuba-4.2/
+
+varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
 FLAGS_LIB = -Wl,-rpath,$(dirLib) -L$(dirLib) -lWRAP
 FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
@@ -41,14 +43,14 @@ clean:
 	rm -f *.o integration_gsl minimisation_gsl integration_cuba fits catalogue_with_weights.fits *~ \#* temp* core*
 
 integration_gsl.o: integration_gsl.cpp makefile $(dirLib)*.$(ES)
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c integration_gsl.cpp
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c integration_gsl.cpp
 
 minimisation_gsl.o: minimisation_gsl.cpp makefile $(dirLib)*.$(ES)
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c minimisation_gsl.cpp 
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c minimisation_gsl.cpp 
 
 integration_cuba.o: integration_cuba.cpp makefile $(dirLib)*.$(ES)
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c integration_cuba.cpp 
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c integration_cuba.cpp 
 
 fits.o: fits.cpp makefile $(dirLib)*.$(ES)
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c fits.cpp 
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c fits.cpp 
 

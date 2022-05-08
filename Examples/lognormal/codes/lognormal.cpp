@@ -4,6 +4,11 @@
 
 #include "LogNormal.h"
 
+// these two variables contain the name of the CosmoBolognaLib
+// directory and the name of the current directory (useful when
+// launching the code on remote systems)
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
+
 int main () {
 
   try {
@@ -20,7 +25,7 @@ int main () {
     // -------------------------------------------------------------
     
     // the random catalogues used to construct the mask
-    const cbl::catalogue::Catalogue random {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_comoving_, {"../input/random.dat"}};
+    const cbl::catalogue::Catalogue random {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_comoving_, {cbl::par::DirLoc+"../input/random.dat"}};
 
     // mean number of objects in the log-normal catalogues
     const int nObjects = 1110;
@@ -43,7 +48,7 @@ int main () {
 
     if (system("mkdir -p ../output/")) {}
     
-    logNormal.generate(1, "../output/");
+    logNormal.generate(1, cbl::par::DirLoc+"../output/");
 
     std::cout << "The number of objects in the log-normal catalogue is " << logNormal.catalogue(0)->nObjects() << std::endl;
     

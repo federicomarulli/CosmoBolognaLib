@@ -190,7 +190,7 @@ namespace cbl {
 	 *  @brief function to get the protected member m_data
 	 *  @return return the protected member m_data
 	 */
-	std::shared_ptr<catalogue::Catalogue> catalogue () { return m_data; }
+	catalogue::Catalogue catalogue () { return m_data; }
 
 	///@}
 	/**

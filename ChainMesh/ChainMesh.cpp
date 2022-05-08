@@ -134,9 +134,6 @@ void cbl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<double> >
 {
   // setting stuff, generalized for n(=nDim) dimensions
 
-  m_rMAX = rMAX;  
-  m_rMIN = rMIN;
-
   long nObj = data[0].size();
   m_List.erase(m_List.begin(), m_List.end()); m_List.resize(nObj, -1);
   m_NonEmpty_Cells.erase(m_NonEmpty_Cells.begin(), m_NonEmpty_Cells.end());
@@ -163,7 +160,7 @@ void cbl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<double> >
       m_cell_to_index[i] = m_Delta[i]/m_nCell[i];
     }
     for (int i=1; i<m_nDim; i++)
-      m_multCell[m_nDim-1-i] = m_nCell[m_nDim-i]*m_multCell[i-1];
+      m_multCell[m_nDim-1-i] = m_nCell[i-1]*m_multCell[i-1];
     
     fact *= 1.1;
 
@@ -225,7 +222,9 @@ void cbl::chainmesh::ChainMesh::create_chain_mesh_m2 (const vector<vector<double
 
 void cbl::chainmesh::ChainMesh::get_searching_region (const double r_max, const double r_min)
 {
-
+  m_rMAX = r_max;
+  m_rMIN = r_min;
+  
   int n_max = nint(r_max/m_cell_size);
   n_max = (n_max*m_cell_size<r_max) ? n_max+1 : n_max;
 
@@ -319,8 +318,8 @@ vector<long> cbl::chainmesh::ChainMesh::close_objects (const vector<double> cent
       
       double dist = 0.;
       for (int ii=0; ii<m_nDim; ii++)
-	dist += ((indx[ii]+0.5)*m_cell_size-center[ii]+m_Lim[ii][0])*((indx[ii]+0.5)*m_cell_size-center[ii]+m_Lim[ii][0]);
-      
+	dist += pow((indx[ii]+0.5)*m_cell_size+m_Lim[ii][0]-center[ii], 2.);
+
       dist = sqrt(dist);
       
       double half_diag = m_cell_size*0.5*sqrt(m_nDim);

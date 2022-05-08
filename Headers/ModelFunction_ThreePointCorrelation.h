@@ -78,7 +78,7 @@ namespace cbl {
 	std::vector<double> kk;
 
 	/// Dark matter power spectrum
-	std::vector<double> Pk_matter;
+	std::vector<double> Pk_DM;
 
 	/// the redshift
 	double redshift;

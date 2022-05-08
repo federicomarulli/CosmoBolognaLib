@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: /tmp/fileStAVJo.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(333.70847,1.940898,333.81187,1.9383996,333.81121,2.057898,333.80744,2.06214,333.7972,2.068432,333.70976,2.068436,333.70014,2.062493,333.69701,2.057892,333.69702,1.94446) # color=red dash=1

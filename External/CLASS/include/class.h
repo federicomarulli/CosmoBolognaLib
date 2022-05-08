@@ -25,10 +25,9 @@
 #include "thermodynamics.h"
 #include "perturbations.h"
 #include "primordial.h"
-#include "fourier.h"
+#include "nonlinear.h"
 #include "transfer.h"
-#include "harmonic.h"
-#include "distortions.h"
+#include "spectra.h"
 #include "lensing.h"
 #include "output.h"
 

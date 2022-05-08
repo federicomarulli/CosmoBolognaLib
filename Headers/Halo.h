@@ -80,18 +80,7 @@ namespace cbl {
        */
       Halo ()
 	: Object(), m_vx(par::defaultDouble), m_vy(par::defaultDouble), m_vz(par::defaultDouble), m_mass(par::defaultDouble) {}
-  
-      /**
-       * @brief function that allows copying private variables of the class 
-       * when an object of class Catalogue is copied
-       * 
-       * @return a shared pointer to the Object
-       *
-       */
-      std::shared_ptr<Object> getShared() {
-        return std::make_shared<Halo>(*this);
-      }
-       
+   
       /**
        *  @brief constructor that uses comoving coordinates
        *

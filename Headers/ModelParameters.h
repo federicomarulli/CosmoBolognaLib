@@ -226,13 +226,6 @@ namespace cbl {
       size_t nparameters_derived () const;
 
       /**
-       * @brief return the number of correlated parameters
-       *
-       * @return the number of correlated parameters
-       */
-      size_t nparameters_correlated () const;
-      
-      /**
        * @brief return the private member m_derived_parameter
        *
        * @return the private member m_derived_parameter

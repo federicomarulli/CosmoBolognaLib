@@ -57,8 +57,9 @@ namespace cbl {
        *  @brief The class Modelling_TwoPointCorrelation1D_monopole
        *
        *  This file defines the interface of the base class
-       *  Modelling_TwoPointCorrelation1D_monopole, used for modelling
-       *  the monopole of two-point correlation function
+       *  Modelling_TwoPointCorrelation1D_monopole, used for modelling the
+       *  monopole of two-point correlation function
+       *
        */
       class Modelling_TwoPointCorrelation1D_monopole : public Modelling_TwoPointCorrelation1D {
 
@@ -705,7 +706,7 @@ namespace cbl {
 	 *  
 	 */
 	void set_model_bias_sigmaz (const statistics::PriorDistribution bias_prior={}, const statistics::PriorDistribution sigmaz_prior={});
-	
+
 	/**
 	 *  @brief set the parameters to model the monopole of the
 	 *  two-point correlation function in redshift space
@@ -738,93 +739,6 @@ namespace cbl {
 	 *  
 	 */
 	void set_model_scaling_relation_sigmaz (const statistics::PriorDistribution M0_prior={}, const statistics::PriorDistribution slope_prior={}, const statistics::PriorDistribution scatter_prior={}, const statistics::PriorDistribution sigmaz_prior={});
-	
-	/**
-	 *  @brief Set the parameters to model the monopole of the
-	 *  two-point correlation function in redshift space, where
-	 *  the effective bias can be computed in two ways, depending
-	 *  on the cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set\_data\_model used.
-	 *  In one case, the masses are given by a mass-observable scaling relation
-	 *  with the following functional form:
-	 *
-	 *  \f[ \log \frac{M}{M_{\rm piv}} = \alpha+
-	 *  \beta  \log \frac{\lambda}{\lambda_{\rm piv}}+
-	 *  \gamma  \log f(z;z_{\rm piv}) + \sigma_{\rm intr}, \f]
-	 *
-	 *  where \f$\lambda\f$ is the mass proxy and
-	 *  the intrinsic scatter, \f$\sigma_{\rm intr}\f$, should
-	 *  be set as both negative and positive and it has the 
-	 *  following functional form:
-	 *
-	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{M} 
-	 *  \log (M/M_{\rm piv})^{e_{M}} + \sigma_z \log (f(z))^{e_z}. \f$
-	 *
-	 *  The bias is then computed for each object in correspondence of
-	 *  such masses, and then averaged to obtain the effective bias.
-	 *
-	 *  In the second case, the effective bias is derived as follows:
-	 *
-	 *  \f$ b_{\rm eff} = \frac{1}{N}\sum_{i=1}^N b(z_{{\rm ob},i},\lambda_{{\rm ob},i}) = 
-	 *  \frac{1}{N}\sum_{i=1}^N\int_0^\infty {\rm d}z\,\int_0^\infty{\rm d}\lambda\,\int_0^\infty{\rm d}M\,\, b(M,z) \, 
-	 *  P(M|\lambda,z) \, P(z|z_{{\rm ob},i}) \, P(\lambda|\lambda_{{\rm ob},i}), \f$
-	 *
-	 *  where \f$N\f$ is the number of objects, \f$z_{{\rm ob},i}\f$ and \f$\lambda_{{\rm ob},i}\f$
-	 *  are the observed redshift and mass proxy of the \f$i\f$th object, respectively,
-	 *  \f$P(M|\lambda,z)\f$ is a log-normal whose mean is the mass proxy - mass relation and whose
-	 *  rms is the intrinsic scatter of such relation (for details, see e.g. 
-	 *  cbl::modelling::massobsrel::Modelling_MassObservableRelation), while \f$P(z|z_{{\rm ob},i})\f$
-	 *  and \f$P(\lambda|\lambda_{{\rm ob},i})\f$ are Gaussian distributions whose standard deviations
-	 *  are given by the errors on redshift and proxy, respectively.
-	 * 
-	 *  Redshift-space distorsions are modelled in the Kaiser
-	 *  limit, that is neglecting non-linearities in dynamics
-	 *  and bias; specifically, the model considered is the
-	 *  following:
-	 * 
-	 *  \f$\xi(s) = b^2 \xi'(r) + b \xi''(r) + \xi'''(r) \, ;\f$
-	 *
-	 *  where b is the linear bias and the terms \f$\xi'(r)\f$,
-	 *  \f$\xi''(r)\f$, \f$\xi'''(r)\f$ are the Fourier
-	 *  anti-transform of the power spectrum terms obtained
-	 *  integrating the redshift space 2D power spectrum along
-	 *  \f$\mu\f$ (see cbl::modelling::twopt.:damped_Pk_terms)
-	 *
-	 *  @param cosmo_param vector of enums containing cosmological
-	 *  parameters
-	 *
-	 *  @param cosmo_prior vector containing the priors for
-	 *  the cosmological parameters
-	 *
-	 *  @param alpha_prior prior on the scaling relation normalization
-	 *
-	 *  @param beta_prior prior on the scaling relation slope
-	 *
-	 *  @param gamma_prior prior on the redshift evolution factor of the scaling relation
-	 *
-	 *  @param scatter0_prior prior on the 
-	 *  constant term of the intrinsic scatter, \f$ \sigma_0 \f$
-	 *
-	 *  @param scatterM_prior prior on the factor in the
-	 *  proxy-dependent term of the intrinsic scatter, \f$ \sigma_{\lambda} \f$
-	 *
-	 *  @param scatterM_exponent_prior prior on the exponent in the
-	 *  proxy-dependent term of the intrinsic scatter, \f$ e_{\lambda} \f$
-	 *
-	 *  @param scatterz_prior prior on the factor in the
-	 *  redshift-dependent term of the intrinsic scatter, \f$ \sigma_z \f$
-	 *
-	 *  @param scatterz_exponent_prior prior on the exponent in the
-	 *  redshift-dependent term of the intrinsic scatter, \f$ e_z \f$
-	 *
-	 *  @param sigmaz_prior prior for the parameter
-	 *  \f$\sigma_z(z)\f$
-	 *
-	 *  @param z_evo functional form of the redshift evolution
-	 *  function in the scaling relation. See the documentation
-	 *  of cbl::modelling::massobsrel::Modelling_MassObservableRelation
-	 *  
-	 */
-	void set_model_scaling_relation_sigmaz_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution sigmaz_prior, const std::string z_evo);
 
 	///@}
 

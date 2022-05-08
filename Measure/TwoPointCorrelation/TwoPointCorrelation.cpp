@@ -338,9 +338,9 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs (const TwoPType ty
   else if (type==TwoPType::_angular_) {
     double xx, yy, zz;
     cartesian_coord(radians(m_dd->sMax(), m_dd->angularUnits()), radians(m_dd->sMax(), m_dd->angularUnits()), 1., xx, yy, zz);
-    rMAX = sqrt(yy*yy+zz*zz);
+    rMAX = sqrt(xx*xx+zz*zz);
     cartesian_coord(radians(m_dd->sMin(), m_dd->angularUnits()), radians(m_dd->sMin(), m_dd->angularUnits()), 1., xx, yy, zz);
-    rMIN = sqrt(yy*yy+zz*zz);
+    rMIN = sqrt(xx*xx+zz*zz);
   }
 
   else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_wedges_) {
@@ -796,9 +796,9 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region (std::vecto
   else if (type==TwoPType::_angular_) {
     double xx, yy, zz;
     cartesian_coord(radians(m_dd->sMax(), m_dd->angularUnits()), radians(m_dd->sMax(), m_dd->angularUnits()), 1., xx, yy, zz);
-    rMAX = sqrt(yy*yy+zz*zz);
+    rMAX = sqrt(xx*xx+zz*zz);
     cartesian_coord(radians(m_dd->sMin(), m_dd->angularUnits()), radians(m_dd->sMin(), m_dd->angularUnits()), 1., xx, yy, zz);
-    rMIN = sqrt(yy*yy+zz*zz);
+    rMIN = sqrt(xx*xx+zz*zz);
   }
 
   else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_wedges_) {
@@ -975,9 +975,9 @@ void cbl::measure::twopt::TwoPointCorrelation::count_allPairs_region_test (const
   else if (type==TwoPType::_angular_) {
     double xx, yy, zz;
     cartesian_coord(radians(m_dd->sMax(), m_dd->angularUnits()), radians(m_dd->sMax(), m_dd->angularUnits()), 1., xx, yy, zz);
-    rMAX = sqrt(yy*yy+zz*zz);
+    rMAX = sqrt(xx*xx+zz*zz);
     cartesian_coord(radians(m_dd->sMin(), m_dd->angularUnits()), radians(m_dd->sMin(), m_dd->angularUnits()), 1., xx, yy, zz);
-    rMIN = sqrt(yy*yy+zz*zz);
+    rMIN = sqrt(xx*xx+zz*zz);
   }
 
   else if (type==TwoPType::_2D_polar_ || type==TwoPType::_multipoles_integrated_ || type ==TwoPType::_wedges_) {

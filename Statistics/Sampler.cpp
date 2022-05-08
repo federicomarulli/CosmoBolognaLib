@@ -61,21 +61,6 @@ shared_ptr<random::DistributionRandomNumbers> cbl::statistics::Sampler::m_set_gz
 
 void cbl::statistics::Sampler::m_initialize_chains (const vector< vector<double> > start)
 {
-  for (int i=0; i<m_nwalkers; i++) {
-    vector<double> pp = start[i];
-    m_function_chain[0][i] = m_function(pp);
-    m_chains[0][i] = pp;
-  }
-}
-
-
-// ============================================================================================
-
-
-
-void cbl::statistics::Sampler::m_initialize_chains_parallel (const vector< vector<double> > start)
-{
-#pragma omp parallel for schedule(dynamic)
   for (int i=0; i<m_nwalkers; i++) { 
     vector<double> pp = start[i];
     m_function_chain[0][i] = m_function(pp);
@@ -254,7 +239,7 @@ void cbl::statistics::Sampler::m_sample_stretch_move_parallel_cpp (const int cha
   auto gz = m_set_gz(gz_seed, aa);
 
   // initialise the chains
-  m_initialize_chains_parallel(start);
+  m_initialize_chains(start);
   
   // stretch-move
 

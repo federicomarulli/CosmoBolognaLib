@@ -9,7 +9,13 @@
 #include "NumberCounts1D_Size.h"
 #include "Modelling_NumberCounts1D_Size.h"
 
+
 using namespace std;
+
+// these two variables contain the name of the CosmoBolognaLib
+// directory and the name of the current directory (useful when
+// launching the code on remote systems)
+string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
 
 
 int main () {
@@ -17,7 +23,7 @@ int main () {
   try {
 
     // --- set the input/output file/directories ---
-    const std::string dir = "../output/";
+    const std::string dir = cbl::par::DirLoc+"../output/";
     const string file_output_start = "model_starting_values.dat";
     const string file_output_bestfit = "model_bestfit.dat";
 
@@ -27,7 +33,7 @@ int main () {
     // ------------------------------------------
 
     // ASCII void catalogue 
-    std::string file_voids_in = "../input/cleaned_void_catalogue.out";
+    std::string file_voids_in = cbl::par::DirLoc+"../input/cleaned_void_catalogue.out";
 
     // std::vector containing the variable name list to read from file
     std::vector<cbl::catalogue::Var> var_names_voids = {cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_, cbl::catalogue::Var::_Radius_};

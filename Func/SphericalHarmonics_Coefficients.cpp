@@ -19,15 +19,15 @@
  ********************************************************************/
 
 /**
- *  @file CosmoBolognaLib/Func/SphericalHarmonics_Coefficients.cpp
+ *  \@file CosmoBolognaLib/Func/SphericalHarmonics_Coefficients.cpp
  *
- *  @brief Methods of the class SphericalHarmonics_Coefficients used
- *  to compute the spherical harmonics coefficients at a given
- *  position on
+ *  @brief Methods of the class
+ *  SphericalHarmonics_Coefficients used to compute the spherical
+ *  harmonics coefficients at a given position on
  *
  *  This file contains the implementation of the methods of the class
- *  SphericalHarmonics_Coefficients used to measure the spherical
- *  harmonics coefficients at a given position on the unit sphere
+ *  SphericalHarmonics_Coefficients used to measure the
+ *  spherical harmonics coefficients at a given position on the unit sphere
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *

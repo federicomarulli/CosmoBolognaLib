@@ -337,7 +337,7 @@ namespace cbl {
 	bool NL = 0;
 	int norm = 0;
 
-	double Plin_BAO = cosm.Pk_matter({kk}, method_PkC, NL, m_redshift, m_store_output, m_output_root, norm, m_kmax)[0]-cosm.Pk_matter({kk}, method_PkEH, NL, m_redshift, m_store_output)[0];
+	double Plin_BAO = cosm.Pk_DM(kk, method_PkC, NL, m_redshift, m_store_output, m_output_root, norm, m_kmax)-cosm.Pk_DM(kk, method_PkEH, NL, m_redshift, m_store_output);
 	Plin_BAO *= exp(-kk*kk*0.5/(m_k_star*m_k_star));
     
 	return Plin_BAO*sin(kk*m_rr)*kk/m_rr;  
@@ -382,7 +382,7 @@ namespace cbl {
 	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
 	
 	if (m_method_Pk=="EisensteinHu") 
-	  return pow(cosm.linear_growth_rate(m_redshift, kk),2)*cosm.Pk_matter({kk}, m_method_Pk, false, m_redshift, m_store_output)[0]*pow(cbl::TopHat_WF(kk*m_rr),2);   
+	  return pow(cosm.linear_growth_rate(m_redshift, kk),2)*cosm.Pk_DM(kk, m_method_Pk, false, m_redshift, m_store_output)*pow(cbl::TopHat_WF(kk*m_rr),2);   
 
 	else return cbl::ErrorCBL("", "func_V2", "CosmClassFunc.h"); 
       }
@@ -473,7 +473,7 @@ namespace cbl {
 	cosmology::Cosmology cosm (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit);
     
 	if (m_method_Pk=="EisensteinHu") 
-	  return pow(cosm.linear_growth_rate(m_redshift, kk),2)*cosm.Pk_matter({kk}, m_method_Pk, false, m_redshift, m_store_output)[0]*(1.-pow(cbl::TopHat_WF(kk*m_rr),2));
+	  return pow(cosm.linear_growth_rate(m_redshift, kk),2)*cosm.Pk_DM(kk, m_method_Pk, false, m_redshift, m_store_output)*(1.-pow(cbl::TopHat_WF(kk*m_rr),2));
 	
 	else return cbl::ErrorCBL("", "func_sigma2", "CosmClassFunc.h"); 
       }

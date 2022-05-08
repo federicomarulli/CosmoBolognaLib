@@ -1,5 +1,4 @@
 #include "FFTlog.h"
-#include "CAMB.h"
 #include "FITSwrapper.h"
 #include "Histogram.h"
 #include "ModelFunction_NumberCounts1D_Mass.h"
@@ -130,7 +129,6 @@
 #include "Data.h"
 #include "PosteriorDistribution.h"
 #include "Cosmology.h"
-#include "HaloProfile.h"
 #include "CosmClassFunc.h"
 #include "Modelling_TwoPointCorrelation1D_monopole.h"
 #include "ThreePointCorrelation_comoving_reduced.h"

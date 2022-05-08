@@ -305,7 +305,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 */
-	void set_model_fullShape_DeWiggled (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution SigmaNL_perpendicular_prior={}, const statistics::PriorDistribution SigmaNL_parallel_prior={}, const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaS_prior={}, const bool compute_PkDM=true);
+	void set_model_fullShape_DeWiggled (const statistics::PriorDistribution alpha_perpendicular_prior={}, const statistics::PriorDistribution alpha_parallel_prior={}, const statistics::PriorDistribution SigmaNL_perpendicular_prior={}, const statistics::PriorDistribution SigmaNL_parallel_prior={}, statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution SigmaS_prior={}, const bool compute_PkDM=true);
 
 	/**
 	 *  @brief set the mode-coupling model to fit the full shape
@@ -396,7 +396,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 */
-	void set_model_dispersion (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, const statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
+	void set_model_dispersion (statistics::PriorDistribution fsigma8_prior={}, statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
 	
 	/**
 	 *  @brief set the Scoccimarro model to fit the wedges of the
@@ -443,7 +443,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 */
-	void set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, const statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
+	void set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
 
 	/**
 	 *  @brief set the Scoccimarro model to fit the wedges of the
@@ -498,7 +498,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 */
-	void set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, const statistics::PriorDistribution kd_prior={}, const statistics::PriorDistribution kt_prior={}, const statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true); 
+	void set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, const statistics::PriorDistribution kd_prior={}, const statistics::PriorDistribution kt_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true); 
 
 	/**
 	 *  @brief set the Scoccimarro model to fit the wedges of the
@@ -562,7 +562,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 */
-	void set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, const statistics::PriorDistribution kd_prior={}, const statistics::PriorDistribution bb_prior={}, const statistics::PriorDistribution a1_prior={}, const statistics::PriorDistribution a2_prior={}, const statistics::PriorDistribution a3_prior={}, const statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
+	void set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, const statistics::PriorDistribution kd_prior={}, const statistics::PriorDistribution bb_prior={}, const statistics::PriorDistribution a1_prior={}, const statistics::PriorDistribution a2_prior={}, const statistics::PriorDistribution a3_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
 
 	/**
 	 * @brief set the TNS (Taruya, Nishimichi and Saito) model to
@@ -609,7 +609,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 */
-	void set_model_TNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, const statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
+	void set_model_TNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution bsigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
 
 	/**
 	 *  @brief set the eTNS model, i.e extended-TNS (Taruya,
@@ -665,7 +665,7 @@ namespace cbl {
 	 *  @param compute_PkDM true \f$\rightarrow\f$ compute the
 	 *  fiducial model of the dark matter power spectrum
 	 */
-	void set_model_eTNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution b1sigma8_prior={}, const statistics::PriorDistribution b2sigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, const statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution N_prior={cbl::glob::DistributionType::_Constant_, 0.}, const bool DFoG=true, const bool compute_PkDM=true);
+	void set_model_eTNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution b1sigma8_prior={}, const statistics::PriorDistribution b2sigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution N_prior={cbl::glob::DistributionType::_Constant_, 0.}, const bool DFoG=true, const bool compute_PkDM=true);
         
       };
     }

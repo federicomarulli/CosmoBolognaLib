@@ -6,6 +6,11 @@
 #include "Data1D.h"
 #include "Modelling_Cosmology.h"
 
+// these two variables contain the name of the CosmoBolognaLib
+// directory and the name of the current directory (useful when
+// launching the code on remote systems)
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
+
 int main () {
 
   try {
@@ -21,9 +26,8 @@ int main () {
     // ---------------- read the dataset ------------
     // ---------------------------------------------- 
 
-    cbl::Path path;
-    const std::string data_file = path.DirCosmo()+"/External/Data/BAO/BAO_Addison2013.dat";
-    const std::string covariance_file = path.DirCosmo()+"/External/Data/BAO/BAO_Addison2013_covariance.dat";
+    const std::string data_file = cbl::par::DirCosmo+"/External/Data/BAO/BAO_Addison2013.dat";
+    const std::string covariance_file = cbl::par::DirCosmo+"/External/Data/BAO/BAO_Addison2013_covariance.dat";
 
     auto data = std::make_shared<cbl::data::Data1D>(cbl::data::Data1D(data_file, 1));
     data->set_covariance(covariance_file, 2, 1);

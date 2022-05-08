@@ -44,7 +44,7 @@ using namespace cbl;
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double k_min, const double k_max, const int step, const bool store_output, const int norm, const double Delta, const bool isDelta_critical, const std::string model_MF, const std::string selection_function_file, const std::vector<int> selection_function_column, const double z_min, const double z_max, const int z_step, const double Mass_min, const double Mass_max, const int Mass_step, const double area_degrees, const double prec)
+void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double k_min, const double k_max, const int step, const bool store_output, const int norm, const double Delta, const bool isDelta_vir, const std::string model_MF, const std::string selection_function_file, const std::vector<int> selection_function_column, const double z_min, const double z_max, const int z_step, const double Mass_min, const double Mass_max, const int Mass_step, const double area_degrees, const double prec)
 {
   m_data_model.isSnapshot = false;
 
@@ -65,7 +65,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
   m_data_model.output_root = "test";
   m_data_model.file_par = par::defaultString;
 
-  m_data_model.isDelta_critical = isDelta_critical;
+  m_data_model.isDelta_Vir = isDelta_vir;
   m_data_model.Delta = Delta;
   m_data_model.model_MF = model_MF;
 
@@ -103,7 +103,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const cosmology::Cosmology cosmology, const std::vector<double> SF_weights, const double z_pivot, const double proxy_pivot, const double mass_pivot, const double log_base, const std::string method_Pk, const bool store_output, const int norm, const double Delta, const bool isDelta_critical, const std::string model_MF, const std::string model_bias, const double z_min, const double z_max, const double area_degrees, const double prec)
+void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const cosmology::Cosmology cosmology, const catalogue::Cluster cluster, const std::vector<double> SF_weights, const double z_pivot, const double proxy_pivot, const double mass_pivot, const double log_base, const std::string method_Pk, const bool store_output, const int norm, const double Delta, const bool isDelta_vir, const std::string model_MF, const std::string model_bias, const double z_min, const double z_max, const double area_degrees, const double prec)
 {
   m_data_model.isSnapshot = false;
 
@@ -115,6 +115,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
       ErrorCBL("The values of the proxy edges cannot be <= 0.","set_data_model","Modelling_NumberCounts.cpp");
 
   m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  m_data_model.cluster = make_shared<catalogue::Cluster>(cluster);
 
   if (SF_weights.size() == (m_data->edges_xx()).size()-1)
     m_data_model.SF_weights = SF_weights;
@@ -136,7 +137,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts::set_data_model (const
   m_data_model.output_root = "test";
   m_data_model.file_par = par::defaultString;
 
-  m_data_model.isDelta_critical = isDelta_critical;
+  m_data_model.isDelta_Vir = isDelta_vir;
   m_data_model.Delta = Delta;
   m_data_model.model_MF = model_MF;
   m_data_model.model_bias = model_bias;

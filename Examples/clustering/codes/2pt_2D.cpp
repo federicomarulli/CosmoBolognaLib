@@ -4,6 +4,12 @@
 
 #include "TwoPointCorrelation2D.h"
 
+// these two variables contain the name of the CosmoBolognaLib
+// directory and the name of the current directory (useful when
+// launching the code on remote systems)
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
+
+
 int main () {
 
   try {
@@ -19,7 +25,7 @@ int main () {
     // ---------------- read the input catalogue ----------------
     // ----------------------------------------------------------
   
-    const std::string file_catalogue = "../input/cat.dat";
+    const std::string file_catalogue = cbl::par::DirLoc+"../input/cat.dat";
 
     const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
   
@@ -39,8 +45,8 @@ int main () {
 
     // ----- output data ----- 
 
-    const std::string dir_pairs = "../output/";
-    const std::string dir_output = "../output/";
+    const std::string dir_pairs = cbl::par::DirLoc+"../output/";
+    const std::string dir_output = cbl::par::DirLoc+"../output/";
 
   
     // ----- measure the 2D correlation function in Cartesian coordinates, xi(rp,pi), and store the outputs ----- 

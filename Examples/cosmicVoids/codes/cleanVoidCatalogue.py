@@ -7,15 +7,25 @@ import sys
 import os
 
 # import CosmoBolognaLib functions #
-import CosmoBolognaLib as cbl
+import CosmoBolognaLib as cbl                                 
+from CosmoBolognaLib import ErrorCBL
 
 
 ##########################################################
 # just remember that parameter files do have a purpose
 
-filename = "../input/parameter_file.ini"
-print(" Loading parameters from", filename)
-param = cbl.ReadParameters(filename)
+if (len(sys.argv) == 1):
+  print("Usage: /path/to/cleaVoidCatalogue.py /path/to/parameter_file.ini")
+  exit(-1)
+
+if (len(sys.argv) > 1):
+  filename = sys.argv[1]
+  print(" Loading parameters from", filename)
+  param = cbl.ReadParameters(filename)
+
+else:
+  print(" Using default parameters")
+
   
 ##########################################################
 # Coordinates type selection
@@ -51,7 +61,7 @@ if (param.findDouble('boxside') < 0.) :
   boxside = abs(vdcat.Max(cbl.Var__X_) - vdcat.Min(cbl.Var__X_))
 else :
   boxside = param.findDouble('boxside')
-
+vdcat.compute_catalogueProperties(boxside)
       
 ##########################################################
 # load the input tracers catalogue
@@ -120,6 +130,7 @@ else :
     print("Observed coordinates not supported with this configuration...")
     exit(1)
 
+trcat.compute_catalogueProperties(param.findDouble('boxside'))
   
   
 ##########################################################
@@ -139,12 +150,17 @@ ChM = cbl.ChainMesh3D (2.*trcat.mps(),
                        vdcat.Max(cbl.Var__Radius_))
 
 # sets the central density if not read from file:
-#if not param.findBool('centralDensity') : 
-#  vdcat.compute_centralDensity(trcat,ChM)
+if not param.findBool('centralDensity') : 
+  vdcat.compute_centralDensity(trcat,
+                               ChM,
+                               trcat.volume(),
+                               param.findDouble('ratio'))
 
 # sets the density contrast if not read from file:
-#if not param.findBool('densityContrast') :
-#  vdcat.compute_densityContrast(trcat,ChM,param.findDouble('ratio'))
+if not param.findBool('densityContrast') :
+  vdcat.compute_densityContrast(trcat,
+                                ChM,
+                                param.findDouble('ratio'))
 
 # overlap-check criterion choice:
 ol_crit = cbl.Var__DensityContrast_ if param.findInt('ol_crit') == 1 else cbl.Var__CentralDensity_
@@ -153,7 +169,10 @@ ol_crit = cbl.Var__DensityContrast_ if param.findInt('ol_crit') == 1 else cbl.Va
 threshold = 1. + param.findDouble('deltav_NL')
 
 # build the catalogue:
-vdcat.clean_void_catalogue([param.findBool('clean1'),param.findBool('clean2'),param.findBool('clean3')],
+vdcat_cleaned = cbl.Catalogue (vdcat,
+                               [param.findBool('clean1'),
+                                param.findBool('clean2'),
+                                param.findBool('clean3')],
                                param.findVectorDouble('delta_r'),
                                threshold,
                                param.findDouble('relevance'),
@@ -172,7 +191,7 @@ clmnsToPrint = cbl.VarCast(attrAv)
 if not os.path.exists(param.findString('outputDir')):
     os.makedirs(param.findString('outputDir'))
 
-vdcat.write_data(param.findString('outputDir')+param.findString('VoidCatalogueFile'),
+vdcat_cleaned.write_data(param.findString('outputDir')+param.findString('VoidCatalogueFile'),
                          clmnsToPrint)
 
 #############################################################################################################

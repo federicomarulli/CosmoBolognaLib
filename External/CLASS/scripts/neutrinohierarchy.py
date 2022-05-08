@@ -1,12 +1,11 @@
-#!/usr/bin/env python
+
 # coding: utf-8
 
-# In[ ]:
-
+# In[1]:
 
 # import necessary modules
 # uncomment to get plots displayed in notebook
-#get_ipython().run_line_magic('matplotlib', 'inline')
+#%matplotlib inline
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,8 +13,7 @@ from classy import Class
 from scipy.optimize import fsolve
 
 
-# In[ ]:
-
+# In[2]:
 
 # esthetic definitions for the plots
 font = {'size'   : 16, 'family':'STIXGeneral'}
@@ -24,8 +22,7 @@ matplotlib.rc('font', **font)
 matplotlib.mathtext.rcParams['legend.fontsize']='medium'
 
 
-# In[ ]:
-
+# In[3]:
 
 # a function returning the three masses given the Delta m^2, the total mass, and the hierarchy (e.g. 'IN' or 'IH')
 # taken from a piece of MontePython written by Thejs Brinckmann
@@ -56,25 +53,23 @@ def get_masses(delta_m_squared_atm, delta_m_squared_sol, sum_masses, hierarchy):
         return m1,m2,m3
 
 
-# In[ ]:
-
+# In[4]:
 
 # test of this function, returning the 3 masses for total mass of 0.1eV
 m1,m2,m3 = get_masses(2.45e-3,7.50e-5,0.1,'NH')
-print ('NH:',m1,m2,m3,m1+m2+m3)
+print 'NH:',m1,m2,m3,m1+m2+m3
 m1,m2,m3 = get_masses(2.45e-3,7.50e-5,0.1,'IH')
-print ('IH:',m1,m2,m3,m1+m2+m3)
+print 'IH:',m1,m2,m3,m1+m2+m3
 
 
-# In[ ]:
-
+# In[5]:
 
 # The goal of this cell is to compute the ratio of P(k) for NH and IH with the same total mass
 commonsettings = {'N_ur':0,
                   'N_ncdm':3,
                   'output':'mPk',
                   'P_k_max_1/Mpc':3.0,
-                  # The next line should be uncommented for higher precision (but significantly slower running)
+                  # The next line should be uncommented fgor higher precision (but significantly slower running)
                   'ncdm_fluid_approximation':3,
                   # You may uncomment this line to get more info on the ncdm sector from Class:
                   'background_verbose':1
@@ -110,6 +105,7 @@ for sum_masses in [0.1, 0.115, 0.13]:
     h = NH.h()
     plt.semilogx(kvec/h,1-np.array(pkNH)/np.array(pkIH))
     legarray.append(r'$\Sigma m_i = '+str(sum_masses)+'$eV')
+
 plt.axhline(0,color='k')
 plt.xlim(kvec[0]/h,kvec[-1]/h)
 plt.xlabel(r'$k [h \mathrm{Mpc}^{-1}]$')
@@ -117,7 +113,6 @@ plt.ylabel(r'$1-P(k)^\mathrm{NH}/P(k)^\mathrm{IH}$')
 plt.legend(legarray)
 
 
-# In[ ]:
-
+# In[6]:
 
 plt.savefig('neutrinohierarchy.pdf')

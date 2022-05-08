@@ -2,10 +2,6 @@
 
 %module cblFunc
 
-%import "Path.i"
-%import "Kernel.i"
-%import "FuncGrid.i"
-
 %{
 #include "Func.h"
 #include "LegendrePolynomials.h"

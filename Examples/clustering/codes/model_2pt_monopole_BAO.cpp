@@ -5,6 +5,12 @@
 #include "Data1D.h"
 #include "Modelling_TwoPointCorrelation1D_monopole.h"
 
+// these two variables contain the name of the CosmoBolognaLib
+// directory and the name of the current directory (useful when
+// launching the code on remote systems)
+std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
+
+
 int main () {
 
   try {
@@ -27,8 +33,8 @@ int main () {
     // ------------- reading the dataset ------------
     // ----------------------------------------------
 
-    const std::string dir_input = "../input/";
-    const std::string dir_output = "../output/";
+    const std::string dir_input = cbl::par::DirLoc+"../input/";
+    const std::string dir_output = cbl::par::DirLoc+"../output/";
     const std::string dir_chains = dir_output+"chains/";
     const std::string MK = "mkdir -p "+dir_output+" "+dir_chains; if (system(MK.c_str())) {}
     

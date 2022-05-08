@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/fileZnUv4p.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(35.244145,-5.504932,35.340942,-5.506112,35.348415,-5.504919,35.348502,-5.473143,35.348812,-5.459532,35.348836,-5.386041,35.333957,-5.376359,35.246122,-5.376322,35.236805,-5.382254,35.233364,-5.386916,35.233338,-5.500348) # color=red dash=1

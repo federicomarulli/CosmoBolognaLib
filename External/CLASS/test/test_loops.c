@@ -12,14 +12,13 @@ int class(
           struct file_content *pfc,
           struct precision * ppr,
           struct background * pba,
-          struct thermodynamics * pth,
-          struct perturbations * ppt,
+          struct thermo * pth,
+          struct perturbs * ppt,
           struct primordial * ppm,
-          struct fourier * pfo,
-          struct transfer * ptr,
-          struct harmonic * phr,
+          struct nonlinear * pnl,
+          struct transfers * ptr,
+          struct spectra * psp,
           struct lensing * ple,
-          struct distortions * psd,
           struct output * pop,
           int l_max,
           double ** cl,
@@ -27,7 +26,7 @@ int class(
 
   int l;
 
-  class_call(input_read_from_file(pfc,ppr,pba,pth,ppt,ptr,ppm,phr,pfo,ple,psd,pop,errmsg),
+  class_call(input_init(pfc,ppr,pba,pth,ppt,ptr,ppm,psp,pnl,ple,pop,errmsg),
              errmsg,
              errmsg);
 
@@ -39,7 +38,7 @@ int class(
              pth->error_message,
              errmsg);
 
-  class_call(perturbations_init(ppr,pba,pth,ppt),
+  class_call(perturb_init(ppr,pba,pth,ppt),
              ppt->error_message,
              errmsg);
 
@@ -47,19 +46,19 @@ int class(
              ppm->error_message,
              errmsg);
 
-  class_call(fourier_init(ppr,pba,pth,ppt,ppm,pfo),
-             pfo->error_message,
+  class_call(nonlinear_init(ppr,pba,pth,ppt,ppm,pnl),
+             pnl->error_message,
              errmsg);
 
-  class_call(transfer_init(ppr,pba,pth,ppt,pfo,ptr),
+  class_call(transfer_init(ppr,pba,pth,ppt,pnl,ptr),
              ptr->error_message,
              errmsg);
 
-  class_call(harmonic_init(ppr,pba,ppt,ppm,pfo,ptr,phr),
-             phr->error_message,
+  class_call(spectra_init(ppr,pba,ppt,ppm,pnl,ptr,psp),
+             psp->error_message,
              errmsg);
 
-  class_call(lensing_init(ppr,ppt,phr,pfo,ple),
+  class_call(lensing_init(ppr,ppt,psp,pnl,ple),
              ple->error_message,
              errmsg);
 
@@ -67,8 +66,8 @@ int class(
 
   for (l=2; l <= l_max; l++) {
 
-    class_call(output_total_cl_at_l(phr,ple,pop,(double)l,cl[l]),
-               phr->error_message,
+    class_call(output_total_cl_at_l(psp,ple,pop,(double)l,cl[l]),
+               psp->error_message,
                errmsg);
   }
 
@@ -78,23 +77,23 @@ int class(
              ple->error_message,
              errmsg);
 
-  class_call(harmonic_free(phr),
-             phr->error_message,
+  class_call(spectra_free(psp),
+             psp->error_message,
              errmsg);
 
   class_call(transfer_free(ptr),
              ptr->error_message,
              errmsg);
 
-  class_call(fourier_free(pfo),
-             pfo->error_message,
+  class_call(nonlinear_free(pnl),
+             pnl->error_message,
              errmsg);
 
   class_call(primordial_free(ppm),
              ppm->error_message,
              errmsg);
 
-  class_call(perturbations_free(ppt),
+  class_call(perturb_free(ppt),
              ppt->error_message,
              errmsg);
 
@@ -114,14 +113,13 @@ int main() {
 
   struct precision pr;        /* for precision parameters */
   struct background ba;       /* for cosmological background */
-  struct thermodynamics th;           /* for thermodynamics */
-  struct perturbations pt;         /* for source functions */
-  struct transfer tr;        /* for transfer functions */
+  struct thermo th;           /* for thermodynamics */
+  struct perturbs pt;         /* for source functions */
+  struct transfers tr;        /* for transfer functions */
   struct primordial pm;       /* for primordial spectra */
-  struct harmonic hr;          /* for output spectra */
-  struct fourier fo;        /* for non-linear spectra */
+  struct spectra sp;          /* for output spectra */
+  struct nonlinear nl;        /* for non-linear spectra */
   struct lensing le;          /* for lensed spectra */
-  struct distortions sd;      /* for spectral distortions */
   struct output op;           /* for output files */
   ErrorMsg errmsg;            /* for error messages */
 
@@ -189,7 +187,7 @@ int main() {
     printf("#run with omega_b = %s\n",fc.value[4]);
 
     /* calls class and return the C_l's*/
-    if (class(&fc,&pr,&ba,&th,&pt,&pm,&fo,&tr,&hr,&le,&sd,&op,l_max,cl,errmsg) == _FAILURE_) {
+    if (class(&fc,&pr,&ba,&th,&pt,&pm,&nl,&tr,&sp,&le,&op,l_max,cl,errmsg) == _FAILURE_) {
       printf("\n\nError in class \n=>%s\n",errmsg);
       return _FAILURE_;
     }
@@ -198,9 +196,9 @@ int main() {
     for (l=2;l<=l_max;l++) {
       fprintf(stdout,"%d  %e  %e  %e\n",
 	      l,
-	      cl[l][hr.index_ct_tt],
-	      cl[l][hr.index_ct_ee],
-	      cl[l][hr.index_ct_te]);
+	      cl[l][sp.index_ct_tt],
+	      cl[l][sp.index_ct_ee],
+	      cl[l][sp.index_ct_te]);
     }
     fprintf(stdout,"\n");
   }

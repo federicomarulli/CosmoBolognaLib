@@ -67,69 +67,18 @@ void cbl::modelling::distribution::Modelling_Distribution::set_model_Distributio
 // ============================================================================================
 
 
-void cbl::modelling::distribution::Modelling_Distribution::set_model_Distribution (const double k, const statistics::PriorDistribution mean_prior, const statistics::PriorDistribution std0_prior, const std::string mean_name, const std::string std0_name, const std::string std_name)
-{
-  m_data_model.k = k;
-  
-  const int nParams = 3;
-  const int nParams_derived = 1;
-  
-  vector<statistics::ParameterType> Par_type(nParams, statistics::ParameterType::_Base_);
-  Par_type[2] = statistics::ParameterType::_Derived_;
-  
-  vector<string> Par_string(nParams);
-  std::vector<statistics::PriorDistribution> param_prior (nParams-nParams_derived);
-
-  // Set the parameter names and priors
-  Par_string[0] = mean_name;
-  Par_string[1] = std0_name;
-  Par_string[2] = std_name;
-  
-  param_prior[0] = mean_prior;
-  param_prior[1] = std0_prior;
-  
-  // set prior
-  m_set_prior(param_prior);
-
-  // set fixed parameters
-  auto inputs = make_shared<STR_Distr_model>(m_data_model);
-
-  // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_gaussian2, nParams, Par_type, Par_string, inputs));
-}
-
-
-// ============================================================================================
-
-
 std::vector<double> cbl::modelling::distribution::model_gaussian (const std::vector<double> x, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   (void)inputs;
   
-  std::shared_ptr<void> ptr;
+  std::shared_ptr<void> pp;
+
   std::vector<double> values(x.size());
 
   for (size_t i=0; i<x.size(); i++)
-    values[i] = cbl::gaussian(x[i], ptr, {parameter[0], parameter[1]});
+    values[i] = cbl::gaussian(x[i], pp, {parameter[0], parameter[1]});
 
   return values;
 }
 
-
-// ============================================================================================
-
-
-std::vector<double> cbl::modelling::distribution::model_gaussian2 (const std::vector<double> x, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
-{
-  shared_ptr<STR_Distr_model> pp = static_pointer_cast<STR_Distr_model>(inputs);
-  
-  std::shared_ptr<void> ptr;
-  std::vector<double> values(x.size());
-  parameter[2] = parameter[1]*pp->k;
-  
-  for (size_t i=0; i<x.size(); i++)
-    values[i] = cbl::gaussian(x[i], ptr, {parameter[0], parameter[2]});
-
-  return values;
-}
 

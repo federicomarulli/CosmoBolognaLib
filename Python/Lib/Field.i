@@ -1,9 +1,6 @@
 // SWIG Interface to Field3D
 
-%module cblField
-
-%import "Path.i"
-%import "Kernel.i"
+%module cblField3D
 
 %{
 #include "Field3D.h"

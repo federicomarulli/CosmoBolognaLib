@@ -155,7 +155,8 @@ namespace cbl {
       std::shared_ptr<random::DistributionRandomNumbers>m_set_gz (const int seed, const double aa=2);
 
       /**
-       * @brief initialize chains
+       * @brief initialize chains, generating random
+       * points in a sphere around starting position
        *
        * @param start vector containing the starting position
        * for the parameters
@@ -163,16 +164,6 @@ namespace cbl {
        * 
        */
       void m_initialize_chains (const std::vector<std::vector<double>> start);
-      
-      /**
-       * @brief initialize chains
-       *
-       * @param start vector containing the starting position
-       * for the parameters
-       * 
-       * 
-       */
-      void m_initialize_chains_parallel (const std::vector<std::vector<double>> start);
 
       /**
        *  @brief sample the input function using the stretch-move

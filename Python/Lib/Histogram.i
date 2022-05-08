@@ -2,9 +2,6 @@
 
 %module cblHistogram
 
-%import "Path.i"
-%import "Kernel.i"
-
 %shared_ptr(cbl::glob::Histogram);
 %shared_ptr(cbl::glob::Histogram1D);
 %shared_ptr(cbl::glob::Histogram2D);

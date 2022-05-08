@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/fileAjv4lo.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(35.297351,-4.4732168,35.388715,-4.4734018,35.397668,-4.4696538,35.397651,-4.3463978,35.38937,-4.3441598,35.289602,-4.3447368,35.28075,-4.3463868,35.280355,-4.4659668) # color=red dash=1

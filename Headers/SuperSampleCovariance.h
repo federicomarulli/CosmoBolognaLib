@@ -58,11 +58,12 @@
 
 
 #include "Cosmology.h"
+#include "Modelling.h"
 
 
 namespace cbl {
 
-  namespace cosmology {
+  namespace statistics {
 
      
     /**
@@ -79,8 +80,8 @@ namespace cbl {
       
     protected:
     
-      /// pointer to the response function of the probe
-      std::vector<std::shared_ptr<statistics::Model>> m_response_func;
+      /// pointer to the transfer function, or response, of the probe
+      std::vector<std::shared_ptr<statistics::Model>> m_transfer_func;
     
       /// pointer to the Cosmology object
       std::shared_ptr<cosmology::Cosmology> m_cosmo;
@@ -142,16 +143,6 @@ namespace cbl {
        *
        */
       void m_compute_gaussian_window (const double delta_z, const std::vector<double> W_mean, const std::vector<double> W_std);
-      
-      /**
-       * @brief compute the S_ij matrix
-       *
-       * @param cosmo the cosmological model
-       *
-       * @return the super-sample covariance matrix
-       *
-       */
-      std::vector<std::vector<double>> m_compute_Sij (cbl::cosmology::Cosmology cosmo) const;
 
 
     public:
@@ -162,10 +153,7 @@ namespace cbl {
       ///@{
 
       /**
-       *  @brief Default constructor, used to compute the \f$S_{ij}\f$ matrix, 
-       *  assuming top-hat window functions. The top-hat
-       *  window function can be used when the redshift errors
-       *  are smaller than the width of the redshift bins.
+       *  @brief Default constructor, used to compute the \f$S_{ij}\f$ matrix for the super-sample covariance.
        *
        *  Given two redshift bins, labelled as \f$i\f$ and \f$j\f$, \f$S_{ij}\f$ is:
        *
@@ -183,7 +171,32 @@ namespace cbl {
        *  redshift bin, \f$g\f$ is the growth factor, \f$j_0\f$ the
        *  Bessel spherical function, and \f$W_i\f$ is the window function.
        *
-       *  Physical units are forced.
+       *  Physical units are forced, in set_SSC.
+       *
+       *  @param modelling pointers to Modelling objects
+       *  
+       */
+      SuperSampleCovariance (std::vector<std::shared_ptr<cbl::modelling::Modelling>> modelling);
+
+      /**
+       *  @brief default destructor
+       */
+      virtual ~SuperSampleCovariance () = default;
+
+      ///@}
+      
+      
+      /**
+       *  @name Member functions to set the private/protected members
+       */
+      ///@{
+      
+      /**
+       *  @brief Set the
+       *  super-sample covariance matrix \f$S_{ij}\f$,
+       *  assuming top-hat window functions. The top-hat
+       *  window function can be used when the redshift errors
+       *  are smaller than the width of the redshift bins
        *
        *  @param cosm the Cosmology object
        *
@@ -211,33 +224,15 @@ namespace cbl {
        *  @param store_output if true the output files created 
        *  by the Boltzmann solver are stored; if false the 
        *  output files are removed
-       *  
+       *
        */
-      SuperSampleCovariance (cbl::cosmology::Cosmology cosm, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<double> redshift_edges, const double area, const std::string method_Pk="EisensteinHu", const double delta_z=0.001, const double precision=10, const bool NL=false, const bool store_output=false);
+      void set_SSC (cbl::cosmology::Cosmology cosm, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<double> redshift_edges, const double area, const std::string method_Pk="EisensteinHu", const double delta_z=0.001, const double precision=10, const bool NL=false, const bool store_output=false);
+      
       
       /**
-       *  @brief Default constructor, used to compute the \f$S_{ij}\f$ matrix, 
-       *  assuming top-hat window functions. The top-hat
-       *  window function can be used when the redshift errors
-       *  are smaller than the width of the redshift bins.
-       *
-       *  Given two redshift bins, labelled as \f$i\f$ and \f$j\f$, \f$S_{ij}\f$ is:
-       *
-       *  \f$ S_{ij} = \frac{1}{\Omega} \frac{1}{2\pi^2} 
-       *  \int {\rm d} k\,\, k^2 P(k) \frac{U_i(k)}{I_i} \frac{U_j(k)}{I_j}, \f$
-       *  
-       *  where \f$\Omega\f$ is the survey area, \f$P(k)\f$ is the power spectrum,
-       *  and \f$U_i(k)\f$ and \f$I_i\f$ are expressed as:
-       *
-       *  \f$ U_i(k) = \int {\rm d} V_i \,\, W^2_i g(z_j) j_0(kr_j), \f$
-       *
-       *  \f$ I_i = \int {\rm d} V_i \,\, W^2_i, \f$
-       *
-       *  where \f$V_i\f$ is the comoving volume within the \f$i\f$-th
-       *  redshift bin, \f$g\f$ is the growth factor, \f$j_0\f$ the
-       *  Bessel spherical function, and \f$W_i\f$ is the window function.
-       *
-       *  Physical units are forced.
+       *  @brief Set the
+       *  super-sample covariance matrix \f$S_{ij}\f$,
+       *  assuming Gaussian window functions.
        *
        *  @param cosm the Cosmology object
        *
@@ -270,21 +265,28 @@ namespace cbl {
        *  @param store_output if true the output files created 
        *  by the Boltzmann solver are stored; if false the 
        *  output files are removed
-       *  
+       *
        */
-      SuperSampleCovariance (cbl::cosmology::Cosmology cosm, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const double area, const std::vector<double> W_mean, const std::vector<double> W_std, const std::string method_Pk="EisensteinHu", const double delta_z=0.001, const double precision=10, const bool NL=false, const bool store_output=false);
-
-      /**
-       *  @brief default destructor
-       */
-      virtual ~SuperSampleCovariance () = default;
-
+      void set_SSC (cbl::cosmology::Cosmology cosm, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const double area, const std::vector<double> W_mean, const std::vector<double> W_std, const std::string method_Pk="EisensteinHu", const double delta_z=0.001, const double precision=10, const bool NL=false, const bool store_output=false);
+      
+      
       ///@}
       
       /**
        *  @name Member functions to compute \f$S_{ij}\f$
        */
       ///@{
+      
+      
+      /**
+       * @brief compute the S_ij matrix
+       *
+       * @param cosmo the cosmological model
+       *
+       * @return the covariance matrix
+       *
+       */
+      std::vector<std::vector<double>> compute_Sij (cbl::cosmology::Cosmology cosmo) const;
       
       /**
        *  @brief get \f$S_{ij}\f$
@@ -294,6 +296,30 @@ namespace cbl {
        *  @return the covariance matrix
        */
       std::vector<std::vector<double>> operator () (std::vector<double> &parameter) const;
+      
+      /**
+       *  @brief get the response, or the transfer function, of all the probes
+       *
+       *  @param xx the points where the response is evaluated
+       *
+       *  @param parameter the parameters of interest in the covariance matrix
+       *
+       *  @return the values of the response function
+       */
+      std::vector<std::vector<double>> get_response (std::vector<std::vector<double>> xx, std::vector<double> &parameter) const;
+      
+      /**
+       *  @brief get the response, or the transfer function, of the i-th probe
+       *
+       *  @param i index of the probe
+       *
+       *  @param xx the points where the response is evaluated
+       *
+       *  @param parameter the parameters of interest in the covariance matrix
+       *
+       *  @return the values of the response function
+       */
+      std::vector<double> get_response (int i, std::vector<double> xx, std::vector<double> &parameter) const;
        
        ///@}
        

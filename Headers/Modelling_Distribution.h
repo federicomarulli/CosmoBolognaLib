@@ -57,24 +57,6 @@ namespace cbl {
     namespace distribution {
     
       /**
-       *  @struct STR_Distr_model
-       *  @brief the structure STR_Distr_model
-       *
-       *  This structure contains the fixed parameters used for statistical
-       *  analyses of generic distributions
-       */
-      struct STR_Distr_model {
-      
-        /// constant
-        double k;
-
-	/**
-	 *  @brief default constructor
-	 */
-	STR_Distr_model () = default;
-      };
-    
-      /**
        *  @class Modelling_Distribution
        *  Modelling_Distribution.h
        *  "Headers/Modelling_Distribution.h"
@@ -89,9 +71,6 @@ namespace cbl {
       class Modelling_Distribution : public Modelling {
       
       protected:
-      
-        /// the container of fixed parameters
-	STR_Distr_model m_data_model;
 
       public:
 
@@ -119,7 +98,7 @@ namespace cbl {
 	 */
 	virtual ~Modelling_Distribution () = default;
 
-	///@}	
+      ///@}	
 	
 	/**
 	 *  @name Member functions used to set the model parameters
@@ -139,33 +118,9 @@ namespace cbl {
 	 *
 	 */
 	void set_model_Distribution (const statistics::PriorDistribution mean_prior, const statistics::PriorDistribution std_prior, const std::string mean_name, const std::string std_name);
-	
-	/**
-	 *  @brief set the parameters of a Gaussian PDF, where
-	 *  the standard deviation, \f$\sigma\f$, is expressed as
-	 *  
-	 *  \f$\sigma=\sigma_0k,\f$
-	 *
-	 *  where \f$k\f$ is fixed, \f$\sigma_0\f$ is a base parameter,
-	 *  and \f$\sigma\f$ is a derived parameter.
-	 *
-	 *  @param k the value of \f$k\f$
-	 *
-	 *  @param mean_prior prior on the mean
-	 *
-	 *  @param std0_prior prior on \f$\sigma_0\f$
-	 *
-	 *  @param mean_name string identifying the mean
-	 *
-	 *  @param std0_name string identifying \f$\sigma_0\f$
-	 *
-	 *  @param std_name string identifying \f$\sigma\f$
-	 *
-	 */
-	void set_model_Distribution (const double k, const statistics::PriorDistribution mean_prior, const statistics::PriorDistribution std0_prior, const std::string mean_name, const std::string std0_name, const std::string std_name);
 
 	///@}
-      };
+     };
 
       
       /**
@@ -181,26 +136,6 @@ namespace cbl {
        *
        */
       std::vector<double> model_gaussian (const std::vector<double> x, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
-      
-      /**
-       * @brief compute a Gaussian PDF, where
-       * the standard deviation, \f$\sigma\f$, is expressed as
-       *  
-       * \f$\sigma=\sigma_0k,\f$
-       *
-       * where \f$k\f$ is fixed, \f$\sigma_0\f$ is a base parameter,
-       * and \f$\sigma\f$ is a derived parameter.
-       *
-       * @param x the points where the distribution is evaluated
-       *
-       * @param inputs model inputs
-       *
-       * @param parameter model parameters
-       *
-       * @return the Gaussian PDF values
-       *
-       */
-      std::vector<double> model_gaussian2 (const std::vector<double> x, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
             
     }
   }

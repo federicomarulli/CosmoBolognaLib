@@ -1,50 +1,171 @@
-The following is the list of scientific publications that used the
-CosmoBolognaLib but could not cite the reference CosmoBolognaLib
-paper (http://arxiv.org/abs/1511.00012), as they have been published
-before it:
+------------------------------------------------------------------
+----- the list of publications that used the CosmoBolognaLib -----
+------------------------------------------------------------------
 
-*   Sereno, Veropalumbo, Marulli, Covone, Moscardini, Cimatti
+33. Lindholm et al.
+    Clustering of CODEX clusters	  
+    2020, submitted to A&A
+    	       
+32. Moresco, Veropalumbo, Marulli, Moscardini, Cimatti
+    C^3 -Cluster Clustering Cosmology II. First detection of the BAO
+    peak in the three-point correlation function of galaxy clusters
+    2020, submitted to ApJ 
+	 
+31. Marulli, Veropalumbo, García-Farieta, Moresco, Moscardini, Cimatti
+    C^3 - Cluster Clustering Cosmology I. New constraints on the
+    cosmic growth rate at z~0.3 from redshift-space clustering
+    anisotropies
+    2020, submitted to ApJ
+
+30. Sarpa, Veropalumbo, Schimd, Branchini, Matarrese
+    Extended Fast Action Minimisation method: application to SDSS-DR12
+    Combined Sample
+    2020, submitted to MNRAS
+    
+29. Giocoli, Monaco, Moscardini, Castro, Meneghetti, Metcalf, Baldi
+    Testing the Reliability of Fast Methods for Weak Lensing
+    Simulations: WL-MOKA on PINOCCHIO
+    2020, MNRAS, 496, 1307
+
+28. García-Farieta, Marulli, Moscardini, Veropalumbo, Casas-Miranda
+    Validating the methodology for constraining the linear growth rate
+    from clustering anisotropies
+    2020, MNRAS, 494, 1658
+
+27. Moresco, Jimenez, Verde, Cimatti, Pozzetti
+    Setting the Stage for Cosmic Chronometers. II. Impact of Stellar
+    Population Synthesis Models Systematics and Full Covariance Matrix
+    2020, ApJ, 898, 82
+
+26. Girelli, Pozzetti, Bolzonella, Giocoli, Marulli, Baldi
+    The stellar-to-halo mass relation over the past 12
+    Gyr. I. Standard ΛCDM model
+    2020, A&A, 634, 135
+
+25. Verza, Pisani, Carbone, Hamaus, Guzzo
+    The Void Size Function in Dynamical Dark Energy Cosmologies
+    2019, JCAP, 12, 040
+    
+24. Allevato et al.
+    The Chandra COSMOS Legacy Survey: clustering dependence of Type 2
+    AGN on host galaxy properties
+    2019, A&A, 632, 88
+
+23. Keihänen et al.
+    Estimating the galaxy two-point correlation function using a split
+    random catalog
+    2019, A&A, 631, 73
+
+22. Contarini, Ronconi, Marulli, Moscardini, Veropalumbo, Baldi
+    Cosmological exploitation of the size function of cosmic voids
+    identified in the distribution of biased tracers
+    2019, MNRAS, 488, 3526
+    
+21. García-Farieta, Marulli, Veropalumbo, Moscardini, Casas, Giocoli, Baldi
+    Clustering and redshift-space distortions in modified gravity
+    models with massive neutrinos
+    2019, MNRAS, 488, 1987
+    
+20. Ronconi, Contarini, Marulli, Baldi, Moscardini
+    Cosmic voids uncovered -- first-order statistics of depressions in
+    the biased density field
+    2019, MNRAS, 488, 5075
+
+19. Sarpa, Schimd, Branchini, Matarrese
+    BAO reconstruction: a swift numerical action method for massive
+    spectroscopic surveys
+    2019, MNRAS, 484, 3818
+
+18. Marulli and the XXL team
+    The XXL Survey: XVI. The clustering of X-ray selected galaxy
+    clusters at z~0.3
+    2018, A&A, 620, 1
+
+17. Moresco, Marulli
+    Cosmological constraints from a joint analysis of cosmic growth
+    and expansion
+    2017, MNRAS, 471, 82
+
+16. Moresco, Marulli and the VIPERS team
+    The VIMOS Public Extragalactic Redshift Survey (VIPERS). Exploring
+    the dependence of the three-point correlation function on stellar
+    mass and luminosity at 0.5<z<1.1
+    2017, A&A, 604, 133
+    
+15. Ronconi, Marulli
+    Towards a cosmological exploitation of cosmic void statistics -
+    New numerical tools in the CosmoBolognaLib to extract cosmological
+    constraints from the void size function
+    2017, A&A, 607, 24
+
+14. Sridhar, Maurogordato, Benoist, Cappi, Marulli
+    Evolution of the real-space correlation function from next
+    generation cluster surveys. Recovering the real-space correlation
+    function from photometric redshifts
+    2017, A&A, 600, 32
+ 
+13. Marulli, Veropalumbo, Moscardini, Cimatti, Dolag
+    Redshift-space distortions of galaxies, clusters and AGN: testing
+    how the accuracy of growth rate measurements depends on scales and
+    sample selections
+    2017, A&A, 599, 106
+    
+12. Cucciati, Marulli, Cimatti, Merson, Norberg, Pozzetti, Baugh, Branchini
+    Measuring galaxy environment with the synergy of future
+    photometric and spectroscopic surveys
+    2016, MNRAS, 462, 1786
+
+11. Petracca, Marulli, Moscardini, Cimatti, Carbone, Angulo
+    Forecasts on neutrino mass constraints from the redshift-space
+    two-point correlation function
+    2016, MNRAS, 462, 4208
+
+10. Veropalumbo, Marulli, Moscardini, Moresco, Cimatti
+    Measuring the distance-redshift relation with the baryon acoustic
+    oscillations of galaxy clusters
+    2016, MNRAS, 458, 1909
+
+9.  Sereno, Veropalumbo, Marulli, Covone, Moscardini, Cimatti
     New constraints on sigma8 from a joint analysis of stacked
     gravitational lensing and clustering of galaxy clusters
     2015, MNRAS, 449, 4147
 
-*   Moresco, Marulli, Baldi, Moscardini, Cimatti
+8.  Moresco, Marulli, Baldi, Moscardini, Cimatti
     Disentangling interacting dark energy cosmologies with the
     three-point correlation function
     2014, MNRAS, 443, 2874
 
-*   Veropalumbo, Marulli, Moscardini, Moresco, Cimatti
+7.  Veropalumbo, Marulli, Moscardini, Moresco, Cimatti
     An improved measurement of baryon acoustic oscillations from the
     correlation function of galaxy clusters at z~0.3
     2014, MNRAS, 442, 3275
    
-*   Villaescusa-Navarro, Marulli, Viel, Branchini, Castorina, Sefusatti, Saito
+6.  Villaescusa-Navarro, Marulli, Viel, Branchini, Castorina, Sefusatti, Saito
     Cosmology with massive neutrinos I: towards a realistic modeling of
     the relation between matter, haloes and galaxies
     2014, JCAP, 03, 011
    
-*   Giocoli, Marulli, Baldi, Moscardini, Metcalf
+5.  Giocoli, Marulli, Baldi, Moscardini, Metcalf
     Characterizing dark interactions with the halo mass accretion
     history and structural properties
     2013, MNRAS, 434, 2982	   
 
-*   Marulli and the VIPERS team
+4.  Marulli and the VIPERS team
     The VIMOS Public Extragalactic Redshift Survey (VIPERS). Luminosity
     and stellar mass dependence of galaxy clustering at 0.5 < z < 1.1
     2013, A&A, 557, 17	       
 
-*   Marulli, Bianchi, Branchini, Guzzo, Moscardini, Angulo
+3.  Marulli, Bianchi, Branchini, Guzzo, Moscardini, Angulo
     Cosmology with clustering anisotropies: disentangling dynamic and
     geometric distortions in galaxy redshift surveys
     2012, MNRAS, 426, 2566
 
-*   Marulli, Baldi, Moscardini
+2.  Marulli, Baldi, Moscardini
     Clustering and redshift-space distortions in interacting dark
     energy cosmologies
     2012, MNRAS, 420, 2377
 
-*   Marulli, Carbone, Viel, Moscardini, Cimatti
+1.  Marulli, Carbone, Viel, Moscardini, Cimatti
     Effects of massive neutrinos on the large-scale structure of the
     Universe
-    2011, MNRAS, 418, 346
-	
+    2011, MNRAS, 418, 346 

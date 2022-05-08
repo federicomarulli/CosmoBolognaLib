@@ -6,7 +6,7 @@
 from __future__ import print_function
 
 # import the CosmoBolognaLib 
-import cblCatalogue as cbl
+import CosmoBolognaLib as cbl
 from CosmoBolognaLib import StringVector as sv
 
 
@@ -38,3 +38,5 @@ cat3 = catalogue.sub_catalogue(cbl.Var__X_, -70, 10)
 print("Full sample: ", catalogue.nObjects())
 print("User-defined mask: ", cat2.nObjects())
 print("Min-Max cut:  ", cat3.nObjects())
+
+

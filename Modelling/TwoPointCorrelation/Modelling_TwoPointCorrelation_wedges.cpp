@@ -144,10 +144,15 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
   m_data_model->nWedges = 2;
 
   m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
-  vector<double> Pk = m_data_model->cosmology->Pk_matter(m_data_model->kk, m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+  vector<double> Pk(m_data_model->step, 0);
+  
+  for (size_t i=0; i<(size_t)m_data_model->step; i++)
+    Pk[i] = m_data_model->cosmology->Pk_DM(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
   
   if (m_data_model->Pk_mu_model=="dispersion_dewiggled") {
-    vector<double> PkNW = m_data_model->cosmology->Pk_matter(m_data_model->kk, "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+    vector<double> PkNW(m_data_model->step,0);
+    for (size_t i=0; i<(size_t)m_data_model->step; i++)
+      PkNW[i] = m_data_model->cosmology->Pk_DM(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
     m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
     m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
 
@@ -177,7 +182,9 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
   }
 
   else if (m_data_model->Pk_mu_model=="Scoccimarro_Pezzotta_Gauss" || m_data_model->Pk_mu_model=="Scoccimarro_Pezzotta_Lorentz" || m_data_model->Pk_mu_model=="Scoccimarro_Bel_Gauss" || m_data_model->Pk_mu_model=="Scoccimarro_Bel_Lorentz") {
-    vector<double> Pknonlin = m_data_model->cosmology->Pk_matter(m_data_model->kk, m_data_model->method_Pk, true, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+    vector<double> Pknonlin(m_data_model->step,0);
+    for (size_t i=0; i<(size_t)m_data_model->step; i++)
+      Pknonlin[i] = m_data_model->cosmology->Pk_DM(m_data_model->kk[i], m_data_model->method_Pk, true, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
     m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
     m_data_model->func_Pk_nonlin = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pknonlin, "Spline"));
 
@@ -318,11 +325,14 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_x
   const vector<double> rad = linear_bin_vector(m_data_model->step, m_data_model->r_min, m_data_model->r_max);
 
   m_data_model->rr = rad;
+
+  vector<double> Pk(m_data_model->step, 0), PkNW(m_data_model->step, 0);
   m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
 
-  vector<double> Pk =  m_data_model->cosmology->Pk_matter(m_data_model->kk, m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-  vector<double> PkNW =  m_data_model->cosmology->Pk_matter(m_data_model->kk, "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-
+  for (size_t i=0; i<(size_t)m_data_model->step; i++) {
+    Pk[i] =  m_data_model->cosmology->Pk_DM(m_data_model->kk[i], m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+    PkNW[i] =  m_data_model->cosmology->Pk_DM(m_data_model->kk[i], "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+  }
 
   m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
   m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
@@ -563,7 +573,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_BAO 
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_dispersion (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_dispersion (statistics::PriorDistribution fsigma8_prior, statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
   if (DFoG) m_data_model->Pk_mu_model = "dispersion_Gauss";
   else m_data_model->Pk_mu_model = "dispersion_Lorentz";
@@ -607,7 +617,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_disp
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
   if (DFoG) m_data_model->Pk_mu_model = "Scoccimarro_Gauss";
   else m_data_model->Pk_mu_model = "Scoccimarro_Lorentz";
@@ -652,7 +662,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoc
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution kt_prior, const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution kt_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
   if (DFoG) m_data_model->Pk_mu_model = "Scoccimarro_Pezzotta_Gauss";
   else m_data_model->Pk_mu_model = "Scoccimarro_Pezzotta_Lorentz";
@@ -699,7 +709,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoc
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution bb_prior, const statistics::PriorDistribution a1_prior, const statistics::PriorDistribution a2_prior, const statistics::PriorDistribution a3_prior, const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution bb_prior, const statistics::PriorDistribution a1_prior, const statistics::PriorDistribution a2_prior, const statistics::PriorDistribution a3_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
   if (DFoG) m_data_model->Pk_mu_model = "Scoccimarro_Bel_Gauss";
   else m_data_model->Pk_mu_model = "Scoccimarro_Bel_Lorentz";

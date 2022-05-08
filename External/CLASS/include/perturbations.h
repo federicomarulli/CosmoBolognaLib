@@ -4,6 +4,8 @@
 #define __PERTURBATIONS__
 
 #include "thermodynamics.h"
+#include "evolver_ndf15.h"
+#include "evolver_rkck.h"
 
 #define _scalars_ ((ppt->has_scalars == _TRUE_) && (index_md == ppt->index_md_scalars))
 #define _vectors_ ((ppt->has_vectors == _TRUE_) && (index_md == ppt->index_md_vectors))
@@ -94,7 +96,7 @@ enum selection_type {gaussian,tophat,dirac};
  *
  */
 
-struct perturbations
+struct perturbs
 {
   /** @name - input parameters initialized by user in input module
    *  (all other quantities are computed in this module, given these
@@ -227,47 +229,46 @@ struct perturbations
 
   //@{
 
-  short has_source_t;          /**< do we need source for CMB temperature? */
-  short has_source_p;          /**< do we need source for CMB polarization? */
-  short has_source_delta_m;    /**< do we need source for delta of total matter? */
-  short has_source_delta_cb;   /**< do we ALSO need source for delta of ONLY cdm and baryon? */
-  short has_source_delta_tot;  /**< do we need source for delta total? */
-  short has_source_delta_g;    /**< do we need source for delta of gammas? */
-  short has_source_delta_b;    /**< do we need source for delta of baryons? */
-  short has_source_delta_cdm;  /**< do we need source for delta of cold dark matter? */
+  short has_source_t;           /**< do we need source for CMB temperature? */
+  short has_source_p;           /**< do we need source for CMB polarization? */
+  short has_source_delta_m;     /**< do we need source for delta of total matter? */
+  short has_source_delta_cb;    /**< do we ALSO need source for delta of ONLY cdm and baryon? */
+  short has_source_delta_tot;   /**< do we need source for delta total? */
+  short has_source_delta_g;     /**< do we need source for delta of gammas? */
+  short has_source_delta_b;     /**< do we need source for delta of baryons? */
+  short has_source_delta_cdm;   /**< do we need source for delta of cold dark matter? */
+  short has_source_delta_dcdm;  /**< do we need source for delta of DCDM? */
+  short has_source_delta_fld;   /**< do we need source for delta of dark energy? */
+  short has_source_delta_scf;   /**< do we need source for delta from scalar field? */
+  short has_source_delta_dr;    /**< do we need source for delta of decay radiation? */
+  short has_source_delta_ur;    /**< do we need source for delta of ultra-relativistic neutrinos/relics? */
   short has_source_delta_idr;   /**< do we need source for delta of interacting dark radiation? */
   short has_source_delta_idm_dr;/**< do we need source for delta of interacting dark matter (with dr)? */
-  short has_source_delta_dcdm;  /**< do we need source for delta of DCDM? */
-  short has_source_delta_fld;  /**< do we need source for delta of dark energy? */
-  short has_source_delta_scf;  /**< do we need source for delta from scalar field? */
-  short has_source_delta_dr;   /**< do we need source for delta of decay radiation? */
-  short has_source_delta_ur;   /**< do we need source for delta of ultra-relativistic neutrinos/relics? */
-  short has_source_delta_ncdm; /**< do we need source for delta of all non-cold dark matter species (e.g. massive neutrinos)? */
-  short has_source_theta_m;    /**< do we need source for theta of total matter? */
-  short has_source_theta_cb;   /**< do we ALSO need source for theta of ONLY cdm and baryon? */
-  short has_source_theta_tot;  /**< do we need source for theta total? */
-  short has_source_theta_g;    /**< do we need source for theta of gammas? */
-  short has_source_theta_b;    /**< do we need source for theta of baryons? */
-  short has_source_theta_cdm;  /**< do we need source for theta of cold dark matter? */
-  short has_source_theta_idr;  /**< do we need source for theta of interacting dark radiation? */
-  short has_source_theta_idm_dr; /**< do we need source for theta of interacting dark matter (with dr)? */
-  short has_source_theta_dcdm; /**< do we need source for theta of DCDM? */
-  short has_source_theta_fld;  /**< do we need source for theta of dark energy? */
-  short has_source_theta_scf;  /**< do we need source for theta of scalar field? */
-  short has_source_theta_dr;   /**< do we need source for theta of ultra-relativistic neutrinos/relics? */
-  short has_source_theta_ur;   /**< do we need source for theta of ultra-relativistic neutrinos/relics? */
-  short has_source_theta_ncdm; /**< do we need source for theta of all non-cold dark matter species (e.g. massive neutrinos)? */
-  short has_source_phi;        /**< do we need source for metric fluctuation phi? */
-  short has_source_phi_prime;  /**< do we need source for metric fluctuation phi'? */
-  short has_source_phi_plus_psi; /**< do we need source for metric fluctuation (phi+psi)? */
-  short has_source_psi;        /**< do we need source for metric fluctuation psi? */
-  short has_source_h;          /**< do we need source for metric fluctuation h? */
-  short has_source_h_prime;    /**< do we need source for metric fluctuation h'? */
-  short has_source_eta;        /**< do we need source for metric fluctuation eta? */
-  short has_source_eta_prime;  /**< do we need source for metric fluctuation eta'? */
-  short has_source_H_T_Nb_prime; /**< do we need source for metric fluctuation H_T_Nb'? */
-  short has_source_k2gamma_Nb; /**< do we need source for metric fluctuation gamma in Nbody gauge? */
-
+  short has_source_delta_ncdm;  /**< do we need source for delta of all non-cold dark matter species (e.g. massive neutrinos)? */
+  short has_source_theta_m;     /**< do we need source for theta of total matter? */
+  short has_source_theta_cb;    /**< do we ALSO need source for theta of ONLY cdm and baryon? */
+  short has_source_theta_tot;   /**< do we need source for theta total? */
+  short has_source_theta_g;     /**< do we need source for theta of gammas? */
+  short has_source_theta_b;     /**< do we need source for theta of baryons? */
+  short has_source_theta_cdm;   /**< do we need source for theta of cold dark matter? */
+  short has_source_theta_dcdm;  /**< do we need source for theta of DCDM? */
+  short has_source_theta_fld;   /**< do we need source for theta of dark energy? */
+  short has_source_theta_scf;   /**< do we need source for theta of scalar field? */
+  short has_source_theta_dr;    /**< do we need source for theta of ultra-relativistic neutrinos/relics? */
+  short has_source_theta_ur;    /**< do we need source for theta of ultra-relativistic neutrinos/relics? */
+  short has_source_theta_idr;   /**< do we need source for theta of interacting dark radiation? */
+  short has_source_theta_idm_dr;/**< do we need source for theta of interacting dark matter (with dr)? */
+  short has_source_theta_ncdm;  /**< do we need source for theta of all non-cold dark matter species (e.g. massive neutrinos)? */
+  short has_source_phi;         /**< do we need source for metric fluctuation phi? */
+  short has_source_phi_prime;   /**< do we need source for metric fluctuation phi'? */
+  short has_source_phi_plus_psi;/**< do we need source for metric fluctuation (phi+psi)? */
+  short has_source_psi;         /**< do we need source for metric fluctuation psi? */
+  short has_source_h;           /**< do we need source for metric fluctuation h? */
+  short has_source_h_prime;     /**< do we need source for metric fluctuation h'? */
+  short has_source_eta;         /**< do we need source for metric fluctuation eta? */
+  short has_source_eta_prime;   /**< do we need source for metric fluctuation eta'? */
+  short has_source_H_T_Nb_prime;/**< do we need source for metric fluctuation H_T_Nb'? */
+  short has_source_k2gamma_Nb;  /**< do we need source for metric fluctuation gamma in Nbody gauge? */
 
   /* remember that the temperature source function includes three
      terms that we call 0,1,2 (since the strategy in class v > 1.7 is
@@ -444,7 +445,7 @@ struct perturbations
  * vectors changes when the approximation scheme changes.
  */
 
-struct perturbations_vector
+struct perturb_vector
 {
   int index_pt_delta_g;   /**< photon density */
   int index_pt_theta_g;   /**< photon velocity */
@@ -520,7 +521,7 @@ struct perturbations_vector
  * (scalar/.../tensor) and each thread (in case of parallel computing)
  */
 
-struct perturbations_workspace
+struct perturb_workspace
 {
 
   /** @name - all possible useful indices for those metric
@@ -552,7 +553,7 @@ struct perturbations_workspace
   double * pvecback;          /**< background quantities */
   double * pvecthermo;        /**< thermodynamics quantities */
   double * pvecmetric;        /**< metric quantities */
-  struct perturbations_vector * pv; /**< pointer to vector of integrated
+  struct perturb_vector * pv; /**< pointer to vector of integrated
                                  perturbations and their
                                  time-derivatives */
 
@@ -593,7 +594,7 @@ struct perturbations_workspace
   double S_fld;                /**< S quantity sourcing Gamma_prime evolution in PPF scheme (equivalent to eq. 15 in 0808.3125) */
   double Gamma_prime_fld;      /**< Gamma_prime in PPF scheme (equivalent to eq. 14 in 0808.3125) */
 
-  FILE * perturbations_output_file; /**< filepointer to output file*/
+  FILE * perturb_output_file; /**< filepointer to output file*/
   int index_ikout;            /**< index for output k value (when k_output_values is set) */
 
   //@}
@@ -637,22 +638,22 @@ struct perturbations_workspace
 };
 
 /**
- * Structure pointing towards all what the function that perturbations_derivs
+ * Structure pointing towards all what the function that perturb_derivs
  * needs to know: fixed input parameters and indices contained in the
  * various structures, workspace, etc.
  */
 
-struct perturbations_parameters_and_workspace {
+struct perturb_parameters_and_workspace {
 
   struct precision * ppr;         /**< pointer to the precision structure */
   struct background * pba;        /**< pointer to the background structure */
-  struct thermodynamics * pth;            /**< pointer to the thermodynamics structure */
-  struct perturbations * ppt;          /**< pointer to the precision structure */
+  struct thermo * pth;            /**< pointer to the thermodynamics structure */
+  struct perturbs * ppt;          /**< pointer to the precision structure */
   int index_md;                   /**< index of mode (scalar/.../vector/tensor) */
   int index_ic;			          /**< index of initial condition (adiabatic/isocurvature(s)/...) */
   int index_k;			          /**< index of wavenumber */
   double k;			              /**< current value of wavenumber in 1/Mpc */
-  struct perturbations_workspace * ppw; /**< workspace defined above */
+  struct perturb_workspace * ppw; /**< workspace defined above */
 
 };
 
@@ -665,8 +666,8 @@ struct perturbations_parameters_and_workspace {
 extern "C" {
 #endif
 
-  int perturbations_sources_at_tau(
-                             struct perturbations * ppt,
+  int perturb_sources_at_tau(
+                             struct perturbs * ppt,
                              int index_md,
                              int index_ic,
                              int index_tp,
@@ -674,117 +675,113 @@ extern "C" {
                              double * pvecsources
                              );
 
-  int perturbations_output_data(
+  int perturb_output_data(
                           struct background * pba,
-                          struct perturbations * ppt,
+                          struct perturbs * ppt,
                           enum file_format output_format,
                           double z,
                           int number_of_titles,
                           double *data
                           );
 
-  int perturbations_output_titles(
+  int perturb_output_titles(
                             struct background *pba,
-                            struct perturbations *ppt,
+                            struct perturbs *ppt,
                             enum file_format output_format,
                             char titles[_MAXTITLESTRINGLENGTH_]
                             );
 
-  int perturbations_output_firstline_and_ic_suffix(
-                                      struct perturbations *ppt,
+  int perturb_output_firstline_and_ic_suffix(
+                                      struct perturbs *ppt,
                                       int index_ic,
                                       char first_line[_LINE_LENGTH_MAX_],
-                                      char ic_suffix[_SUFFIXNAMESIZE_]
+                                      FileName ic_suffix
                                       );
 
-  int perturbations_init(
+  int perturb_init(
                    struct precision * ppr,
                    struct background * pba,
-                   struct thermodynamics * pth,
-                   struct perturbations * ppt
+                   struct thermo * pth,
+                   struct perturbs * ppt
                    );
 
-  int perturbations_free_input(
-                   struct perturbations * ppt
+  int perturb_free(
+                   struct perturbs * ppt
                    );
 
-  int perturbations_free(
-                   struct perturbations * ppt
-                   );
+  int perturb_indices_of_perturbs(
+                                  struct precision * ppr,
+                                  struct background * pba,
+                                  struct thermo * pth,
+                                  struct perturbs * ppt
+                                  );
 
-  int perturbations_indices(
-                      struct precision * ppr,
-                      struct background * pba,
-                      struct thermodynamics * pth,
-                      struct perturbations * ppt
-                      );
-
-  int perturbations_timesampling_for_sources(
+  int perturb_timesampling_for_sources(
                                        struct precision * ppr,
                                        struct background * pba,
-                                       struct thermodynamics * pth,
-                                       struct perturbations * ppt
+                                       struct thermo * pth,
+                                       struct perturbs * ppt
                                        );
-  int perturbations_get_k_list(
+  int perturb_get_k_list(
                          struct precision * ppr,
                          struct background * pba,
-                         struct thermodynamics * pth,
-                         struct perturbations * ppt
+                         struct thermo * pth,
+                         struct perturbs * ppt
                          );
 
-  int perturbations_workspace_init(
+  int perturb_workspace_init(
                              struct precision * ppr,
                              struct background * pba,
-                             struct thermodynamics * pth,
-                             struct perturbations * ppt,
+                             struct thermo * pth,
+                             struct perturbs * ppt,
                              int index_md,
-                             struct perturbations_workspace * ppw
+                             struct perturb_workspace * ppw
                              );
 
-  int perturbations_workspace_free(
-                             struct perturbations * ppt,
+  int perturb_workspace_free(
+                             struct perturbs * ppt,
                              int index_md,
-                             struct perturbations_workspace * ppw
+                             struct perturb_workspace * ppw
                              );
 
-  int perturbations_solve(
+  int perturb_solve(
                     struct precision * ppr,
                     struct background * pba,
-                    struct thermodynamics * pth,
-                    struct perturbations * ppt,
+                    struct thermo * pth,
+                    struct perturbs * ppt,
                     int index_md,
                     int index_ic,
                     int index_k,
-                    struct perturbations_workspace * ppw
+                    struct perturb_workspace * ppw
                     );
 
-  int perturbations_prepare_k_output(
+  int perturb_prepare_k_output(
                                struct background * pba,
-                               struct perturbations * ppt
+                               struct perturbs * ppt
                                );
 
-  int perturbations_find_approximation_number(
+  int perturb_find_approximation_number(
                                         struct precision * ppr,
                                         struct background * pba,
-                                        struct thermodynamics * pth,
-                                        struct perturbations * ppt,
+                                        struct thermo * pth,
+                                        struct perturbs * ppt,
                                         int index_md,
                                         double k,
-                                        struct perturbations_workspace * ppw,
+                                        struct perturb_workspace * ppw,
                                         double tau_ini,
                                         double tau_end,
                                         int * interval_number,
                                         int * interval_number_of
                                         );
 
-  int perturbations_find_approximation_switches(
+  int perturb_find_approximation_switches(
                                           struct precision * ppr,
                                           struct background * pba,
-                                          struct thermodynamics * pth,
-                                          struct perturbations * ppt,
+                                          struct thermo * pth,
+                                          struct perturbs * ppt,
                                           int index_md,
                                           double k,
-                                          struct perturbations_workspace * ppw,
+                                          struct perturb_workspace * ppw,
                                           double tau_ini,
                                           double tau_end,
                                           double precision,
@@ -794,76 +791,76 @@ extern "C" {
                                           int ** interval_approx
                                           );
 
-  int perturbations_vector_init(
+  int perturb_vector_init(
                           struct precision * ppr,
                           struct background * pba,
-                          struct thermodynamics * pth,
-                          struct perturbations * ppt,
+                          struct thermo * pth,
+                          struct perturbs * ppt,
                           int index_md,
                           int index_ic,
                           double k,
                           double tau,
-                          struct perturbations_workspace * ppw,
+                          struct perturb_workspace * ppw,
                           int * pa_old
                           );
 
-  int perturbations_vector_free(
-                          struct perturbations_vector * pv
+  int perturb_vector_free(
+                          struct perturb_vector * pv
                           );
 
-  int perturbations_initial_conditions(
+  int perturb_initial_conditions(
                                  struct precision * ppr,
                                  struct background * pba,
-                                 struct perturbations * ppt,
+                                 struct perturbs * ppt,
                                  int index_md,
                                  int index_ic,
                                  double k,
                                  double tau,
-                                 struct perturbations_workspace * ppw
+                                 struct perturb_workspace * ppw
                                  );
 
-  int perturbations_approximations(
+  int perturb_approximations(
                              struct precision * ppr,
                              struct background * pba,
-                             struct thermodynamics * pth,
-                             struct perturbations * ppt,
+                             struct thermo * pth,
+                             struct perturbs * ppt,
                              int index_md,
                              double k,
                              double tau,
-                             struct perturbations_workspace * ppw
+                             struct perturb_workspace * ppw
                              );
 
-  int perturbations_timescale(
+  int perturb_timescale(
                         double tau,
                         void * parameters_and_workspace,
                         double * timescale,
                         ErrorMsg error_message
                         );
 
-  int perturbations_einstein(
+  int perturb_einstein(
                        struct precision * ppr,
                        struct background * pba,
-                       struct thermodynamics * pth,
-                       struct perturbations * ppt,
+                       struct thermo * pth,
+                       struct perturbs * ppt,
                        int index_md,
                        double k,
                        double tau,
                        double * y,
-                       struct perturbations_workspace * ppw
+                       struct perturb_workspace * ppw
                        );
 
-  int perturbations_total_stress_energy(
+  int perturb_total_stress_energy(
                                   struct precision * ppr,
                                   struct background * pba,
-                                  struct thermodynamics * pth,
-                                  struct perturbations * ppt,
+                                  struct thermo * pth,
+                                  struct perturbs * ppt,
                                   int index_md,
                                   double k,
                                   double * y,
-                                  struct perturbations_workspace * ppw
+                                  struct perturb_workspace * ppw
                                   );
 
-  int perturbations_sources(
+  int perturb_sources(
                       double tau,
                       double * pvecperturbations,
                       double * pvecderivs,
@@ -872,7 +869,7 @@ extern "C" {
                       ErrorMsg error_message
                       );
 
-  int perturbations_print_variables(
+  int perturb_print_variables(
                               double tau,
                               double * y,
                               double * dy,
@@ -880,7 +877,7 @@ extern "C" {
                               ErrorMsg error_message
                               );
 
-  int perturbations_derivs(
+  int perturb_derivs(
                      double tau,
                      double * y,
                      double * dy,
@@ -888,36 +885,34 @@ extern "C" {
                      ErrorMsg error_message
                      );
 
-  int perturbations_tca_slip_and_shear(
+  int perturb_tca_slip_and_shear(
                                  double * y,
                                  void * parameters_and_workspace,
                                  ErrorMsg error_message
                                  );
 
-  int perturbations_rsa_delta_and_theta(
+  int perturb_rsa_delta_and_theta(
                                   struct precision * ppr,
                                   struct background * pba,
-                                  struct thermodynamics * pth,
-                                  struct perturbations * ppt,
+                                  struct thermo * pth,
+                                  struct perturbs * ppt,
                                   double k,
                                   double * y,
                                   double a_prime_over_a,
                                   double * pvecthermo,
-                                  struct perturbations_workspace * ppw,
-                                  ErrorMsg error_message
+                                  struct perturb_workspace * ppw
                                   );
 
-  int perturbations_rsa_idr_delta_and_theta(
+  int perturb_rsa_idr_delta_and_theta(
                                   struct precision * ppr,
                                   struct background * pba,
-                                  struct thermodynamics * pth,
-                                  struct perturbations * ppt,
+                                  struct thermo * pth,
+                                  struct perturbs * ppt,
                                   double k,
                                   double * y,
                                   double a_prime_over_a,
                                   double * pvecthermo,
-                                  struct perturbations_workspace * ppw,
-                                  ErrorMsg error_message
+                                  struct perturb_workspace * ppw
                                   );
 
 #ifdef __cplusplus

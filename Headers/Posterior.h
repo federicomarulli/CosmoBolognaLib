@@ -58,9 +58,6 @@ namespace cbl {
 
       /// the prior distribution
       std::shared_ptr<cbl::statistics::Prior> m_prior;
-      
-      /// response function for the computation of the super-sample covariance
-      std::shared_ptr<statistics::Model> m_response_func = NULL;
 
       /// the logarithm of the likelihood
       std::vector<double> m_log_likelihood;
@@ -102,12 +99,6 @@ namespace cbl {
        * @return a seed generated from m_seed_generator
        */
       int m_generate_seed () { return m_seed_generator->operator()(); }
-      
-      /**
-       *  @brief check if the response function used to compute the 
-       *  super-sample covariance is set
-       */    
-      void m_isSet_response () {if (m_response_func == NULL) ErrorCBL("the response function for the SSC is not set!", "m_isSet_response", "Posterior.h");};
 
     public:
 
@@ -374,22 +365,6 @@ namespace cbl {
        * @return m_log_likelihood_function_grid
        */
       LogLikelihood_function get_m_log_likelihood_function_grid () { return m_log_likelihood_function_grid; };
-
-      /**
-       *  @brief set the response function used to compute the 
-       *  super-sample covariance
-       *
-       *  @param response pointer to the response statistics::Model object
-       */    
-      void set_response_function (std::shared_ptr<statistics::Model> response) {m_response_func = response;};
-
-      /**
-       *  @brief return the response function used to compute the 
-       *  super-sample covariance
-       *
-       *  @return pointer to the response function
-       */    
-      std::shared_ptr<statistics::Model> get_response_function () {m_isSet_response(); return m_response_func;};
 
 
       /**

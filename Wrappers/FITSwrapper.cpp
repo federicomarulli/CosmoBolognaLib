@@ -91,8 +91,6 @@ void cbl::wrapper::ccfits::write_table_fits (const std::string output_dir, const
 {
   const string file_name = output_dir+file_fits;
 
-  if (system(("rm -rf "+file_name).c_str())) {}
-  
   shared_ptr<CCfits::FITS> pFits(0);
 
   try

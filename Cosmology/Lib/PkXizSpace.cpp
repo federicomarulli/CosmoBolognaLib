@@ -62,7 +62,7 @@ double cbl::cosmology::Cosmology::xi0_Kaiser (const double rad, const double f_s
 std::vector<double> cbl::cosmology::Cosmology::xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const double redshift, const bool store_output, const std::string output_root, const bool NL, const int norm, const double k_min, const double k_max, const double prec, const std::string file_par)
 {
   const vector<double> kk = logarithmic_bin_vector(100, k_min, k_max);
-  const vector<double> Pk = this->Pk_matter(kk, method_Pk, NL, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par);
+  const vector<double> Pk = this->Pk_DM(kk, method_Pk, NL, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par);
 
   vector<double> xi = wrapper::fftlog::transform_FFTlog(rad, 1, kk, Pk, 0);
 

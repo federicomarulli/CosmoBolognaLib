@@ -2,9 +2,6 @@
 
 %module cblChainMesh
 
-%import "Path.i"
-%import "Kernel.i"
-
 %{
 #include "ChainMesh.h"
 %}

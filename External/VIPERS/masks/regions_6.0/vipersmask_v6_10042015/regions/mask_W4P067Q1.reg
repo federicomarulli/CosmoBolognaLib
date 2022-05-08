@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/fileuTrAVt.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(331.904559,1.936169,331.904639,2.056392,331.895709,2.067712,331.803949,2.068488,331.788239,2.058532,331.788029,1.935564) # color=red dash=1

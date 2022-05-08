@@ -18,10 +18,8 @@ calculations http://arxiv.org/abs/1511.00012
 The specific tools to analyse cosmic void catalogues are presented in
 https://arxiv.org/abs/1703.07848
 
-These are the scientific publications that used the CosmoBolognaLib:
-<a
-href="https://ui.adsabs.harvard.edu/abs/2016A%26C....14...35M/citations">publications
-I</a> and <a href="../../Doc/papers.txt">publications II</a>
+This is the full list of scientific publications that used the
+CosmoBolognaLib: <a href="../../Doc/papers.txt">publications</a>
 
 -----------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------
@@ -30,9 +28,6 @@ Author and BDFL:
   - @b Federico @b Marulli (federico.marulli3@unibo.it)
 
 Main contributors:
-  - Sofia Contarini (voids, python, CBL logo, etc.)
-  - Giorgio Lesci (cluster number counts, weak-lensing profiles,
-    super-sample covariance, conda virtual environment, CAMB wrapper, etc.)
   - Michele Moresco (three-point correlation)
   - Alfonso Veropalumbo (two-point angular correlation, clustering
     wedges, jackknife and bootstrap, lognormal mocks, BAO modelling,
@@ -40,18 +35,18 @@ Main contributors:
 
 Other contributors:
   - Carlo Cannarozzo (void detection)
+  - Sofia Contarini (void number counts, CBL logo)
   - Cosimo Fedeli (non-Gaussian cosmologies)
   - Giovanni Gandolfi (HOD modelling)
   - Jorge Enrique García-Farieta (two-point correlation modelling)
   - Carlo Giocoli (mass accretion history)
+  - Giorgio Lesci (cluster number counts and weak-lensing profiles)
   - Jacopo Neri (mass function)
   - Davide Pelliciari (probe combination)
-  - Massimiliano Romanello (angular clustering)
   - Mauro Roncarelli (fast comoving distance estimator) 
   - Tommaso Ronconi (void number counts)
-  - Simone Sartori (void detection)
-  - Luca Stabellini (HOD)
-  - Alessandro Benati, Elena Sarpa, Akke Viitanen (code validation)
+  - Elena Sarpa (code validation)
+  - Akke Viitanen (code validation)
 
 
 -----------------------------------------------------------------------------------------------------
@@ -61,8 +56,8 @@ Other contributors:
 A @b configured @b virtual @b development @b environment to use the
 CosmoBolognaLib is available here:
 \n
-https://apps.difa.unibo.it/files/people/Str957-cluster/astro/CosmoBolognaLib_VM/Ubuntu_CBL.ova
-\n the password is: ilovecbl
+https://apps.difa.unibo.it/files/people/Str957-cluster/CosmoBolognaLib_VM/Ubuntu_CBL.ova
+\n the password is: cbl
 
 Alternatively, to @b install @b the @b CosmoBolognaLib on a custom
 Unix/Mac distribution, please follow the instructions below:
@@ -137,21 +132,6 @@ FLAGS defined in the Makefile (e.g.: make C=icpc FLAGS="-O0 -g")
 > <KBD> $ make MPTbreeze </KBD> 
 
 > <KBD> $ make mangle </KBD>
-
-It is also possible to create a @b conda @b environment for the CosmoBolognaLib, called "cbl".
-\n In CosmoBolognaLib/ run
-
-> <KBD> $ conda env create -f environment_ubuntu.yml </KBD>
-
-> <KBD> $ conda activate cbl </KBD>
-
-In order to compile the CosmoBolognaLib in the conda environment, run
-
-> <KBD> $ python environment_compile.py </KBD>
-
-To run e.g. make clean in the conda environment, run
-
-> <KBD> $ python environment_compile.py clean </KBD>
 
 */
 	

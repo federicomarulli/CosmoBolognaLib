@@ -604,8 +604,9 @@ void cbl::statistics::Posterior::write_chain_fits (const string output_dir, cons
       value[nparameters+4].emplace_back(m_weight[j*n_walkers+i]);
       n ++;
     }
-
+  
   cbl::wrapper::ccfits::write_table_fits(output_dir, output_file, names, value);
+  
 }
 
 

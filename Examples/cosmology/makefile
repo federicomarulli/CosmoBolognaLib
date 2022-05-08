@@ -5,9 +5,11 @@ FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 
 dirLib = $(PWD)/../../
 dirH = $(dirLib)Headers/
-dir_Eigen = $(dirLib)External/Eigen/eigen-3.4.0/
+dir_Eigen = $(dirLib)External/Eigen/eigen-3.3.7/
 dir_CCfits = $(dirLib)External/CCfits/include
-dirCUBA = $(dirLib)External/Cuba-4.2.1/
+dirCUBA = $(dirLib)External/Cuba-4.2/
+
+varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
 
 FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lCBL
 FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
@@ -17,7 +19,6 @@ OBJ2 = fsigma8.o
 OBJ3 = distances.o 
 OBJ4 = model_cosmology.o
 OBJ5 = Pk_dynamical_DE.o
-OBJ6 = Pk_BoltzmannSolver.o
 
 ES = so
 
@@ -42,26 +43,20 @@ model_cosmology: $(OBJ4)
 Pk_dynamical_DE: $(OBJ5) 
 	$(CXX) $(OBJ5) -o Pk_dynamical_DE $(FLAGS_LIB)
 
-Pk_BoltzmannSolver: $(OBJ6) 
-	$(CXX) $(OBJ6) -o Pk_BoltzmannSolver $(FLAGS_LIB)
-
 clean:
-	rm -f *.o cosmology fsigma8 distances model_cosmology Pk_dynamical_DE Pk_BoltzmannSolver *~ \#* temp* core*
+	rm -f *.o cosmology fsigma8 distances model_cosmology Pk_dynamical_DE *~ \#* temp* core*
 
 cosmology.o: cosmology.cpp makefile $(dirLib)*.$(ES)
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c cosmology.cpp
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c cosmology.cpp
 
 fsigma8.o: fsigma8.cpp makefile $(dirLib)*.$(ES)
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c fsigma8.cpp 
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c fsigma8.cpp 
 
 distances.o: distances.cpp makefile $(dirLib)*.$(ES)
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c distances.cpp 
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c distances.cpp 
 
 model_cosmology.o: model_cosmology.cpp makefile $(dirLib)*.$(ES)
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c model_cosmology.cpp
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c model_cosmology.cpp
 
 Pk_dynamical_DE.o: Pk_dynamical_DE.cpp makefile $(dirLib)*.$(ES)
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c Pk_dynamical_DE.cpp
-
-Pk_BoltzmannSolver.o: Pk_BoltzmannSolver.cpp makefile $(dirLib)*.$(ES)
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c Pk_BoltzmannSolver.cpp
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c Pk_dynamical_DE.cpp

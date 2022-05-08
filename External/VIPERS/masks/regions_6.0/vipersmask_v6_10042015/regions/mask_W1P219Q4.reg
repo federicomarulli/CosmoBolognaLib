@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/fileJ2COxl.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(36.214272,-5.978086,36.222479,-5.980682,36.317802,-5.980681,36.321581,-5.978024,36.321695,-5.976772,36.326789,-5.975916,36.326763,-5.852484,36.217371,-5.85078,36.209749,-5.8511696,36.20968,-5.971373) # color=red dash=1

@@ -9,6 +9,9 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
+# set the CosmoBolognaLib and local directories 
+cbl.SetDirs(os.getcwd()+"/../../../", os.getcwd()+"/")
+
 # set the cosmological model 
 cosmology = cbl.Cosmology(cbl.CosmologicalModel__Planck18_)
 
@@ -24,7 +27,7 @@ kk = np.logspace(-4, 2, 500)
 rr = np.linspace(1, 150, 100)
 
 # compute the matter power spectrum
-Pk = cosmology.Pk_matter(kk, "CAMB", False, redshift)
+Pk = np.array([cosmology.Pk_DM(_kk, "CAMB", False, redshift) for _kk in kk])
 interpPk = cbl.FuncGrid(dv(kk), dv(Pk), "Spline")
 
 # set the redshift errors

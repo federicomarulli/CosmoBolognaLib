@@ -1,5 +1,0 @@
-# Region file format: DS9 version 4.1
-# Filename: tmp_fits/fileR4arqb.fits
-global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
-fk5
-polygon(35.760928,-4.9047029,35.760115,-4.7835646,35.756365,-4.779547,35.749323,-4.773685,35.657992,-4.77336,35.647796,-4.779338,35.64525,-4.783977,35.645057,-4.903674) # color=red dash=1
