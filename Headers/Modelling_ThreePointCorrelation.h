@@ -238,12 +238,12 @@ namespace cbl {
 	 *
 	 *  @param kk vector containing wavevector moduls
 	 *
-	 *  @param Pk_DM vector containing the theoretical dark matter 
+	 *  @param Pk_matter vector containing the theoretical dark matter 
          *  power-spectrum
 	 *
 	 *  
 	 */
-	void set_data_Q_nonlocal (const cosmology::Cosmology cosmology, const double r1, const double r2, const std::vector<double> theta, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM);
+	void set_data_Q_nonlocal (const cosmology::Cosmology cosmology, const double r1, const double r2, const std::vector<double> theta, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter);
 
       };
     }

@@ -6,7 +6,7 @@
 from __future__ import print_function
 
 # import the CosmoBolognaLib
-import CosmoBolognaLib as cbl
+import cblCosmology as cbl
 
 # define a cosmological model, using default parameters
 cosm = cbl.Cosmology(cbl.CosmologicalModel__Planck18_)

@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileDAtGbL.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(35.431619,-4.3015758,35.434802,-4.299597,35.547949,-4.300419,35.547929,-4.173198,35.544504,-4.169894,35.438625,-4.169684,35.434798,-4.172867,35.432229,-4.173664,35.431616,-4.1774178) # color=red dash=1

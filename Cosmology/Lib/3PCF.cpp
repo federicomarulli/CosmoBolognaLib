@@ -44,14 +44,14 @@ using namespace cosmology;
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::denominator_Q (const double r1, const double r2, const double theta, const vector<double> rr, const vector<double> xi_DM) const
+double cbl::cosmology::Cosmology::denominator_Q (const double r1, const double r2, const double theta, const vector<double> rr, const vector<double> xi_matter) const
 {
   const double r3 = sqrt(r1*r1+r2*r2-2.*r1*r2*cos(theta));
-  const glob::FuncGrid interp_xi_DM(rr, xi_DM, "Spline");
+  const glob::FuncGrid interp_xi_matter(rr, xi_matter, "Spline");
 
-  const double xi1 = interp_xi_DM(r1);
-  const double xi2 = interp_xi_DM(r2);
-  const double xi3 = interp_xi_DM(r3);
+  const double xi1 = interp_xi_matter(r1);
+  const double xi2 = interp_xi_matter(r2);
+  const double xi3 = interp_xi_matter(r3);
 
   return xi1*xi2+xi2*xi3+xi3*xi1;
 }
@@ -60,12 +60,12 @@ double cbl::cosmology::Cosmology::denominator_Q (const double r1, const double r
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::integrals_Q_nonLocal (vector<double> &xi_DM, vector<double> &Phi, const vector<double> rr, const vector<double> kk, const vector<double> Pk_DM, const double prec) const
+void cbl::cosmology::Cosmology::integrals_Q_nonLocal (vector<double> &xi_matter, vector<double> &Phi, const vector<double> rr, const vector<double> kk, const vector<double> Pk_matter, const double prec) const
 {
-  xi_DM = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM, 0, 0, 1, 1);
+  xi_matter = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_matter, 0, 0, 1, 1);
 
   const int nk = kk.size();
-  glob::FuncGrid interp_Pk = glob::FuncGrid(kk, Pk_DM, "Spline", BinType::_logarithmic_);
+  glob::FuncGrid interp_Pk = glob::FuncGrid(kk, Pk_matter, "Spline", BinType::_logarithmic_);
 
   Phi.erase(Phi.begin(), Phi.end());
   Phi.resize(nk, 0);
@@ -96,14 +96,14 @@ double cbl::cosmology::Cosmology::Gamma_3PCF (const double r1, const double r2, 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Q_nonLocal (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+double cbl::cosmology::Cosmology::Q_nonLocal (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_matter, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
   if (rr.size()==0) {
     rr = linear_bin_vector(200, 1., 300.);
-    integrals_Q_nonLocal(xi_DM, Phi, rr, kk, Pk_DM, 1.e-3);
+    integrals_Q_nonLocal(xi_matter, Phi, rr, kk, Pk_matter, 1.e-3);
   }
 
-  glob::FuncGrid interp_xiDM(rr, xi_DM, "Spline");
+  glob::FuncGrid interp_xiDM(rr, xi_matter, "Spline");
   glob::FuncGrid interp_Phi(rr, Phi, "Spline");
 
   const double mu12 = cos(theta);
@@ -135,21 +135,21 @@ double cbl::cosmology::Cosmology::Q_nonLocal (const double r1, const double r2, 
   gamma += Gamma_3PCF(r2, r3, a23, {xi2, xi3}, {dPhi2, dPhi3});
   gamma += Gamma_3PCF(r3, r1, a13, {xi3, xi1}, {dPhi3, dPhi1});
   
-  return 2./3*(gamma/denominator_Q(r1, r2, theta, rr, xi_DM)-1);
+  return 2./3*(gamma/denominator_Q(r1, r2, theta, rr, xi_matter)-1);
 }
 
 
 // =====================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::Q_nonLocal (const double r1, const double r2, const std::vector<double> theta, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::Q_nonLocal (const double r1, const double r2, const std::vector<double> theta, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
   const int ntheta = theta.size();
-  vector<double> rr, xi_DM, Phi;
+  vector<double> rr, xi_matter, Phi;
   vector<double> qNL(ntheta, 0);
 
   for (int i=0; i<ntheta; i++)
-    qNL[i] = Q_nonLocal(r1, r2, theta[i], rr, xi_DM, Phi, kk, Pk_DM);
+    qNL[i] = Q_nonLocal(r1, r2, theta[i], rr, xi_matter, Phi, kk, Pk_matter);
 
   return qNL;
 }
@@ -158,27 +158,27 @@ std::vector<double> cbl::cosmology::Cosmology::Q_nonLocal (const double r1, cons
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::integrals_zeta_Slepian (std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+void cbl::cosmology::Cosmology::integrals_zeta_Slepian (std::vector<double> &xi_matter, std::vector<double> &xi_matter_m1, std::vector<double> &xi_matter_p1, std::vector<double> &xi_matter_2, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
-  vector<double> Pk_DM_m1 = Pk_DM, Pk_DM_p1 = Pk_DM;
+  vector<double> Pk_matter_m1 = Pk_matter, Pk_matter_p1 = Pk_matter;
   const int nk = kk.size();
 
   for (int i=0; i< nk; i++) {
-    Pk_DM_m1[i] *= pow(kk[i], -1);
-    Pk_DM_p1[i] *= kk[i];
+    Pk_matter_m1[i] *= pow(kk[i], -1);
+    Pk_matter_p1[i] *= kk[i];
   }
 
-  xi_DM = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM, 0, 0, 1, 1);
-  xi_DM_m1 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM_m1, 1, 0, 1, 1);
-  xi_DM_p1 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM_p1, 1, 0, 1, 1);
-  xi_DM_2 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM, 2, 0, 1, 1);
+  xi_matter = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_matter, 0, 0, 1, 1);
+  xi_matter_m1 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_matter_m1, 1, 0, 1, 1);
+  xi_matter_p1 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_matter_p1, 1, 0, 1, 1);
+  xi_matter_2 = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_matter, 2, 0, 1, 1);
 }
 
 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::zeta_precyclic_Slepian (const double r1, const double r2, const double mu, const double b1, const double b2, const glob::FuncGrid interp_xi_DM, const glob::FuncGrid interp_xi_DM_m1, const glob::FuncGrid interp_xi_DM_p1, const glob::FuncGrid interp_xi_DM_2) const
+double cbl::cosmology::Cosmology::zeta_precyclic_Slepian (const double r1, const double r2, const double mu, const double b1, const double b2, const glob::FuncGrid interp_xi_matter, const glob::FuncGrid interp_xi_matter_m1, const glob::FuncGrid interp_xi_matter_p1, const glob::FuncGrid interp_xi_matter_2) const
 {
   const double mu12 = mu;
 
@@ -203,17 +203,17 @@ double cbl::cosmology::Cosmology::zeta_precyclic_Slepian (const double r1, const
   const double mu23 = cos(a23);
 
   const double b1_3 = b1*b1*b1;
-  const double zeta_pc_0_12 = (2.*b1*b1*b2+(34./21)*b1_3)*interp_xi_DM(r1)*interp_xi_DM(r2);
-  const double zeta_pc_1_12 = -b1_3*(interp_xi_DM_m1(r1)*interp_xi_DM_p1(r2)+interp_xi_DM_m1(r2)*interp_xi_DM_p1(r1))*legendre_polynomial(mu12, 1);
-  const double zeta_pc_2_12 = (8./21)*b1_3*interp_xi_DM_2(r1)*interp_xi_DM_2(r2)*legendre_polynomial(mu12, 2);
+  const double zeta_pc_0_12 = (2.*b1*b1*b2+(34./21)*b1_3)*interp_xi_matter(r1)*interp_xi_matter(r2);
+  const double zeta_pc_1_12 = -b1_3*(interp_xi_matter_m1(r1)*interp_xi_matter_p1(r2)+interp_xi_matter_m1(r2)*interp_xi_matter_p1(r1))*legendre_polynomial(mu12, 1);
+  const double zeta_pc_2_12 = (8./21)*b1_3*interp_xi_matter_2(r1)*interp_xi_matter_2(r2)*legendre_polynomial(mu12, 2);
 
-  const double zeta_pc_0_13 = (2.*b1*b1*b2+(34./21)*b1_3)*interp_xi_DM(r1)*interp_xi_DM(r3);
-  const double zeta_pc_1_13 = -b1_3*(interp_xi_DM_m1(r1)*interp_xi_DM_p1(r3)+interp_xi_DM_m1(r3)*interp_xi_DM_p1(r1))*legendre_polynomial(mu13, 1);
-  const double zeta_pc_2_13 = 8./21*b1_3*interp_xi_DM_2(r1)*interp_xi_DM_2(r3)*legendre_polynomial(mu13, 2);
+  const double zeta_pc_0_13 = (2.*b1*b1*b2+(34./21)*b1_3)*interp_xi_matter(r1)*interp_xi_matter(r3);
+  const double zeta_pc_1_13 = -b1_3*(interp_xi_matter_m1(r1)*interp_xi_matter_p1(r3)+interp_xi_matter_m1(r3)*interp_xi_matter_p1(r1))*legendre_polynomial(mu13, 1);
+  const double zeta_pc_2_13 = 8./21*b1_3*interp_xi_matter_2(r1)*interp_xi_matter_2(r3)*legendre_polynomial(mu13, 2);
 
-  const double zeta_pc_0_23 = (2.*b1*b1*b2+(34./21)*b1_3)*interp_xi_DM(r2)*interp_xi_DM(r3);
-  const double zeta_pc_1_23 = -b1_3*(interp_xi_DM_m1(r2)*interp_xi_DM_p1(r3)+interp_xi_DM_m1(r3)*interp_xi_DM_p1(r2))*legendre_polynomial(mu23, 1);
-  const double zeta_pc_2_23 = (8./21)*b1_3*interp_xi_DM_2(r2)*interp_xi_DM_2(r3)*legendre_polynomial(mu23, 2);
+  const double zeta_pc_0_23 = (2.*b1*b1*b2+(34./21)*b1_3)*interp_xi_matter(r2)*interp_xi_matter(r3);
+  const double zeta_pc_1_23 = -b1_3*(interp_xi_matter_m1(r2)*interp_xi_matter_p1(r3)+interp_xi_matter_m1(r3)*interp_xi_matter_p1(r2))*legendre_polynomial(mu23, 1);
+  const double zeta_pc_2_23 = (8./21)*b1_3*interp_xi_matter_2(r2)*interp_xi_matter_2(r3)*legendre_polynomial(mu23, 2);
 
   return zeta_pc_0_12+zeta_pc_1_12+zeta_pc_2_12+zeta_pc_0_13+zeta_pc_1_13+zeta_pc_2_13+zeta_pc_0_23+zeta_pc_1_23+zeta_pc_2_23;
 }
@@ -222,7 +222,7 @@ double cbl::cosmology::Cosmology::zeta_precyclic_Slepian (const double r1, const
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::zeta_precyclic_Slepian (const double r1, const double r2, const double r3, const double deltaR, const double b1, const double b2, const glob::FuncGrid interp_xi_DM, const glob::FuncGrid interp_xi_DM_m1, const glob::FuncGrid interp_xi_DM_p1, const glob::FuncGrid interp_xi_DM_2) const
+double cbl::cosmology::Cosmology::zeta_precyclic_Slepian (const double r1, const double r2, const double r3, const double deltaR, const double b1, const double b2, const glob::FuncGrid interp_xi_matter, const glob::FuncGrid interp_xi_matter_m1, const glob::FuncGrid interp_xi_matter_p1, const glob::FuncGrid interp_xi_matter_2) const
 {
   double r1Min = r1-0.5*deltaR;
   double r1Max = r1+0.5*deltaR;
@@ -244,7 +244,7 @@ double cbl::cosmology::Cosmology::zeta_precyclic_Slepian (const double r1, const
       else {
 	auto integrandNum_r3 = [&] (const double _r3) {
 	  double mu = (_r1*_r1+_r2*_r2-_r3*_r3)/(2*_r1*_r2);
-	  return zeta_precyclic_Slepian (_r1, _r2, mu, b1, b2, interp_xi_DM, interp_xi_DM_m1, interp_xi_DM_p1, interp_xi_DM_2);
+	  return zeta_precyclic_Slepian (_r1, _r2, mu, b1, b2, interp_xi_matter, interp_xi_matter_m1, interp_xi_matter_p1, interp_xi_matter_2);
 	};
 
 	return wrapper::gsl::GSL_integrate_cquad(integrandNum_r3, a, b, 1.e-4);
@@ -288,18 +288,18 @@ double cbl::cosmology::Cosmology::zeta_precyclic_Slepian (const double r1, const
 // =====================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::zeta_expansion_Slepian (const double r1, const double r2, const double b1, const double b2, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const int norders, const double prec) const
+std::vector<double> cbl::cosmology::Cosmology::zeta_expansion_Slepian (const double r1, const double r2, const double b1, const double b2, std::vector<double> &rr, std::vector<double> &xi_matter, std::vector<double> &xi_matter_m1, std::vector<double> &xi_matter_p1, std::vector<double> &xi_matter_2, const int norders, const double prec) const
 {
-  glob::FuncGrid interp_xi_DM(rr, xi_DM, "Spline");
-  glob::FuncGrid interp_xi_DM_m1(rr, xi_DM_m1, "Spline");
-  glob::FuncGrid interp_xi_DM_p1(rr, xi_DM_p1, "Spline");
-  glob::FuncGrid interp_xi_DM_2(rr, xi_DM_2, "Spline");
+  glob::FuncGrid interp_xi_matter(rr, xi_matter, "Spline");
+  glob::FuncGrid interp_xi_matter_m1(rr, xi_matter_m1, "Spline");
+  glob::FuncGrid interp_xi_matter_p1(rr, xi_matter_p1, "Spline");
+  glob::FuncGrid interp_xi_matter_2(rr, xi_matter_2, "Spline");
 
   vector<double> zeta_r1_r2(norders, 0);
 
   for (int i=0; i<norders; i++) {
     auto integrand = [&] (const double mu12) {
-      return Cosmology::zeta_precyclic_Slepian(r1, r2, mu12, b1, b2, interp_xi_DM, interp_xi_DM_m1, interp_xi_DM_p1, interp_xi_DM_2)*legendre_polynomial (mu12, i);
+      return Cosmology::zeta_precyclic_Slepian(r1, r2, mu12, b1, b2, interp_xi_matter, interp_xi_matter_m1, interp_xi_matter_p1, interp_xi_matter_2)*legendre_polynomial (mu12, i);
     };
     zeta_r1_r2[i] = 0.5*(2*i+1)*wrapper::gsl::GSL_integrate_qag(integrand, -1, 1, prec);
   }
@@ -311,15 +311,15 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_expansion_Slepian (const dou
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::zeta_DM_Slepian (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const std::vector<double> kk, const std::vector<double> Pk_DM, const int norders, const double prec) const
+double cbl::cosmology::Cosmology::zeta_DM_Slepian (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_matter, std::vector<double> &xi_matter_m1, std::vector<double> &xi_matter_p1, std::vector<double> &xi_matter_2, const std::vector<double> kk, const std::vector<double> Pk_matter, const int norders, const double prec) const
 {
   if (rr.size()==0) {
     rr = linear_bin_vector(200, 1., 300.);
-    integrals_zeta_Slepian(xi_DM, xi_DM_m1, xi_DM_p1, xi_DM_2, rr, kk, Pk_DM);
+    integrals_zeta_Slepian(xi_matter, xi_matter_m1, xi_matter_p1, xi_matter_2, rr, kk, Pk_matter);
   }
 
   const double mu = cos(theta);
-  vector<double> z_r1_r2 = Cosmology::zeta_expansion_Slepian(r1, r2, 1, 0, rr, xi_DM, xi_DM_m1, xi_DM_p1, xi_DM_2, norders, prec);
+  vector<double> z_r1_r2 = Cosmology::zeta_expansion_Slepian(r1, r2, 1, 0, rr, xi_matter, xi_matter_m1, xi_matter_p1, xi_matter_2, norders, prec);
 
   double zeta_r1_r2_theta = 0.;
   for (size_t i=0; i<z_r1_r2.size(); i++)
@@ -332,27 +332,27 @@ double cbl::cosmology::Cosmology::zeta_DM_Slepian (const double r1, const double
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Q_DM_Slepian (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const std::vector<double> kk, const std::vector<double> Pk_DM, const int norders, const double prec) const
+double cbl::cosmology::Cosmology::Q_DM_Slepian (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_matter, std::vector<double> &xi_matter_m1, std::vector<double> &xi_matter_p1, std::vector<double> &xi_matter_2, const std::vector<double> kk, const std::vector<double> Pk_matter, const int norders, const double prec) const
 {
-  const double zeta_DM = zeta_DM_Slepian(r1, r2, theta, rr, xi_DM, xi_DM_m1, xi_DM_p1, xi_DM_2, kk, Pk_DM, norders, prec);
+  const double zeta_DM = zeta_DM_Slepian(r1, r2, theta, rr, xi_matter, xi_matter_m1, xi_matter_p1, xi_matter_2, kk, Pk_matter, norders, prec);
 
-  return zeta_DM/denominator_Q(r1, r2, theta, rr, xi_DM);
+  return zeta_DM/denominator_Q(r1, r2, theta, rr, xi_matter);
 }
 
 
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::integrals_zeta_BarrigaGatzanaga (std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+void cbl::cosmology::Cosmology::integrals_zeta_BarrigaGatzanaga (std::vector<double> &xi_matter, std::vector<double> &Phi, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
   const int nk = kk.size();
 
-  vector<double> Pk_DM_m4 = Pk_DM;
+  vector<double> Pk_matter_m4 = Pk_matter;
   for (int i=0; i< nk; i++)
-    Pk_DM_m4[i] *= pow(kk[i], -2);
+    Pk_matter_m4[i] *= pow(kk[i], -2);
   
-  xi_DM = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM, 0, 0, 1, 1);
-  Phi = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_DM_m4, 0, 0, 1, 1);
+  xi_matter = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_matter, 0, 0, 1, 1);
+  Phi = wrapper::fftlog::transform_FFTlog(rr, 1, kk, Pk_matter_m4, 0, 0, 1, 1);
 }
 
 
@@ -384,14 +384,14 @@ double cbl::cosmology::Cosmology::zeta_single_BarrigaGatzanaga (const double r1,
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::zeta_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+double cbl::cosmology::Cosmology::zeta_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_matter, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
   if (rr.size()==0) {
     rr = linear_bin_vector(200, 1., 300.);
-    integrals_zeta_BarrigaGatzanaga (xi_DM, Phi, rr, kk, Pk_DM);
+    integrals_zeta_BarrigaGatzanaga (xi_matter, Phi, rr, kk, Pk_matter);
   }
 
-  glob::FuncGrid interp_xiDM(rr, xi_DM, "Spline");
+  glob::FuncGrid interp_xiDM(rr, xi_matter, "Spline");
   glob::FuncGrid interp_Phi(rr, Phi, "Spline");
 
   const double mu12 = cos(theta);
@@ -434,30 +434,30 @@ double cbl::cosmology::Cosmology::zeta_DM_BarrigaGatzanaga (const double r1, con
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Q_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+double cbl::cosmology::Cosmology::Q_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_matter, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
-  return zeta_DM_BarrigaGatzanaga(r1, r2, theta, rr, xi_DM, Phi, kk, Pk_DM)/denominator_Q(r1, r2, theta, rr, xi_DM);
+  return zeta_DM_BarrigaGatzanaga(r1, r2, theta, rr, xi_matter, Phi, kk, Pk_matter)/denominator_Q(r1, r2, theta, rr, xi_matter);
 }
 
 
 // =====================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::zeta_DM (const double r1, const double r2, const std::vector<double> theta, const string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::zeta_DM (const double r1, const double r2, const std::vector<double> theta, const string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
   const int ntheta = theta.size();
-  vector<double> rr, xi_DM;
+  vector<double> rr, xi_matter;
   vector<double> zDM(ntheta, 0.);
 
   if (model=="Slepian") {
-    vector<double> xi_DM_m1, xi_DM_p1, xi_DM_2;
+    vector<double> xi_matter_m1, xi_matter_p1, xi_matter_2;
     for (int i=0; i<ntheta; i++)
-      zDM[i] = zeta_DM_Slepian(r1, r2, theta[i], rr, xi_DM, xi_DM_m1, xi_DM_p1, xi_DM_2, kk, Pk_DM, 9, 1.e-3);
+      zDM[i] = zeta_DM_Slepian(r1, r2, theta[i], rr, xi_matter, xi_matter_m1, xi_matter_p1, xi_matter_2, kk, Pk_matter, 9, 1.e-3);
   }
   else if (model=="BarrigaGatzanaga") {
     vector<double> Phi;
     for (int i=0; i<ntheta; i++)
-      zDM[i] = zeta_DM_BarrigaGatzanaga(r1, r2, theta[i], rr, xi_DM, Phi, kk, Pk_DM);
+      zDM[i] = zeta_DM_BarrigaGatzanaga(r1, r2, theta[i], rr, xi_matter, Phi, kk, Pk_matter);
   }
   else
     ErrorCBL("the chosen model is not implemented!", "zeta_DM", "3PCF.cpp");
@@ -468,22 +468,22 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_DM (const double r1, const d
 // =====================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::Q_DM (const double r1, const double r2, const std::vector<double> theta, const string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::Q_DM (const double r1, const double r2, const std::vector<double> theta, const string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
   const int ntheta = theta.size();
-  vector<double> rr, xi_DM;
+  vector<double> rr, xi_matter;
   vector<double> qDM(ntheta, 0);
 
   if (model=="Slepian") {
-    vector<double> xi_DM_m1, xi_DM_p1, xi_DM_2;
+    vector<double> xi_matter_m1, xi_matter_p1, xi_matter_2;
     for (int i=0; i<ntheta; i++)
-      qDM[i] = Q_DM_Slepian(r1, r2, theta[i], rr, xi_DM, xi_DM_m1, xi_DM_p1, xi_DM_2, kk, Pk_DM, 9, 1.e-3);
+      qDM[i] = Q_DM_Slepian(r1, r2, theta[i], rr, xi_matter, xi_matter_m1, xi_matter_p1, xi_matter_2, kk, Pk_matter, 9, 1.e-3);
   }
   else if (model=="BarrigaGatzanaga")
   {
     vector<double> Phi;
     for (int i=0; i<ntheta; i++)
-      qDM[i] = Q_DM_BarrigaGatzanaga(r1, r2, theta[i], rr, xi_DM, Phi, kk, Pk_DM);
+      qDM[i] = Q_DM_BarrigaGatzanaga(r1, r2, theta[i], rr, xi_matter, Phi, kk, Pk_matter);
   }
   else
     ErrorCBL("the chosen model is not implemented!", "Q_DM", "3PCF.cpp");
@@ -496,22 +496,22 @@ std::vector<double> cbl::cosmology::Cosmology::Q_DM (const double r1, const doub
 // =====================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::zeta_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::zeta_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
   const int ntheta = theta.size();
-  vector<double> rr, xi_DM;
+  vector<double> rr, xi_matter;
   vector<double> zH(ntheta, 0);
 
   if (model=="Slepian") {
-    vector<double> xi_DM_m1, xi_DM_p1, xi_DM_2;
+    vector<double> xi_matter_m1, xi_matter_p1, xi_matter_2;
     for (int i=0; i<ntheta; i++)
-      zH[i] = b1*b1*b1*zeta_DM_Slepian(r1, r2, theta[i], rr, xi_DM, xi_DM_m1, xi_DM_p1, xi_DM_2, kk, Pk_DM, 9, 1.e-3)+b1*b1*b2*denominator_Q(r1, r2, theta[i], rr, xi_DM);
+      zH[i] = b1*b1*b1*zeta_DM_Slepian(r1, r2, theta[i], rr, xi_matter, xi_matter_m1, xi_matter_p1, xi_matter_2, kk, Pk_matter, 9, 1.e-3)+b1*b1*b2*denominator_Q(r1, r2, theta[i], rr, xi_matter);
   }
   else if (model=="BarrigaGatzanaga")
   {
     vector<double> Phi;
     for (int i=0; i<ntheta; i++)
-      zH[i] = b1*b1*b1*zeta_DM_BarrigaGatzanaga(r1, r2, theta[i], rr, xi_DM, Phi, kk, Pk_DM)+b1*b1*b2*denominator_Q(r1, r2, theta[i], rr, xi_DM);
+      zH[i] = b1*b1*b1*zeta_DM_BarrigaGatzanaga(r1, r2, theta[i], rr, xi_matter, Phi, kk, Pk_matter)+b1*b1*b2*denominator_Q(r1, r2, theta[i], rr, xi_matter);
   }
   else
     ErrorCBL("the chosen model is not implemented!", "z_halo", "3PCF.cpp");
@@ -523,10 +523,10 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_halo (const double r1, const
 // =====================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::Q_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::Q_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
   const int ntheta = theta.size();
-  vector<double> qDM = Cosmology::Q_DM(r1, r2, theta, model, kk, Pk_DM);
+  vector<double> qDM = Cosmology::Q_DM(r1, r2, theta, model, kk, Pk_matter);
   vector<double> qH(ntheta, 0);
 
   for (int i=0; i<ntheta; i++)
@@ -539,11 +539,11 @@ std::vector<double> cbl::cosmology::Cosmology::Q_halo (const double r1, const do
 // =====================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::Q_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const double g2, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::Q_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const double g2, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
   const int ntheta = theta.size();
-  vector<double> qH = Cosmology::Q_halo(r1, r2, theta, b1, b2, model, kk, Pk_DM);
-  vector<double> qNL = Cosmology::Q_nonLocal(r1, r2, theta, kk, Pk_DM);
+  vector<double> qH = Cosmology::Q_halo(r1, r2, theta, b1, b2, model, kk, Pk_matter);
+  vector<double> qNL = Cosmology::Q_nonLocal(r1, r2, theta, kk, Pk_matter);
 
   for (int i=0; i<ntheta; i++)
     qH[i] += g2/b1*qNL[i]; 
@@ -555,23 +555,23 @@ std::vector<double> cbl::cosmology::Cosmology::Q_halo (const double r1, const do
 // =====================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::zeta_DM_eq (const std::vector<double> rr, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::zeta_DM_eq (const std::vector<double> rr, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
   const int nr = rr.size();
   const double theta = par::pi/3;
-  vector<double> _rr, xi_DM;
+  vector<double> _rr, xi_matter;
   vector<double> zDM(nr, 0);
 
   if (model=="Slepian") {
-    vector<double> xi_DM_m1, xi_DM_p1, xi_DM_2;
+    vector<double> xi_matter_m1, xi_matter_p1, xi_matter_2;
     for (int i=0; i<nr; i++)
-      zDM[i] = zeta_DM_Slepian(rr[i], rr[i], theta, _rr, xi_DM, xi_DM_m1, xi_DM_p1, xi_DM_2, kk, Pk_DM, 9, 1.e-3);
+      zDM[i] = zeta_DM_Slepian(rr[i], rr[i], theta, _rr, xi_matter, xi_matter_m1, xi_matter_p1, xi_matter_2, kk, Pk_matter, 9, 1.e-3);
   }
   else if (model=="BarrigaGatzanaga")
   {
     vector<double> Phi;
     for (int i=0; i<nr; i++)
-      zDM[i] = zeta_DM_BarrigaGatzanaga(rr[i], rr[i], theta, _rr, xi_DM, Phi, kk, Pk_DM);
+      zDM[i] = zeta_DM_BarrigaGatzanaga(rr[i], rr[i], theta, _rr, xi_matter, Phi, kk, Pk_matter);
   }
   else
     ErrorCBL("the chosen model is not implemented!", "zeta_DM_eq", "3PCF.cpp");
@@ -583,23 +583,23 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_DM_eq (const std::vector<dou
 // =====================================================================================
 
 
-std::vector<double> cbl::cosmology::Cosmology::Q_DM_eq (const std::vector<double> rr, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const
+std::vector<double> cbl::cosmology::Cosmology::Q_DM_eq (const std::vector<double> rr, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const
 {
   const int nr = rr.size();
   const double theta = par::pi/3;
-  vector<double> _rr, xi_DM;
+  vector<double> _rr, xi_matter;
   vector<double> Q_DM(nr, 0);
 
   if (model=="Slepian") {
-    vector<double> xi_DM_m1, xi_DM_p1, xi_DM_2;
+    vector<double> xi_matter_m1, xi_matter_p1, xi_matter_2;
     for (int i=0; i<nr; i++)
-      Q_DM[i] = Q_DM_Slepian(rr[i], rr[i], theta, _rr, xi_DM, xi_DM_m1, xi_DM_p1, xi_DM_2, kk, Pk_DM, 9, 1.e-3);
+      Q_DM[i] = Q_DM_Slepian(rr[i], rr[i], theta, _rr, xi_matter, xi_matter_m1, xi_matter_p1, xi_matter_2, kk, Pk_matter, 9, 1.e-3);
   }
   else if (model=="BarrigaGatzanaga")
   {
     vector<double> Phi;
     for (int i=0; i<nr; i++)
-      Q_DM[i] = Q_DM_BarrigaGatzanaga(rr[i], rr[i], theta, _rr, xi_DM, Phi, kk, Pk_DM);
+      Q_DM[i] = Q_DM_BarrigaGatzanaga(rr[i], rr[i], theta, _rr, xi_matter, Phi, kk, Pk_matter);
   }
   else
     ErrorCBL("the chosen model is not implemented!", "Q_DM_eq", "3PCF.cpp");
@@ -1087,7 +1087,7 @@ std::vector<double> cbl::cosmology::Cosmology::zeta_RSD (const double r1, const 
   double beta = (force_RealSpace) ? 0 : linear_growth_rate(redshift)/b1;
   vector<double> rr = linear_bin_vector(step_r, 1., rmax);
   vector<double> kk = logarithmic_bin_vector(step_k, 1.e-4, 10.);
-  vector<double> _Pk = Pk_DM(kk, method_Pk, false, redshift, store_output, output_root);  
+  vector<double> _Pk = Pk_matter(kk, method_Pk, false, redshift, store_output, output_root);  
 
   return zeta_RSD (r1, r2, ntheta, b1, b2, bt, beta, rr, kk, _Pk, include_limits, max_ll, use_k);
 }

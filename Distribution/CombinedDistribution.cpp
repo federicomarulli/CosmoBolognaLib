@@ -1,6 +1,5 @@
 /********************************************************************
- *  Copyright (C) 2020 by Federico Marulli and Alfonso Veropalumbo  *
- *  federico.marulli3@unibo.it                                      *
+ *  Copyright (C) 2020 by Sofia Contarini                           *
  *                                                                  *
  *  This program is free software; you can redistribute it and/or   *
  *  modify it under the terms of the GNU General Public License as  *

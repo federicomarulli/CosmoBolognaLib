@@ -6,7 +6,6 @@
 #include "RandomNumbers.h"
 #include "Histogram.h"
 
-
 int main () {
 
   try {

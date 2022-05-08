@@ -18,12 +18,12 @@
  *  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.       *
  ********************************************************************/
 
-/** @file Statistics/Likelihood.cpp
+/** @file Statistics/Chi2.cpp
  *
- *  @brief Methods of the class Likelihood 
+ *  @brief Methods of the class Chi2 
  *
  *  This file contains the implementation of the methods of the class
- *  Likelihood
+ *  Chi2
  *
  *  @authors Federico Marulli, Alfonso Veropalumbo
  *

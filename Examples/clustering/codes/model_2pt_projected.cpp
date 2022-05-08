@@ -4,12 +4,6 @@
 
 #include "Modelling_TwoPointCorrelation_projected.h"
 
-// these two variables contain the name of the CosmoBolognaLib
-// directory and the name of the current directory (useful when
-// launching the code on remote systems)
-std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
-
-
 int main () {
 
   try {
@@ -26,9 +20,9 @@ int main () {
     // ---------------- Input/Output files and directories ----------------
     // --------------------------------------------------------------------
   
-    const std::string file_catalogue = cbl::par::DirLoc+"../input/cat.dat";
+    const std::string file_catalogue = "../input/cat.dat";
 
-    const std::string dir_output = cbl::par::DirLoc+"../output/";
+    const std::string dir_output = "../output/";
     const std::string dir_pairs = dir_output+"pairs/";
     const std::string dir_covariance = dir_output+"covariance/";
   

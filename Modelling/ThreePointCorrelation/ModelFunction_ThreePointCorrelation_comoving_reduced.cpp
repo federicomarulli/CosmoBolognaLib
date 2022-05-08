@@ -83,7 +83,7 @@ std::vector<double> cbl::modelling::threept::Q_nonlinear_nonlocalbias (const std
   double g2 = parameter[2];
 
   vector<double> Q_nl_nlb(pp->theta.size());
-  Q_nl_nlb = pp->cosmology->Q_halo (pp->r1, pp->r2, pp->theta, bias1, bias2, g2, pp->model, pp->kk, pp->Pk_DM);
+  Q_nl_nlb = pp->cosmology->Q_halo (pp->r1, pp->r2, pp->theta, bias1, bias2, g2, pp->model, pp->kk, pp->Pk_matter);
 
   return Q_nl_nlb;
 }
@@ -109,7 +109,7 @@ std::vector<double> cbl::modelling::threept::Q_nonlinear_nonlocalbias_alpha (con
 
   vector<double> Q_nl_nlb_alpha(pp->theta.size());
 
-  Q_nl_nlb_alpha = pp->cosmology->Q_halo (pp->r1*alpha, pp->r2*alpha, pp->theta, bias1, bias2, g2, pp->model, pp->kk, pp->Pk_DM);
+  Q_nl_nlb_alpha = pp->cosmology->Q_halo (pp->r1*alpha, pp->r2*alpha, pp->theta, bias1, bias2, g2, pp->model, pp->kk, pp->Pk_matter);
 
   return Q_nl_nlb_alpha;
 }

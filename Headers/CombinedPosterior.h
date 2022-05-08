@@ -42,6 +42,7 @@
 #include "Likelihood.h"
 #include "Posterior.h"
 #include "CovarianceMatrix.h"
+#include "SuperSampleCovariance.h"
 
 
 // ===================================================================================================
@@ -65,7 +66,13 @@ namespace cbl {
       std::shared_ptr<data::CovarianceMatrix> covariance;
       
       /// vector of pointers to the Model objects
-      std::vector<std::shared_ptr<Model>> models;	
+      std::vector<std::shared_ptr<Model>> models;
+      
+      /// vector of pointers to the response functions, used for super-sample covariance
+      std::vector<std::shared_ptr<Model>> responses;
+      
+      /// pointer to cbl::cosmology::SuperSampleCovariance object
+      std::shared_ptr<cbl::cosmology::SuperSampleCovariance> Sij;
 	
       /// values where the models are computed
       std::vector<std::vector<double>> xx;
@@ -199,25 +206,25 @@ namespace cbl {
       
       /**
        *  @brief Constructor used to set the modelling of
-       *  statistically dependent probes. For each vector of Posterior
-       *  objects in the \f$posteriors\f$ argument, a CovarianceMatrix
+       *  statistically dependent probes. For each vector of cbl::statistics::Posterior
+       *  objects in the \e posteriors argument, a cbl::data::CovarianceMatrix
        *  object must be defined. The probes in each vector within
-       *  \f$posteriors\f$ are described by the same likelihood function.
-       *  The final likelihood is given by the sum of the logarithms
+       *  \e posteriors are described by the same likelihood function.
+       *  The final log-likelihood is given by the sum of the logarithms
        *  of each likelihood describing a set of dependent probes.
        *
-       *  It should be noted that a set of probe can also be described
-       *  by a Poissonian likelihood.
+       *  If sets of probes are described by user-defined likelihoods,
+       *  then the cbl::data::CovarianceMatrix objects must not be provided
+       *  for such sets.
        *
        *  @param posteriors vector of vectors of pointers 
-       *  to Posterior objects. In each vector a set of
+       *  to Posterior objects. In each vector, a set of
        *  probes is contained, with a covariance matrix
-       *  defined by the corresponding CovarianceMatrix object
+       *  defined by the corresponding cbl::data::CovarianceMatrix object
        *  given as input in the second argument of this constructor
        *
        *  @param covariance objects defining the covariance
-       *  matrices for the Posterior objects given in input through
-       *  the posteriors argument
+       *  matrices for the Posterior objects given in input
        *  
        *  @param likelihood_types likelihood types describing each set of probes
        *
@@ -237,7 +244,7 @@ namespace cbl {
        *  All the probes (A1, A2, A3, B1, B2, B3) depend on the parameter \f$p\f$, 
        *  whose identification string is "par", and we set repeated_par = {"par"}.
        *  If we want each pair of probes {A1, B1}, {A2, B2}, {A3, B3}, to provide
-       *  a different posterior on \f$p\f$, we must set common_repeated_par = { { {0,1}, {2,3}, {4,5} } }.
+       *  a different posterior on \f$p\f$, we must set common_repeated_par = { { {0,3}, {1,4}, {2,5} } }.
        *  This is useful when different probes in the same bin provide constraints
        *  on the same parameters.
        *  If common_repeated_par is not provided, every probe depending on \f$p\f$ 
@@ -246,8 +253,14 @@ namespace cbl {
        *  only "par2" must be shared by more than one probe, then leave blank the
        *  vector of vectors corresponding to "par1" in common_repeated_par.
        *
+       *  @param SSC vector of pointers to cbl::cosmology::SuperSampleCovariance
+       *  objects, for the computation of the \f$S_{ij}\f$ matrices. If, for example,
+       *  the sets of probes A, B, C, are considered, and only for A and C the 
+       *  super-sample covariance must be computed, then set the second element of
+       *  \e SSC equal to \e NULL.
+       *
        */
-      CombinedPosterior (const std::vector<std::vector<std::shared_ptr<Posterior>>> posteriors, const std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={});
+      CombinedPosterior (const std::vector<std::vector<std::shared_ptr<Posterior>>> posteriors, const std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={}, const std::vector<std::shared_ptr<cbl::cosmology::SuperSampleCovariance>> SSC={});
 
       /**
        *  @brief default destructor
@@ -291,14 +304,106 @@ namespace cbl {
        *
        */
       void set_weight(const std::vector<double> weightsA, const std::vector<double> weightsB);
-
-
+      
       /**
-       * @brief set all the internal variables needed for modelling
-       * independent probes
+       * @brief check the repeated parameters
+       *
+       * @param dummy_Nposteriors number of posterior objects
+       *
+       * @param posteriors pointers to Posterior objects
+       *
+       * @param repeated_par repeated parameters
        *
        */
-      void m_set_independent_probes ();
+      void m_check_repeated_par (int dummy_Nposteriors, std::vector<std::shared_ptr<Posterior>> posteriors, const std::vector<std::string> repeated_par);
+      
+      /**
+       * @brief check the common repeated parameters
+       *
+       * @param dummy_Nposteriors number of posterior objects
+       *
+       * @param posteriors vector of input Posterior objects
+       *
+       * @param repeated_par repeated parameters
+       *
+       * @param common_repeated_par indices of the common 
+       * repeated parameters
+       *
+       */
+      void m_check_common_repeated_par (int dummy_Nposteriors, std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par, std::vector<std::vector<std::vector<int>>> common_repeated_par);
+      
+      /**
+       * @brief add a prior
+       *
+       * @param par_is_repeated if true, the considered
+       * parameter is repeated
+       *
+       * @param posteriors pointer to the Posterior objects
+       *
+       * @param N index of the Posterior object
+       *
+       * @param k index of the parameter of the N-th Posterior
+       *
+       * @param prior_distributions vector containing all the Posterior objects
+       *
+       */
+      void m_add_prior (bool par_is_repeated, std::vector<std::shared_ptr<Posterior>> posteriors, const int N, const int k, std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> &prior_distributions);
+      
+      /**
+       * @brief set a common repeated parameter
+       *
+       * @param posteriors pointer to the Posterior objects
+       *
+       * @param is_in_parnames if true, the parameter is already
+       * in the vector of parameter names
+       *
+       * @param N index of the Posterior object
+       *
+       * @param k index of the parameter of the N-th Posterior
+       *
+       * @param repeated_par repeated parameter names
+       *
+       * @param common_repeated_par indices of the common 
+       * repeated parameters
+       *
+       * @param prior_distributions vector containing all the Posterior objects
+       *
+       * @param parameter_names vector containing all the parameter names
+       *
+       * @param original_names vector of original parameter names
+       *
+       * @param parameter_types vector containing all the parameter types
+       *
+       */
+      void m_set_common_repeated_par (std::vector<std::shared_ptr<Posterior>> posteriors, const bool is_in_parnames, const int N, const int k, const std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par, std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> &prior_distributions, std::vector<std::string> &parameter_names, std::vector<std::string> &original_names, std::vector<ParameterType> &parameter_types);
+      
+      /**
+       * @brief set a repeated parameter
+       *
+       * @param posteriors pointer to the Posterior objects
+       *
+       * @param is_in_parnames if true, the parameter is already
+       * in the vector of parameter names
+       *
+       * @param N index of the Posterior object
+       *
+       * @param k index of the parameter of the N-th Posterior
+       *
+       * @param repeated_par repeated parameter names
+       *
+       * @param common_repeated_par indices of the common 
+       * repeated parameters
+       *
+       * @param prior_distributions vector containing all the Posterior objects
+       *
+       * @param parameter_names vector containing all the parameter names
+       *
+       * @param original_names vector of original parameter names
+       *
+       * @param parameter_types vector containing all the parameter types
+       *
+       */
+      void m_set_repeated_par (std::vector<std::shared_ptr<Posterior>> posteriors, const bool is_in_parnames, const int N, const int k, const std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par, std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> &prior_distributions, std::vector<std::string> &parameter_names, std::vector<std::string> &original_names, std::vector<ParameterType> &parameter_types);
       
       /**
        * @brief set the parameters and the priors
@@ -332,6 +437,15 @@ namespace cbl {
        *
        */
       void m_set_parameters_priors (std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={});
+      
+      
+      /**
+       * @brief set all the internal variables needed for modelling
+       * independent probes
+       *
+       */
+      void m_set_independent_probes ();
+      
 
       /**
        * @brief do the importance sampling for two Posterior objects, which has been read externally

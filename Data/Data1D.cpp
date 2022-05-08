@@ -159,7 +159,6 @@ void cbl::data::Data1D::Print (const int precision) const
 	 << "   " << std::fixed << setprecision(precision) << setw(8) << right << m_error[i] << endl;
 }
 
-
 // ======================================================================================
 
 

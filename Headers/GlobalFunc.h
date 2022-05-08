@@ -415,6 +415,24 @@ namespace cbl {
    *  @return vector containing the colatitude
    */
   std::vector<double> colatitude (std::vector<double> latitude);
+  
+  /**
+   *  @brief set data and random objects' regions 
+   *  given R.A.-Dec tiles and a number of redshift
+   *  sub-samples. The user must set the identification
+   *  number of the tiles (cbl::catalogue::Var::\_Region\_), 
+   *  with cbl::catalogue::Catalogue::set\_region(), both
+   *  in the input data catalogue and in the random catalogue.
+   *
+   *  @author Giorgio Lesci (giorgio.lesci2@unibo.it)
+   *
+   *  @param data input data catalogue
+   *
+   *  @param random random catalogue
+   *
+   *  @param nz number of redshift sub-samples
+   */
+  void set_ObjectRegion_Tiles_Redshift (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nz);
 
   /**
    *  @brief set the object region in angular SubBoxes
@@ -429,13 +447,13 @@ namespace cbl {
    *  allows a contigous pixelization. Default is true. Set to false
    *  if you sample already uses colatitude
    *
-   *  @warning The cell area is: \f[ S \, = \Delta \alpha \left(
-   *  cos(\delta_{max})-\cos(\delta_{min})) \f] with \f$\alpha\f$ the
-   *  right ascension and \f$\delta\f$ the declination. The area
-   *  discretization is done w.r.t. the right ascension and the cosine
-   *  of the declination. This implies that the number of cells in the
-   *  declination axis will not correspond to a constant spacing in
-   *  \f$\delta\f$.
+   *  @warning The cell area is: \f[ S \, = \Delta \alpha
+   *  \left(cos(\delta_{max})-\cos(\delta_{min})\right) \f] with
+   *  \f$\alpha\f$ the right ascension and \f$\delta\f$ the
+   *  declination. The area discretization is done w.r.t. the right
+   *  ascension and the cosine of the declination. This implies that
+   *  the number of cells in the declination axis will not correspond
+   *  to a constant spacing in \f$\delta\f$.
    */
   void set_ObjectRegion_RaDec (catalogue::Catalogue &data, const int nCells_Ra, const int nCells_Dec, const bool use_colatitude=true);
 
@@ -454,13 +472,13 @@ namespace cbl {
    *  allows a contigous pixelization. Default is true. Set to false
    *  if you sample already uses colatitude
    *
-   *  @warning The cell area is: \f[ S \, = \Delta \alpha \left(
-   *  cos(\delta_{max})-\cos(\delta_{min})) \f] with \f$\alpha\f$ the
-   *  right ascension and \f$\delta\f$ the declination. The area
-   *  discretization is done w.r.t. the right ascension and the cosine
-   *  of the declination. This implies that the number of cells in the
-   *  declination axis will not correspond to a constant spacing in
-   *  \f$\delta\f$.
+   *  @warning The cell area is: \f[ S \, = \Delta \alpha 
+   *  \left(cos(\delta_{max})-\cos(\delta_{min})\right) \f] with
+   *  \f$\alpha\f$ the right ascension and \f$\delta\f$ the
+   *  declination. The area discretization is done w.r.t. the right
+   *  ascension and the cosine of the declination. This implies that
+   *  the number of cells in the declination axis will not correspond
+   *  to a constant spacing in \f$\delta\f$.
    */
   void set_ObjectRegion_RaDec (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nCells_Ra, const int nCells_Dec, const bool use_colatitude=true);
 

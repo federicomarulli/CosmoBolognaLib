@@ -298,6 +298,34 @@ namespace cbl {
        *  @return the damped two-point correlation monopole.
        */
       std::vector<double> xi0_damped_scaling_relation_sigmaz (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+      
+      /**
+       *  @brief the damped two-point correlation monopole;
+       *  from Sereno et al. 2015
+       *
+       *  The function computes the damped two-point correlation 
+       *  monopole:
+       * 
+       *  \f$\xi(s) = b^2 \xi'(s) + b \xi''(s) + \xi'''(s) \, ;\f$
+       *
+       *  where b is the linear bias and the terms \f$\xi'(s)\f$,
+       *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are
+       *  the Fourier anti-transform of the power spectrum terms
+       *  obtained integrating the redshift space 2D power spectrum
+       *  along \f$\mu\f$ (see cbl::modelling::twopt.:damped_Pk_terms,
+       *  see cbl::modelling::twopt.:damped_Xi).
+       *
+       *  @param rad the scale at which the model is computed
+       *
+       *  @param inputs pointer to the structure that contains the
+       *  cosmological paramters used to compute the dark matter
+       *  two-point correlation function
+       *
+       *  @param parameter 1D vector containing the linear bias
+       *
+       *  @return the damped two-point correlation monopole.
+       */
+      std::vector<double> xi0_damped_scaling_relation_sigmaz_cosmology (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
 
       /**
        *  @brief model for the monopole of the two-point correlation

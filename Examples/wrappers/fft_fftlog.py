@@ -7,15 +7,12 @@ import matplotlib.pyplot as plt
 import CosmoBolognaLib as cbl 
 from CosmoBolognaLib import DoubleVector as dv
 
-# set the CosmoBolognaLib and the current directories
-cbl.SetDirs(os.getcwd()+"/../../", os.getcwd()+"/")
-
 # set the cosmological model, with default parameters
 cosmology = cbl.Cosmology()
 
 # compute the dark matter power spectrum
 kk = np.logspace(-4, 2, 200)
-Pk = [cosmology.Pk_DM(kk[i], "CAMB", False, 0.2) for i in range(len(kk))]
+Pk = cosmology.Pk_matter(kk, "CAMB", False, 0.2)
 
 # get correlation function from fftlog: dir is the transformation
 # direction, mu is the order of the Bessel function (see the

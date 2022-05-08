@@ -183,11 +183,10 @@ namespace cbl {
 	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
 	 *  &rarr; normalize the power spectrum
 	 *
-	 *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-	 *  mean interior density relative to the background
+	 *  @param Delta \f$\Delta\f$, the overdensity
 	 *
-	 *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
-	 *  virial overdensity
+	 *  @param isDelta_critical \f$\rightarrow\f$ \f$\Delta\f$ is the
+	 *  overdensity defined with respect to the critical density
 	 *
 	 *  @param model_MF author(s) who proposed the mass function
          *
@@ -216,7 +215,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const std::string selection_function_file=par::defaultString, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const int z_step=50, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
+	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const std::string selection_function_file=par::defaultString, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const int z_step=50, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
 	
 	/**
 	 *  @brief set the data used to construct a model of
@@ -244,8 +243,6 @@ namespace cbl {
 	 *  are Gaussian distributions.
 	 *  
 	 *  @param cosmology the cosmological model
-	 *
-	 *  @param cluster object of the class Cluster
 	 *
 	 *  @param SF_weights the counts weights derived from the selection
 	 *  function (see e.g. Lesci et al. 2021)
@@ -276,11 +273,10 @@ namespace cbl {
 	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
 	 *  &rarr; normalize the power spectrum
 	 *
-	 *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-	 *  mean interior density relative to the background
+	 *  @param Delta \f$\Delta\f$, the overdensity
 	 *
-	 *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
-	 *  virial overdensity
+	 *  @param isDelta_critical \f$\rightarrow\f$ \f$\Delta\f$ is the
+	 *  overdensity defined with respect to the critical density
 	 *
 	 *  @param model_MF author(s) who proposed the mass function
 	 *
@@ -298,7 +294,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology, const cbl::catalogue::Cluster cluster, const std::vector<double> SF_weights, const double z_pivot, const double proxy_pivot, const double mass_pivot, const double log_base, const std::string method_Pk, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const std::string model_bias="Tinker", const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
+	void set_data_model (const cbl::cosmology::Cosmology cosmology, const std::vector<double> SF_weights, const double z_pivot, const double proxy_pivot, const double mass_pivot, const double log_base, const std::string method_Pk, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const std::string model_bias="Tinker", const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
 
 	///@}
 		
@@ -414,11 +410,10 @@ namespace cbl {
 	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
 	 *  &rarr; normalize the power spectrum
 	 *
-	 *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-	 *  mean interior density relative to the background
+	 *  @param Delta \f$\Delta\f$, the overdensity
 	 *
-	 *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
-	 *  virial overdensity
+	 *  @param isDelta_critical \f$\rightarrow\f$ \f$\Delta\f$ is the
+	 *  overdensity defined with respect to the critical density
 	 *
 	 *  @param model_MF author(s) who proposed the mass function
 	 *
@@ -435,10 +430,10 @@ namespace cbl {
 	 *  @return none, or an error message if the derived object
 	 *  does not have this member
 	 */
-	virtual void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4) 
+	virtual void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4) 
 	{ 
 	  (void)cosmology; (void)redshift; (void)method_Pk; (void)k_min; (void)k_max; (void)step;
-	  (void)store_output; (void)norm; (void)Delta; (void)isDelta_vir; (void)model_MF;
+	  (void)store_output; (void)norm; (void)Delta; (void)isDelta_critical; (void)model_MF;
 	  (void)Volume; (void)prec; (void)Mass_min; (void)Mass_max; (void)Mass_step;
 	  cbl::ErrorCBL("", "set_data_model_snapshot", "Modelling_NumberCounts.h");
 	}

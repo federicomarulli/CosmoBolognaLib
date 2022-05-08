@@ -8,14 +8,6 @@
 
 using namespace std;
 
-// these two variables contain the name of the CosmoBolognaLib
-// directory and the name of the current directory (useful when
-// launching the code on remote systems)
-string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
-
-
-// =====================================================================
-
 
 // this example model has 4 parameters: A, B, C, D; A and B are free parameters, C is fixed, D is a derived parameter
 
@@ -43,8 +35,8 @@ int main () {
 
     // --- set the input/output file/directories ---
     
-    const string dir_input = cbl::par::DirLoc+"../input/";
-    const string dir_output = cbl::par::DirLoc+"../output/";
+    const string dir_input = "../input/";
+    const string dir_output = "../output/";
     const string file_data = "data.dat";
     const string file_output_start = "model_starting_values.dat";
     const string file_output_bestfit = "model_bestfit.dat";
@@ -132,10 +124,10 @@ int main () {
     posterior.show_results(burn_in, thin);
 
     // store the chain ouputs
-    posterior.write_results(cbl::par::DirLoc+"../output/", "chains_linear_relation", burn_in, thin);
+    posterior.write_results("../output/", "chains_linear_relation", burn_in, thin);
 
     // store the best-fit model
-    posterior.write_model_from_chain(cbl::par::DirLoc+"../output/", "model_from_chain.dat", {}, {}, burn_in, thin);
+    posterior.write_model_from_chain("../output/", "model_from_chain.dat", {}, {}, burn_in, thin);
 
   }
   

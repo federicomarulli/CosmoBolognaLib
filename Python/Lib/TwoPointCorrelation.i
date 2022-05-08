@@ -2,6 +2,10 @@
 
 %module cblTwoPointCorrelation
 
+%import "Path.i"
+%import "Kernel.i"
+%import "Catalogue.i"
+
 %shared_ptr(cbl::pairs::Pair);
 %shared_ptr(cbl::pairs::Pair1D);
 %shared_ptr(cbl::pairs::Pair1D_angular);
@@ -26,6 +30,18 @@
 %shared_ptr(cbl::pairs::Pair2D_comovingPolar_loglog);
 
 %{
+#include "Data.h"
+#include "Data1D.h"
+#include "Data1D_collection.h"
+#include "Data1D_extra.h"
+#include "CovarianceMatrix.h"
+#include "TaperedCovarianceMatrix.h"
+#include "Chi2.h"
+#include "LikelihoodParameters.h"
+#include "PosteriorParameters.h"
+#include "CombinedPosterior.h"
+#include "CatalogueChainMesh.h"
+  
 #include "Pair.h"
 #include "Pair1D.h"
 #include "Pair2D.h"

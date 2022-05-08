@@ -53,12 +53,14 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation2D_cartesian::set_fiduc
   
   if (m_data_model->sigmaNL==0) {  
     for (size_t i=0; i<(size_t)m_data_model->step; i++)
-      xiDM[i] = m_data_model->cosmology->xi_DM(rad[i], m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->aa, m_data_model->GSL, m_data_model->prec, m_data_model->file_par);
+      xiDM[i] = m_data_model->cosmology->xi_matter(rad[i], m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, true, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->aa, m_data_model->GSL, m_data_model->prec, m_data_model->file_par);
+    if (!m_data_model->store_output)
+      m_data_model->cosmology->remove_output_Pk_tables(m_data_model->method_Pk, m_data_model->NL, m_data_model->redshift, m_data_model->output_root);
   }
 
   else {
     const vector<double> kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
-    vector<double> Pk = m_data_model->cosmology->Pk_DM_DeWiggled("CAMB", "EisensteinHu", kk, m_data_model->redshift, m_data_model->sigmaNL, 4, 10, 0.05, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->prec);
+    vector<double> Pk = m_data_model->cosmology->Pk_matter_DeWiggled("CAMB", "EisensteinHu", kk, m_data_model->redshift, m_data_model->sigmaNL, 4, 10, 0.05, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->prec);
     xiDM = Xi0(rad, kk, Pk);
   }
 

@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileIW4RPE.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(37.716699,-5.50296,37.815554,-5.502939,37.824821,-5.501571,37.824795,-5.383583,37.819404,-5.378771,37.808534,-5.375503,37.792935,-5.376379,37.717654,-5.3765533,37.712466,-5.37854,37.707678,-5.3817186,37.707718,-5.501586) # color=red dash=1

@@ -143,11 +143,10 @@ namespace cbl {
 	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
 	 *  &rarr; normalize the power spectrum
 	 *
-	 *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-	 *  mean interior density relative to the background
+	 *  @param Delta \f$\Delta\f$, the overdensity
 	 *
-	 *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
-	 *  virial overdensity
+	 *  @param isDelta_critical \f$\rightarrow\f$ \f$\Delta\f$ is the
+	 *  overdensity defined with respect to the critical density
 	 *
 	 *  @param model_MF author(s) who proposed the mass function
 	 *
@@ -163,7 +162,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const int norm=-1, const double Delta=200., const bool isDelta_vir=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4); 
+	void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4); 
 	
 	///@}
 

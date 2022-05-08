@@ -111,18 +111,19 @@ std::shared_ptr<data::Data> cbl::measure::twopt::TwoPointCorrelation_projected::
   const int pim = nint((m_piMax_integral-Min(pi))/binSize); // to convert from Mpc/h into the vector index
   
   for (size_t i=0; i<rp.size(); i++) {
-
     ww[i] = 0.;
     error[i] = 0.;
     
-    for (int j=0; j<pim; j++) {  
-      ww[i] = ww[i]+2.*binSize*xi[i][j];
-      if (ww[i]>-1.) error[i] += pow(2.*binSize*error_xi[i][j], 2); // check!!!!
+    for (size_t j=0; j<pim*1.000001; j++) {
+      if (j<xi[i].size() and j<error_xi[i].size()) {
+	ww[i] = ww[i]+2.*binSize*xi[i][j];
+	if (ww[i]>-1.) error[i] += pow(2.*binSize*error_xi[i][j], 2); // check!!!!
+      }
     }
   }
-
+  
   for_each( error.begin(), error.end(), [] (double &vv) { vv = sqrt(vv);} );
-
+  
   return (!m_compute_extra_info) ? move(unique_ptr<data::Data1D>(new data::Data1D(rp, ww, error))) : data_with_extra_info(rp, ww, error);
 
 }
@@ -183,10 +184,11 @@ void cbl::measure::twopt::TwoPointCorrelation_projected::measurePoisson (const s
 
   TwoPointCorrelation2D_cartesian::measurePoisson(dir_output_pairs, dir_input_pairs, count_dd, count_rr, count_dr, tcount, estimator, fact);
 
-  
+
   // ----------- integrate the 2D two-point correlation function along the parallel direction ----------- 
   
   m_dataset = Projected(TwoPointCorrelation2D_cartesian::xx(), TwoPointCorrelation2D_cartesian::yy(), TwoPointCorrelation2D_cartesian::xi2D(), TwoPointCorrelation2D_cartesian::error2D());
+  
 }
 
 

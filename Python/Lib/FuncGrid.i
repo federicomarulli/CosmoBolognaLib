@@ -2,6 +2,9 @@
 
 %module cblFuncGrid
 
+%include "Path.i"
+%import "Kernel.i"
+
 %shared_ptr(cbl::glob::FuncGrid);
 %shared_ptr(cbl::glob::FuncGrid2D);
 %shared_ptr(cbl::glob::FuncGrid_Bspline);

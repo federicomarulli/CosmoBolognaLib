@@ -2,6 +2,9 @@
 
 %module cblData
 
+%include "Path.i"
+%import "Kernel.i"
+
 %ignore *::operator[];
 
 %shared_ptr(cbl::data::Data);
@@ -21,6 +24,7 @@
 #include "Data1D_extra.h"
 #include "Data2D_extra.h"
 #include "Data1D_collection.h"
+#include "EigenWrapper.h"
 #include "CovarianceMatrix.h"
 #include "TaperedCovarianceMatrix.h"
 #include "Table.h"
@@ -32,9 +36,11 @@
 %include "Data1D_extra.h"
 %include "Data2D_extra.h"
 %include "Data1D_collection.h"
+%include "EigenWrapper.h"
 %include "CovarianceMatrix.h"
 %include "TaperedCovarianceMatrix.h"
 %include "Table.h"
+
 
 %extend cbl::data::Table {
   std::vector<double> & __getitem__(const std::string name) {

@@ -4,12 +4,6 @@
 
 #include "Modelling_TwoPointCorrelation2D_cartesian.h"
 
-// these two variables contain the name of the CosmoBolognaLib
-// directory and the name of the current directory (useful when
-// launching the code on remote systems)
-std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
-
-
 int main () {
 
   try {
@@ -26,7 +20,7 @@ int main () {
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
 
-    const std::string file_catalogue = cbl::par::DirLoc+"../input/cat.dat";
+    const std::string file_catalogue = "../input/cat.dat";
   
     const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -51,7 +45,7 @@ int main () {
     const int nbins = 10;     // number of bins
     const double shift = 0.5; // spatial shift used to set the bin centre 
 
-    const std::string dir = cbl::par::DirLoc+"../output/";
+    const std::string dir = "../output/";
     const std::string file = "xi2D.dat";
 
   

@@ -4,10 +4,6 @@
 
 #include "FITSwrapper.h"
 
-// this variable contains the name of the current directory (useful
-// when launching the code on remote systems)
-std::string cbl::par::DirLoc = DIRL;
-
 int main () {
 
   try {
@@ -36,7 +32,7 @@ int main () {
     const std::vector<std::string> column_units = {"Mpc/h", "Mpc/h", "Mpc/h", ""};
 
     // write the output on a new fits file, adding the weight column
-    cbl::wrapper::ccfits::write_table_fits(cbl::par::DirLoc, "catalogue_with_weights.fits", column_names, table, column_units);
+    cbl::wrapper::ccfits::write_table_fits("./", "catalogue_with_weights.fits", column_names, table, column_units);
   }
   
   catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }

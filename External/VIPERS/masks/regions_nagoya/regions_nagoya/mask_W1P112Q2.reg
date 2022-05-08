@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileAdFPwM.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(34.107984,-4.902602,34.21163,-4.90282,34.211436,-4.7816917,34.202054,-4.7737646,34.109281,-4.772918,34.099591,-4.779614,34.096979,-4.784137,34.096956,-4.897569) # color=red dash=1

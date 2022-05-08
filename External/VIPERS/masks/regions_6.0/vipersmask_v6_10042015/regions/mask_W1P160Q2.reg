@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/filesgvxx9.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(37.774699,-5.203538,37.780646,-5.203438,37.784477,-5.204638,37.879309,-5.204641,37.879726,-5.126569,37.879906,-5.083514,37.871298,-5.075138,37.770379,-5.0753863,37.764395,-5.0779676,37.764008,-5.199238) # color=red dash=1

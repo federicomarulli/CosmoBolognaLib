@@ -89,7 +89,6 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const cosmology::Co
 
 // ============================================================================
 
-
 cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue catalogue, const double N_R, const int nbin, const cosmology::Cosmology &cosm, const bool conv, const double sigma, const std::vector<double> redshift, const std::vector<double> RA, const std::vector<double> Dec, const int z_ndigits, const int seed)
 {
   size_t nRandom = int(N_R*catalogue.nObjects());
@@ -303,7 +302,8 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const std::vector<s
 {
   if (type!=RandomType::_createRandom_MANGLE_) ErrorCBL("the random catalogue has to be of type _MANGLE_!", "Catalogue", "RandomCatalogue.cpp");
 
-  string mangle_dir = par::DirCosmo+"External/mangle/";
+  cbl::Path path;
+  string mangle_dir = path.DirCosmo()+"/External/mangle/";
 
   string mangle_working_dir = mangle_dir+"output/";
   string mkdir = "mkdir -p "+mangle_working_dir;
@@ -435,5 +435,116 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const Catalogue cat
   for (size_t i =0; i<random_ra.size(); i++) {
     observedCoordinates coord = {radians(random_ra[i]), radians(random_dec[i]), random_redshift[i]};
     m_object.push_back(move(Object::Create(ObjectType::_Random_, coord, cosm)));
+  }
+}
+
+//=========================================================================
+
+cbl::catalogue::Catalogue::Catalogue(const RandomType type, Catalogue catalogue, const double N_R, const cosmology::Cosmology cosm, const std::vector<double> RA_range, const std::vector<double> DEC_range, const unsigned int nbin, const int seed)
+{
+  if (type != RandomType::_createRandom_homogeneous_LC_)
+    ErrorCBL("the random catalogue has to be of type _homogeneous_LC_!", "Catalogue", "RandomCatalogue.cpp");
+  
+  auto prop = catalogue.compute_catalogueProperties_lightCone(cosm, RA_range, DEC_range, nbin);
+  vector<double> nObj(nbin+1);
+  nObj[0] = 1;
+  vector<double> zbins = linear_bin_vector(nbin+1, catalogue.Min(Var::_Redshift_), catalogue.Max(Var::_Redshift_));
+  for (size_t i=1; i<nbin+1; i++) 
+    nObj[i]=nObj[i-1]+prop[1][i-1];
+  
+  std::default_random_engine generator;
+  generator.seed(seed);
+  std::uniform_int_distribution<int> distribution(1,catalogue.nObjects());
+  random::UniformRandomNumbers randomDec(sin(DEC_range[0]), sin(DEC_range[1]), seed+1);
+  random::UniformRandomNumbers randomRA(RA_range[0], RA_range[1], seed+2);
+
+  for (int i=0; i<int(catalogue.nObjects()*N_R); i++)
+  {
+    observedCoordinates coord = {randomRA(), asin(randomDec()), interpolated(distribution(generator), nObj, zbins, "Linear")};
+    m_object.push_back(move(Object::Create(ObjectType::_Random_, coord, cosm)));
+  }
+
+}
+
+//=========================================================================
+
+void cbl::catalogue::Catalogue::equalize_random_lightCone (cbl::catalogue::Catalogue tracer_catalogue, cbl::cosmology::Cosmology cosm, const std::vector<double> RA_range, const std::vector<double> DEC_range, const int seed) 
+{
+  if (nObjects()>tracer_catalogue.nObjects()) {
+    std::default_random_engine generator;
+    generator.seed(seed);
+    std::uniform_int_distribution<int> distribution(0,nObjects()-1);
+
+    vector<bool> mask(nObjects(), false);
+
+    size_t erased=0;
+    while (erased<nObjects()-tracer_catalogue.nObjects()) {
+      int rand = distribution(generator);
+      if (mask[rand] == false) {
+        mask[rand] = true;
+        erased++;
+      }
+    }
+
+    remove_objects(mask);
+  }
+  else {
+
+    auto prop = tracer_catalogue.compute_catalogueProperties_lightCone(cosm, RA_range, DEC_range, 100);
+    vector<double> nObj = {1.};
+    vector<double> zbins = linear_bin_vector(101, cbl::Min(var(Var::_Redshift_)), cbl::Max(var(Var::_Redshift_)));
+    for (size_t i=0; i<100; i++) 
+      nObj.emplace_back(prop[1][i]);
+
+    std::default_random_engine generator;
+    generator.seed(seed);
+    std::uniform_int_distribution<int> distribution(1,tracer_catalogue.nObjects());
+    random::UniformRandomNumbers randomDec(sin(DEC_range[0]), sin(DEC_range[1]), seed+1);
+    random::UniformRandomNumbers randomRA(RA_range[0], RA_range[1], seed+2);
+
+    int nObjec = nObjects();
+    for (int i=0; i<int(tracer_catalogue.nObjects()-nObjec); i++)
+    {
+      observedCoordinates coord = {randomRA(), asin(randomDec()), interpolated(distribution(generator), nObj, zbins, "Linear")};
+      add_object(move(Object::Create(ObjectType::_Random_, coord, cosm)));
+    }
+  }
+
+
+}
+
+//=========================================================================
+
+void cbl::catalogue::Catalogue::equalize_random_box (cbl::catalogue::Catalogue tracer_catalogue, const int seed) 
+{
+  if (nObjects()>tracer_catalogue.nObjects()) {
+    std::default_random_engine generator;
+    generator.seed(seed);
+    std::uniform_int_distribution<int> distribution(0,nObjects()-1);
+
+    vector<bool> mask(nObjects(), false);
+
+    size_t erased=0;
+    while (erased<nObjects()-tracer_catalogue.nObjects()) {
+      int rand = distribution(generator);
+      if (mask[rand] == false) {
+        mask[rand] = true;
+        erased++;
+      }
+    }
+
+    remove_objects(mask);
+  }
+  else {
+    random::UniformRandomNumbers randomX(tracer_catalogue.Min(Var::_X_), tracer_catalogue.Max(Var::_X_), seed);
+    random::UniformRandomNumbers randomY(tracer_catalogue.Min(Var::_Y_), tracer_catalogue.Max(Var::_Y_), seed+1);
+    random::UniformRandomNumbers randomZ(tracer_catalogue.Min(Var::_Z_), tracer_catalogue.Max(Var::_Z_), seed+2);
+
+    int nObjec = nObjects();
+    for (int i=0; i<int(tracer_catalogue.nObjects()-nObjec); i++)
+    {
+      comovingCoordinates coord = {randomX(), randomY(), randomZ()};
+      add_object(move(Object::Create(ObjectType::_Random_, coord)));
+    }
   }
 }

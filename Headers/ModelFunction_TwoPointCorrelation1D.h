@@ -140,7 +140,7 @@ namespace cbl {
 	/// output_root of the parameter file used to compute the power spectrum 
 	std::string output_root = "test";
 	
-	///  &Delta;: the overdensity, defined as the mean interior density relative to the background
+	///  &Delta;, the overdensity
 	double Delta = 200.;
 
 	/// wave vector module
