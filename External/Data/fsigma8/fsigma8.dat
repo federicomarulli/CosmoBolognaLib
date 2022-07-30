@@ -53,4 +53,8 @@ VIPERS-PDR2	0.86	0.40	 0.11	 0.12	 Pezzotta et al. 2016; galaxy clustering; http
 VIPERS-PDR2     0.727   0.296    0.078   0.075 	 Hawken et al. 2017; void profiles; https://arxiv.org/abs/1611.07046
 VIPERS-PRD2	0.85	0.45	 0.11	 0.11 	 Mohammad et al. 2017; clustering of blue galaxies; https://arxiv.org/abs/1708.00026
 FastSound	1.4	0.494	 0.120	 0.126   Okumura et al. 2016; galaxy clustering; https://arxiv.org/abs/1511.08083
+<<<<<<< HEAD
 C3-SDSS		0.275	0.44     0.05	 0.05	 Marulli et al. 2021; cluster clustering; https://arxiv.org/abs/2010.11206
+=======
+C3-SDSS		0.275	0.44     0.05	 0.05	 Marulli et al. 2021; cluster clustering; https://arxiv.org/abs/2010.11206
+>>>>>>> 6348e77ad77fd96d30c6ed44ed5f69828528a07c
