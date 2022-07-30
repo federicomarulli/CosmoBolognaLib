@@ -19,9 +19,9 @@
  ********************************************************************/
 
 /**
- *  @file Headers/Data.h
+ *  @file Headers/Table.h
  *
- *  @brief The class Data
+ *  @brief The class Table
  *
  *  This file defines the interface of the class Table
  *

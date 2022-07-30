@@ -8,14 +8,12 @@ FLAGST = $(FLAGS0) $(FLAGS)
 
 dirLib = $(PWD)/../../../
 dirH = $(dirLib)Headers/
-dir_Eigen = $(dirLib)External/Eigen/eigen-3.3.7/
+dir_Eigen = $(dirLib)External/Eigen/eigen-3.4.0/
 dir_CCfits = $(dirLib)External/CCfits/include
-dirCUBA = $(dirLib)External/Cuba-4.2/
+dirCUBA = $(dirLib)External/Cuba-4.2.1/
 
-varDIR = -DDIRCOSMO=\"$(dirLib)\" -DDIRL=\"$(PWD)/\"
+FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lCBL
 
-#FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lCBL
-FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lMODEL_GLOB
 FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits) 
 
 FLAGS_LINK = -shared
@@ -77,17 +75,17 @@ modelpy: ModelPY_wrap.o ModelPY.i
 	$(CXX) $(FLAGS_LINK) -o _modelpy.so ModelPY_wrap.o $(FLAGS_LIB)
 
 clean:
-	rm -f *.o *.cxx ModelPY_wrap.cxx modelpy.py _modelpy.so *~ \#* temp* core* prior fit sampler
+	rm -f *.o *.cxx ModelPY_wrap.cxx modelpy.py modelpy.pyc _modelpy.so *~ \#* temp* core* prior fit sampler
 	rm -rf __pycache__
 
 prior.o: prior.cpp makefile $(dirLib)*.$(ES) 
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c prior.cpp
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c prior.cpp
 
 fit.o: fit.cpp makefile $(dirLib)*.$(ES) 
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c fit.cpp
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c fit.cpp
 
 sampler.o: sampler.cpp makefile $(dirLib)*.$(ES) 
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c sampler.cpp
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c sampler.cpp
 
 ModelPY_wrap.o: ModelPY_wrap.cxx ModelPY.i ModelPY.h
 	$(CXX) $(FLAGST) -Wno-uninitialized -Wno-missing-field-initializers -Wno-unused-parameter $(PFLAGS) -c -fPIC $(FLAGS_INC) ModelPY_wrap.cxx -o ModelPY_wrap.o

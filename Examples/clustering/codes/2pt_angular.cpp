@@ -4,12 +4,6 @@
 
 #include "TwoPointCorrelation1D_angular.h"
 
-// these two variables contain the name of the CosmoBolognaLib
-// directory and the name of the current directory (useful when
-// launching the code on remote systems)
-std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
-
-
 int main () {
 
   try {
@@ -18,7 +12,7 @@ int main () {
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec) --------------------------------
     // -----------------------------------------------------------------------------------------------------------------
 
-    const std::string file_catalogue = cbl::par::DirLoc+"../input/cat2d.dat";
+    const std::string file_catalogue = "../input/cat2d.dat";
   
     const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}};
 
@@ -44,7 +38,7 @@ int main () {
     const double shift = 0.5;                                                // shift used to set the bin centre 
     const cbl::CoordinateUnits angularUnits = cbl::CoordinateUnits::_degrees_; // angular units
 
-    const std::string dir = cbl::par::DirLoc+"../output/";
+    const std::string dir = "../output/";
     const std::string file = "xi_angular.dat";
 
   

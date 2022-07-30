@@ -82,53 +82,36 @@ namespace cbl {
 	 *  @brief set the multiplicative shear calibration, m
 	 *
 	 */
-	void m_set_multiplicative_calib();	
-
-	/**
-	 *  @brief set the colour and photo-z selection, along with the
-	 *  logic operator between them
-	 *
-	 */
-	void m_set_selections();
+	void m_set_multiplicative_calib();
 	
 	/**
-	 *  @brief colour selection by Oguri et al. 2012
+	 *  @brief colour selection function in the colour-colour
+	 *  space (\f$r-i\f$) vs (\f$g-r\f$)
 	 *
 	 *  @param i_gal galaxy index
 	 *
-	 *  @return true if the conditions are satisfied
+	 *  @param clu_zbin index of the redshift bin of the lensing cluster
 	 *
-	 */	
-	bool m_colourSelection_Oguri (const int i_gal);
-	
-	/**
-	 *  @brief photo-z selection accounting for the odds
-	 *
-	 *  @param x cluster and galaxy indices, respctively
-	 *
-	 *  @return true if the conditions are satisfied
+	 *  @return true if the galaxy satisfies the conditions,
+	 *  otherwise it returns false
 	 *
 	 */
-	bool m_zphotSelection_ODDS (const std::vector<int> x);
+	bool m_colourSelection_gri (const int i_gal, const int clu_zbin);
 	
 	/**
-	 *  @brief photo-z selection not accounting for the odds
+	 *  @brief redshift selection function
 	 *
-	 *  @param x cluster and galaxy indices, respctively
+	 *  @param i_clu cluster index
 	 *
-	 *  @return true if the conditions are satisfied
+	 *  @param i_gal galaxy index
 	 *
-	 */
-	bool m_zphotSelection_noODDS (const std::vector<int> x);
-	
-	/**
-	 *  @brief set the logic operator between color and phot-z selections
+	 *  @param clu_zbin index of the redshift bin of the lensing cluster
 	 *
-	 *  @param sel the logic selection operator ("and" or "or")
+	 *  @return true if the galaxy satisfies the conditions,
+	 *  otherwise it returns false
 	 *
 	 */
-	void m_set_logicSelection(const std::string sel);
-	
+	bool m_photzSelection (const int i_clu, const int i_gal, const int clu_zbin);
 	
 	/**
 	 *  @brief check if all the necessary variables in the
@@ -225,6 +208,9 @@ namespace cbl {
 	 */
 	void m_write(const std::string output_dir, const std::string output_file);
 	
+	/// if true, create the folder containing the background galaxies indices
+	bool m_write_background;
+	
 	/// input cosmology
 	std::shared_ptr<cosmology::Cosmology> m_cosm;
 	
@@ -234,23 +220,35 @@ namespace cbl {
 	/// input cluster catalogue
 	std::shared_ptr<catalogue::Catalogue> m_cluData;
 	
-	/// pointer to the colour selection function
-	bool (StackedDensityProfile::*m_colourSel)(int);
+	/// vector of pointers to the colour selection function s
+	std::vector<bool (StackedDensityProfile::*)(const int, const int)> m_colourSel; // std::vector<std::function<bool(const int)>> m_colourSel;
 	
-	/// pointer to the photo-z selection function
-	bool (StackedDensityProfile::*m_photzSel)(std::vector<int>);
+	/// vector of pointers to the photo-z selection functions
+	std::vector<bool (StackedDensityProfile::*)(const int, const int, const int)> m_photzSel;
 	
 	/// logic operator between colour and photo-z selection
-	std::function<bool(const std::vector<bool>)> m_logicSelection;
+	std::vector<std::function<bool(const std::vector<bool>)>> m_logicSel;
 	
-	/// the colour selection
-	std::string m_colour_sel;
+	/// vector for checking if the colour selection is set in all the z bins
+	std::vector<bool> m_isSet_colourSel;
 	
-	/// the photo-z selection
-	std::string m_zphot_sel;
+	/// vector for checking if the photo-z selection is set in all the z bins
+	std::vector<bool> m_isSet_photzSel;
 	
-	/// the logic operator between colour and photo-z selections
-	std::string m_logic_sel;
+	/// vector for checking if the logic selection linking colour and z selections is set in all the z bins
+	std::vector<bool> m_isSet_logicSel;
+	
+	/// vector of indices of the background galaxies selected through the redshift selection
+	std::vector<std::vector<int>> m_background_idx_z;
+	
+	/// vector of indices of the background galaxies selected through the colour selection
+	std::vector<std::vector<int>> m_background_idx_colour;
+	
+	/// bool stating if the measure is read from file
+	bool m_measure_is_read;
+	
+	/// minimum interval between the cluster and the source redshifts
+	double m_delta_redshift;
 	
 	/// minimum signal-to-noise
 	double m_SN_min;
@@ -276,8 +274,14 @@ namespace cbl {
 	/// gamma slope for lensing-weighted observables
 	double m_obs_gamma;
 	
+	/// the parameters for the colour selection
+	std::vector<std::vector<double>> m_colour_sel_pars;
+	
 	/// the parameters for the redshift selection
-	std::vector<double> m_zphot_sel_pars;
+	std::vector<std::vector<double>> m_zphot_sel_pars;
+	
+	/// the logic selection linking redshift and colour selections
+	std::vector<std::vector<std::string>> m_logic_sel_par;
 	
 	/// radius bin edges
 	std::vector<double> m_rad_arr;
@@ -445,24 +449,14 @@ namespace cbl {
 	   *
 	   *  @param clu_cat catalogue of galaxy clusters
 	   *
-	   *  @param colour_sel colour selection criterion. 
-	   *  The possible choices are : "Oguri" (Oguri et al. 2012).
-	   *
-	   *  @param zphot_sel photo-z selection criterion. 
-	   *  The possible choices are : "Odds", "NoOdds".
-	   *  If "NoOdds" is chosen, the selection is not based on the odds.
-	   *
-	   *  @param zphot_sel_pars array of 4 parameters for the 
-	   *  phot-z selection, following this order : 1) additive term, \f$\Delta z\f$, to
-	   *  the cluster redshift, i.e. how much the minimum galaxy redshift,
-	   *  \f$z_g\f$, (in the tail of the relative posterior) must be higher 
-	   *  than the cluster redshift, \f$z_c\f$, that is \f$z_g > z_c+\Delta z\f$
-	   *  , 2) minimum value for the galaxy mean redshift, 
-	   *  3) maximum value for the galaxy mean redshift, 4) minimum value
-	   *  for the ODDS parameter (if the ODDS are considered).
-	   *
-	   *  @param logic_sel logic operator between
-	   *  colour and phot-z selection criteria ("and" or "or")
+	   *  @param delta_redshift minimum interval between 
+	   *  the cluster and the source redshifts. That is,
+	   *  it is \f$\Delta_z\f$ in the equation 
+	   *  \f$z_g>z_c+\Delta_z\f$, where \f$z_g\f$ and 
+	   *  \f$z_c\f$ are the galaxy and cluster 
+	   *  mean redshifts, respectively.
+	   *  This condition must be satisfied along with
+	   *  \f$p(z)\f$ or/and color conditions.
 	   *
 	   *  @param z_binEdges redshift bin edges
 	   *
@@ -493,16 +487,13 @@ namespace cbl {
 	   *  the lower and upper edge of the redshift bins for each estimate of the 
 	   *  multiplicative shear calibration parameter, m
 	   *
-	   *  @param n_resampling number of resampling regions for the bootstrap
-	   *  procedure used to evaluate the uncertainty on \f$\Delta\Sigma(r)\f$
-	   *
 	   *  @param rad_alpha slope for the observable weighted mean
 	   *
 	   *  @param obs_gamma gamma slope for lensing-weighted observables
 	   *
 	   *  Cluster stacked density profile
 	   */
-	StackedDensityProfile (cosmology::Cosmology cosm, const catalogue::Catalogue gal_cat, const catalogue::Catalogue clu_cat, const std::string colour_sel, const std::string zphot_sel, std::vector<double> zphot_sel_pars, const std::string logic_sel, std::vector<double> z_binEdges, std::vector<std::vector<double>> proxy_binEdges, const double rad_min, const double rad_max, const int nRad, const bool log_rad, const double SN_min, const double pix_size, const std::vector<std::vector<double>> multiplicative_calibration_stats={}, const std::vector<std::vector<double>> multiplicative_calibration_zEdges={}, const int n_resampling=10000, const double rad_alpha=1., const double obs_gamma=1.);
+	StackedDensityProfile (cosmology::Cosmology cosm, const catalogue::Catalogue gal_cat, const catalogue::Catalogue clu_cat, const double delta_redshift, std::vector<double> z_binEdges, std::vector<std::vector<double>> proxy_binEdges, const double rad_min, const double rad_max, const int nRad, const bool log_rad, const double SN_min, const double pix_size, const std::vector<std::vector<double>> multiplicative_calibration_stats={}, const std::vector<std::vector<double>> multiplicative_calibration_zEdges={}, const double rad_alpha=1., const double obs_gamma=1.);
 	///@}
 	
 	/**
@@ -511,26 +502,148 @@ namespace cbl {
 	///@{
 	
 	/**
+	 *  @brief Set the colour selection in the i-th cluster redshift bin.
+	 *
+	 *  @param colour_space the colour space; possibilities are: 
+	 *  "ri_gr" (\f$r-i\f$ vs \f$g-r\f$)
+	 *
+	 *  @param z_bin index of the cluster redshift bin
+	 *
+	 *  @param C1 for example, for the colour space \f$(r-i)\f$ vs \f$(g-r)\f$,
+	 *  it is \f$C_1\f$ in \f$ (g-r)<C_1 \f$
+	 *
+	 *  @param C2 for example, for the colour space \f$(r-i)\f$ vs \f$(g-r)\f$,
+	 *  it is \f$C_2\f$ in \f$ (r-i)>C_2 \f$
+	 *
+	 *  @param C3 for example, for the colour space \f$(r-i)\f$ vs \f$(g-r)\f$,
+	 *  it is \f$C_3\f$ in \f$ (r-i)>C_3*(g-r)+C_4 \f$
+	 *
+	 *  @param C4 for example, for the colour space \f$(r-i)\f$ vs \f$(g-r)\f$,
+	 *  it is \f$C_4\f$ in \f$ (r-i)>C_3*(g-r)+C_4 \f$
+	 *
+	 *  @param z_min minimum redshift of the selected galaxies
+	 *
+	 */
+	void set_colour_selection(const std::string colour_space, const int z_bin, const double C1, const double C2, const double C3, const double C4, const double z_min);
+	
+	/**
+	 *  @brief Set the colour selection in all cluster redshift bins.
+	 *
+	 *  @param colour_space the colour space; possibilities are: 
+	 *  "ri_gr" (\f$r-i\f$ vs \f$g-r\f$)
+	 *
+	 *  @param C1 for example, for the colour space \f$(r-i)\f$ vs \f$(g-r)\f$,
+	 *  it is \f$C_1\f$ in \f$ (g-r)<C_1 \f$
+	 *
+	 *  @param C2 for example, for the colour space \f$(r-i)\f$ vs \f$(g-r)\f$,
+	 *  it is \f$C_2\f$ in \f$ (r-i)>C_2 \f$
+	 *
+	 *  @param C3 for example, for the colour space \f$(r-i)\f$ vs \f$(g-r)\f$,
+	 *  it is \f$C_3\f$ in \f$ (r-i)>C_3*(g-r)+C_4 \f$
+	 *
+	 *  @param C4 for example, for the colour space \f$(r-i)\f$ vs \f$(g-r)\f$,
+	 *  it is \f$C_4\f$ in \f$ (r-i)>C_3*(g-r)+C_4 \f$
+	 *
+	 *  @param z_min minimum redshift of the selected galaxies
+	 *
+	 */
+	void set_colour_selection(const std::string colour_space, const double C1, const double C2, const double C3, const double C4, const double z_min);
+	
+	/**
+	 *  @brief Set the redshift selection in the i-th cluster redshift bin
+	 *
+	 *  @param z_bin index of the cluster redshift bin
+	 *
+	 *  @param deltaz additive term, \f$\Delta z\f$, to
+	 *  the cluster redshift, i.e. how much the minimum galaxy redshift,
+	 *  \f$z_{\rm g,\,min}\f$, (in the tail of the relative posterior) must be higher 
+	 *  than the cluster redshift, \f$z_c\f$, that is \f$z_{\rm g,\,min} > z_c+\Delta z\f$
+	 *
+	 *  @param zgal_min minimum value for the galaxy mean redshift
+	 *
+	 *  @param zgal_max maximum value for the galaxy mean redshift
+	 *
+	 *  @param ODDS_min minimum value for the ODDS parameter
+	 *
+	 */
+	 
+	void set_zphot_selection(const int z_bin, const double deltaz, const double zgal_min, const double zgal_max, const double ODDS_min);
+	
+	/**
+	 *  @brief Set the redshift selection in all cluster redshift bins
+	 *
+	 *  @param deltaz additive term, \f$\Delta z\f$, to
+	 *  the cluster redshift, i.e. how much the minimum galaxy redshift,
+	 *  \f$z_{\rm g,\,min}\f$, (in the tail of the relative posterior) must be higher 
+	 *  than the cluster redshift, \f$z_c\f$, that is \f$z_{\rm g,\,min} > z_c+\Delta z\f$
+	 *
+	 *  @param zgal_min minimum value for the galaxy mean redshift
+	 *
+	 *  @param zgal_max maximum value for the galaxy mean redshift
+	 *
+	 *  @param ODDS_min minimum value for the ODDS parameter
+	 *
+	 */
+	 
+	void set_zphot_selection(const double deltaz, const double zgal_min, const double zgal_max, const double ODDS_min);
+	
+	/**
+	 *  @brief Set the logic operator linking redshift and colour
+	 *  selections in the i-th cluster redshift bin
+	 *
+	 *  @param z_bin index of the cluster redshift bin
+	 *
+	 *  @param sel "and" or "or"
+	 *
+	 */
+	 
+	void set_logic_selection(const int z_bin, const std::string sel);
+	
+	/**
+	 *  @brief Set the logic operator linking redshift and colour
+	 *  selections in the all the cluster redshift bins
+	 *
+	 *  @param sel "and" or "or"
+	 *
+	 */
+	 
+	void set_logic_selection(const std::string sel);
+	
+	/**
 	 *  @brief measure the stacked profiles in all the bins of redshift and 
 	 *  mass proxy, providing in output the stacked profile in the redshift 
 	 *  and proxy bins chosen through the parameter z_proxy_bin.
 	 *
 	 *  Note that with this function the stacking is performed in all the
 	 *  redshift and proxy bins, and the results are written on file. 
-	 *
 	 *  In the first line of the header of such file, all the 
 	 *  parameters used for the stacking (colour and redshift selections,
 	 *  binnings, ...) are written, as well as the cosmological parameters. 
-	 *
 	 *  If such a file has already been written, the code reads it instead
 	 *  of performing again the stacking procedure.
+	 *
+	 *  In addition, this function creates the following folders:
+	 *
+	 *  - covariance/: it contains \f$N\f$ files, where \f$N\f$ is
+	 *  the number of redshift-proxy bins. Each file name contains
+	 *  a string of two integers (e.g. "00"), where the first integer
+	 *  corresponds to the index of the redshift bin, while the second
+	 *  integer represents the index of the proxy bin.
+	 *
+	 *  - background_galaxies/: created if write_background is set to true.
+	 *  This folder contains sub-folders, one for each 
+	 *  redshift bin. In such folders, two files are stored: one containing
+	 *  the indices of the galaxies selected with the redshift selection,
+	 *  while the second file contains the indices of those galaxies selected
+	 *  through the colour selection. Such indices correspond to those
+	 *  of the input catalogue of galaxies, and start from 0.
 	 *
 	 *  @param z_proxy_bin vector containing the indices of the redshift
 	 *  and proxy bins to be stored, respectively
 	 *
 	 *  @param output_dir output directory for the output_file
 	 *
-	 *  @param output_file output file, containing the
+	 *  @param output_file_root root name of the output file, which contains the
 	 *  stacked profiles in all the redshift and mass 
 	 *  proxy bins
 	 *
@@ -538,8 +651,14 @@ namespace cbl {
 	 *  density profile (only the diagonal of the covariance
 	 *  matrix is considered)
 	 *
+	 *  @param n_resampling number of resampling regions for the bootstrap
+	 *  procedure used to evaluate the uncertainty on \f$\Delta\Sigma(r)\f$
+	 *
+	 *  @param write_background if true, create the background_galaxies/ folder.
+	 *  WARNING: this folder may be very large
+	 *
 	 */
-	void measure(const std::vector<int> z_proxy_bin, const std::string output_dir, const std::string output_file, const ErrorType errorType=ErrorType::_Bootstrap_);
+	void measure(const std::vector<int> z_proxy_bin, const std::string output_dir, const std::string output_file_root, const ErrorType errorType=ErrorType::_Bootstrap_, const int n_resampling=10000, const bool write_background=false);
 	
 	///@}
 	

@@ -68,3 +68,5 @@ V5.3 new functions to model number counts, redshift-space distortions and three-
 V5.4 new logo (by Sofia Contarini), new functions to model 2 and 3 point correlation functions
 
 V5.5 new functions for modelling different cosmological probes and their combinations
+
+V6.0 V6.0 general improvements on base functionalities; new cosmic void detector; new or improved functions for modeling halo and void number counts and clustering; new HOD implementation; several bugs fixed

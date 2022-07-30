@@ -122,10 +122,11 @@ void cbl::lognormal::LogNormal::generate (const int n_lognormal_mocks, const std
 
   const double fact = (m_real) ? pow(m_bias, 2) : pow(m_bias, 2)*xi_ratio(m_cosmology.linear_growth_rate(m_redshift, 0.)/m_bias);
     
-  vector<double> kG = logarithmic_bin_vector(500, 1.e-4, 1.e2), PkG;
+  vector<double> kG = logarithmic_bin_vector(500, 1.e-4, 1.e2);
+  vector<double> PkG = m_cosmology.Pk_matter(kG, m_method_Pk, m_NL, m_redshift);
     
-  for (auto &&kg : kG)
-    PkG.emplace_back(fact*m_cosmology.Pk_DM(kg, m_method_Pk, m_NL, m_redshift));
+  for (size_t i=0; i<kG.size(); i++)
+    PkG[i] = fact*PkG[i];
 
 
   cbl::glob::FuncGrid interpPk(kG, PkG, "Spline");

@@ -123,11 +123,14 @@ void cbl::catalogue::Catalogue::m_check_it_out (std::ifstream& finr, const bool 
 
 //==============================================================================================
 
-cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const std::string file_cn, const bool snapformat, const bool swap, const double fact, const bool read_catalogue, const double nSub, const std::string component_to_read)
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const std::string file_cn, const bool snapformat, const bool swap, const double fact, const bool read_catalogue, const double nSub, const std::string component_to_read, const std::vector<std::vector<double>> edges)
 {
   std::string gdgt_head = file_cn+".0";
   std::ifstream finhead(gdgt_head.c_str(), std::ios::binary|std::ios::in); checkIO(finhead, gdgt_head);
   finhead.seekg(finhead.beg);
+	bool cut=false;
+	if (edges[0][0]!=par::defaultDouble && edges[0][1]!=par::defaultDouble && edges[1][0]!=par::defaultDouble && edges[1][1]!=par::defaultDouble
+							&& edges[2][0]!=par::defaultDouble && edges[2][1]!=par::defaultDouble) cut=true;
 
   // for snapformat = 2:
   if (snapformat) {
@@ -183,16 +186,16 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const std::st
 
       // for snapformat = 2:
       if (snapformat) {
-	m_check_it_in(finsnap, swap);
-	char charvar;
-	std::string stringvar;
-	for (int i=0; i<4; i++) {
-	  finsnap.read((char *)&charvar, sizeof(charvar));
-	  stringvar.push_back(charvar);
-	}
-	int intvar;
-	finsnap.read((char *)&intvar, sizeof(intvar));
-	m_check_it_out(finsnap, swap);
+				m_check_it_in(finsnap, swap);
+				char charvar;
+				std::string stringvar;
+				for (int i=0; i<4; i++) {
+					finsnap.read((char *)&charvar, sizeof(charvar));
+					stringvar.push_back(charvar);
+				}
+				int intvar;
+				finsnap.read((char *)&intvar, sizeof(intvar));
+				m_check_it_out(finsnap, swap);
       }
       
       Gadget_Header data;
@@ -206,58 +209,60 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const std::st
       std::vector<bool> read (dimsnap, false);
       if (component_to_read == "ALL") std::replace(read.begin(), read.end(), false, true);
       else {
-	int offset = 0;
-	bool wrong_component_name = true;
-	for (size_t jj = 0; jj<components_name.size(); jj++) {
-	  if (component_to_read == components_name[jj]) std::replace(read.begin()+offset,
+				int offset = 0;
+				bool wrong_component_name = true;
+				for (size_t jj = 0; jj<components_name.size(); jj++) {
+	  			if (component_to_read == components_name[jj]) std::replace(read.begin()+offset,
 								     read.begin()+offset+data.npart[jj],
 								     false, true);
-	  offset += data.npart[jj];
-	  if (component_to_read == components_name[jj]) wrong_component_name = false;
-	}
-	if (wrong_component_name) WarningMsgCBL("selected component is not available, available components are ALL, Gas, Halo, Disk, Bulge, Stars, Boundary", "Catalogue", "GadgetCatalogue.cpp");
-	if (offset != dimsnap) ErrorCBL("something horrible happened...", "Catalogue", "GadgetCatalogue.cpp");
+	  			offset += data.npart[jj];
+	  			if (component_to_read == components_name[jj]) wrong_component_name = false;
+				}
+				if (wrong_component_name) WarningMsgCBL("selected component is not available, available components are ALL, Gas, Halo, Disk, Bulge, Stars, Boundary", "Catalogue", "GadgetCatalogue.cpp");
+				if (offset != dimsnap) ErrorCBL("something horrible happened...", "Catalogue", "GadgetCatalogue.cpp");
       }
 	
       // reading particle positions
       
       // for snapformat = 2:
       if (snapformat) {
-	m_check_it_in(finsnap, swap);
-	char charvar;
-	std::string stringvar;
-	for (int i=0; i<4; i++) {
-	  finsnap.read((char *)&charvar, sizeof(charvar));
-	  stringvar.push_back(charvar);
-	}
-	int intvar;
-	finsnap.read((char *)&intvar, sizeof(intvar));
-	m_check_it_out(finsnap, swap);
+				m_check_it_in(finsnap, swap);
+				char charvar;
+				std::string stringvar;
+				for (int i=0; i<4; i++) {
+	  			finsnap.read((char *)&charvar, sizeof(charvar));
+	  			stringvar.push_back(charvar);
+				}
+				int intvar;
+				finsnap.read((char *)&intvar, sizeof(intvar));
+				m_check_it_out(finsnap, swap);
       }
       m_check_it_in(finsnap,swap);
       for (int h = 0; h<dimsnap; h++) {
-	
-	comovingCoordinates coords;
+				comovingCoordinates coords;
+				finsnap.read((char *)&num_float1, sizeof(num_float1));
+				if (swap) num_float1 = FloatSwap(num_float1);
+				coords.xx=(num_float1)*fact;
+				finsnap.read((char *)&num_float2, sizeof(num_float2));
+				if (swap) num_float2 = FloatSwap(num_float2);
+				coords.yy=(num_float2)*fact;
+				finsnap.read((char *)&num_float3, sizeof(num_float3));
+				if (swap) num_float3 = FloatSwap(num_float3);
+				coords.zz=(num_float3)*fact;
 
-	finsnap.read((char *)&num_float1, sizeof(num_float1));
-	if (swap) num_float1 = FloatSwap(num_float1);
-	coords.xx=(num_float1)*fact;
-
-	finsnap.read((char *)&num_float2, sizeof(num_float2));
-	if (swap) num_float2 = FloatSwap(num_float2);
-	coords.yy=(num_float2)*fact;
-
-	finsnap.read((char *)&num_float3, sizeof(num_float3));
-	if (swap) num_float3 = FloatSwap(num_float3);
-	coords.zz=(num_float3)*fact;
-
-	if (read[h])
-	  if (ran(gen)<nSub) m_object.push_back(move(Object::Create(objectType, coords)));
+				if (read[h]) {
+					if (cut) {
+						if (ran(gen)<nSub && coords.xx>edges[0][0] && coords.xx<edges[0][1] &&
+									coords.yy>edges[1][0] && coords.yy<edges[1][1] &&
+									coords.zz>edges[2][0] && coords.zz<edges[2][1] ) m_object.push_back(move(Object::Create(objectType, coords)));
+					}
+					else 
+						if (ran(gen)<nSub) m_object.push_back(move(Object::Create(objectType, coords)));
+				}
       }
       m_check_it_out(finsnap,swap);
       finsnap.clear(); finsnap.close();
     }
-
   }//read_catalogue=true
   
   else WarningMsgCBL("the catalogue is empty!", "Catalogue", "GadgetCatalogue.cpp"); //read_catalogue=false
@@ -265,7 +270,6 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const std::st
 }
 
 //==============================================================================================
-
 
 cbl::catalogue::Catalogue::Catalogue (const int snap, const std::string basedir, const bool swap, const bool long_ids, const double scaleFact, const double massFact, const EstimateCriterion estimate_crit, const bool veldisp, const bool masstab, const bool add_satellites, const bool verbose) 
 {

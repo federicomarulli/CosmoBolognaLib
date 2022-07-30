@@ -390,11 +390,17 @@ std::shared_ptr<cbl::statistics::Prior> cbl::statistics::PosteriorParameters::pr
       double prior_value = 1;
 
       vector<double> new_pars = parameters;
-      for (size_t i=0; i<m_nparameters_derived; i++)
-	new_pars.erase(new_pars.begin()+m_derived_parameter[i]);
+      int n_erased_elem = 0;
+      for (size_t i=0; i<m_nparameters_derived; i++) {
+	new_pars.erase(new_pars.begin()+m_derived_parameter[i]-n_erased_elem);
+	n_erased_elem ++;
+      }
 
-      for (size_t i=0; i<m_nparameters_base-m_nparameters_correlated; i++)
-	prior_value *= m_parameter_prior[m_base_parameter[i]]->operator()(new_pars[m_base_parameter[i]]);
+      int idx = 0;
+      for (size_t i=0; i<m_nparameters_base-m_nparameters_correlated; i++){
+	prior_value *= m_parameter_prior[m_base_parameter[i]]->operator()(new_pars[idx]);
+	idx ++;
+      }
 
       int add_previous = 0;
       for (size_t i=0; i<m_multipriors.size(); i++) {

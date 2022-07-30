@@ -116,25 +116,25 @@ namespace cbl {
       
       /**
        *  @brief Constructor used to set the modelling of
-       *  statistically dependent probes. For each vector of Modelling
-       *  objects in the \f$modelling\f$ argument, a CovarianceMatrix
+       *  statistically dependent probes. For each vector of cbl::statistics::Posterior
+       *  objects in the \e posteriors argument, a cbl::data::CovarianceMatrix
        *  object must be defined. The probes in each vector within
-       *  \f$modelling\f$ are described by the same likelihood function.
-       *  The final likelihood is given by the sum of the logarithms
+       *  \e posteriors are described by the same likelihood function.
+       *  The final log-likelihood is given by the sum of the logarithms
        *  of each likelihood describing a set of dependent probes.
        *
-       *  It should be noted that a set of probe can also be described
-       *  by a Poissonian likelihood.
+       *  If sets of probes are described by user-defined likelihoods,
+       *  then the cbl::data::CovarianceMatrix objects must not be provided
+       *  for such sets.
        *
        *  @param modelling vector of vectors of pointers 
-       *  to Modelling objects. In each vector a set of
+       *  to Modelling objects. In each vector, a set of
        *  probes is contained, with a covariance matrix
-       *  defined by the corresponding CovarianceMatrix object
+       *  defined by the corresponding cbl::data::CovarianceMatrix object
        *  given as input in the second argument of this constructor
        *
        *  @param covariance objects defining the covariance
-       *  matrices for the Posterior objects given in input through
-       *  the posteriors argument
+       *  matrices for the Posterior objects
        *  
        *  @param likelihood_types likelihood types for each set of probes
        *
@@ -154,7 +154,7 @@ namespace cbl {
        *  All the probes (A1, A2, A3, B1, B2, B3) depend on the parameter \f$p\f$, 
        *  whose identification string is "par", and we set repeated_par = {"par"}.
        *  If we want each pair of probes {A1, B1}, {A2, B2}, {A3, B3}, to provide
-       *  a different posterior on \f$p\f$, we must set common_repeated_par = { { {0,1}, {2,3}, {4,5} } }.
+       *  a different posterior on \f$p\f$, we must set common_repeated_par = { { {0,3}, {1,4}, {2,5} } }.
        *  This is useful when different probes in the same bin provide constraints
        *  on the same parameters.
        *  If common_repeated_par is not provided, every probe depending on \f$p\f$ 
@@ -163,8 +163,14 @@ namespace cbl {
        *  only "par2" must be shared by more than one probe, then leave blank the
        *  vector of vectors corresponding to "par1" in common_repeated_par.
        *
+       *  @param SSC vector of pointers to cbl::cosmology::SuperSampleCovariance
+       *  objects, for the computation of the \f$S_{ij}\f$ matrices. If, for example,
+       *  the sets of probes A, B, C, are considered, and only for A and C the 
+       *  super-sample covariance must be computed, then set the second element of
+       *  \e SSC equal to \e NULL.
+       *
        */
-      CombinedModelling (std::vector<std::vector<std::shared_ptr<modelling::Modelling>>> modelling, const std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={});
+      CombinedModelling (std::vector<std::vector<std::shared_ptr<modelling::Modelling>>> modelling, const std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={}, const std::vector<std::shared_ptr<cosmology::SuperSampleCovariance>> SSC={});
 
       /**
        *  @brief default destructor 

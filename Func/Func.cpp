@@ -19,7 +19,7 @@
  *******************************************************************/
 
 /**
- *  \@file CosmoBolognaLib/Func/Func.cpp
+ *  @file CosmoBolognaLib/Func/Func.cpp
  *
  *  @brief Useful generic functions
  *
@@ -33,6 +33,7 @@
 
 #include "Func.h"
 #include "LegendrePolynomials.h"
+#include <boost/math/special_functions/spherical_harmonic.hpp>
 
 using namespace std;
 
@@ -213,14 +214,14 @@ double cbl::converted_angle (const double angle, const CoordinateUnits inputUnit
 void cbl::polar_coord (const double XX, const double YY, const double ZZ, double &ra, double &dec, double &dd)
 {
   dd = sqrt(XX*XX+YY*YY+ZZ*ZZ);
-  ra = atan2(XX,YY);
+  ra = atan2(YY,XX);
   dec = asin(ZZ/dd);
 }
 
 void cbl::cartesian_coord (const double ra, const double dec, const double dd, double &XX, double &YY, double &ZZ)
 {
-  XX = dd*cos(dec)*sin(ra);
-  YY = dd*cos(dec)*cos(ra);
+  XX = dd*cos(dec)*cos(ra);
+  YY = dd*cos(dec)*sin(ra);
   ZZ = dd*sin(dec);
 }
 
@@ -228,7 +229,7 @@ void cbl::polar_coord (const std::vector<double> XX, const std::vector<double> Y
 {
   for (size_t i=0; i<XX.size(); i++) {
     dd[i] = sqrt(XX[i]*XX[i]+YY[i]*YY[i]+ZZ[i]*ZZ[i]);
-    ra[i] = atan2(XX[i],YY[i]);
+    ra[i] = atan2(YY[i],XX[i]);
     dec[i] = asin(ZZ[i]/dd[i]);
   }
 }
@@ -236,8 +237,8 @@ void cbl::polar_coord (const std::vector<double> XX, const std::vector<double> Y
 void cbl::cartesian_coord (const std::vector<double> ra, const std::vector<double> dec, const std::vector<double> dd, std::vector<double> &XX, std::vector<double> &YY, std::vector<double> &ZZ)
 {
   for (size_t i=0; i<XX.size(); i++) {
-    XX[i] = dd[i]*cos(dec[i])*sin(ra[i]);
-    YY[i] = dd[i]*cos(dec[i])*cos(ra[i]);
+    XX[i] = dd[i]*cos(dec[i])*cos(ra[i]);
+    YY[i] = dd[i]*cos(dec[i])*sin(ra[i]);
     ZZ[i] = dd[i]*sin(dec[i]);
   }
 }
@@ -540,6 +541,40 @@ double cbl::interpolated_2D (const double _x1, const double _x2, const std::vect
   return val;
 }
 
+// ============================================================================
+
+std::vector<double> cbl::linear_interpolation_3D(const std::vector<double> min, std::vector<double> max, std::vector<int> steps, std::vector<std::vector<std::vector<double>>> func, const std::vector<std::vector<double>> pos) 
+{
+	if (min.size()!= 3 || max.size()!=3 || steps.size() !=3)
+    ErrorCBL("the input grid have a wrong dimension", "linear_interpolation_nD", "Func.cpp");
+
+	vector<double> output(pos.size());
+	vector<double> step_dim(3);
+	for (auto i=0; i<3; i++) step_dim[i] = (max[i]-min[i])/steps[i];
+
+	for (size_t i=0; i<pos.size(); i++) {
+
+		vector<int> inds(3);
+		for (int dim=0; dim<3; dim++) {
+			inds[dim] = (pos[i][dim]-min[dim])/step_dim[dim];
+			if (inds[dim]<0 || (inds[dim]+1)*step_dim[dim]+min[dim] > max[dim])
+    		ErrorCBL("Point out of grid", "linear_interpolation_3D", "Func.cpp");
+		}
+		double tempX1 = ((pos[i][0]-(min[0]+inds[0]*step_dim[0]))*func[inds[2]][inds[1]][inds[0]+1] - 
+										(pos[i][0]-(min[0]+(inds[0]+1)*step_dim[0]))*func[inds[2]][inds[1]][inds[0]])/step_dim[0];
+		double tempX2 = ((pos[i][0]-(min[0]+inds[0]*step_dim[0]))*func[inds[2]][inds[1]+1][inds[0]+1] - 
+										(pos[i][0]-(min[0]+(inds[0]+1)*step_dim[0]))*func[inds[2]][inds[1]+1][inds[0]])/step_dim[0];
+		double tempX3 = ((pos[i][0]-(min[0]+inds[0]*step_dim[0]))*func[inds[2]+1][inds[1]][inds[0]+1] - 
+										(pos[i][0]-(min[0]+(inds[0]+1)*step_dim[0]))*func[inds[2]+1][inds[1]][inds[0]])/step_dim[0];
+		double tempX4 = ((pos[i][0]-(min[0]+inds[0]*step_dim[0]))*func[inds[2]+1][inds[1]+1][inds[0]+1] - 
+										(pos[i][0]-(min[0]+(inds[0]+1)*step_dim[0]))*func[inds[2]+1][inds[1]+1][inds[0]])/step_dim[0];
+		double tempY1 = ((pos[i][1]-(min[1]+inds[1]*step_dim[1]))*tempX2 - (pos[i][1]-(min[1]+(inds[1]+1)*step_dim[1]))*tempX1)/step_dim[1];
+		double tempY2 = ((pos[i][1]-(min[1]+inds[1]*step_dim[1]))*tempX4 - (pos[i][1]-(min[1]+(inds[1]+1)*step_dim[1]))*tempX3)/step_dim[1];
+		output[i] = ((pos[i][2]-(min[2]+inds[2]*step_dim[2]))*tempY2 - (pos[i][2]-(min[2]+(inds[2]+1)*step_dim[2]))*tempY1)/step_dim[2];
+	}
+
+	return output;
+}
 
 // ============================================================================
 
@@ -1900,15 +1935,34 @@ vector<vector<double>> cbl::Legendre_polynomial_triangles_average (const double 
 // ============================================================================
 
 
-complex<double> cbl::spherical_harmonics (const int l, const int m, const double xx, const double yy, const double zz)
+complex<double> cbl::spherical_harmonics (cbl::CoordinateType coordinate_type, const int l, const int m, const double coord1, const double coord2, const double coord3) 
 {
-  const double sintheta = sin(acos(zz));
-  complex<double> exp_iphi(xx/(sintheta), yy/(sintheta));
-  complex<double> pow_exp = pow(exp_iphi, m);
 
-  double fact = pow(-1., m)*gsl_sf_legendre_sphPlm (l, m, zz);
-
-  return fact*pow_exp;
+  if(coordinate_type==cbl::CoordinateType::_comoving_){
+    double xx=coord1, yy=coord2, zz=coord3;
+    const double sintheta = sin(acos(zz));
+    complex<double> exp_iphi(xx/(sintheta), yy/(sintheta));
+    
+    if(m<0) {  //Y_l_-m=(-1)^m*conj(Y_lm)
+      complex<double> pow_exp = pow(exp_iphi, -m);
+      double fact = gsl_sf_legendre_sphPlm (l, -m, zz);
+      return conj(fact*pow_exp);
+    }
+    else {
+      complex<double> pow_exp = pow(exp_iphi, m);
+      double fact = pow(-1.,m)*gsl_sf_legendre_sphPlm(l, m, zz);
+      return fact*pow_exp;
+    }    
+  }
+  
+  else {
+    const double pi_2=cbl::par::pi*0.5;
+    double colatitude=pi_2-coord1;
+    double RA= coord2;
+    return pow(-1.,m)*boost::math::spherical_harmonic(l, m, colatitude, RA);
+        
+  }
+  
 }
 
 
@@ -2162,6 +2216,273 @@ double cbl::trapezoid_integration (const std::vector<double> xx, const std::vect
 double cbl::binomial_coefficient(const int n, const int m)
 {
   return double(gsl_sf_fact(n))/double(gsl_sf_fact(m)*gsl_sf_fact(n-m));
+}
+
+
+// ============================================================================
+
+
+template <typename T>        //template used in wigner_3j
+double cbl::sgn(T val)
+{
+  int sgn = (T(0) < val) - (val < T(0));
+  if (sgn == 0)
+    return 1.0;
+  else
+    return (double)sgn;
+}
+
+
+// ============================================================================
+
+
+double cbl::wigner3j_auxA(double l1, double l2, double l3, double m1, double /*m2*/, double /*m3*/)
+{
+  double T1 = l1*l1-pow(l2-l3,2.0);
+  double T2 = pow(l2+l3+1.0,2.0)-l1*l1;
+  double T3 = l1*l1-m1*m1;
+  
+  return sqrt(T1*T2*T3);
+}
+
+
+// ============================================================================
+
+
+double cbl::wigner3j_auxB(double l1, double l2, double l3, double m1, double m2, double m3)
+{
+  double T1 = -(2.0*l1+1.0);
+  double T2 = l2*(l2+1.0)*m1;
+  double T3 = l3*(l3+1.0)*m1;
+  double T4 = l1*(l1+1.0)*(m3-m2);
+  
+  return T1*(T2-T3-T4);
+}
+
+
+// ============================================================================
+
+
+std::vector<double> cbl::wigner3j(double l2, double l3, double m1, double m2, double m3)
+{
+    
+  // We compute the numeric limits of double precision.
+  double huge = sqrt(std::numeric_limits<double>::max()/20.0);
+  double srhuge = sqrt(huge);
+  double tiny = std::numeric_limits<double>::min();
+  double srtiny = sqrt(tiny);
+  double eps = std::numeric_limits<double>::epsilon();
+
+  // We enforce the selection rules.
+  bool select(true);
+  select = (
+	    std::fabs(m1+m2+m3)<eps
+	    && std::fabs(m2) <= l2+eps
+	    && std::fabs(m3) <= l3+eps
+	    );
+
+  if (!select) return std::vector<double>(1,0.0);
+
+  // We compute the limits of l1.
+  double l1min = std::max(std::fabs(l2-l3),std::fabs(m1));
+  double l1max = l2+l3;
+
+  // We compute the size of the resulting array.
+  int size = (int)std::floor(l1max-l1min+1.0+eps);
+  std::vector<double> thrcof(size,0.0);
+
+  // If l1min=l1max, we have an analytical formula.
+  if (size==1)
+    {
+      thrcof[0] = pow(-1.0,std::floor(std::fabs(l2+m2-l3+m3)))/sqrt(l1min+l2+l3+1.0);
+    }
+
+  // Another special case where the recursion relation fails.
+  else
+    {
+      // We start with an arbitrary value.
+      thrcof[0] = srtiny;
+
+      // From now on, we check the variation of |alpha(l1)|.
+      double alphaNew, l1(l1min);
+      if (l1min==0.0)
+	alphaNew = -(m3-m2+2.0*wigner3j_auxB(l1,l2,l3,m1,m2,m3))/wigner3j_auxA(1.0,l2,l3,m1,m2,m3);
+      else
+	alphaNew = -wigner3j_auxB(l1min,l2,l3,m1,m2,m3)
+	  /(l1min*wigner3j_auxA(l1min+1.0,l2,l3,m1,m2,m3));
+
+      // We compute the two-term recursion.
+      thrcof[1] = alphaNew*thrcof[0];
+
+      // If size > 2, we start the forward recursion.
+      if (size>2)
+	{
+	  // We start with an arbitrary value.
+	  thrcof[0] = srtiny;
+
+	  // From now on, we check the variation of |alpha(l1)|.
+	  double alphaOld, alphaNew, beta, l1(l1min);
+	  if (l1min==0.0)
+	    alphaNew = -(m3-m2+2.0*wigner3j_auxB(l1,l2,l3,m1,m2,m3))/wigner3j_auxA(1.0,l2,l3,m1,m2,m3);
+	  else
+	    alphaNew = -wigner3j_auxB(l1min,l2,l3,m1,m2,m3)
+	      /(l1min*wigner3j_auxA(l1min+1.0,l2,l3,m1,m2,m3));
+
+	  // We compute the two-term recursion.
+	  thrcof[1] = alphaNew*thrcof[0];
+
+	  // We compute the rest of the recursion.
+	  int i = 1;
+	  bool alphaVar = false;
+	  do
+	    {
+	      // Bookkeeping:
+	      i++;					// Next term in recursion
+	      alphaOld = alphaNew;	// Monitoring of |alpha(l1)|.
+	      l1 += 1.0;				// l1 = l1+1
+
+	      // New coefficients in recursion.
+	      alphaNew = -wigner3j_auxB(l1,l2,l3,m1,m2,m3)
+		/(l1*wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3));
+
+	      beta = -(l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3)
+		/(l1*wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3));
+
+	      // Application of the recursion.
+	      thrcof[i] = alphaNew*thrcof[i-1]+beta*thrcof[i-2];
+
+	      // We check if we are overflowing.
+	      if (std::fabs(thrcof[i])>srhuge)
+		{
+		  std::cout << "We renormalized the forward recursion." << std::endl;
+		  for (std::vector<double>::iterator it = thrcof.begin(); it != thrcof.begin()+i; ++it)
+		    {
+		      //if (std::fabs(*it) < srtiny) *it = 0;
+		      //else
+		      *it /= srhuge;
+		    }
+		}
+
+	      // This piece of code checks whether we have reached
+	      // the classical region. If we have, the second if
+	      // sets alphaVar to true and we break this loop at the
+	      // next iteration because we need thrcof(l1mid+1) to
+	      // compute the scalar lambda.
+	      if (alphaVar) break;
+
+	      if (std::fabs(alphaNew)-std::fabs(alphaOld)>0.0)
+		alphaVar=true;
+
+	    }	while (i<(size-1));	// Loop stops when we have computed all values.
+
+	  // If this is the case, we have stumbled upon a classical region.
+	  // We start the backwards recursion.
+	  if (i!=size-1)
+	    {
+	      // We keep the two terms around l1mid to compute the factor later.
+	      double l1midm1(thrcof[i-2]),l1mid(thrcof[i-1]),l1midp1(thrcof[i]);
+
+	      // We compute the backward recursion by providing an arbitrary
+	      // startint value.
+	      thrcof[size-1] = srtiny;
+
+	      // We compute the two-term recursion.
+	      l1 = l1max;
+	      alphaNew = -wigner3j_auxB(l1,l2,l3,m1,m2,m3)
+		/((l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3));
+	      thrcof[size-2] = alphaNew*thrcof[size-1];
+
+	      // We compute the rest of the backward recursion.
+	      int j = size-2;
+	      do
+		{
+		  // Bookkeeping
+		  j--;			// Previous term in recursion.
+		  l1 -= 1.0;		// l1 = l1-1
+
+					// New coefficients in recursion.
+		  alphaNew = -wigner3j_auxB(l1,l2,l3,m1,m2,m3)
+		    /((l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3));
+		  beta = -l1*wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3)
+		    /((l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3));
+
+		  // Application of the recursion.
+		  thrcof[j] = alphaNew*thrcof[j+1]+beta*thrcof[j+2];
+
+		  // We check if we are overflowing.
+		  if (std::fabs(thrcof[j]>srhuge))
+		    {
+		      std::cout << "We renormalized the backward recursion." << std::endl;
+		      for (std::vector<double>::iterator it = thrcof.begin()+j; it != thrcof.end(); ++it)
+			{
+			  //if (std::fabs(*it) < srtiny) *it = 0;
+			  //else
+			  *it /= srhuge;
+			}
+		    }
+
+		} while (j>(i-2)); // Loop stops when we are at l1=l1mid-1.
+
+	      // We now compute the scaling factor for the forward recursion.
+	      double lambda = (l1midp1*thrcof[j+2]+l1mid*thrcof[j+1]+l1midm1*thrcof[j])
+		/(l1midp1*l1midp1+l1mid*l1mid+l1midm1*l1midm1);
+
+	      // We scale the forward recursion.
+	      for (std::vector<double>::iterator it = thrcof.begin(); it != thrcof.begin()+j; ++it)
+		{
+		  *it *= lambda;
+		}
+	    }
+	}
+    }
+
+  // We compute the overall factor.
+  double sum = 0.0;
+  for (int k=0;k<size;k++)
+    {
+      sum += (2.0*(l1min+k)+1.0)*thrcof[k]*thrcof[k];
+    }
+  //std::cout << sum << std::endl;
+
+  //std::cout << "(-1)^(l2-l3-m1): " << pow(-1.0,l2-l3-m1) << " sgn:" << sgn(thrcof[size-1]) << std::endl;
+  double c1 = pow(-1.0,l2-l3-m1)*sgn(thrcof[size-1]);
+  //std::cout << "c1: " << c1 << std::endl;
+  for (std::vector<double>::iterator it = thrcof.begin(); it != thrcof.end(); ++it)
+    {
+      //std::cout << *it << ", " << c1 << ", ";
+      *it *= c1/sqrt(sum);
+      //std::cout << *it << std::endl;
+    }
+  return thrcof;
+}
+
+
+// ============================================================================
+
+
+double cbl::wigner3j(double l1, double l2, double l3,double m1, double m2, double m3)
+{
+  // We enforce the selection rules.
+  bool select(true);
+  select = (
+	    std::fabs(m1+m2+m3)<1.0e-10
+	    && std::floor(l1+l2+l3)==(l1+l2+l3)
+	    && l3 >= std::fabs(l1-l2)
+	    && l3 <= l1+l2
+	    && std::fabs(m1) <= l1
+	    && std::fabs(m2) <= l2
+	    && std::fabs(m3) <= l3
+	    );
+
+  if (!select) return 0.0;
+
+  // We compute l1min and the position of the array we will want.
+  double l1min = std::max(std::fabs(l2-l3),std::fabs(m1));
+
+  // We fetch the proper value in the array.
+  int index = (int)(l1-l1min);
+
+  return wigner3j(l2,l3,m1,m2,m3)[index];
 }
 
 

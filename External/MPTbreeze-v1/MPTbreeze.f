@@ -41,7 +41,7 @@
 
       nc       = 2
       iverbose = 1
-      path     = "./"
+      path     = ""
       fileTF   = ""
       filePk   = ""
 

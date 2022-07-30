@@ -7,9 +7,6 @@
 
 using namespace std;
 
-std::string cbl::par::DirCosmo;
-std::string cbl::par::DirLoc;
-
 // this example model has 4 parameters: A, B, C, D; C and D are free parameters, A is fixed, B is a derived parameter
 vector<double> model_function_plus (const vector<double> x, const shared_ptr<void> modelInput, std::vector<double> &parameter)
 {

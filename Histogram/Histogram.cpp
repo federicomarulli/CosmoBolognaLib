@@ -109,6 +109,8 @@ void cbl::glob::Histogram1D::set (const size_t nbins, const double minVar, const
       m_edges[i+1] = vec_edges[i+1];
       m_bins[i] = 0.5*(vec_edges[i]+vec_edges[i+1]);
     }
+    gsl_histogram_set_ranges(histo1.get(), m_edges.data(), m_nbins+1);
+    gsl_histogram_set_ranges(histo2.get(), m_edges.data(), m_nbins+1);
   }
 
   m_histo = histo1;
@@ -644,5 +646,3 @@ void cbl::glob::Histogram2D::write (const string dir, const string file, const H
 
   fout.clear(); fout.close();
 }
-
-

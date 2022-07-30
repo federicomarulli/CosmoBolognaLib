@@ -37,6 +37,7 @@
 
 #include "Likelihood.h"
 #include "EisensteinHu.h"
+#include "CAMB.h"
 
 
 // ===================================================================================================
@@ -403,9 +404,10 @@ namespace cbl {
        *  Boltzmann solver are stored; if false the output files are
        *  removed
        *
-       *  @param output_root the output_root parameter of the
-       *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        * 
        *  @param interpType method to interpolate the power spectrum
        *
@@ -435,7 +437,7 @@ namespace cbl {
        *  @return the funciton to compute the not-yet-normalised 
        *  mass variances
        */
-      double m_func_sigma (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true, std::function<double(double)> filter={}, const bool unit1=false) const;
+      double m_func_sigma (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, std::function<double(double)> filter={}, const bool unit1=false) const;
 
       /**
        *  @brief the not-yet-normalised mass variance,
@@ -465,9 +467,10 @@ namespace cbl {
        *  Boltzmann solver are stored; if false the output files are
        *  removed
        *
-       *  @param output_root the output_root parameter of the
-       *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        * 
        *  @param interpType method to interpolate the power spectrum
        *
@@ -494,7 +497,7 @@ namespace cbl {
        *
        *  @return the not-yet-normalised \f$\sigma^2(R)\f$
        */
-      double m_sigma2R_notNormalised (const double radius, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const;
+      double m_sigma2R_notNormalised (const double radius, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const;
       
       /**
        *  @brief the not-yet-normalised mass variance,
@@ -524,9 +527,10 @@ namespace cbl {
        *  Boltzmann solver are stored; if false the output files are
        *  removed
        *
-       *  @param output_root the output_root parameter of the
-       *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -552,7 +556,7 @@ namespace cbl {
        *
        *  @return the not-yet-normalised \f$\sigma^2(M)\f$
        */
-      double m_sigma2M_notNormalised (const double mass, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double m_sigma2M_notNormalised (const double mass, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
       
       /**
        *  @brief auxiliary function to compute the mass function of
@@ -606,8 +610,7 @@ namespace cbl {
        *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
        *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
        *  @param default_delta true = using function
        *  cbl::cosmology::deltac; false = using delta_t*growth
@@ -619,9 +622,9 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
@@ -629,6 +632,64 @@ namespace cbl {
        *  masses and at \f$z<1.25\f$
        */
       double m_MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const double Delta=200., const bool default_delta=true, const double delta_t=1.686); 
+
+      /**
+       *  @brief auxiliary function to compute the mass function
+       *
+       *  @author Alfonso Veropalumbo, Jacopo Neri (and Federico
+       *  Marulli)
+       *
+       *  @author alfonso.veropalumbo@unibo.it, jacopo.neri6@gmail.com
+       *  (and federico.marulli3@unibo.it)
+       *
+       *  @param Mass mass
+       *
+       *  @param Sigma &sigma;(mass): the mass variance
+       *
+       *  @param Dln_Sigma dln&sigma;/dM: the derivative of the mass
+       *  variance
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
+       *
+       *  @param D_N the growth factor, precomputed. 
+       *
+       *  @param Delta \f$\Delta\f$, the overdensity
+       *
+       *  @param default_delta true = using function
+       *  cbl::cosmology::deltac; false = using delta_t*growth
+       *  factor
+       *  
+       *  @param delta_t user defined density contrast at \f$z = 0\f$
+       *
+       *  @return the mass function, d&Phi;/dM=dn(M)/dM
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
+       *
+       *  @warning the mass function by Manera et al. (2010) has been
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
+       */
+      double m_MF_generator (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const double D_N, const std::string model_MF, const double Delta=200., const bool default_delta=true, const double delta_t=1.686); 
 
       /**
        *  @brief auxiliary function to compute the halo bias
@@ -642,18 +703,43 @@ namespace cbl {
        *  2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the correction
        *  of Warren 2004), Tinker (Tinker et al. 2010)
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
        *  @return the halo bias
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        */
       double m_bias_halo_generator (const double Sigma, const double redshift, const std::string author, const double Delta=200.) const;    
+
+      /**
+       *  @brief auxiliary function to compute the halo bias
+       *
+       *  @param Sigma &sigma;(mass, z=0): the mass variance at z=0
+       *
+       *  @param redshift the redshift
+       *
+       *  @param D_N the amplitude of the growing mode
+       *
+       *  @param author author(s) who proposed the bias; valid authors
+       *  are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo & Tormen
+       *  2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the correction
+       *  of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param Delta \f$\Delta\f$, the overdensity
+       *
+       *  @return the halo bias
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
+       */
+      double m_bias_halo_generator (const double Sigma, const double redshift, const double D_N, const std::string author, const double Delta=200.) const;  
 
       /**
        *  @brief the incomplete elliptic integral 
@@ -773,16 +859,51 @@ namespace cbl {
        *  @param [in] redshift redshift
        *  
        *  @param [in] store_output if true the output files created by
-       *  the Boltmann solver are stored; if false the output files
+       *  the Boltzmann solver are stored; if false the output files
        *  are removed
        *
-       *  @param [in] output_root output_root of the parameter file used
-       *  to compute the power spectrum; it can be any name
+       *  @param [in] output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        *
        *  @param [in] k_max maximum wave vector module up to which the
        *  power spectrum is computed
        */
-      void m_Table_Pk_CAMB_MPTbreeze (const std::string code, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=5.) const;
+      void m_Table_Pk_CAMB_MPTbreeze (const std::string code, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100.) const;
+
+      /**
+       *  @brief write and read the table where the dark matter power
+       *  spectrum, computed with either CAMB or MPTbreeze, is stored
+       *
+       *  @param [in] code method used to compute the power spectrum;
+       *  valid codes are: CAMB [http://camb.info/] or MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465]
+
+       *  @param [in] NL false \f$\rightarrow\f$ linear power
+       *  spectrum; true \f$\rightarrow\f$ non-linear power spectrum
+       *
+       *  @param [out] lgkk vector of vectors containing the log(k) at
+       *  each redshift
+       *
+       *  @param [out] lgPk vector of vectors containing the log(P(k)) at
+       *  each redshift
+       *
+       *  @param [in] redshift vector of redshifts
+       *  
+       *  @param [in] store_output if true the output files created by
+       *  the Boltzmann solver are stored; if false the output files
+       *  are removed
+       *
+       *  @param [in] output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
+       *
+       *  @param [in] k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       */
+      void m_Table_Pk_CAMB_MPTbreeze (const std::string code, const bool NL, std::vector<std::vector<double>> &lgkk, std::vector<std::vector<double>> &lgPk, const std::vector<double> redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100.) const;
 
       /**
        *  @brief write and read the table where the dark matter power
@@ -798,33 +919,47 @@ namespace cbl {
        *  @param [in] redshift redshift
        *  
        *  @param [in] store_output if true the output files created by
-       *  the Boltmann solver are stored; if false the output files
+       *  the Boltzmann solver are stored; if false the output files
        *  are removed
        *
-       *  @param [in] output_root output_root of the parameter file used
-       *  to compute the power spectrum; it can be any name
+       *  @param [in] output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        *
        *  @param [in] k_max maximum wave vector module up to which the
        *  power spectrum is computed
        */
-      void m_Table_Pk_CLASS (const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=5.) const;
-      
-      /**
-       *  @brief remove the output generated by the methods CAMB,
-       *  MPTbreeze or CLASS
+      void m_Table_Pk_CLASS (const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100.) const;
+            /**
+       *  @brief write and read the table where the dark matter power
+       *  spectrum computed with CLASS is stored
        *
-       *  @param code method used to compute the power spectrum; valid
-       *  codes are: CAMB [http://camb.info/], CLASS
-       *  [http://class-code.net/], MPTbreeze-v1
-       *  [http://arxiv.org/abs/1207.1465]
-
-       *  @param NL false \f$\rightarrow\f$ linear power
+       *  @param [in] NL false \f$\rightarrow\f$ linear power
        *  spectrum; true \f$\rightarrow\f$ non-linear power spectrum
        *
-       *  @param redshift redshift
+       *  @param [out] lgkk vector of vectors containing the log(k) at
+       *  each redshift
+       *
+       *  @param [out] lgPk vector of vectors containing the log(P(k)) at
+       *  each redshift
+       *
+       *  @param [in] redshift vector of redshifts
+       *  
+       *  @param [in] store_output if true the output files created by
+       *  the Boltzmann solver are stored; if false the output files
+       *  are removed
+       *
+       *  @param [in] output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
+       *
+       *  @param [in] k_max maximum wave vector module up to which the
+       *  power spectrum is computed
        */
-      void m_remove_output_Pk_tables (const std::string code, const bool NL, const double redshift) const;
-
+      void m_Table_Pk_CLASS (const bool NL, std::vector<std::vector<double>> &lgkk, std::vector<std::vector<double>> &lgPk, const std::vector<double> redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100.) const;
+      
       /**
        *  @brief write and read the table where the dark matter power
        *  spectrum is stored; it is used when a parameter file is
@@ -848,8 +983,10 @@ namespace cbl {
        *
        *  @param [in] redshift redshift
        *
-       *  @param [in] output_root output_root of the parameter file
-       *  used to compute the power spectrum; it can be any name
+       *  @param [in] output_root output_root of the parameter file used to
+       *  compute the power spectrum; it can be any name. If this
+       *  parameter is different from the default value it will be
+       *  used also in the output directory name
        *
        *  @warning the input output_root parameter must be the same as
        *  the one in the parameter file
@@ -1231,6 +1368,46 @@ namespace cbl {
        */
       void set_parameters (const std::vector<CosmologicalParameter> parameter, const std::vector<double> value);
 
+
+      /**
+       *  @brief set the value of \f$\Omega_{\rm b}\f$, \f$\Omega_{\rm cdm}\f$,
+       *  \f$\Omega_{\nu}\f$, \f$\Omega_{\rm rad}\f$, \f$\Omega_{\rm DE}\f$,
+       *  and consequently the values of 
+       *
+       *  \f$\Omega_{\rm M} = \Omega_{\rm b}+\Omega_{\rm cdm}+\Omega_{\nu}, \f$
+       *
+       *  and 
+       *
+       *  \f$\Omega_{\rm k} = 1-\Omega_{\rm M}-\Omega_{\rm rad}-\Omega_{\rm DE}\f$
+       *
+       *  @param OmegaB density of baryons, \f$\Omega_{\rm M}\f$, in units of the
+       *  critical density
+       *
+       *  @param OmegaCDM density of cold dark matter, \f$\Omega_{\rm cdm}\f$, in units of the
+       *  critical density 
+       *
+       *  @param OmegaNu density of massive neutrinos, \f$\Omega_{\nu}\f$, in units of the
+       *  critical density
+       *
+       *  @param OmegaR density of radiation, \f$\Omega_{\rm rad}\f$, in units of the
+       *  critical density
+       *
+       *  @param OmegaDE density of dark energy, \f$\Omega_{\rm DE}\f$, in units of the
+       *  critical density
+       *
+       */
+      void set_Omega_all (const double OmegaB, const double OmegaCDM, const double OmegaNu, const double OmegaR, const double OmegaDE) {
+	m_Omega_baryon = OmegaB;
+     	m_Omega_CDM = OmegaCDM;
+     	m_Omega_neutrinos = OmegaNu;
+     	m_Omega_radiation = OmegaR;
+     	m_Omega_DE = OmegaDE;
+     
+     	m_Omega_matter = m_Omega_CDM+m_Omega_baryon+m_Omega_neutrinos;
+     	m_Omega_k = 1.-m_Omega_matter-m_Omega_radiation-m_Omega_DE;
+      };
+      
+
       /**
        *  @brief set the value of &Omega;<SUB>M</SUB>, keeping
        *  &Omega;<SUB>DE</SUB>=1-&Omega;<SUB>M</SUB>-&Omega;<SUB>rad</SUB>-&Omega;<SUB>k</SUB>
@@ -1295,7 +1472,6 @@ namespace cbl {
       {
 	m_Omega_DE = Omega_DE; 
 	m_Omega_k = 1.-m_Omega_matter-m_Omega_radiation-m_Omega_DE;
-	m_Omega_CDM = m_Omega_matter-m_Omega_baryon-m_Omega_neutrinos;
       };
 
       /**
@@ -1640,50 +1816,6 @@ namespace cbl {
       double Delta_c (const double redshift, const std::string author="BryanNorman") const;
 
       /**
-       *  @brief the virial overdensity given a critical overdensity
-       *
-       *  this function converts a given critical overdensity
-       *  \f$\Delta_c(z)\equiv\Delta^{vir}_c(z)\f$ into the
-       *  correspondent virial overdensity, at a given redshift
-       *
-       *  \f[\Delta_{vir}(z) \equiv \Delta^{vir}_b(z) =
-       *  \frac{\Delta^{vir}_c(z)}{\Omega_M(z)}\f]
-       *
-       *  where \f$\rho_{vir} = \Delta^{vir}_c\rho_c =
-       *  \Delta^{vir}_b\rho_m = \Delta^{vir}_b\Omega_M\rho_c\f$ (see
-       *  e.g. Coe 2010)
-       *
-       *  @param Delta_c \f$\Delta_{crit}\f$: critical overdensity
-       *
-       *  @param redshift the redshift
-       *
-       *  @return \f$\Delta_{vir}\f$
-       */
-      double Delta_vir (const double Delta_c, const double redshift) const;
-      
-      /**
-       *  @brief the virial overdensity
-       *
-       *  this function computes the virial overdensity:
-       *
-       *  \f[\Delta_{vir}(z) \equiv \Delta^{vir}_b(z) =
-       *  \frac{\Delta^{vir}_c(z)}{\Omega_M(z)}\f]
-       *
-       *  where \f$\rho_{vir} = \Delta^{vir}_c\rho_c =
-       *  \Delta^{vir}_b\rho_m = \Delta^{vir}_b\Omega_M\rho_c\f$ (see
-       *  e.g. Coe 2010), and \f$\Delta^{vir}_c(z)\f$ is computed by
-       *  cbl::cosmology::Cosmology::Delta_c
-       *  
-       *  @param redshift the redshift
-       *
-       *  @param author the author of the equation implemented;
-       *  available options are: "BryanNorma", "Eke", "NakamuraSuto"
-       *
-       *  @return \f$\Delta_{vir}\f$
-       */
-      double Delta_vir (const double redshift, const std::string author="BryanNorman") const; 
-
-      /**
        *  @brief the virial mass, given the virial radius and the
        *  redshift
        *
@@ -1807,36 +1939,40 @@ namespace cbl {
       double HH (const double redshift=0.) const;
 
       /**
-       *  @brief the linear growth factor at a given redshift,
-       *  \f$g(z)\f$
+       *  @brief the normalised amplitude of the growing mode at a
+       *  given redshift, \f$D(z)/D(0)\f$
        *
-       *  this function computes the following quantity (e.g. Eq.1 by
-       *  Hamilton 2001):
+       *  this function computes the following quantity:
        *
-       *  \f[ g(z) \equiv D(z)(1+z) \f]
+       *  \f[ \frac{D(z)}{D(z_{norm})} = \exp{\int_{a_{norm}}^{a}
+       *  \frac{f}{a'} {\rm d}a'} \f]
        *
-       *  where \f$a=1/(1+z)\f$ and \f$D(z)\f$ is computed by
-       *  cbl::cosmology::Cosmology::DD
+       *  where \f$a=1/(1+z)\f$, \f$a_{norm}=1/(1+z_{norm})\f$, and
+       *  \f$f\f$ is the linear growth rate computed by
+       *  cbl::cosmology::Cosmology::linear_growth_rate
        *
-       *  @param redshift the redshift
+       *  @param redshift the redshift 
        *
-       *  @return the linear growth factor
+       *  @param redshift_norm the redshift at with the amplitude of
+       *  the growing mode is normalised
        *
-       *  @warning the current implementation is valid only for
-       *  &Lambda;CDM cosmologies (e.g. Percival 2005 and references
-       *  therein)
+       *  @param prec precision used for the resolution of the
+       *  differential equation when the the normalised growth factor
+       *  is computed
+       *
+       *  @return the amplitude of the growing mode
        */
-      double gg (const double redshift=0.) const;   
+      double DN (const double redshift, const double redshift_norm=0., const double prec=1.e-4) const;
 
       /**
        *  @brief the amplitude of the growing mode at a given
        *  redshift, \f$D(z)\f$
        *
-       *  this function computes the following quantity (see Eq.15
-       *  by Percival 2005):
+       *  this function computes the following quantity (see Eq.(15)
+       *  by Percival (2005), A&A 443, 819):
        *
-       *  \f[ D(z) = \frac{5 \Omega_{M,0} }{2} E(a)
-       *  \int_0^a \frac{{\rm d}\,a'}{[a' E(a')]^3} \f]
+       *  \f[ D(z) = \frac{5 \Omega_{M,0} }{2} E(a) \int_0^a
+       *  \frac{{\rm d}\,a'}{[a' E(a')]^3} \f]
        *
        *  where \f$a=1/(1+z)\f$
        *
@@ -1845,67 +1981,29 @@ namespace cbl {
        *  @return the amplitude of the growing mode
        *
        *  @warning the current implementation is valid only for
-       *  &Lambda;CDM cosmologies (e.g. Percival 2005 and references
-       *  therein)
+       *  &Lambda;CDM cosmologies (e.g. Percival (2005) A&A 443, 819,
+       *  and references therein)
        */
       double DD (const double redshift) const;
-
-       /**
-       *  @brief the normalised amplitude of the growing mode at a given
-       *  redshift, \f$D(z)/D(0)\f$
+      
+      /**
+       *  @brief the linear growth factor at a given redshift,
+       *  \f$g(z)\f$
        *
-       *  For non-&Lambda;CDM cosmologies the function computes the
-       *  integral of the linear growth rate \f$f(z)\f$, given by the function
-       *  cbl::cosmology::Cosmology::linear_growth_rate. Otherwise it
-       *  makes use of the function cbl::cosmology::Cosmology::DD
+       *  this function computes the following quantity (e.g. Eq.(1) by
+       *  Hamilton 2001):
        *
-       *  @param redshift the redshift 
+       *  \f[ g(z) \equiv \tilde{D}(z)(1+z) \f]
        *
-       *  @param redshift_norm the redshift at with the amplitude of
-       *  the growing mode is normalised
-
-       *  @param computing_method if this string is "growth_rate" the
-       *  normalised of amplitude of the growing mode is computed
-       *  integrating the linear growth rate \f$f(z)\f$, if instead is
-       *  "Pk_ratio" this value is computed as the squared root of the
-       *  ratio between 2 P(k) spectra, at the specified wave vector
-       *  module and using the specified method. By default the
-       *  normalised growth factor is computed using the function
+       *  where \f$a=1/(1+z)\f$ and \f$D(z)\f$ is computed by
        *  cbl::cosmology::Cosmology::DD
        *
-       *  @param method_Pk method used to compute the power spectrum
-       *  (i.e. the Boltzmann solver); valid choices for method_Pk
-       *  are: CAMB [http://camb.info/], MGCAMB,
-       *  [https://arxiv.org/abs/1901.05956], CLASS
-       *  [http://class-code.net/], MPTbreeze-v1
-       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
-       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *  @param redshift the redshift
        *
-       *  @param NL false \f$\rightarrow\f$ linear power
-       *  spectrum; true \f$\rightarrow\f$ non-linear power spectrum
-       *
-       *  @param kk wave vector module
-       *
-       *  @param store_output if true the output files created by the
-       *  Boltzmann solver are stored; if false the output files are
-       *  removed
-       *
-       *  @param output_root the output_root parameter of the
-       *  parameter file used to compute the power spectrum; it can be
-       *  any name
-       *
-       *  @param prec precision used for the resolution of the
-       *  differential equation when the the normalised growth factor
-       *  is computed with computing_method="growth_rate"
-       *
-       *  @return the amplitude of the growing mode normalised to its
-       *  value at z=0
-       *
-       *  @warning The contribution of the radiation is not taken into
-       *  account
+       *  @return the linear growth factor
        */
-      double DD_norm (const double redshift, const double redshift_norm=0., const std::string computing_method="classic", const std::string method_Pk="CAMB", const bool NL=false, const double kk=-1., const bool store_output=true, const std::string output_root="test", const double prec=1.e-4) const;  
-
+      double gg (const double redshift=0.) const;
+      
       /**
        *  @brief &sigma;<SUB>8</SUB> at a given redshift
        *
@@ -2131,7 +2229,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @return redshift
        */
@@ -2497,7 +2596,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *     
@@ -2521,7 +2621,7 @@ namespace cbl {
        *
        *  @return file_grid name of the file where the grid is stored
        */
-      std::string create_grid_sigmaM (const std::string method_SS, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;         
+      std::string create_grid_sigmaM (const std::string method_SS, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;         
 
       /**
        *  @brief the mass function of dark matter haloes (filaments
@@ -2564,10 +2664,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
-       *  interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2612,17 +2712,107 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mass_function (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
-
+      double mass_function (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
+      /**
+       *  @brief the mass function of dark matter haloes in f(R)
+       *  cosmologies (see Hu & Sawicki 2007) computed with the
+       *  Boltzmann solver MGCAMB
+       *
+       *  @author Leonardo Gabriele Coppola and Sofia Contarini
+       *
+       *  @author leonardo.coppola@studio.unibo.it,
+       *  sofia.contarini3@unibo.it
+       *
+       *  @param Mass the mass
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
+       *
+       *  @param f_R0 value of the parameter \f$f_\mathrm{R0}\f$
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param Delta \f$\Delta\f$, the overdensity
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @param default_delta true = using function
+       *  cbl::cosmology::deltac; false = using delta_t*growth
+       *  factor
+       *  
+       *  @param delta_t user defined density contrast at \f$z = 0\f$
+       *
+       *  @return the mass function, d&Phi;/dM=dn(M)/dM
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
+       *
+       *  @warning the mass function by Manera et al. (2010) has been
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
+       */
+      double mass_function_fR (const double Mass, const double redshift, const std::string model_MF, const double f_R0=0., const bool store_output=true, const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
+      
       /**
        *  @brief the mass function of dark matter haloes (filaments and
        *  sheets) computed quickly using a grid
@@ -2664,10 +2854,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. . If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
-       *  interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2706,16 +2896,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mass_function_fast (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double mass_function_fast (const double Mass, const double redshift, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief the mass function of dark matter haloes (filaments and
@@ -2758,10 +2948,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the mean
-       *  interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2805,16 +2995,217 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const std::string model_MF, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      
+      /**
+       *  @brief the mass function of dark matter haloes (filaments and
+       *  sheets) computed quickly passing directly the mass variance
+       *  and its derivative as inputs
+       *
+       *  @author Alfonso Veropalumbo, Jacopo Neri (and Federico
+       *  Marulli)
+       *
+       *  @author alfonso.veropalumbo@unibo.it, jacopo.neri6@gmail.com
+       *  (and federico.marulli3@unibo.it)
+       *
+       *  @param Mass mass
+       *
+       *  @param Sigma &sigma;(mass): the mass variance
+       *
+       *  @param Dln_Sigma dln&sigma;/dM: the derivative of the mass
+       *  variance
+       *
+       *  @param redshift the redshift
+       *
+       *  @param D_N the amplitude of the growing mode
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
+       * 
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
+       *
+       *  @param Delta \f$\Delta\f$, the overdensity
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed to estimate the power spectrum
+       *  normalisation; this parameter is used only if norm=1
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], CLASS [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return the mass function, d&Phi;/dM=dn(M)/dM
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
+       *
+       *  @warning the mass function by Manera et al. (2010) has been
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
+       */
+      double mass_function (const double Mass, const double Sigma, const double Dln_Sigma, const double redshift, const double D_N, const std::string model_MF, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+
+      /**
+       *  @brief the mass function of dark matter haloes (filaments and
+       *  sheets) computed quickly passing directly the mass variance
+       *  and its derivative as inputs. This function takes vector in input
+       *  and compute the mass function for the input masses
+       *
+       *  @author Alfonso Veropalumbo, Jacopo Neri (and Federico
+       *  Marulli)
+       *
+       *  @author alfonso.veropalumbo@unibo.it, jacopo.neri6@gmail.com
+       *  (and federico.marulli3@unibo.it)
+       *
+       *  @param Mass mass
+       *
+       *  @param Sigma &sigma;(mass): the mass variance
+       *
+       *  @param Dln_Sigma dln&sigma;/dM: the derivative of the mass
+       *  variance
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_MF author(s) who proposed the mass function;
+       *  valid authors are: PS (Press & Schechter), ST (Sheth &
+       *  Tormen), Jenkins (Jenkins et al. 2001), Warren (Warren et
+       *  al. 2006), ShenH (halo MF, Shen et al. 2006), ShenF
+       *  (filament MF, Shen et al. 2006), ShenS (sheet MF, Shen et
+       *  al. 2006), Pan (Pan 2007), Peacock (Peacock at al. 2007),
+       *  Reed (Reed et al. 2007), Tinker (Tinker et al. 2008), Crocce
+       *  (Crocce et al. 2010), Manera (Manera et al. 2010), Courtin
+       *  (Courtin et al. 2010), Bhattacharya (Bhattacharya et
+       *  al. 2011), Angulo_FOF (FoF MF, Angulo et al. 2012),
+       *  Angulo_Sub (SUBFIND MF, Angulo et al. 2012), Watson_FOF (FoF
+       *  MF, Watson et al. 2012), Watson_SOH (Spherical Overdensity
+       *  halo MF, Watson et al. 2012), Despali_Z0, Despali_AllZ,
+       *  Despali_AllZAllCosmo, Despali_HighM (Despali et al. 2016)
+       * 
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
+       *
+       *  @param Delta \f$\Delta\f$, the overdensity
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed to estimate the power spectrum
+       *  normalisation; this parameter is used only if norm=1
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param prec accuracy of the integration 
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], CLASS [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return the mass function, d&Phi;/dM=dn(M)/dM
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
+       *
+       *  @warning the mass function by Manera et al. (2010) has been
+       *  tested only for z=0 and z=0.5; the mass function by Despali
+       *  et al. (2016) is currently implemented only for virial
+       *  masses and at \f$z<1.25\f$
+       */
+      std::vector<double> mass_function (const std::vector<double> Mass, const std::vector<double> Sigma, const std::vector<double> Dln_Sigma, const double redshift, const std::string model_MF, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
     
       /**
        *  @brief number of dark matter haloes per steradian or square
@@ -2863,10 +3254,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *       
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -2893,16 +3284,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double n_haloes (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double n_haloes (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief number of dark matter haloes per volume at fixed
@@ -2957,10 +3348,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -3004,16 +3395,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double n_haloes (const double Mass_min, const double Mass_max, const double Volume, const double redshift, const std::string model_MF, const std::string method_SS, const int nbin_mass=0, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
+      double n_haloes (const double Mass_min, const double Mass_max, const double Volume, const double redshift, const std::string model_MF, const std::string method_SS, const int nbin_mass=0, const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool default_delta=true, const double delta_t=1.686);
       
       /**
        *  @brief number of dark matter haloes per steradian or square
@@ -3068,13 +3459,13 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
-       *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
-       *  virial overdensity
+       *  @param isDelta_critical \f$\rightarrow\f$ \f$\Delta\f$ is the
+       *  overdensity defined with respect to the critical density
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -3101,16 +3492,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double n_haloes_selection_function (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double n_haloes_selection_function (const double Mass_min, const double Mass_max, const double z_min, const double z_max, const bool angle_rad, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_critical=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief mass function for a range of masses
@@ -3151,13 +3542,13 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
-       *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
-       *  virial overdensity
+       *  @param isDelta_critical \f$\rightarrow\f$ \f$\Delta\f$ is the
+       *  overdensity defined with respect to the critical density
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -3184,16 +3575,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      std::vector<double> mass_function (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> mass_function (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_critical=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief mass function given a selection function
@@ -3239,13 +3630,13 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
-       *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
-       *  virial overdensity
+       *  @param isDelta_critical \f$\rightarrow\f$ \f$\Delta\f$ is the
+       *  overdensity defined with respect to the critical density
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -3272,16 +3663,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      std::vector<double> mass_function_selection_function_vector (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> mass_function_selection_function_vector (const std::vector<double> mass, const double z_min, const double z_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_critical=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief redshift distribution of dark matter haloes
@@ -3329,13 +3720,13 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
-       *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
-       *  virial overdensity
+       *  @param isDelta_critical \f$\rightarrow\f$ \f$\Delta\f$ is the
+       *  overdensity defined with respect to the critical density
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -3361,16 +3752,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      std::vector<double> redshift_distribution_haloes (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> redshift_distribution_haloes (const double z_min, const double z_max, const int step_z, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_critical=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief redshift distribution of dark matter haloes, given a
@@ -3421,13 +3812,13 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
-       *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
-       *  virial overdensity
+       *  @param isDelta_critical \f$\rightarrow\f$ \f$\Delta\f$ is the
+       *  overdensity defined with respect to the critical density
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -3453,16 +3844,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      std::vector<double> redshift_distribution_haloes_selection_function (const std::vector<double> redshift, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> redshift_distribution_haloes_selection_function (const std::vector<double> redshift, const double Area_degrees, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_critical=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the mean redshift of a dark matter haloe sample,
@@ -3512,13 +3903,13 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
-       *  @param isDelta_vir \f$\rightarrow\f$ \f$\Delta\f$ is the
-       *  virial overdensity
+       *  @param isDelta_critical \f$\rightarrow\f$ \f$\Delta\f$ is the
+       *  overdensity defined with respect to the critical density
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -3544,16 +3935,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double mean_redshift_haloes_selection_function (const double z_min, const double z_max, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_vir=false, const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double mean_redshift_haloes_selection_function (const double z_min, const double z_max, const double Mass_min, const double Mass_max, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const bool store_output=true, const std::string output_root="test", const double Delta=200, const bool isDelta_critical=false, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
   
       /**
        *  @brief minimum halo mass, given the number of haloes in a
@@ -3611,10 +4002,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -3640,16 +4031,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double MhaloMin (const int n_halo, const double Area, const bool angle_rad, const double z_min, const double z_max, const double Mmax, const double lgM1_guess, const double lgM2_guess, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double MhaloMin (const int n_halo, const double Area, const bool angle_rad, const double z_min, const double z_max, const double Mmax, const double lgM1_guess, const double lgM2_guess, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200, const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
 
       /**
        *  @brief convert a cluster mass estimated in a different
@@ -3735,7 +4126,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @return p(z): formation probability
        */
@@ -3792,7 +4184,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        */
       void medianzf (const double ff, const double mass, const double z0, const std::string model_model, const std::string method_SS, std::vector<double> &zf, const bool store_output=true, const std::string output_root="test") const; 
   
@@ -3822,7 +4215,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @return the conditional variable w
        */
@@ -3848,10 +4242,11 @@ namespace cbl {
       /**
        *  @brief amplitude of the curvature perturbations
        *  
-       *  this function provides an approximate value of A<SUB>s</SUB>,
-       *  for a fiven value of &sigma;<SUB>8</SUB>, from Vikhlinin et
-       *  al. 2009, Eq.3; it is valid only without massive neutrinos! 
-       *  (see also Hu & Jain 2004)
+       *  this function provides an approximate value of
+       *  A<SUB>s</SUB>, for a fiven value of &sigma;<SUB>8</SUB>,
+       *  from Eq.(3) by Vikhlinin et al. 2009, ApJ, 692, 1060; it is
+       *  valid only without massive neutrinos!  (see also Hu & Jain
+       *  2004)
        *
        *  @param sigma8 &sigma;<SUB>8</SUB> the power spectrum normalisation
        *  @return A<SUB>s</SUB>
@@ -3893,7 +4288,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_max the maximum wave vector module up to which the
        *  power spectrum is computed
@@ -3904,7 +4300,7 @@ namespace cbl {
        *
        *  @return the path to the power spectrum output
        */
-      std::string Pk_output_file (const std::string code, const bool NL, const double redshift, const bool run=0, const bool store_output=true, const std::string output_root="test", const double k_max=5., const std::string file_par=par::defaultString);
+      std::string Pk_output_file (const std::string code, const bool NL, const double redshift, const bool run=0, const bool store_output=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString);
 
       /**
        *  @brief run CAMB [http://camb.info/]
@@ -3931,7 +4327,7 @@ namespace cbl {
        *  file is provided (i.e. file_par!=NULL), it will use be used,
        *  ignoring the cosmological parameters of the object
        */
-      void run_CAMB (const bool NL, const double redshift, const std::string output_root=par::defaultString, const std::string output_dir=par::defaultString, const double k_max=5., const std::string file_par=par::defaultString) const; 
+      void run_CAMB (const bool NL, const double redshift, const std::string output_root=par::defaultString, const std::string output_dir=par::defaultString, const double k_max=100., const std::string file_par=par::defaultString) const; 
 
       /**
        *  @brief run CAMB [http://camb.info/] and read the matter
@@ -3964,7 +4360,7 @@ namespace cbl {
        *  file is provided (i.e. file_par!=NULL), it will use be used,
        *  ignoring the cosmological parameters of the object
        */
-      void run_CAMB (std::vector<double> &lgkk, std::vector<double> &lgPk, const bool NL, const double redshift, const std::string output_root="test", const std::string output_dir=par::defaultString, const double k_max=5., const std::string file_par=par::defaultString) const;
+      void run_CAMB (std::vector<double> &lgkk, std::vector<double> &lgPk, const bool NL, const double redshift, const std::string output_root="test", const std::string output_dir=par::defaultString, const double k_max=100., const std::string file_par=par::defaultString) const;
 
       /**
        *  @brief write or read the table where the dark matter power
@@ -3987,8 +4383,10 @@ namespace cbl {
        *  @param [in] store_output if true the output files created
        *  are stored; if false the output files created are removed
        *
-       *  @param [in] output_root output_root of the parameter file used
-       *  to compute the power spectrum; it can be any name
+       *  @param [in] output_root output_root of the parameter file
+       *  used to compute the power spectrum; it can be any name. If
+       *  this parameter is different from the default value it will
+       *  be used also in the output directory name
        *
        *  @param [in] k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -3997,8 +4395,44 @@ namespace cbl {
        *  parameter file is provided (i.e. file_par!=NULL), it will be
        *  used, ignoring the cosmological parameters of the object
        */
-      void Table_PkCodes (const std::string code, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=5., const std::string file_par=par::defaultString) const;
+      void Table_PkCodes (const std::string code, const bool NL, std::vector<double> &lgkk, std::vector<double> &lgPk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const;
 
+      /**
+       *  @brief write or read the table where the dark matter power
+       *  spectrum is stored
+       *
+       *  @param [in] code method used to compute the power spectrum;
+       *  valid codes are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465]
+       *
+       *  @param [in] NL false \f$\rightarrow\f$ linear power
+       *  spectrum; true \f$\rightarrow\f$ non-linear power spectrum
+       *
+       *  @param [out] lgkk vector of vectors containing the log(k) at
+       *  each redshift
+       *
+       *  @param [out] lgPk vector of vectors containing the log(P(k))
+       *  at each redshift
+       *
+       *  @param [in] redshift vector of redshifts
+       *  
+       *  @param [in] store_output if true the output files created
+       *  are stored; if false the output files created are removed
+       *
+       *  @param [in] output_root output_root of the parameter file
+       *  used to compute the power spectrum; it can be any name. If
+       *  this parameter is different from the default value it will
+       *  be used also in the output directory name
+       *
+       *  @param [in] k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param [in] file_par name of the parameter file; if a
+       *  parameter file is provided (i.e. file_par!=NULL), it will be
+       *  used, ignoring the cosmological parameters of the object
+       */
+      void Table_PkCodes (const std::string code, const bool NL, std::vector<std::vector<double>> &lgkk, std::vector<std::vector<double>> &lgPk, const std::vector<double> redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const;
       /**
        *  @brief write or read the table where the dark matter two-point
        *  correlation function is stored
@@ -4018,11 +4452,13 @@ namespace cbl {
        *  @param [in] redshift redshift
        *
        *  @param [in] store_output if true the output files created by
-       *  the Boltmann solver are stored; if false the output files
+       *  the Boltzmann solver are stored; if false the output files
        *  are removed
        *
-       *  @param [in] output_root output_root of the parameter file used
-       *  to compute the power spectrum; it can be any name
+       *  @param [in] output_root output_root of the parameter file
+       *  used to compute the power spectrum; it can be any name. If
+       *  this parameter is different from the default value it will
+       *  be used also in the output directory name
        *
        *  @param [in] k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -4041,7 +4477,7 @@ namespace cbl {
        *
        *  @param method_Pk method used to compute the power spectrum
        *  (i.e. the Boltzmann solver); valid choices for method_Pk
-       *  are: CAMB [http://camb.info/], CLASS
+       *  are: CAMB [http://camb.info/], CAMB_wrapper (running CAMB wrapper), CLASS
        *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
@@ -4054,7 +4490,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default
+       *  value it will be used also in the output directory name
        *
        *  @param k_min minimum wave vector module up to which the
        *  power spectrum is computed to estimate the power spectrum
@@ -4070,26 +4507,26 @@ namespace cbl {
        *  file is provided (i.e. file_par!=NULL), it will be used,
        *  ignoring the cosmological parameters of the object
        */
-      void Pk_0 (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      void Pk_0 (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief the dark matter power spectrum
        *
-       *  this function provides the dark matter power spectrum P(k);
+       *  this function provides the dark matter power spectrum;
        *  it can use either CAMB, CLASS, MPTbreeze or the analytic
        *  approximation by Eisenstein & Hu
        *
-       *  @param kk the wave vector module
+       *  @param kk vector of wave vector modules
        *
        *  @param method_Pk method used to compute the power spectrum
        *  (i.e. the Boltzmann solver); valid choices for method_Pk
-       *  are: CAMB [http://camb.info/], CLASS
+       *  are: CAMB [http://camb.info/], CAMB_wrapper (running CAMB wrapper), CLASS
        *  [http://class-code.net/], MPTbreeze-v1
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param NL false \f$\rightarrow\f$ linear power spectrum;
-       *  true \f$\rightarrow\f$ non-linear power spectrum
+       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
+       *  non-linear power spectrum
        *
        *  @param redshift the redshift
        *
@@ -4099,7 +4536,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default
+       *  value it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4124,7 +4562,7 @@ namespace cbl {
        *
        *  @return the dark matter power spectrum 
        */
-      double Pk_DM (const double kk, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
+      std::vector<double> Pk_matter (const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
 
       /**
        *  @brief the dark matter power spectrum
@@ -4142,10 +4580,10 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
-       *  non-linear power spectrum
+       *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1
+       *  \f$\rightarrow\f$ non-linear power spectrum
        *
-       *  @param redshift the redshift
+       *  @param redshift vector of redshifts
        *
        *  @param store_output if true the output files created by the
        *  Boltzmann solver are stored; if false the output files are
@@ -4153,7 +4591,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default
+       *  value it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4178,7 +4617,7 @@ namespace cbl {
        *
        *  @return the dark matter power spectrum 
        */
-      std::vector<double> Pk_DM (const std::vector<double> kk, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
+      std::vector<std::vector<double>> Pk_matter (const std::vector<double> kk, const std::string method_Pk, const bool NL, const std::vector<double> redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false); 
 
       /**
        *  @brief  the dark matter linear power spectrum.
@@ -4204,7 +4643,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4215,7 +4655,7 @@ namespace cbl {
        *  @return P;<SUB>DW</SUB>(k): the De-Wiggled power
        *  spectrum of dark matter
        */
-      std::vector<double> Pk_DM_Linear (const std::string method, const std::vector<double> kk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double prec=1.e-4);
+      std::vector<double> Pk_matter_Linear (const std::string method, const std::vector<double> kk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double prec=1.e-4);
 
       /**
        *  @brief the dark matter power spectrum without BAO wiggles.
@@ -4261,7 +4701,7 @@ namespace cbl {
        *  @return P;<SUB>NW</SUB>(k): the No-Wiggle par of the power
        *  spectrum of dark matter
        */
-      std::vector<double> Pk_DM_NoWiggles_gaussian (const std::vector<double> kk, const std::vector<double> PkLin, const std::vector<double> PkApprox, const double lambda, const std::string method);
+      std::vector<double> Pk_matter_NoWiggles_gaussian (const std::vector<double> kk, const std::vector<double> PkLin, const std::vector<double> PkApprox, const double lambda, const std::string method);
 
       /**
        *  @brief the dark matter power spectrum without BAO wiggles.
@@ -4289,7 +4729,7 @@ namespace cbl {
        *  @return P;<SUB>NW</SUB>(k): the No-Wiggle par of the power
        *  spectrum of dark matter
        */
-      std::vector<double> Pk_DM_NoWiggles_bspline (const std::vector<double> kk, const std::vector<double> PkLin, const std::vector<double> PkApprox, const int order, const int nknots);
+      std::vector<double> Pk_matter_NoWiggles_bspline (const std::vector<double> kk, const std::vector<double> PkLin, const std::vector<double> PkApprox, const int order, const int nknots);
 
       /**
        *  @brief the dark matter power spectrum without BAO wiggles
@@ -4299,11 +4739,11 @@ namespace cbl {
        *  - EisensteinHu approximate formulas
        *  [http://arxiv.org/abs/1207.1465]:
        *  -  bspline interpolation (see 
-       *  cbl::cosmology::Cosmology::Pk_DM_NoWiggles_bspline).
+       *  cbl::cosmology::Cosmology::Pk_matter_NoWiggles_bspline).
        *  - gaussian 3d smoothing  (see 
-       *  cbl::cosmology::Cosmology::Pk_DM_NoWiggles_gaussian_3d).
+       *  cbl::cosmology::Cosmology::Pk_matter_NoWiggles_gaussian_3d).
        *  - gaussian 1d smoothing  (see 
-       *  cbl::cosmology::Cosmology::Pk_DM_NoWiggles_gaussian_1d).
+       *  cbl::cosmology::Cosmology::Pk_matter_NoWiggles_gaussian_1d).
        *
        *  @author Alfonso Veropalumbo
        *  @author alfonso.veropalumbo@unibo.it
@@ -4336,7 +4776,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4347,7 +4788,7 @@ namespace cbl {
        *  @return P;<SUB>DW</SUB>(k): the De-Wiggled power
        *  spectrum of dark matter
        */
-      std::vector<double> Pk_DM_NoWiggles (const std::string method, const std::vector<double> kk, const double redshift, const std::string linear_method="CAMB", const int order=4, const int nknots=10, const double lambda=0.25, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double prec=1.e-4);
+      std::vector<double> Pk_matter_NoWiggles (const std::string method, const std::vector<double> kk, const double redshift, const std::string linear_method="CAMB", const int order=4, const int nknots=10, const double lambda=0.25, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double prec=1.e-4);
 
       /**
        *  @brief the dark matter power spectrum, de-wiggled (see
@@ -4386,7 +4827,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4397,8 +4839,29 @@ namespace cbl {
        *  @return P;<SUB>DW</SUB>(k): the De-Wiggled power
        *  spectrum of dark matter
        */
-       std::vector<double> Pk_DM_DeWiggled (const std::string linear_method, const std::string nowiggles_method, const std::vector<double> kk, const double redshift, const double sigma_NL, const int order=4, const int nknots=10, const double lambda=0.25, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double prec=1.e-4);
+       std::vector<double> Pk_matter_DeWiggled (const std::string linear_method, const std::string nowiggles_method, const std::vector<double> kk, const double redshift, const double sigma_NL, const int order=4, const int nknots=10, const double lambda=0.25, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double prec=1.e-4);
+       
+       /**
+	*  @brief remove the output generated by the methods CAMB,
+	*  MPTbreeze or CLASS
+	*
+	*  @param code method used to compute the power spectrum; valid
+	*  codes are: CAMB [http://camb.info/], CLASS
+	*  [http://class-code.net/], MPTbreeze-v1
+	*  [http://arxiv.org/abs/1207.1465]
 
+	*  @param NL false \f$\rightarrow\f$ linear power
+	*  spectrum; true \f$\rightarrow\f$ non-linear power spectrum
+	*
+	*  @param redshift redshift
+	*
+	*  @param output_root output_root of the parameter file used to
+	*  compute the power spectrum; it can be any name. If this
+	*  parameter is different from the default value it will be
+	*  used also in the output directory name
+	*/
+       void remove_output_Pk_tables (const std::string code, const bool NL, const double redshift, const std::string output_root="test") const;
+       
       /**
        *  @brief the mass variance, \f$\sigma^2(R)\f$
        *
@@ -4427,7 +4890,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -4453,7 +4917,7 @@ namespace cbl {
        *
        *  @return \f$\sigma^2(R)\f$
        */
-      double sigma2R (const double radius, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double sigma2R (const double radius, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
 
       /**
        *  @brief the mass variance, \f$\sigma^2(M)\f$
@@ -4483,7 +4947,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -4509,7 +4974,7 @@ namespace cbl {
        *
        *  @return \f$\sigma^2(M)\f$
        */
-      double sigma2M (const double mass, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double sigma2M (const double mass, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
  
       /**
        *  @brief the nth-order derivative of the mass variance,
@@ -4534,7 +4999,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -4565,7 +5031,7 @@ namespace cbl {
        *  incremental step; it is computationally efficient, but the
        *  accuracy might be lowt
        */
-      double dnsigma2R (const int nd, const double radius, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double dnsigma2R (const int nd, const double radius, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
 
       /**
        *  @brief the first derivative of the mass variance, \f${\rm
@@ -4590,7 +5056,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -4621,7 +5088,7 @@ namespace cbl {
        *  incremental step; it is computationally efficient, but the
        *  accuracy might be low
        */
-      double dnsigma2M (const int nd, const double mass, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
+      double dnsigma2M (const int nd, const double mass, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true, const bool unit1=false) const; 
 
       ///@}
 
@@ -4632,25 +5099,17 @@ namespace cbl {
       ///@{
       
       /**
-       *  @brief the concentration-mass relation
+       *  @brief the halo concentration-mass relation for NFW
+       * prfile and Duffy model
        * 
-       *  this function computes the concentration of a dark matter
-       *  halo of a given a mass, at a given redshift; the models
-       *  implemented are the following:
-       *
-       *  - Duffy et al. 2008:
+       *  This function computes the concentration of a dark matter
+       *  halo of a given a mass, at a given redshift following 
+       *  Duffy et al. 2008 model:
        *  \f[c(M_h, z) = A(M_h/M_{pivot})^B\,(1+z)^C\f]
        *
-       *  @param Mass the halo mass
+       *  @param Mass the halo mass.
        *
-       *  @param redshift the redshift
-       *
-       *  @param author the author(s) of the relation; available
-       *  options are: "Duffy" (Duffy et al. 2008)
-       *
-       *  @param profile the density profile; available options are:
-       *  "NFW" \f$\rightarrow\f$ Navarro-Frenk-White profile;
-       *  "Einasto" \f$\rightarrow\f$ Einasto profile
+       *  @param redshift the redshift (must be < 2).
        *
        *  @param halo_def the halo definition; available options are:
        *  "vir" \f$\rightarrow\f$ all matter withing the radius
@@ -4661,28 +5120,17 @@ namespace cbl {
        *  internal density is 200 times the critical density; "mean"
        *  \f$\rightarrow\f$ all matter withing the radius
        *  \f$r_{200}\f$ for which the mean internal density is 200
-       *  times the critical mean background density
+       *  times the critical mean background density.
        *
-       *  @return the halo concentration
+       *  @return the halo concentration for NFW profile and Duffy model.
        *
        *  @warning the Duffy et al. concentrantion-mass relation
        *  refers to the 0<z<2 redshift range, obtained from their full
        *  samples (see Table 1 of Duffy et al. 2008); actually, the
-       *  current implementation does not depend on cosmology, it is
-       *  implemented here for possible future implementations (Zhao
-       *  et al. 2009, Giocoli, Tormen & Sheth 2012)
+       *  current implementation does not depend on cosmology.
        */
-      double concentration (const double Mass, const double redshift, const std::string author="Duffy", const std::string profile="NFW", const std::string halo_def="vir") const;
-          
-      /**
-       *  @brief compute the halo concentration
-       *  @author Carlo Giocoli
-       *  @author cgiocoli@gmail.com
-       *  @param Vmax V<SUB>max</SUB>
-       *  @param Rmax R<SUB>max</SUB>
-       *  @return the halo concentration
-       */
-      double concentration2 (const double Vmax, const double Rmax) const;
+      double concentration_NFW_Duffy (const double Mass, const double redshift, const std::string halo_def="vir") const;
+
 
       /**
        *  @brief virial halo concentration given \f$c_{200}\f$
@@ -4709,198 +5157,10 @@ namespace cbl {
        *  @return \f$c_{vir}\f$
        */
       double c_vir (const double c200, const double redshift, const std::string author="BryanNorman") const;
-      
-      /**
-       *  @brief the normalised halo density profile
-       *
-       *  this function computes the normalised density distribution
-       *  of dark matter haloes; the Navarro-Frenk-White profile is
-       *  the only one currently implemented (see e.g. eq. 74 of
-       *  Cooray & Sheth 2002, eq. 68 of van den Bosch et
-       *  al. 2012eq. 38 of Coe 2010):
-       *
-       *  \f[u_h(r, M_h, z) = \frac{\rho_h(r, M_h, z)}{M_h} =
-       *  \frac{\rho_s}{(r/r_s)(1+r/r_s)^2}\f]
-       *
-       *  where
-       *
-       *  \f[\rho_s =
-       *  \frac{\rho_{crit}\Delta_c}{3}\frac{c^3}{\ln(1+c)-c/(1+c)}\f]
-       *
-       *  the relation between the halo concentration,
-       *  \f$c=c_{vir}=r_{vir}/r_s\f$, and halo mass, \f$M_h\f$, is
-       *  computed by cbl::modelling::twopt::concentration;
-       *  \f$\Delta_c(z)\f$ is computed by
-       *  cbl::cosmology::Cosmology::Delta_c and
-       *  \f$\rho_{crit}(z)\f$ is computed by
-       *  cbl::cosmology::Cosmology::rho_crit; \f$r_{vir}(M_h,
-       *  z)\f$ is computed by cbl::cosmology::Cosmology::r_vir
-       *
-       *  @param rad the scale
-       *
-       *  @param Mass the dark matter halo mass
-       *
-       *  @param redshift the redshift
-       *
-       *  @param model_cM the author(s) of the concentration-mass
-       *  relation (see cbl::modelling::twopt::concentration)
-       *
-       *  @param profile the density profile (see
-       *  cbl::modelling::twopt::concentration)
-       *
-       *  @param halo_def the halo definition (see
-       *  cbl::modelling::twopt::concentration)
-       *
-       *  @return the halo density profile
-       */
-      double density_profile (const double rad, const double Mass, const double redshift, const std::string model_cM="Duffy", const std::string profile="NFW", const std::string halo_def="vir") const;
 
-      /**
-       *  @brief the Fourier transform of the normalised halo density
-       *  profile
-       *
-       *  this function computes the Fourier transform of the
-       *  normalised density distribution of dark matter haloes; the
-       *  Navarro-Frenk-White profile is the only one currently
-       *  implemented (see e.g. eq. 81 of Cooray & Sheth 2002 and 70
-       *  of van den Bosch et al. 2012)
-       *
-       *  \f[\tilde{u}_h(k, M_h, z) = \frac{4\pi\rho_sr_s^3}{M_h}
-       *  \left[\cos\mu\left[{\rm Ci}(\mu+\mu c) - {\rm
-       *  Ci}(\mu)\right] + \sin\mu\left[{\rm Si}(\mu+\mu c) - {\rm
-       *  Si}(\mu)\right] - \frac{\sin\mu c}{\mu+\mu c}\right]\f]
-       *
-       *  where 
-       *
-       *  \f[\mu\equiv kr_s\,,\f]
-       *
-       *  \f[\rho_s = \frac{\rho_{crit}\Delta_c}{3}
-       *  \frac{c^3}{\ln(1+c)-c/(1+c)}\,,\f]
-       *
-       *  \f[{\rm Ci}(x)=-\int_x^\infty\frac{\cos t}{t}\,{\rm d}t\,,\f]
-       *
-       *  \f[{\rm Si}(x)=-\int_x^\infty\frac{\sin t}{t}\,{\rm d}t\f]
-       *
-       *  the relation between the halo concentration,
-       *  \f$c=c_{vir}=r_{vir}/r_s\f$, and halo mass, \f$M_h\f$, is
-       *  computed by cbl::modelling::twopt::concentration;
-       *  \f$\Delta_c(z)\f$ is computed by
-       *  cbl::cosmology::Cosmology::Delta_c and
-       *  \f$\rho_{crit}(z)\f$ is computed by
-       *  cbl::cosmology::Cosmology::rho_crit; \f$r_{vir}(M_h,
-       *  z)\f$ is computed by cbl::cosmology::Cosmology::r_vir
-       *
-       *  @param kk the wave vector module at which the model is
-       *  computed
-       *
-       *  @param Mass the halo mass
-       *
-       *  @param redshift the redshift
-       *
-       *  @param model_cM the author(s) of the concentration-mass
-       *  relation (see cbl::modelling::twopt::concentration)
-       *
-       *  @param profile the density profile, see
-       *  cbl::modelling::twopt::concentration
-       *
-       *  @param halo_def the halo definition, see
-       *  cbl::modelling::twopt::concentration
-       *
-       *  @return the halo density profile
-       */
-      double density_profile_FourierSpace (const double kk, const double Mass, const double redshift, const std::string model_cM="Duffy", const std::string profile="NFW", const std::string halo_def="vir") const;
-
-      /**
-       *  @brief The halo mass converted to a different value of
-       *  \f$\Delta\f$, assuming the Navarro-Frenk-White density
-       *  profile
-       *
-       *  This function converts a given input mass \f$M_\Delta\f$ to
-       *  \f$M_{\Delta^{new}}\f$ (e.g. \f$M_{500} \rightarrow
-       *  M_{200}\f$).
-       *
-       *  Specifically, the algorithm currently implemented can be
-       *  derived as follows. Given the Navarro-Frenk-White profile:
-       *
-       *  \f[ \rho(r) = \frac{\rho_0}{\frac{r}{R_s}
-       *  \left(1+\frac{r}{R_s} \right)^2} \f]
-       *
-       *  the total halo mass contained within a radius \f$R_\Delta\f$
-       *  is:
-       *  
-       *  \f[ M_\Delta = \int_0^{R_\Delta} 4\pi r^2\rho(r)dr = 4\pi
-       *  \rho_0 R_s^3 \left[
-       *  \ln(1+c_\Delta)-\frac{c_\Delta}{1+c_\Delta} \right] \f]
-       *
-       *  where the concentration is defined as \f$c_\Delta\equiv
-       *  R_\Delta/R_s\f$. Thus, we can write:
-       *
-       *  \f[ \frac{\ln(1+c_\Delta) - \frac{c_\Delta}{1+c_\Delta}}
-       *  {M_\Delta} = \frac{\ln(1+c_{\Delta^{new}}) -
-       *  \frac{c_{\Delta^{new}}}{1+c_{\Delta^{new}}}}
-       *  {M_{\Delta^{new}}} \f]
-       *
-       *  \f$ M_\Delta \f$ can be written as follows:
-       *
-       *  \f[ M_\Delta = \frac{4}{3}\pi\Delta\rho_{crit}R_\Delta^3 =
-       *  \frac{\Delta}{\Delta^{new}}
-       *  \left(\frac{R_\Delta}{R_{\Delta^{new}}} \right)^3
-       *  M_{\Delta^{new}} = \frac{\Delta}{\Delta^{new}} x^3
-       *  M_{\Delta^{new}} \f]
-       *
-       *  where \f$ x\equiv R_\Delta/R_{\Delta^{new}} \f$. Thus we
-       *  have:
-       *
-       *  \f[ \frac{M_\Delta}{M_{\Delta^{new}}} \left[
-       *  \ln(1+c_{\Delta^{new}}) -
-       *  \frac{c_{\Delta^{new}}}{1+c_{\Delta^{new}}} \right] - \left[
-       *  \ln(1+c_\Delta) - \frac{c_\Delta}{1+c_\Delta} \right] = 0
-       *  \f]
-       *
-       *  where \f$ c_{\Delta^{new}} \equiv R_{\Delta^{new}}/R_s =
-       *  c_\Delta R_{\Delta^{new}}/R_\Delta = c_\Delta/x \f$. The
-       *  algorithm solves the above equation as a function of \f$ x
-       *  \f$, providing in output:
-       *
-       *  \f[ M_{\Delta^{new}} =
-       *  \frac{1}{x^3}\frac{\Delta^{new}}{\Delta} M_\Delta \f]
-       *
-       *  @param Mass the input mass \f$M_\Delta\f$
-       *  (e.g. \f$M_{500}\f$)
-       *
-       *  @param Delta_in the input \f$\Delta\f$
-       *  (e.g. \f$\Delta=500\f$)
-       *
-       *  @param Delta_out the output \f$\Delta^{new}\f$
-       *  (e.g. \f$\Delta^{new}=200\f$)
-       *
-       *  @param conc the concentration related to either the input
-       *  \f$\Delta\f$, or the output \f$\Delta^{new}\f$ (this is
-       *  specified by is_input_conc)
-       *
-       *  @param is_input_conc true \f$\rightarrow\f$ the given
-       *  concentration is related to the input \f$\Delta\f$; false
-       *  \f$\rightarrow\f$ the given concentration is related to the
-       *  output \f$\Delta^{new}\f$
-       * 
-       *  @param rRmin_guess the minimum guess value of
-       *  \f$r_\Delta/r_{\Delta^{new}}\f$ used by the gsl minimisation
-       *  function
-       *
-       *  @param rRmax_guess the maximum guess value of
-       *  \f$r_\Delta/r_{\Delta^{new}}\f$ used by the gsl minimisation
-       *  function
-       *
-       *  @return \f$M_{\Delta^{new}}\f$
-       *
-       *  @warning the current implementation assumes the
-       *  Navarro-Frenk-White profile
-       */
-      double Mass_Delta (const double Mass, const double Delta_in, const double Delta_out, const double conc, const bool is_input_conc, const double rRmin_guess=1.e-3, const double rRmax_guess=10.) const;
-      
       ///@}
 
- 
+
       /**
        *  @name Functions to estimate the two-point correlation function, bias and related quantities
        */
@@ -4933,7 +5193,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -4964,7 +5225,7 @@ namespace cbl {
        *  averaged (monopole) of the two-point correlation function of
        *  dark matter
        */
-      double xi_DM (const double rr, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=5., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi_matter (const double rr, const std::string method_Pk, const bool NL, const double redshift, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the dark matter angular two-point correlation function
@@ -5010,7 +5271,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalize the power
        *  spectrum; 1 \f$\rightarrow\f$ normalize the power spectrum;
@@ -5112,7 +5374,7 @@ namespace cbl {
        * @param interpolationMethod the method in interpolation
        *
        * @param method_Pk method used to compute the power spectrum
-       * (i.e. the Boltmann solver); valid choices for method_Pk are:
+       * (i.e. the Boltzmann solver); valid choices for method_Pk are:
        * CAMB [http://camb.info/], CLASS
        * [http://class-code.net/], MPTbreeze-v1
        * [http://arxiv.org/abs/1207.1465], EisensteinHu
@@ -5124,7 +5386,8 @@ namespace cbl {
        *
        * @param output_root output_root of the parameter file used to
        * compute the power spectrum and &sigma;(mass); it can be any
-       * name
+       * name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        * @param norm 0 \f$\rightarrow\f$ don't normalize the power
        * spectrum; 1 \f$\rightarrow\f$ normalize the power spectrum;
@@ -5170,7 +5433,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -5194,7 +5458,7 @@ namespace cbl {
        *  averaged (monopole) of the two-point correlation function of
        *  dark matter
        */
-      double xi_DM_DeWiggle (const double rr, const double redshift, const double sigma_NL, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double k_min=0.001, const double k_max=5., const double aa=1., const double prec=1.e-2);
+      double xi_matter_DeWiggle (const double rr, const double redshift, const double sigma_NL, const bool store_output=true, const std::string output_root="test", const bool norm=1, const double k_min=0.001, const double k_max=100., const double aa=1., const double prec=1.e-2);
 
       /**
        *  @brief get the dark matter two-point correlation function
@@ -5223,7 +5487,8 @@ namespace cbl {
        *
        *  @param [in] output_root output_root of the parameter file used
        *  to compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param [in] xiType 0 \f$\rightarrow\f$ standard; 1
        *  \f$\rightarrow\f$ Chuang & Wang model
@@ -5264,7 +5529,7 @@ namespace cbl {
        *  parameter file is provided (i.e. file_par!=NULL), it will be
        *  used, const ignoring the cosmological parameters of the object
        */
-      void get_xi (std::vector<double> &rr, std::vector<double> &Xi, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=5., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      void get_xi (std::vector<double> &rr, std::vector<double> &Xi, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
   
       /**
        *  @brief get the barred dark matter correlation functions
@@ -5328,7 +5593,7 @@ namespace cbl {
        *  parameter file is provided (i.e. file_par!=NULL), it will be
        *  used, ignoring the cosmological parameters of the object
        */
-      void get_barred_xi (std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const std::string method_Pk, const double redshift, const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=5., const double aa=0., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
+      void get_barred_xi (std::vector<double> rr, std::vector<double> Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const std::string method_Pk, const double redshift, const bool xiType=0, const double k_star=-1., const bool xiNL=0, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=100., const double aa=0., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
 
       /**
        *  @brief the dark matter projected correlation function
@@ -5360,7 +5625,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -5395,7 +5661,7 @@ namespace cbl {
        *  @return w<SUB>p,DM</SUB>(&theta;): the projected correlation
        *  function of dark matter
        */
-      double wp_DM (const double rp, const std::string method_Pk, const bool NL, const double redshift, const double pimax, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0.001, const double k_max=5., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=cbl::par::defaultString);
+      double wp_DM (const double rp, const std::string method_Pk, const bool NL, const double redshift, const double pimax, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=cbl::par::defaultString);
 
       /**
        *  @brief the k<SUB>*</SUB> parameter 
@@ -5419,7 +5685,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -5430,7 +5697,7 @@ namespace cbl {
        *
        *  @return k<SUB>*</SUB>
        */
-      double k_star (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=5., const std::string file_par=par::defaultString) const; 
+      double k_star (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const; 
 
 
       /**
@@ -5460,7 +5727,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *  
        *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
        *  non-linear power spectrum
@@ -5498,7 +5766,7 @@ namespace cbl {
        *  @return &sigma;<SUB>R</SUB>: the dark matter rms mass
        *  fluctuation
        */
-      double sigmaR_DM (const double RR, const int corrType, const std::string method_Pk, const double redshift, const double pimax=40, const bool store_output=true, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0.001, const double k_max=5., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      double sigmaR_DM (const double RR, const int corrType, const std::string method_Pk, const double redshift, const double pimax=40, const bool store_output=true, const std::string output_root="test", const bool NL=1, const int norm=-1, const double r_min=1.e-3, const double r_max=350., const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief the dark matter rms mass fluctuation within 8 Mpc/h
@@ -5521,7 +5789,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *  
        *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$
        *  non-linear power spectrum
@@ -5543,7 +5812,7 @@ namespace cbl {
        *  @return &sigma;<SUB>8</SUB>: the dark matter rms mass
        *  fluctuation within 8 Mpc/h
        */
-      double sigma8_Pk (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool NL=0, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString) const; 
+      double sigma8_Pk (const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool NL=0, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const; 
 
       /**
        *  @brief bias of dark matter haloes
@@ -5569,12 +5838,12 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *  
        *  @param kk wave vector module
        *
@@ -5611,11 +5880,11 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        */
-      double bias_halo (const double Mass, const double redshift, const std::string author, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double bias_halo (const double Mass, const double redshift, const std::string author, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief bias of dark matter haloes
@@ -5637,12 +5906,12 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *  
        *  @param kk wave vector module
        *
@@ -5685,12 +5954,164 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        */
-      double bias_halo (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_halo (const double Mass, const double Sigma, const double redshift, const std::string model_bias, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      
+      /**
+       *  @brief bias of dark matter haloes
+       *
+       *  @param Mass halo mass
+       *
+       *  @param Sigma &sigma;(mass, z=0): the mass variance at z=0
+       *
+       *  @param redshift the redshift
+       *
+       *  @param DN normalised amplitude of the growing mode at a
+       *  given redshift
+       *
+       *  @param model_bias author(s) who proposed the bias; valid
+       *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+       *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+       *  correction of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param Delta \f$\Delta\f$, the overdensity
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], CLASS [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *    
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return b<SUB>halo</SUB>: the dark matter bias
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
+       */
+      double bias_halo (const double Mass, const double Sigma, const double redshift, const double DN, const std::string model_bias, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+
+       /**
+       *  @brief bias of dark matter haloes, for a vector of masses
+       *
+       *  @param Mass halo mass
+       *
+       *  @param Sigma &sigma;(mass, z=0): the mass variance at z=0
+       *
+       *  @param redshift the redshift
+       *
+       *  @param model_bias author(s) who proposed the bias; valid
+       *  authors are: ST99 (Sheth & Tormen 1999), SMT01 (Sheth, Mo &
+       *  Tormen 2001), SMT01_WL04 (Sheth, Mo & Tormen 2001 with the
+       *  correction of Warren 2004), Tinker (Tinker et al. 2010)
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param Delta \f$\Delta\f$, the overdensity
+       *  
+       *  @param kk wave vector module
+       *
+       *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
+       *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
+       *  -1 \f$\rightarrow\f$ normalise only if sigma8 is set
+       *
+       *  @param k_min minimum wave vector module up to which the
+       *  power spectrum is computed in order to estimate the power
+       *  spectrum normalisation; this parameter is used only if
+       *  either norm=1, or norm=-1 and sigma8 is set
+       *
+       *  @param k_max maximum wave vector module up to which the
+       *  power spectrum is computed
+       *
+       *  @param prec accuracy of the integration
+       *
+       *  @param method_SS method used to compute the power spectrum
+       *  and &sigma;(mass); valid method_SS are: CAMB
+       *  [http://camb.info/], CLASS [http://class-code.net/],
+       *  EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *    
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return b<SUB>halo</SUB>: the dark matter bias
+       *
+       *  @warning the input parameter \f$\Delta\f$ is the background
+       *  overdensity, not the critical overdensity
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
+       */
+      std::vector<double> bias_halo (const std::vector<double> Mass, const std::vector<double> Sigma, const double redshift, const std::string model_bias, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double Delta=200., const double kk=-1., const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string method_SS="CAMB", const std::string input_file=par::defaultString, const bool is_parameter_file=true);
   
+
       /**
        *  @brief the effective bias of dark matter haloes, with masses
        *  in a given range and at a given mean redshift
@@ -5751,10 +6172,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *  
        *  @param kk wave vector module
        *
@@ -5793,16 +6214,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double bias_eff (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_eff (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
  
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -5849,10 +6270,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *  
        *  @param kk wave vector module
        *
@@ -5891,11 +6312,11 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        */
-      double bias_eff (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_eff (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
 
       /**
@@ -5949,7 +6370,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -5990,7 +6412,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      std::vector<double> bias_eff_mass_grid (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_mass_grid (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -6041,10 +6463,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
-       *  overdensity
+       *  @param Delta \f$\Delta\f$: the background overdensity
        *  
        *  @param kk wave vector module
        *
@@ -6082,7 +6504,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      std::vector<double> bias_eff_mass (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_mass (const std::vector<double> MM, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -6137,10 +6559,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
-       *  overdensity
+       *  @param Delta \f$\Delta\f$: the background overdensity
        *  
        *  @param kk wave vector module
        *
@@ -6178,7 +6600,7 @@ namespace cbl {
        *  @return a vector containing the mean and standard deviation
        *  of the effective dark matter bias
        */
-      std::vector<double> bias_eff_mass (const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_mass (const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief compute the effective bias of dark matter haloes, by
@@ -6259,7 +6681,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6304,7 +6727,7 @@ namespace cbl {
        *  the source galaxies, in case the cluster masses are
        *  estimated from weak lensing
        */
-      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
+      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -6396,7 +6819,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6434,7 +6858,7 @@ namespace cbl {
        *  the method specified by method_Pk; false \f$\rightarrow\f$
        *  the input_file is a file containing the power spectrum
        */
-      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const double redshift, const double Mass_min, const double Mass_max, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      void generate_bias_eff_grid_one_cosmopar (std::vector<double> &parameter, std::vector<double> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar, const double min_par, const double max_par, const int nbin_par, const double redshift, const double Mass_min, const double Mass_max, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       
       /**
        *  @brief effective bias of dark matter haloes, computed by
@@ -6531,10 +6955,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *  
        *  @param kk wave vector module
        *
@@ -6576,7 +7000,7 @@ namespace cbl {
        *  the source galaxies, in case the cluster masses are estimated
        *  from weak lensing
        */
-      void generate_bias_eff_grid_two_cosmopars (std::vector<double> &parameter1, std::vector<double> &parameter2, std::vector<std::vector<double>> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cbl::cosmology::CosmologicalParameter cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
+      void generate_bias_eff_grid_two_cosmopars (std::vector<double> &parameter1, std::vector<double> &parameter2, std::vector<std::vector<double>> &bias_eff, const std::string dir_output, const std::string file_bias_eff_grid, const cbl::cosmology::CosmologicalParameter cosmoPar1, const double min_par1, const double max_par1, const int nbin_par1, const cbl::cosmology::CosmologicalParameter cosmoPar2, const double min_par2, const double max_par2, const int nbin_par2, const std::vector<double> mass, const std::vector<double> mass_grid, const std::vector<double> redshift, const std::string model_bias, const std::string method_SS, const std::string meanType="mean_bias", const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true, const cbl::cosmology::Cosmology cosmology_mass={}, const std::vector<double> redshift_source={});
 
       /**
        *  @brief effective bias of dark matter haloes, computed using
@@ -6654,7 +7078,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6701,7 +7126,7 @@ namespace cbl {
        *  some applications (e.g. MCMC) where these quantities can be
        *  computed once
        */
-      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
        
       /**
        *  @brief effective bias of dark matter haloes, computed using
@@ -6779,7 +7204,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6826,7 +7252,7 @@ namespace cbl {
        *  some applications (e.g. MCMC) where these quantities can be
        *  computed once
        */
-      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid2D interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_selection_function (const glob::FuncGrid interp_sigma, const glob::FuncGrid interp_DnSigma, const glob::FuncGrid2D interp_SF, const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief effective bias of dark matter haloes, computed using
@@ -6899,7 +7325,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param Delta_crit \f$\Delta_{crit}\f$: the critical
        *  overdensity
@@ -6940,7 +7367,7 @@ namespace cbl {
        *
        *  @return b<SUB>eff</SUB>: the effective dark matter bias
        */
-      std::vector<double> bias_eff_selection_function (const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> bias_eff_selection_function (const double Mass_min, const double Mass_max, const std::vector<double> redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const std::string selection_function_file, const std::vector<int> column={}, const double alpha=1., const bool store_output=true, const std::string output_root="test", const double Delta_crit=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
        
       ///@}
 
@@ -6949,7 +7376,7 @@ namespace cbl {
        *  @name Functions to model redshift-space distortions
        */
       ///@{
-
+      
       /**
        *  @brief the linear growth rate at a given redshift,
        *  \f$f(z)\f$
@@ -6958,12 +7385,7 @@ namespace cbl {
        *
        *  \f[ f(z) = \frac{{\rm d}\,\ln D}{{\rm d}\,\ln a} \f]
        *
-       *  using approximated functions provided by Wang & Steinhardt
-       *  1998, Kiakotou, Elgarøy & Lahav 2008, Gong et al. 2009
-       *
        *  @param redshift the redshift
-       *
-       *  @param kk wave vector module
        *
        *  @param prec precision used for the resolution of the
        *  differential equation in the case w<SUB>a</SUB> different
@@ -6975,7 +7397,7 @@ namespace cbl {
        *  implementation does not take into account the precence of
        *  massive neutrinos
        */
-      double linear_growth_rate (const double redshift, const double kk=-1., const double prec=1.e-4) const;
+      double linear_growth_rate (const double redshift, const double prec=1.e-4) const;
 
       /**
        *  @brief f*&sigma;<SUB>8</SUB>: the linear growth rate times
@@ -6991,13 +7413,13 @@ namespace cbl {
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *  
        *  @param store_output if true the output files created by the
-       *  Boltmann solver are stored; if false the output files are
+       *  Boltzmann solver are stored; if false the output files are
        *  removed
        *
-       *  @param output_root output_root of the parameter file used to compute
-       *  the power spectrum and &sigma;(mass); it can be any name
-       *
-       *  @param kk wave vector module
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param NL false \f$\rightarrow\f$ linear power spectrum;
        *  false \f$\rightarrow\f$ non-linear power spectrum
@@ -7020,28 +7442,26 @@ namespace cbl {
        *
        *  @return f*&sigma;<SUB>8</SUB>
        */
-      double fsigma8 (const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const double kk=-1., const bool NL=false, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
+      double fsigma8 (const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const bool NL=false, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString) const;
 
       /**
        *  @brief the specific growth rate &beta;
        *  @param redshift the redshift
        *  @param bias bias
-       *  @param kk wave vector module
        *  @return &beta;=f/b, where f is the linear growth rate and b is
        *  the bias
        */
-      double beta (const double redshift, const double bias, const double kk=-1.) const;
+      double beta (const double redshift, const double bias) const;
 
       /**
        *  @brief the error on the specific growth rate &beta;
        *  @param redshift the redshift
        *  @param bias bias
        *  @param err_bias error on the bias
-       *  @param kk wave vector module
        *  @return error on &beta;=f/b, where f is the linear growth rate
        *  and b is the bias
        */
-      double error_beta (const double redshift, const double bias, const double err_bias, const double kk=-1.) const;
+      double error_beta (const double redshift, const double bias, const double err_bias) const;
 
       /**
        *  @brief the error on the specific growth rate &beta;
@@ -7084,10 +7504,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *  
        *  @param kk wave vector module
        *
@@ -7127,16 +7547,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the specific growth rate &beta;
@@ -7180,10 +7600,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *  
        *  @param kk wave vector module
        *
@@ -7223,16 +7643,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double error_beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double err_bias, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double error_beta (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const double err_bias, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
   
       /**
        *  @brief the specific growth rate &beta;
@@ -7260,10 +7680,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *  
        *  @param kk wave vector module
        *
@@ -7303,16 +7723,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the error on the specific growth rate &beta;
@@ -7341,10 +7761,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *  
        *  @param kk wave vector module
        *
@@ -7384,16 +7804,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double error_beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const double err_bias, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double error_beta (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const double err_bias, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
  
       /**
        *  @brief the error on the specific growth rate &beta; from
@@ -7441,10 +7861,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *  
        *  @param kk wave vector module
        *
@@ -7484,16 +7904,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double error_beta_measured (const double Volume, const double density, const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief the normalised quadrupole Q
@@ -7536,10 +7956,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *  
        *  @param kk wave vector module
        *
@@ -7578,16 +7998,16 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        *
        *  @warning the mass function by Manera et al. (2010) has been
        *  tested only for z=0 and z=0.5; the mass function by Despali
        *  et al. (2016) is currently implemented only for virial
        *  masses and at \f$z<1.25\f$
        */
-      double quadrupole (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+      double quadrupole (const double Mass_min, const double Mass_max, const double redshift, const std::string model_bias, const std::string model_MF, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
       /**
        *  @brief the normalised quadrupole Q
@@ -7615,10 +8035,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *  
        *  @param kk wave vector module
        *
@@ -7657,11 +8077,11 @@ namespace cbl {
        *
        *  @warning the input parameter \f$\Delta\f$ is the background
        *  overdensity, not the critical overdensity
-       *  \f$\Delta_{crit}\f$; the function
-       *  cbl::Cosmology::Delta_vir can be used to convert
-       *  \f$\Delta_{crit}\f$ into \f$\Delta\f$
+       *  \f$\Delta_{crit}\f$; divide \f$\Delta_{crit}\f$ by
+       *  \f$\Omega_M(z)\f$ (see cbl::cosmology::Cosmology::OmegaM) to
+       *  obtain the background overdensity
        */
-      double quadrupole (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true,  const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double quadrupole (const std::vector<double> MM, const std::vector<double> MF, const double redshift, const std::string model_bias, const std::string method_SS, const bool store_output=true,  const std::string output_root="test", const double Delta=200., const double kk=-1., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the mean square bulk flow
@@ -7685,7 +8105,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_min minimum wave vector module up to which the
        *  power spectrum is computed in order to estimate the power
@@ -7703,7 +8124,7 @@ namespace cbl {
        *
        *  @return the mean square bulk flow
        */
-      double square_bulk_flow (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double square_bulk_flow (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the mean square bulk flow
@@ -7745,7 +8166,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_min minimum wave vector module up to which the
        *  power spectrum is computed in order to estimate the power
@@ -7763,7 +8185,7 @@ namespace cbl {
        *
        *  @return the mean square velocity dispersion
        */
-      double square_velocity_dispersion (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double square_velocity_dispersion (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
     
       /**
        *  @brief the Cosmic Mach Number
@@ -7787,7 +8209,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_max maximum wave vector module up to which the
        *  power spectrum is computed
@@ -7798,7 +8221,7 @@ namespace cbl {
        *
        *  @return the Cosmic Mach Number
        */
-      double CMN (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=5., const std::string file_par=par::defaultString) const;
+      double CMN (const double rr, const double k_int_min, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_max=100., const std::string file_par=par::defaultString) const;
 
       /**
        *  @brief the hierarchical moments S<SUB>n</SUB>
@@ -7823,7 +8246,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -7848,7 +8272,7 @@ namespace cbl {
        *  @return the hierarchical moments, S<SUB>n</SUB>, given by the
        *  perturbation theory
        */
-      double Sn_PT (const int nn, const double RR, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double Sn_PT (const int nn, const double RR, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
   
       /**
        *  @brief the deprojected hierarchical moments
@@ -7874,7 +8298,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -7899,7 +8324,7 @@ namespace cbl {
        *  @return the deprojected hierarchical moments,
        *  &Sigma;<SUB>n</SUB>, given by the perturbation theory
        */
-      double Sigman_PT (const int nn, const double RR, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double Sigman_PT (const int nn, const double RR, const std::string method_SS, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
     
       /**
        *  @brief monopole of the redshift-space two-point correlation
@@ -7941,7 +8366,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param xiType 0 \f$\rightarrow\f$ standard; 1
        *  \f$\rightarrow\f$ Chuang & Wang model
@@ -7984,7 +8410,7 @@ namespace cbl {
        *  @return &xi;<SUB>0</SUB>
        *
        */
-      double xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool NL=false, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=5., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi0_Kaiser (const double rad, const double f_sigma8, const double bias_sigma8, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool xiType=0, const double k_star=-1., const bool NL=false, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
     
       /**
        *  @brief monopole of the redshift-space two-point correlation
@@ -8022,7 +8448,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param NL false \f$\rightarrow\f$ linear power spectrum;
        *  true \f$\rightarrow\f$ non-linear power spectrum
@@ -8048,7 +8475,7 @@ namespace cbl {
        *  @return &xi;<SUB>0</SUB>
        *
        */
-      std::vector<double> xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool NL=false, const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      std::vector<double> xi0_Kaiser (const std::vector<double> rad, const double bias, const std::string method_Pk, const double redshift, const bool store_output=true, const std::string output_root="test", const bool NL=false, const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief 2D correlation function, &xi;(r<SUB>p</SUB>,&pi;),
@@ -8099,7 +8526,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param index internal parameter used when minimizing the
        *  &chi;<SUB>2</SUB>
@@ -8158,7 +8586,7 @@ namespace cbl {
        *
        *  @return &xi;(r<SUB>p</SUB>,&pi;)
        */
-      double xi2D_dispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigmav, const std::string method_Pk, const double redshift, const int FV, const bool NL, std::vector<double> rr, std::vector<double> &Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output=true, const std::string output_root="test", const int index=-1, const bool bias_nl=0, const double bA=-1., const bool xiType=0, const double k_star=-1., const bool xiNL=0, const double v_min=-3000., const double v_max=3000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=5., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi2D_dispersionModel (const double rp, const double pi, const double f_sigma8, const double bias_sigma8, const double sigmav, const std::string method_Pk, const double redshift, const int FV, const bool NL, std::vector<double> rr, std::vector<double> &Xi, std::vector<double> &Xi_, std::vector<double> &Xi__, const bool store_output=true, const std::string output_root="test", const int index=-1, const bool bias_nl=0, const double bA=-1., const bool xiType=0, const double k_star=-1., const bool xiNL=0, const double v_min=-3000., const double v_max=3000., const int step_v=500, const int norm=-1, const double r_min=0.1, const double r_max=150., const double k_min=0.001, const double k_max=100., const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the function &xi;<SUB>*</SUB> of the Chuang & Wang 2012
@@ -8176,7 +8604,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
        *
@@ -8196,7 +8625,7 @@ namespace cbl {
        *
        *  @return &xi;<SUB>*</SUB>
        */
-      double xi_star (const double rr, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_star=-1., const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi_star (const double rr, const double redshift, const bool store_output=true, const std::string output_root="test", const double k_star=-1., const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
   
       /**
        *  @brief the function &xi;<SUB>g,nw</SUB>(s) of the Chuang &
@@ -8234,7 +8663,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @return &xi;<SUB>g,nw</SUB>(s)
        */
@@ -8274,7 +8704,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param k_star k<SUB>*</SUB> of the Chuang & Wang model
        *
@@ -8346,7 +8777,8 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param BAO 0 \f$\rightarrow\f$ no BAO convolution; 1
        *  \f$\rightarrow\f$ BAO convolution
@@ -8405,7 +8837,7 @@ namespace cbl {
        *
        *  @return &xi;(r<SUB>p</SUB>,&pi;)
        */
-      double xi2D_CW (const double rp, const double pi, const double beta, const double bias_lin, const double bA, const double sigmav0, const double cmu, const double cs1, const double cs2, const double redshift, std::vector<double> rr1, std::vector<double> Xi1, std::vector<double> rr2, std::vector<double> Xi2, std::vector<double> &Xi1_, std::vector<double> &Xi1__, std::vector<double> &Xi2_, std::vector<double> &Xi2__, const bool store_output=true, const std::string output_root="test", const bool BAO=1, const bool xiType=0, const double k_star=-1, const bool xiNL=0, const double r_min=0.1, const double r_max=150., const double v_min=-3000., const double v_max=3000., const int step_v=500, const double k_min=0.001, const double k_max=5., const double x_min=-3000., const double x_max=3000., const int step_x=500, const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double xi2D_CW (const double rp, const double pi, const double beta, const double bias_lin, const double bA, const double sigmav0, const double cmu, const double cs1, const double cs2, const double redshift, std::vector<double> rr1, std::vector<double> Xi1, std::vector<double> rr2, std::vector<double> Xi2, std::vector<double> &Xi1_, std::vector<double> &Xi1__, std::vector<double> &Xi2_, std::vector<double> &Xi2__, const bool store_output=true, const std::string output_root="test", const bool BAO=1, const bool xiType=0, const double k_star=-1, const bool xiNL=0, const double r_min=0.1, const double r_max=150., const double v_min=-3000., const double v_max=3000., const int step_v=500, const double k_min=0.001, const double k_max=100., const double x_min=-3000., const double x_max=3000., const int step_x=500, const double aa=0., const bool GSL=false, const double prec=1.e-2, const std::string file_par=par::defaultString);
       
       ///@}
 
@@ -8544,7 +8976,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -8568,7 +9001,7 @@ namespace cbl {
        *
        *  @return A<SUB>m</SUB>
        */
-      double Am (const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString); 
+      double Am (const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString); 
 
       /**
        *  @brief the potential spectral amplitude 
@@ -8589,7 +9022,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -8613,7 +9047,7 @@ namespace cbl {
        *
        *  @return the potential spectral amplitude
        */
-      double potential_spectral_amplitude (const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double potential_spectral_amplitude (const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief the bispectrum
@@ -8636,7 +9070,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -8660,7 +9095,7 @@ namespace cbl {
        *
        *  @return the potential spectral amplitude
        */
-      double bispectrum (const std::vector<double> kk, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double bispectrum (const std::vector<double> kk, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
     
       /**
        *  @brief auxiliary function to estimate cosmological quantities
@@ -8686,7 +9121,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -8710,7 +9146,7 @@ namespace cbl {
        *
        *  @return mrk
        */
-      double mrk (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString);
+      double mrk (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString);
 
       /**
        *  @brief auxiliary function to estimate cosmological quantities
@@ -8736,7 +9172,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -8773,12 +9210,12 @@ namespace cbl {
        *
        *  @return frk
        */
-      double frk (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double frk (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /// @cond TEST_NG
       double bias_kernel (const double, void *); 
 
-      double frk_test (const double, const double, const std::string, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double frk_test (const double, const double, const std::string, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
       /// @endcond
 
 
@@ -8805,7 +9242,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -8842,7 +9280,7 @@ namespace cbl {
        *
        *  @return bias correction
        */
-      double bias_correction (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string  output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double bias_correction (const double kk, const double mass, const std::string method_Pk, const bool store_output=true, const std::string  output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the skewness
@@ -8865,7 +9303,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -8902,7 +9341,7 @@ namespace cbl {
        *
        *  @return skewness
        */
-      double skewness (const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double skewness (const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief the derivative of the skewness, ds/dM
@@ -8925,7 +9364,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -8962,7 +9402,7 @@ namespace cbl {
        *
        *  @return derivative of the skewness
        */
-      double dskewnessdM (const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double dskewnessdM (const double mass, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief correction to the halo mass in non-Gaussian cosmologies
@@ -8987,7 +9427,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *   
@@ -9023,7 +9464,7 @@ namespace cbl {
        *
        *  @return bias correction
        */
-      double MF_correction (const double mass, const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double MF_correction (const double mass, const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       ///@}
 
@@ -9086,21 +9527,14 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param k_Pk_ratio wave vector module required to compute
-       *  the growth factor (cbl::cosmology::Cosmology::DD_norm())
-       *  with the method "Pk_ratio". This parameter represents
-       *  wavenumber at which the ratio between the the power
-       *  spectra at different redshift is computed. It is
-       *  recommended to use this method when dealing with
-       *  cosmologies alternative to the LCDM. To avoid to compute
-       *  the growth factor with this method, set k_Pk_ratio=-1.
        *  @param store_output if true the output files created by the
        *  Boltzmann solver are stored; if false the output files are
        *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -9126,7 +9560,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      double size_function (const double RV, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const double k_Pk_ratio=-1., const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      double size_function (const double RV, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
 
       /**
        *  @brief the void size function
@@ -9163,22 +9597,14 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param k_Pk_ratio wave vector module required to compute
-       *  the growth factor (cbl::cosmology::Cosmology::DD_norm())
-       *  with the method "Pk_ratio". This parameter represents
-       *  wavenumber at which the ratio between the the power
-       *  spectra at different redshift is computed. It is
-       *  recommended to use this method when dealing with
-       *  cosmologies alternative to the LCDM. To avoid to compute
-       *  the growth factor with this method, set k_Pk_ratio=-1.
-       *
        *  @param store_output if true the output files created by the
        *  Boltzmann solver are stored; if false the output files are
        *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -9204,7 +9630,87 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013) for each radius
        */
-      std::vector<double> size_function (const std::vector<double> RV, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const double k_Pk_ratio=1., const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      std::vector<double> size_function (const std::vector<double> RV, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+
+      /**
+       *  @brief number of voids computed from the void size function
+       *  model for bins of radii spaced in log scale and for a
+       *  specified survey/simulation volume
+       *
+       *  @author Sofia Contarini
+       *  @author sofia.contarini3@unibo.it
+       *
+       *  @param min_r the minimum void radius
+       *
+       *  @param max_r the maximum void radius
+       *
+       *  @param num_bins number of bins of void radius
+       *
+       *  @param mean_z the mean redshift of the sample
+       *
+       *  @param Volume the volume of the survey/simulation in units
+       *  of \f$(Mpc/h)^3\f$
+       *
+       *  @param model size function model name; valid choices for
+       *  model name are SvdW (Sheth and van de Weygaert, 2004),
+       *  linear and Vdn (Jennings et al., 2013)
+       *
+       *  @param b_eff the effective bias of the sample
+       *
+       *  @param slope first coefficent to convert the effective bias
+       *  (default value set to \f$0.854\f$)
+       *
+       *  @param offset second coefficent to convert the effective
+       *  bias (default value set to \f$0.420\f$)
+       *
+       *  @param deltav_NL the non linear density contrast:
+       *  \f$\rho_v/\rho_m\f$ (default value set to \f$-0.795\f$)
+       *
+       *  @param del_c critical value of the linear density field
+       *  (default value set to \f$1.06\f$)
+       *
+       *  @param method_Pk method used to compute the power spectrum
+       *  (i.e. the Boltzmann solver); valid choices for method_Pk
+       *  are: CAMB [http://camb.info/], CLASS
+       *  [http://class-code.net/], MPTbreeze-v1
+       *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+       *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+       *
+       *  @param store_output if true the output files created by the
+       *  Boltzmann solver are stored; if false the output files are
+       *  removed
+       *
+       *  @param output_root output_root of the parameter file used to
+       *  compute the power spectrum and &sigma;(mass); it can be any
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
+       *
+       *  @param interpType method to interpolate the power spectrum
+       *
+       *  @param k_max maximum wave vector module up to which the power
+       *  spectrum is computed
+       *
+       *  @param input_file either the parameter file or the power
+       *  spectrum file; if a parameter file is provided,
+       *  i.e. input_file!=NULL and is_parameter_file=true, it will be
+       *  used to compute the power spectrum; if a power spectrum file
+       *  is provided, i.e. input_file!=NULL and
+       *  is_parameter_file=false, then the provided power spectrum
+       *  will be used directly; in both cases &sigma;<SUP>2</SUP>(M)
+       *  is computed by integrating the computed/provided power
+       *  spectrum ignoring the cosmological parameters of the object
+       *
+       *  @param is_parameter_file true \f$\rightarrow\f$ the input_file
+       *  is a parameter file, used to compute the power spectrum with
+       *  the method specified by method_Pk; false \f$\rightarrow\f$
+       *  the input_file is a file containing the power spectrum
+       *
+       *  @return a vector of vectors with dimensions 2xnum_bins. The
+       *  first component contains the void radii (centres of the bins
+       *  computed in log scale), while the second the predicted void
+       *  counts
+       */
+      std::vector<std::vector<double>> Nvoids (const double min_r, const double max_r, const int num_bins, const double mean_z, const double Volume, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
 
       /**
        *  @brief number of voids computed from the void size function
@@ -9254,22 +9760,14 @@ namespace cbl {
        *  [http://arxiv.org/abs/1207.1465], EisensteinHu
        *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
        *
-       *  @param k_Pk_ratio wave vector module required to compute
-       *  the growth factor (cbl::cosmology::Cosmology::DD_norm())
-       *  with the method "Pk_ratio". This parameter represents
-       *  wavenumber at which the ratio between the the power
-       *  spectra at different redshift is computed. It is
-       *  recommended to use this method when dealing with
-       *  cosmologies alternative to the LCDM. To avoid to compute
-       *  the growth factor with this method, set k_Pk_ratio=-1.
-       *
        *  @param store_output if true the output files created by the
        *  Boltzmann solver are stored; if false the output files are
        *  removed
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -9296,7 +9794,7 @@ namespace cbl {
        *  computed in log scale), while the second the predicted void
        *  counts
        */
-      std::vector<std::vector<double>> Nvoids (const double min_r, const double max_r, const int num_bins, const double min_z, const double max_z, const double mean_z, const double Area, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const double k_Pk_ratio=1., const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=5., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
+      std::vector<std::vector<double>> Nvoids (const double min_r, const double max_r, const int num_bins, const double min_z, const double max_z, const double mean_z, const double Area, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true) const;
       
       /**
        *  @brief the void size function
@@ -9341,10 +9839,10 @@ namespace cbl {
        *
        *  @param output_root output_root of the parameter file used to
        *  compute the power spectrum and &sigma;(mass); it can be any
-       *  name
+       *  name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
-       *  @param Delta \f$\Delta\f$: the overdensity, defined as the
-       *  mean interior density relative to the background
+       *  @param Delta \f$\Delta\f$, the overdensity
        *
        *  @param interpType method to interpolate the power spectrum
        *
@@ -9384,7 +9882,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      double size_function (const double RV, const double redshift, const std::string model_mf, const double del_v, const std::string model_sf, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      double size_function (const double RV, const double redshift, const std::string model_mf, const double del_v, const std::string model_sf, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const double Delta=200., const std::string interpType="Linear", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        *  @brief Supplementary function to compute a correction factor
@@ -9442,7 +9940,6 @@ namespace cbl {
        *
        *  @return the matrix containing the first three non-null
        *  multipoles of the two-point correlation function
-       *
        */
       std::vector<std::vector<double>> XiMultipoles (const int nbins, const double rMin, const double rMax, const std::vector<double> kk, const std::vector<double> Pk0, const std::vector<double> Pk2, const std::vector<double> Pk4, const int IntegrationMethod=1);
 
@@ -9723,7 +10220,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -9749,7 +10247,7 @@ namespace cbl {
        *
        *  @return \f$P_{\delta\delta}(k)\f$
        */
-      std::vector<double> Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      std::vector<double> Pk_DeltaDelta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
       
       /**
        *  @brief the real-space matter non-linear power spectrum
@@ -9821,7 +10319,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -9847,7 +10346,7 @@ namespace cbl {
        *
        *  @return \f$P_{\delta\theta}(k)\f$
        */
-      std::vector<double> Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      std::vector<double> Pk_DeltaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
       
       /**
        *  @brief the real-space matter non-linear power spectrum
@@ -9918,7 +10417,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -9944,7 +10444,7 @@ namespace cbl {
        *
        *  @return \f$P_{\theta\theta}(k)\f$
        */
-      std::vector<double> Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=5., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      std::vector<double> Pk_ThetaTheta (const std::vector<double> kk, const double redshift, const std::string method_Pk, const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
 
       /**
        *  @brief the non-linear dark matter power spectrum using
@@ -9978,7 +10478,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10044,7 +10545,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param NL 0 \f$\rightarrow\f$ linear power spectrum; 1 \f$\rightarrow\f$ non-linear
        *  power spectrum
@@ -10115,7 +10617,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can
-       *  be any name
+       *  be any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param NL false \f$\rightarrow\f$ linear power spectrum;
        *  true \f$\rightarrow\f$ non-linear power spectrum
@@ -10178,7 +10681,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10206,7 +10710,7 @@ namespace cbl {
        *
        *  @return \f$\sigma_{\mathrm{v}, \mathrm{lin}}\f$
        */
-      double sigma_v (const double redshift=0., const std::string method_Pk="CAMB", const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=5., const int bin_k=512, const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
+      double sigma_v (const double redshift=0., const std::string method_Pk="CAMB", const bool store_output=true, const std::string output_root="test", const int norm=-1, const double k_min=0.001, const double k_max=100., const int bin_k=512, const double prec=1.e-2, const std::string file_par=par::defaultString, const bool unit1=false);
       
       /**
        *  @brief the multipoles of the A and B correction terms for
@@ -10247,7 +10751,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10311,7 +10816,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10369,7 +10875,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can
-       *  be any name
+       *  be any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10388,7 +10895,7 @@ namespace cbl {
        *  @return A and B terms (expanded) for TNS model: A11, A12,
        *  A22, A23, A33, B12, B13, B14, B22, B23, B24, B33, B34, B44
        */
-      std::vector<std::vector<double>> Pk_TNS_AB_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=5., const double prec=1.e-2);
+      std::vector<std::vector<double>> Pk_TNS_AB_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=100., const double prec=1.e-2);
 
       /**
        *  @brief The expanded correction terms for the extended TNS
@@ -10441,7 +10948,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can
-       *  be any name
+       *  be any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10461,7 +10969,7 @@ namespace cbl {
        *  Pb2d, Pb2v, Pb22, Pbs2d, Pbs2v, Pb2s2, Pbs22, sigma32Pklin,
        *  Bb1, Bb2, Bbs2
        */
-      std::vector<std::vector<double>> Pk_eTNS_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=5., const double prec=1.e-2);
+      std::vector<std::vector<double>> Pk_eTNS_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=100., const double prec=1.e-2);
 
       /**
        *  @brief the expanded A and B correction terms for the TNS
@@ -10507,7 +11015,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can be
-       *  any name
+       *  any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10527,7 +11036,7 @@ namespace cbl {
        *
        *  @return A and B terms (total contribution) for TNS model
        */ 
-      std::vector<std::vector<double>> Pk_TNS_AB_1loop (std::vector<double> kk, const double mu, const double linear_growth_rate, const double bias, const std::string method, const double redshift, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=5., const double prec=1.e-2);
+      std::vector<std::vector<double>> Pk_TNS_AB_1loop (std::vector<double> kk, const double mu, const double linear_growth_rate, const double bias, const std::string method, const double redshift, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=100., const double prec=1.e-2);
 
       /**
        *  @brief the non-linear \f$\delta-\delta\f$,
@@ -10572,7 +11081,8 @@ namespace cbl {
        *
        *  @param output_root the output_root parameter of the
        *  parameter file used to compute the power spectrum; it can
-       *  be any name
+       *  be any name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        *  @param norm 0 \f$\rightarrow\f$ don't normalise the power
        *  spectrum; 1 \f$\rightarrow\f$ normalise the power spectrum;
@@ -10592,7 +11102,7 @@ namespace cbl {
        *  \f$\left[P_{\delta\delta}(k), P_{\delta\theta}(k),
        *  P_{\theta\theta}(k)\right]\f$
        */
-      std::vector<std::vector<double>> Pk_TNS_dd_dt_tt (std::vector<double> kk, const std::string method, const double redshift, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=5., const double prec=1.e-2);
+      std::vector<std::vector<double>> Pk_TNS_dd_dt_tt (std::vector<double> kk, const std::string method, const double redshift, const bool store_output, const std::string output_root, const int norm, const double k_min=0.001, const double k_max=100., const double prec=1.e-2);
 
       ///@}
       
@@ -10624,14 +11134,14 @@ namespace cbl {
        *  @param rr vector containing the scales at which the
        *  two-point correlation function is computed
        *  
-       *  @param xi_DM vector containing the dark matter two-point
+       *  @param xi_matter vector containing the dark matter two-point
        *  correlation function values, estimated at the scales given
        *  in rr
        *
        *  @return the normalization factor for reduced three-point
        *  correlation function
        */
-      double denominator_Q (const double r1, const double r2, const double theta, const std::vector<double> rr, const std::vector<double> xi_DM) const;
+      double denominator_Q (const double r1, const double r2, const double theta, const std::vector<double> rr, const std::vector<double> xi_matter) const;
 
       /**
        *  @brief integral functions for the three-point correlation
@@ -10652,25 +11162,25 @@ namespace cbl {
        *  Bessel function, and \f$W(kr)\f$ is the top-hat window
        *  function computed by cbl::TopHat_WF
        *
-       *  @param [out] xi_DM vector containing the dark matter
+       *  @param [out] xi_matter vector containing the dark matter
        *  two-point correlation function values
        *
        *  @param [out] Phi vector containing the \f$ \Phi(r)\f$
        *  values, estimated at the scales given in rr
        *
        *  @param [in] rr vector or scales at which the dark matter
-       *  two-point correlation function (xi_DM) will be computed
+       *  two-point correlation function (xi_matter) will be computed
        *
        *  @param [in] kk vector of the wave vector modules at which the
        *  power spectrum is computed
        *
-       *  @param [in] Pk_DM vector of containing the dark matter power
+       *  @param [in] Pk_matter vector of containing the dark matter power
        *  spectrum values, estimated at the wave vector modules given
        *  in kk
        *
        *  @param prec the integral precision
        */
-      void integrals_Q_nonLocal (std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_DM, const double prec) const;
+      void integrals_Q_nonLocal (std::vector<double> &xi_matter, std::vector<double> &Phi, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_matter, const double prec) const;
 
       /**
        *  @brief function to compute non-local contribution to
@@ -10730,7 +11240,7 @@ namespace cbl {
        *  @param [out] rr vector or scales at which the dark matter
        *  two-point correlation function is computed
        *
-       *  @param [out] xi_DM vector containing the dark matter
+       *  @param [out] xi_matter vector containing the dark matter
        *  two-point correlation function values
        *
        *  @param [out] Phi vector containing the \f$ \Phi(r)\f$
@@ -10739,13 +11249,13 @@ namespace cbl {
        *  @param [in] kk vector of the wave vector modules at which
        *  the power spectrum is computed
        *
-       *  @param [in] Pk_DM vector of containing the dark matter
+       *  @param [in] Pk_matter vector of containing the dark matter
        *  power spectrum values, estimated at the wave vector modules
        *  given in kk
        *
        *  @return the value of non-local Q
        */
-      double Q_nonLocal (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      double Q_nonLocal (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_matter, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief all the non-local contribution terms of the reduced
@@ -10764,14 +11274,14 @@ namespace cbl {
        *  @param kk vector of the wave vector modules at which the
        *  power spectrum is computed
        *
-       *  @param Pk_DM vector of containing the dark matter power
+       *  @param Pk_matter vector of containing the dark matter power
        *  spectrum values, estimated at the wave vector modules given
        *  in kk
        *
        *  @return vector containing the DM reduced three-point
        *  correlation function
        */
-      std::vector<double> Q_nonLocal (const double r1, const double r2, const std::vector<double> theta, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      std::vector<double> Q_nonLocal (const double r1, const double r2, const std::vector<double> theta, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief integrals used to compute the Slepian et al. 2015
@@ -10788,25 +11298,25 @@ namespace cbl {
        *  \xi^{[2]}_{DM}(r) = \frac{1}{2\pi^2}\int_0^\infty
        *  \mathrm{d} k k^2 P_{DM}(k) j_2(k r) . \f]
        *
-       *  @param [out] xi_DM vector containing the dark matter
+       *  @param [out] xi_matter vector containing the dark matter
        *  two-point correlation function
        *
-       *  @param [out] xi_DM_m1 vector containing
+       *  @param [out] xi_matter_m1 vector containing
        *  \f$\xi^{[1-]}_{DM}(r)\f$
        *
-       *  @param [out] xi_DM_p1 vector containing
+       *  @param [out] xi_matter_p1 vector containing
        *  \f$\xi^{[1+]}_{DM}(r)\f$
        *
-       *  @param [out] xi_DM_2 vector containing
+       *  @param [out] xi_matter_2 vector containing
        *  \f$\xi^{[2]}_{DM}(r)\f$
        *
        *  @param [in] rr vector or scales
        *
        *  @param [in] kk vector of the wave vector modules
        *
-       *  @param [in] Pk_DM the dark matter power spectrum
+       *  @param [in] Pk_matter the dark matter power spectrum
        */
-      void integrals_zeta_Slepian (std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      void integrals_zeta_Slepian (std::vector<double> &xi_matter, std::vector<double> &xi_matter_m1, std::vector<double> &xi_matter_p1, std::vector<double> &xi_matter_2, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief the pre-cyclic three-point correlation function as
@@ -10851,22 +11361,22 @@ namespace cbl {
        *
        *  @param b2 the non-linear bias
        *
-       *  @param interp_xi_DM interpolating function
-       *  for \f$\xi_DM\f$
+       *  @param interp_xi_matter interpolating function
+       *  for \f$\xi_matter\f$
        *
-       *  @param interp_xi_DM_m1 interpolating function
+       *  @param interp_xi_matter_m1 interpolating function
        *  for \f$\xi^{[1-]}_{DM}(r)\f$      
        *
-       *  @param interp_xi_DM_p1 interpolating function
+       *  @param interp_xi_matter_p1 interpolating function
        *  for \f$\xi^{[1+]}_{DM}(r)\f$
        *  
-       *  @param interp_xi_DM_2 interpolating function
+       *  @param interp_xi_matter_2 interpolating function
        *  for \f$\xi^{[2]}_{DM}(r)\f$
        *
        *  @return the pre-cyclic three-point
        *  correlation function
        */
-      double zeta_precyclic_Slepian (const double r1, const double r2, const double mu, const double b1, const double b2, const glob::FuncGrid interp_xi_DM, const glob::FuncGrid interp_xi_DM_m1, const glob::FuncGrid interp_xi_DM_p1, const glob::FuncGrid interp_xi_DM_2) const;
+      double zeta_precyclic_Slepian (const double r1, const double r2, const double mu, const double b1, const double b2, const glob::FuncGrid interp_xi_matter, const glob::FuncGrid interp_xi_matter_m1, const glob::FuncGrid interp_xi_matter_p1, const glob::FuncGrid interp_xi_matter_2) const;
 
 
       /**
@@ -10915,22 +11425,22 @@ namespace cbl {
        *
        *  @param b2 the non-linear bias
        *
-       *  @param interp_xi_DM interpolating function
-       *  for \f$\xi_DM\f$
+       *  @param interp_xi_matter interpolating function
+       *  for \f$\xi_matter\f$
        *
-       *  @param interp_xi_DM_m1 interpolating function
+       *  @param interp_xi_matter_m1 interpolating function
        *  for \f$\xi^{[1-]}_{DM}(r)\f$      
        *
-       *  @param interp_xi_DM_p1 interpolating function
+       *  @param interp_xi_matter_p1 interpolating function
        *  for \f$\xi^{[1+]}_{DM}(r)\f$
        *  
-       *  @param interp_xi_DM_2 interpolating function
+       *  @param interp_xi_matter_2 interpolating function
        *  for \f$\xi^{[2]}_{DM}(r)\f$
        *
        *  @return the pre-cyclic three-point
        *  correlation function
        */
-      double zeta_precyclic_Slepian (const double r1, const double r2, const double r3, const double deltaR, const double b1, const double b2, const glob::FuncGrid interp_xi_DM, const glob::FuncGrid interp_xi_DM_m1, const glob::FuncGrid interp_xi_DM_p1, const glob::FuncGrid interp_xi_DM_2) const;
+      double zeta_precyclic_Slepian (const double r1, const double r2, const double r3, const double deltaR, const double b1, const double b2, const glob::FuncGrid interp_xi_matter, const glob::FuncGrid interp_xi_matter_m1, const glob::FuncGrid interp_xi_matter_p1, const glob::FuncGrid interp_xi_matter_2) const;
 
       /**
        *  @brief the terms of the \f$\zeta(r_1, r_2)\f$ expansion 
@@ -10958,16 +11468,16 @@ namespace cbl {
        *
        *  @param [out] rr vector or scales
        *
-       *  @param [out] xi_DM vector containing the dark matter
+       *  @param [out] xi_matter vector containing the dark matter
        *  two-point correlation function
        *
-       *  @param [out] xi_DM_m1 vector containing
+       *  @param [out] xi_matter_m1 vector containing
        *  \f$\xi^{[1-]}_{DM}(r)\f$
        *
-       *  @param [out] xi_DM_p1 vector containing
+       *  @param [out] xi_matter_p1 vector containing
        *  \f$\xi^{[1+]}_{DM}(r)\f$
        *
-       *  @param [out] xi_DM_2 vector containing
+       *  @param [out] xi_matter_2 vector containing
        *  \f$\xi^{[2]}_{DM}(r)\f$
        *
        *  @param [in] norders the maximum numbers of orders
@@ -10976,7 +11486,7 @@ namespace cbl {
        *
        *  @return vector containing the terms of legendre expansion
        */
-      std::vector<double> zeta_expansion_Slepian (const double r1, const double r2, const double b1, const double b2, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const int norders=9, const double prec=1.e-3) const;
+      std::vector<double> zeta_expansion_Slepian (const double r1, const double r2, const double b1, const double b2, std::vector<double> &rr, std::vector<double> &xi_matter, std::vector<double> &xi_matter_m1, std::vector<double> &xi_matter_p1, std::vector<double> &xi_matter_2, const int norders=9, const double prec=1.e-3) const;
 
       /**
        *  @brief the dark matter three-point correlation function
@@ -10999,21 +11509,21 @@ namespace cbl {
        *
        *  @param [out] rr vector or scales
        *
-       *  @param [out] xi_DM vector containing the dark matter
+       *  @param [out] xi_matter vector containing the dark matter
        *  two-point correlation function
        *
-       *  @param [out] xi_DM_m1 vector containing
+       *  @param [out] xi_matter_m1 vector containing
        *  \f$\xi^{[1-]}_{DM}(r)\f$
        *
-       *  @param [out] xi_DM_p1 vector containing
+       *  @param [out] xi_matter_p1 vector containing
        *  \f$\xi^{[1+]}_{DM}(r)\f$
        *
-       *  @param [out] xi_DM_2 vector containing
+       *  @param [out] xi_matter_2 vector containing
        *  \f$\xi^{[2]}_{DM}(r)\f$
        *
        *  @param [in] kk vector of the wave vector modules
        *
-       *  @param [in] Pk_DM the dark matter power spectrum
+       *  @param [in] Pk_matter the dark matter power spectrum
        *
        *  @param [in] norders the maximum number of orders
        *
@@ -11022,7 +11532,7 @@ namespace cbl {
        *  @return the connected dark matter three-point correlation
        *  function
        */
-      double zeta_DM_Slepian (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const std::vector<double> kk, const std::vector<double> Pk_DM, const int norders=9, const double prec=1.e-3) const;
+      double zeta_DM_Slepian (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_matter, std::vector<double> &xi_matter_m1, std::vector<double> &xi_matter_p1, std::vector<double> &xi_matter_2, const std::vector<double> kk, const std::vector<double> Pk_matter, const int norders=9, const double prec=1.e-3) const;
 
       /**
        *  @brief the dark matter reduced three-point correlation
@@ -11048,21 +11558,21 @@ namespace cbl {
        *
        *  @param [out] rr vector or scales
        *
-       *  @param [out] xi_DM vector containing the dark matter
+       *  @param [out] xi_matter vector containing the dark matter
        *  two-point orrelation function
        *
-       *  @param [out] xi_DM_m1 vector containing
+       *  @param [out] xi_matter_m1 vector containing
        *  \f$\xi^{[1-]}_{DM}(r)\f$
        *
-       *  @param [out] xi_DM_p1 vector containing
+       *  @param [out] xi_matter_p1 vector containing
        *  \f$\xi^{[1+]}_{DM}(r)\f$
        *
-       *  @param [out] xi_DM_2 vector containing
+       *  @param [out] xi_matter_2 vector containing
        *  \f$\xi^{[2]}_{DM}(r)\f$
        *
        *  @param [out] kk vector of the wave vector modules
        *
-       *  @param [out] Pk_DM the dark matter power spectrum
+       *  @param [out] Pk_matter the dark matter power spectrum
        *
        *  @param [in] norders the maximum numbers of orders
        *
@@ -11071,7 +11581,7 @@ namespace cbl {
        *  @return the dark matter reduced three-point correlation
        *  function
        */
-      double Q_DM_Slepian (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &xi_DM_m1, std::vector<double> &xi_DM_p1, std::vector<double> &xi_DM_2, const std::vector<double> kk, const std::vector<double> Pk_DM, const int norders=9, const double prec=1.e-3) const;
+      double Q_DM_Slepian (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_matter, std::vector<double> &xi_matter_m1, std::vector<double> &xi_matter_p1, std::vector<double> &xi_matter_2, const std::vector<double> kk, const std::vector<double> Pk_matter, const int norders=9, const double prec=1.e-3) const;
 
       /**
        *  @brief integrals used to compute the Barriga & Gatzanaga
@@ -11086,7 +11596,7 @@ namespace cbl {
        *  \frac{1}{2\pi^2}\int_0^\infty \mathrm{d} k\, P_{DM}(k)
        *  j_0(k r). \f]
        *
-       *  @param [out] xi_DM vector containing the dark matter
+       *  @param [out] xi_matter vector containing the dark matter
        *  two-point correlation function
        *
        *  @param [out] Phi vector containing \f$ \Phi(r)\f$
@@ -11095,9 +11605,9 @@ namespace cbl {
        *
        *  @param [in] kk vector of the wave vector modules
        *
-       *  @param [in] Pk_DM the dark matter power spectrum
+       *  @param [in] Pk_matter the dark matter power spectrum
        */
-      void integrals_zeta_BarrigaGatzanaga (std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      void integrals_zeta_BarrigaGatzanaga (std::vector<double> &xi_matter, std::vector<double> &Phi, const std::vector<double> rr, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief the single term of the dark matter three-point
@@ -11172,18 +11682,18 @@ namespace cbl {
        *
        *  @param [out] rr vector or scales
        *
-       *  @param [out] xi_DM vector containing the dark matter
+       *  @param [out] xi_matter vector containing the dark matter
        *  two-point correlation function
        *
        *  @param [out] Phi vector containing \f$ \Phi(r)\f$
        *
        *  @param [in] kk vector of the wave vector modules
        *
-       *  @param [in] Pk_DM the dark matter power spectrum
+       *  @param [in] Pk_matter the dark matter power spectrum
        *
        *  @return the dark matter three-point correlation function
        */
-      double zeta_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      double zeta_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_matter, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief the dark matter reduced three-point correlation
@@ -11210,19 +11720,19 @@ namespace cbl {
        * 
        *  @param [out] rr vector or scales
        * 
-       *  @param [out] xi_DM vector containing the dark matter
+       *  @param [out] xi_matter vector containing the dark matter
        *  two-point correlation function
        * 
        *  @param [out] Phi vector containing \f$ \Phi(r)\f$
        * 
        *  @param [in] kk vector of the wave vector modules
        * 
-       *  @param [in] Pk_DM the dark matter power spectrum
+       *  @param [in] Pk_matter the dark matter power spectrum
        *
        *  @return the dark matter reduced three-point correlation
        *  function
        */
-      double Q_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_DM, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      double Q_DM_BarrigaGatzanaga (const double r1, const double r2, const double theta, std::vector<double> &rr, std::vector<double> &xi_matter, std::vector<double> &Phi, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief the dark matter three-point correlation function
@@ -11244,12 +11754,12 @@ namespace cbl {
        *
        *  @param kk vector of the wave vector modules
        *
-       *  @param Pk_DM the dark matter power spectrum
+       *  @param Pk_matter the dark matter power spectrum
        *
        *  @return vector containing the dark matter three-point
        *  correlation function
        */
-      std::vector<double> zeta_DM (const double r1, const double r2, const std::vector<double> theta, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      std::vector<double> zeta_DM (const double r1, const double r2, const std::vector<double> theta, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief the dark matter reduced three-point correlation
@@ -11272,12 +11782,12 @@ namespace cbl {
        *
        *  @param kk vector of the wave vector modules
        *
-       *  @param Pk_DM the dark matter power spectrum
+       *  @param Pk_matter the dark matter power spectrum
        *
        *  @return vector containing the dark matter reduced
        *  three-point correlation function
        */
-      std::vector<double> Q_DM (const double r1, const double r2, const std::vector<double> theta, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      std::vector<double> Q_DM (const double r1, const double r2, const std::vector<double> theta, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief the local-bias model of the three-point correlation
@@ -11314,12 +11824,12 @@ namespace cbl {
        *
        *  @param kk vector of the wave vector modules
        *
-       *  @param Pk_DM the dark matter power spectrum
+       *  @param Pk_matter the dark matter power spectrum
        *
        *  @return vector containing the three-point correlation
        *  function of dark matter haloes
        */
-      std::vector<double> zeta_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      std::vector<double> zeta_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief the local-bias model of the reduced three-point
@@ -11354,12 +11864,12 @@ namespace cbl {
        *
        *  @param kk vector of the wave vector modules
        *
-       *  @param Pk_DM the dark matter power spectrum
+       *  @param Pk_matter the dark matter power spectrum
        *
        *  @return vector containing the reduced three-point
        *  correlation function of dark matter haloes
        */
-      std::vector<double> Q_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      std::vector<double> Q_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief the non-local-bias model of the three-point
@@ -11398,12 +11908,12 @@ namespace cbl {
        *
        *  @param kk vector of the wave vector modules 
        *
-       *  @param Pk_DM the dark matter power spectrum
+       *  @param Pk_matter the dark matter power spectrum
        *
        *  @return vector containing the reduced three-point
        *  correlation function of dark matter haloes
        */
-      std::vector<double> Q_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const double g2, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      std::vector<double> Q_halo (const double r1, const double r2, const std::vector<double> theta, const double b1, const double b2, const double g2, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief the dark matter equilateral three-point correlation
@@ -11420,12 +11930,12 @@ namespace cbl {
        *
        *  @param kk vector of the wave vector modules
        *
-       *  @param Pk_DM the dark matter power spectrum
+       *  @param Pk_matter the dark matter power spectrum
        *
        *  @return vector containing the dark matter three-point
        *  correlation function
        */
-      std::vector<double> zeta_DM_eq (const std::vector<double> rr, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      std::vector<double> zeta_DM_eq (const std::vector<double> rr, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief the dark matter equilateral reduced three-point
@@ -11443,12 +11953,12 @@ namespace cbl {
        *
        *  @param kk vector of the wave vector modules
        *
-       *  @param Pk_DM the dark matter power spectrum
+       *  @param Pk_matter the dark matter power spectrum
        *
        *  @return vector containing the dark matter three-point
        *  correlation function
        */
-      std::vector<double> Q_DM_eq (const std::vector<double> rr, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_DM) const;
+      std::vector<double> Q_DM_eq (const std::vector<double> rr, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter) const;
 
       /**
        *  @brief the dark matter three-point correlation function 
@@ -11645,14 +12155,15 @@ namespace cbl {
        *
        * This function computes the quantity \f$ I_{\mathcal{L} l} (r_1, r_2)\f$:
        *
-       * \f[
-       *   I_{\mathcal{L} l} (r_1, r_2) = \sum_l_1 (-1)^{l_1+l}(2l_1+1)(2l+1) \begin{pmatrix} l_1 & l & \mathcal{L} \\ 0 & 0 & 0 \end{pmatrix}^2 
-       *   \\ \times \int r \mathrm{d} r f_{l, l_1}(r_1;r) f_{l, l_1} (r_2; r)
-       * \f]
+       * \f[ I_{\mathcal{L} l} (r_1, r_2) = \sum_{l_1}
+       *   (-1)^{l_1+l}(2l_1+1)(2l+1) \begin{pmatrix} l_1 & l &
+       *   \mathcal{L} \\ 0 & 0 & 0 \end{pmatrix}^2 \\ \times \int
+       *   \mathrm{d} r \;r\;f_{l, l_1}(r_1;r) f_{l, l_1} (r_2; r) \f]
        *
-       * where \f$ f_{l, l_1} (r_i;r) \f$ is computed by cbl::cosmology::Cosmology::eff_l_l1
-       * This quantity is  used the compute the tree-level theoretical 
-       * prediction  for the biased and redshift space the three-point correlation function, 
+       * where \f$ f_{l, l_1} (r_i;r) \f$ is computed by
+       * cbl::cosmology::Cosmology::eff_l_l1 This quantity is used the
+       * compute the tree-level theoretical prediction for the biased
+       * and redshift space the three-point correlation function,
        * following Slepian&Eisenstein, 2017
        *
        * @param II the quantity \f$ I_{\mathcal{L} l} (r_1, r_2) \f$
@@ -12009,7 +12520,8 @@ namespace cbl {
        *
        * @param output_root output_root of the parameter file used to
        * compute the power spectrum and &sigma;(mass); it can be any
-       * name
+       * name. If this parameter is different from the default value
+       *  it will be used also in the output directory name
        *
        * @param force_RealSpace if true, force the computation to be
        * in real space

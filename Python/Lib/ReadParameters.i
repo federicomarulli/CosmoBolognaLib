@@ -2,6 +2,9 @@
 
 %module cblReadParameters
 
+%import "Path.i"
+%import "Kernel.i"
+
 %{
 #include "ReadParameters.h"
 #include "ParameterFile.h"

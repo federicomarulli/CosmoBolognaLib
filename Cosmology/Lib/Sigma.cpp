@@ -90,39 +90,43 @@ double cbl::cosmology::Cosmology::m_func_sigma (const string method_Pk, const do
       
       if (eh.Pk(kk)!=eh.Pk(kk)) ErrorCBL("eh.Pk=nan!", "m_func_sigma", "Sigma.cpp");
 
-      return eh.Pk(kk*fact)*pow(fact, -3.);
+      return eh.Pk(kk);
     };
     
     func = ff;
   }
 
-  else if (method_Pk=="CAMB" || method_Pk=="CLASS") {
+  else if (method_Pk=="CAMB" || method_Pk=="MGCAMB" || method_Pk=="CLASS") {
     
     vector<double> lgkk, lgPk; 
     Table_PkCodes(method_Pk, false, lgkk, lgPk, redshift, store_output, output_root, kmax, input_file);
 
     for (size_t i=0; i<lgkk.size(); i++) {
-      const double KK = pow(10., lgkk[i])*fact;
+      const double KK = pow(10., lgkk[i]);
       if (KK<kmax) {
 	kk.emplace_back(KK);
-	Pk.emplace_back(pow(10., lgPk[i])*pow(fact, -3.));
+	Pk.emplace_back(pow(10., lgPk[i]));
       }
     }
 
     func = glob::FuncGrid(kk, Pk, interpType, cbl::BinType::_linear_);
   }
+
+  else if (method_Pk=="EisensteinHu" && input_file!=par::defaultString)
+    ErrorCBL("in the EisensteiHu case, no input files can be read!", "m_func_sigma", "Sigma.cpp");
   
-  else ErrorCBL("the chosen method_Pk is not available!", "m_func_sigma", "Sigma.cpp");
+  else
+    ErrorCBL("the chosen method_Pk is not available!", "m_func_sigma", "Sigma.cpp");
 
   auto ff = [&] (const double kk)
     {
-      return func(kk)*kk*kk*filter(kk);
+      return func(kk/fact)*kk*kk*filter(kk);
     };
   
   // compute the mass variance
-  //return 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4)+wrapper::gsl::GSL_integrate_qagiu(ff, 1., 1.e-5);
+  //return ( 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(ff, 0., 1., 1.e-4)+wrapper::gsl::GSL_integrate_qagiu(ff, 1., 1.e-5) ) * pow(fact, -3.);
  
-  return 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(ff, 1.e-4, kmax, 1.e-3);
+  return 1./(2.*pow(par::pi, 2))*wrapper::gsl::GSL_integrate_qag(ff, 1.e-4, kmax, 1.e-3) * pow(fact, -3.);
 }
 
 
@@ -295,8 +299,8 @@ std::string cbl::cosmology::Cosmology::create_grid_sigmaM (const string method_S
 {
   string norm = (m_sigma8>0) ? "_sigma8"+conv(m_sigma8, par::fDP3) : "_scalar_amp"+conv(m_scalar_amp, par::ee3);
 
-  string dir_cosmo = fullpath(par::DirCosmo);
-  string dir_grid = dir_cosmo+"Cosmology/Tables/grid_SigmaM/unit"+conv(m_unit,par::fINT)+"/";
+  cbl::Path path;
+  string dir_grid = path.DirCosmo()+"/Cosmology/Tables/grid_SigmaM/unit"+conv(m_unit,par::fINT)+"/";
   string MK = "mkdir -p "+dir_grid; if (system (MK.c_str())) {};
 
   string file_grid = dir_grid+"grid_"+method_SS+norm+"_h"+conv(m_hh, par::fDP6)+"_OmB"+conv(m_Omega_baryon, par::fDP6)+"_OmCDM"+conv(m_Omega_CDM, par::fDP6)+"_OmL"+conv(m_Omega_DE, par::fDP6)+"_OmN"+conv(m_Omega_neutrinos, par::fDP6)+"_Z"+conv(redshift, par::fDP6)+"_scalar_amp"+conv(m_scalar_amp, par::ee3)+"_scalar_pivot"+conv(m_scalar_pivot, par::fDP6)+"_n"+conv(m_n_spec, par::fDP6)+"_w0"+conv(m_w0, par::fDP6)+"_wa"+conv(m_wa, par::fDP6)+".dat";

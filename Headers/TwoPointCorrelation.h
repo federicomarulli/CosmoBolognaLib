@@ -161,7 +161,7 @@ namespace cbl {
        * @return a vector containing the
        * Estimator names
        */
-      inline std::vector<std::string> EstimatorNames () {return {"natural", "LandySzalay", "SzapudiSzalay"}; }
+      inline std::vector<std::string> EstimatorNames () { return {"natural", "LandySzalay", "SzapudiSzalay"}; }
 
       /**
        * @brief cast an enum of type Estimator
@@ -169,7 +169,7 @@ namespace cbl {
        * @param estimatorIndex the estimator index
        * @return object of class Estimator
        */
-      inline Estimator EstimatorCast (const int estimatorIndex) {return castFromValue<Estimator>(estimatorIndex);}
+      inline Estimator EstimatorCast (const int estimatorIndex) { return castFromValue<Estimator>(estimatorIndex);}
 
       /**
        * @brief cast an enum of type Estimator

@@ -1,6 +1,9 @@
 // SWIG Interface to FFTlog
 
-%module cblFFTlog
+%module cblFFT
+
+%import "Path.i"
+%import "Kernel.i"
 
 %{
 #include "FFTlog.h"

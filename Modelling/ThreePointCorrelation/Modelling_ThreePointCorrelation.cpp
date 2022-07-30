@@ -106,7 +106,7 @@ void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_model (c
 // ============================================================================================
 
 
-void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_Q_nonlocal (const cosmology::Cosmology cosmology, const double r1, const double r2, const std::vector<double> theta, const string model, const std::vector<double> kk, const std::vector<double> Pk_DM)
+void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_Q_nonlocal (const cosmology::Cosmology cosmology, const double r1, const double r2, const std::vector<double> theta, const string model, const std::vector<double> kk, const std::vector<double> Pk_matter)
 {
   m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
   m_data_model.r1 = r1;
@@ -114,7 +114,7 @@ void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_Q_nonloc
   m_data_model.theta = theta;
   m_data_model.model = model;
   m_data_model.kk = kk;
-  m_data_model.Pk_DM = Pk_DM;
+  m_data_model.Pk_matter = Pk_matter;
 }
 
 
@@ -156,5 +156,5 @@ void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_model_ze
   }
   m_data_model.linear_growth_rate_z = m_data_model.cosmology->linear_growth_rate(m_data_model.redshift, 1.);
 
-  m_data_model.Pk_DM = m_data_model.cosmology->Pk_DM(m_data_model.kk, m_data_model.method_Pk, m_data_model.NL, m_data_model.redshift, m_data_model.store_output, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec);
+  m_data_model.Pk_matter = m_data_model.cosmology->Pk_matter(m_data_model.kk, m_data_model.method_Pk, m_data_model.NL, m_data_model.redshift, m_data_model.store_output, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec);
 }

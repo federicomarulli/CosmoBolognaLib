@@ -108,9 +108,11 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateVegas (vector<vector<double>> i
   cbl::wrapper::cuba::STR_CUBA_integrand *userdata = new cbl::wrapper::cuba::STR_CUBA_integrand;
   userdata->func = m_integrand;
   userdata->integration_limits = integration_limits;
-  
-if (parallelize==false)
-    cubacores(0, 0);
+
+  if (!parallelize) {
+    int zero = 0;
+    cubacores(&zero, &zero);
+  }
 
   Vegas(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
     m_inputs.EPSREL, m_inputs.EPSABS, m_inputs.VERBOSE, m_inputs.SEED,
@@ -140,9 +142,11 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateSuave (vector<vector<double>> i
   userdata->func = m_integrand;
   userdata->integration_limits = integration_limits;
 
-  if (parallelize==false)
-    cubacores(0, 0);
-
+  if (!parallelize) {
+    int zero = 0;
+    cubacores(&zero, &zero);
+  }
+  
   Suave(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
     m_inputs.EPSREL, m_inputs.EPSABS, m_inputs.VERBOSE | m_inputs.LAST, m_inputs.SEED,
     m_inputs.MINEVAL, m_inputs.MAXEVAL, m_inputs.NNEW, m_inputs.NMIN, m_inputs.FLATNESS,
@@ -170,9 +174,11 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateDivonne (vector<vector<double>>
   cbl::wrapper::cuba::STR_CUBA_integrand *userdata = new cbl::wrapper::cuba::STR_CUBA_integrand;
   userdata->func = m_integrand;
   userdata->integration_limits = integration_limits;
-  
-  if (parallelize==false)
-    cubacores(0, 0);
+
+  if (!parallelize) {
+    int zero = 0;
+    cubacores(&zero, &zero);
+  }
 
   Divonne(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
     m_inputs.EPSREL, m_inputs.EPSABS, m_inputs.VERBOSE, m_inputs.SEED,
@@ -204,8 +210,10 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateCuhre (vector<vector<double>> i
   userdata->func = m_integrand;
   userdata->integration_limits = integration_limits;
 
-  if (parallelize==false)
-    cubacores(0, 0);
+  if (!parallelize) {
+    int zero = 0;
+    cubacores(&zero, &zero);
+  }
 
   Cuhre(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
     m_inputs.EPSREL, m_inputs.EPSABS, m_inputs.VERBOSE | m_inputs.LAST,

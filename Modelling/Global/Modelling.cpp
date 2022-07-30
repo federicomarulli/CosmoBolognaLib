@@ -55,31 +55,14 @@ void cbl::modelling::Modelling::m_set_prior (vector<statistics::PriorDistributio
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::m_set_posterior (const int seed)
-{
-  if (m_likelihood!=NULL && m_parameter_priors.size()==m_model->parameters()->nparameters_base())
-    m_posterior = make_shared<statistics::Posterior>(statistics::Posterior(m_parameter_priors, *m_likelihood, seed));
+void cbl::modelling::Modelling::m_set_posterior (const int seed){
+
+  if ((m_likelihood!=NULL && m_parameter_priors.size()==m_model->parameters()->nparameters_base()) || m_model->parameters()->nparameters_correlated()>0)
+  m_posterior = make_shared<statistics::Posterior>(statistics::Posterior(m_parameter_priors, *m_likelihood, seed));
   else
     ErrorCBL("either the posterior is not defined or a wrong number of prior distributions has been provided!", "m_set_posterior", "Modelling.cpp");
-}
 
-
-// ============================================================================================
-
-
-shared_ptr<statistics::Model> cbl::modelling::Modelling::transfer_function ()
-{
-  return m_transfer_func;
-}
-
-
-// ============================================================================================
-
-
-void cbl::modelling::Modelling::isSet_response ()
-{
-  if (m_transfer_func == NULL)
-    ErrorCBL("the response function is not set!", "isSet_response", "Modelling.cpp");
+m_posterior->set_response_function(m_response_func);
 }
 
 
@@ -138,7 +121,7 @@ shared_ptr<cbl::statistics::ModelParameters> cbl::modelling::Modelling::posterio
 // ============================================================================================
 
 
-void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type, const vector<size_t> x_index, const int w_index, const double prec, const int Nres)
+void cbl::modelling::Modelling::set_likelihood (const statistics::LikelihoodType likelihood_type, const std::vector<size_t> x_index, const int w_index, const double prec, const int Nres)
 {
   if (m_model==NULL)
     ErrorCBL("undefined model!", "set_likelihood", "Modelling.cpp");

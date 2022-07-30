@@ -107,6 +107,28 @@ namespace cbl {
   double interpolated_2D (const double _x1, const double _x2, const std::vector<double> x1, const std::vector<double> x2, const std::vector<std::vector<double>> yy, const std::string type);
 
   /**
+   *  @brief 3D interpolation on a 3D regular grid   
+   *
+   *  @param min Vector of minimum grid values: [minX, minY, minZ]
+   *
+   *  @param max Vector of maximum grid values: [maxX, maxY, maxZ]
+   *
+   *  @param steps Vector of step values in the three grid dimensions: [stepX, stepY, stepZ] 
+	 * 	The grid can therefore have different steps in different dimensions 
+   *
+   *  @param func Orderd matrix of the values of the function to be interpolated, 
+	 * 	defined in the various points of the grid. Each element is called as func[X][Y][Z]
+   *
+   *  @param pos Vector of points to interpolate on. It must have dimension [Npoints][3]
+   *  
+   *  @return The interpolated values
+   *
+   *  @warning Interpolation only. No extrapolation will be performed
+   *
+   */	
+	std::vector<double> linear_interpolation_3D(const std::vector<double> min, std::vector<double> max, std::vector<int> steps, std::vector<std::vector<std::vector<double>>> func, const std::vector<std::vector<double>> pos); 
+
+  /**
    *  @brief filter W(r/r<SUB>c</SUB>), used e.g. for filtering the
    *  correlation function
    *  @param r the scale at which calculate the filter value
@@ -204,19 +226,21 @@ namespace cbl {
   /**
    *  @brief the order l, degree m spherical harmonics
    *
+   *  @param coordinate_type the coordinate type (comoving, observed)
+   *
    *  @param l the degree l
    *
    *  @param m the order m
    *
-   *  @param xx the variable x
+   *  @param coord1 the variable 1 (xx or RA)
    *
-   *  @param yy the variable y
+   *  @param coord2 the variable 2 (yy or Dec)
    *
-   *  @param zz the variable z
+   *  @param coord3 the variable 3 (zz or redshift)
    *
    *  @return the order l, degree m spherical harmonics
    */
-  std::complex<double> spherical_harmonics (const int l, const int m, const double xx, const double yy, const double zz);
+  std::complex<double> spherical_harmonics (cbl::CoordinateType coordinate_type, const int l, const int m, const double coord1, const double coord2, const double coord3);
 
   /**
    *  @brief the spherical harmonics up to \f$l_{max}\f$
@@ -596,7 +620,7 @@ namespace cbl {
    * @brief get the cosine of the angle between two sides of a
    * triangle
    *
-   * \f$ mu = \frac{r_1^2+r_2^2-r_3^3}\frac{2*r_1*r_2}\f$
+   * \f$ mu = \frac{r_1^2+r_2^2-r_3^3}{2 \cdot r_1 \cdot r_2}\f$
    *
    * @param r1 the first side of the triangle
    * @param r2 the second side of the triangle
@@ -643,7 +667,72 @@ namespace cbl {
   double clebsh_gordan(const int j1, const int j2, const int m1, const int m2, const int j3, const int m3);
 
   /**
+   * @brief sgn the sign function
+   *
+   * @param val the input value
+   *
+   * @return the sign value
+   */
+  template <typename T>
+  double sgn(T val);
+
+  /**
+   * @brief Wigner \f$3-j\f$ auxiliar function A
+   *
+   * @param l1 index
+   * @param l2 index
+   * @param l3 index
+   * @param m1 index
+   * @param m2 index
+   * @param m3 index
+   *
+   * @return value used in wigner_3j
+   */
+  double wigner3j_auxA(double l1, double l2, double l3, double m1, double m2, double m3);
+
+  /**
+   * @brief Wigner \f$3-j\f$ auxiliar function B
+   *
+   * @param l1 index
+   * @param l2 index
+   * @param l3 index
+   * @param m1 index
+   * @param m2 index
+   * @param m3 index
+   *
+   * @return value used in wigner_3j
+   */
+  double wigner3j_auxB(double l1, double l2, double l3, double m1, double m2, double m3);
+  
+  /**
    * @brief Wigner \f$3-j\f$ symbol
+   *
+   * @param l2 index
+   * @param l3 index
+   * @param m1 index
+   * @param m2 index
+   * @param m3 index
+   *
+   * @return the Clebsh-Gordan coefficient
+   */
+  std::vector<double> wigner3j(double l2, double l3, double m1, double m2, double m3);
+
+   /**
+   * @brief Wigner \f$3-j\f$ symbol
+   *
+   * @param l1 index
+   * @param l2 index
+   * @param l3 index
+   * @param m1 index
+   * @param m2 index
+   * @param m3 index
+   *
+   * @return the Clebsh-Gordan coefficient
+   */
+  double wigner3j(double l1, double l2, double l3, double m1, double m2, double m3); 
+  
+  /**
+   * @brief Wigner \f$3-j\f$ symbol, use it for l<100
    *
    * @param j1 index
    * @param j2 index
@@ -654,8 +743,8 @@ namespace cbl {
    *
    * @return the Clebsh-Gordan coefficient
    */
-  double wigner_3j(const int j1, const int j2, const int j3, const int m1, const int m2, const int m3);
-
+  double wigner_3j(int j1, int j2, int j3, int m1, int m2, int m3);
+  
   /**
    * @brief Wigner \f$6-j\f$ symbol
    *
@@ -668,29 +757,32 @@ namespace cbl {
    *
    * @return the Clebsh-Gordan coefficient
    */
+  
   double wigner_6j(const int j1, const int j2, const int j3, const int j4, const int j5, const int j6);
 
   /**
-   * @brief compute the integral of three spherical bessel function, 
-   * from Mehrem, 2011
+   * @brief compute the integral of three spherical bessel function,
+   * from Mehrem (2011)
    *
-   * \f[ \int_{0}^{\infty} k^{2} j_{L_{1}}\left(k r_{1}\right)
+   *  \f[ \int_{0}^{\infty} k^{2} j_{L_{1}}\left(k r_{1}\right)
    *  j_{L_{2}}\left(k r_{2}\right) j_{L_{3}}\left(k r_{3}\right) d k
-   *  = \frac{\pi \beta(\Delta)}{8 \pi^2 r_{1} r_{2} r_{3} left\langle
-   *  L_{1} L_{2} 00 | L_{3} 0\right\rangle}(i)^{L_{1}+L_{2}+L_{3}}
-   *  \left(2 L_{3}+1\right)\left(\frac{r_{1}}{r_{3}}\right)^{L_{3}}
+   *  = \frac{\pi \beta(\Delta)}{8 \pi^2 r_{1} r_{2} r_{3}
+   *  \left\langle L_{1} L_{2} 00 | L_{3}
+   *  0\right\rangle}(i)^{L_{1}+L_{2}+L_{3}} \left(2
+   *  L_{3}+1\right)\left(\frac{r_{1}}{r_{3}}\right)^{L_{3}}
    *  \sum_{L=0}^{L_{3}}\left(\begin{array}{c}{2 L_{3}} \\ {2
    *  L}\end{array}\right)^{1 / 2}\left(\frac{r_{2}}{r_{1}}\right)^{L}
    *  \times \sum_{l}\left\langle L_{1}\left(L_{3}-L\right) 00 |
-   *  0\right\rangle\left\langle L_{2} L 00 | l 0\right\rangle\left\
-   *  {\begin{array}{lll}{L_{1}} & {L_{2}} & {L_{3}} \\ {L} &
-   *  {L_{3}-L} & {l}\end{array}\right\} P_{l}(\Delta) \f]
+   *  0\right\rangle \left\langle L_{2} L 00 | l
+   *  0\right\rangle\left\{\begin{array}{lll}{L_{1}} & {L_{2}} &
+   *  {L_{3}} \\ {L} & {L_{3}-L} & {l}\end{array}\right\}
+   *  P_{l}(\Delta) \f]
    *
    * where \f$\sum_{l}\left\langle l_1 l_2 m_1 m_2 | l_3 m_3
    * \right\rangle\f$ is the Clebsh-Gordan coefficient, computed by
-   * cbl::clebsh_gordan, and \f${\begin{array}{lll}{L_{1}} & {L_{2}} &
-   * {L_{3}} \\ {L} & {L_{3}-L} & {l}\end{array}\right\}\f$ is the
-   * \f$6-j\f$ Wigner symbol.
+   * cbl::clebsh_gordan, and \f$\left\{\begin{array}{lll}{L_{1}} &
+   * {L_{2}} & {L_{3}} \\ {L} & {L_{3}-L} & {l}\end{array}\right\}\f$
+   * is the \f$6-j\f$ Wigner symbol.
    *
    * @param r1
    * @param r2
@@ -704,8 +796,8 @@ namespace cbl {
   double three_spherical_bessel_integral (const double r1, const double r2, const double r3, const int L1, const int L2, const int L3);
 
   /**
-   * @brief compute the integral of three spherical bessel function, 
-   * from Mehrem, 2011, averaged on r1-r2 shells
+   * @brief compute the integral of three spherical bessel function,
+   * from Mehrem (2011), averaged on r1-r2 shells
    *
    * @param r1_min
    * @param r1_max
@@ -2222,12 +2314,12 @@ namespace cbl {
    *
    *  @param sigma8z &sigma;<SUB>8</SUB>
    *
-   *  @param xi_DM the real-space two-point correlation function of
+   *  @param xi_matter the real-space two-point correlation function of
    *  the dark matter
    *
    *  @return the multipole &xi;<SUB>0</SUB>
    */
-  double multipole_xi0_model (const double f_sigma8, const double bias_sigma8, const double sigma8z, const double xi_DM);
+  double multipole_xi0_model (const double f_sigma8, const double bias_sigma8, const double sigma8z, const double xi_matter);
 
   /// @cond glob
   /**
@@ -2875,7 +2967,7 @@ namespace cbl {
     {
       double bias_sigma8;
       double sigma8z;
-      std::vector<double> xi_DM;
+      std::vector<double> xi_matter;
     };
 
     struct STR_xi2D_model

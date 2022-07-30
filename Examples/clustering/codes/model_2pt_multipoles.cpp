@@ -6,12 +6,6 @@
 #include "TwoPointCorrelation_multipoles_integrated.h"
 #include "Modelling_TwoPointCorrelation_multipoles.h"
 
-// these two variables contain the name of the CosmoBolognaLib
-// directory and the name of the current directory (useful when
-// launching the code on remote systems)
-std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
-
-
 int main () {
 
   try {
@@ -27,7 +21,7 @@ int main () {
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
   
-    const std::string file_catalogue = cbl::par::DirLoc+"../input/cat.dat";
+    const std::string file_catalogue = "../input/cat.dat";
 
     const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -46,12 +40,12 @@ int main () {
     // --------------------------------------------------------------------------------------------
 
     // output directory
-    const std::string dir = cbl::par::DirLoc+"../output/";
+    const std::string dir = "../output/";
 
     // binning parameters and output data
     const double rMin = 10.;  // minimum separation 
     const double rMax = 30.;  // maximum separation 
-    const int nbins = 3;      // number of bins
+    const int nbins = 5;      // number of bins
     const double shift = 0.5; // spatial shift used to set the bin centre
   
     // measure the multipoles (using the direct estimator)
@@ -77,7 +71,7 @@ int main () {
     const cbl::statistics::PriorDistribution SigmaNL_parallel_prior {cbl::glob::DistributionType::_Constant_, 0.};  // constant prior 
     const cbl::statistics::PriorDistribution fsigma8_prior {cbl::glob::DistributionType::_Uniform_, 0., 2.}; // Uniform prior for the f*sigma8
     const cbl::statistics::PriorDistribution bsigma8_prior {cbl::glob::DistributionType::_Uniform_, 0., 2.}; // Uniform prior for the b*sigma8
-    const cbl::statistics::PriorDistribution SigmaS_prior {cbl::glob::DistributionType::_Uniform_, 0., 2.}; // Uniform prior for the SigmaS
+    const cbl::statistics::PriorDistribution SigmaS_prior {cbl::glob::DistributionType::_Uniform_, 0., 10.}; // Uniform prior for the SigmaS
 
     // provide the cosmological model and the redshift    
     const double redshift = 1.;

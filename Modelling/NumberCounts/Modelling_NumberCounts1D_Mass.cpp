@@ -47,7 +47,7 @@ using namespace modelling::numbercounts;
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_data_model_snapshot (const cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double k_min, const double k_max, const int step, const int norm, const double Delta, const bool isDelta_vir, const std::string model_MF, const double Volume, const double Mass_min, const double Mass_max, const int Mass_step, const double prec)
+void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_data_model_snapshot (const cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double k_min, const double k_max, const int step, const int norm, const double Delta, const bool isDelta_critical, const std::string model_MF, const double Volume, const double Mass_min, const double Mass_max, const int Mass_step, const double prec)
 {
   m_data_model.isSnapshot = true;
 
@@ -63,7 +63,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_data_model
   m_data_model.output_root = "test";
   m_data_model.file_par = par::defaultString;
 
-  m_data_model.isDelta_Vir = isDelta_vir;
+  m_data_model.isDelta_critical = isDelta_critical;
   m_data_model.Delta = Delta;
   m_data_model.model_MF = model_MF;
 
