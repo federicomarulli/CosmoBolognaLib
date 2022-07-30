@@ -1,0 +1,202 @@
+<map id="Headers/Path.h" name="Headers/Path.h">
+<area shape="rect" id="node1" title="The class Path used to handle the Cosmobolognalib paths." alt="" coords="12256,5,12376,32"/>
+<area shape="rect" id="node2" href="$d3/de9/Kernel_8h.html" title="Useful generic functions." alt="" coords="12177,80,12311,107"/>
+<area shape="rect" id="node200" href="$d5/dbb/Path_8cpp.html" title="The class Path used to handle the Cosmobolognalib paths." alt="" coords="12335,80,12444,107"/>
+<area shape="rect" id="node3" href="$dc/d6b/CAMB_8h.html" title="class CAMB that wrap CAMB routines" alt="" coords="4401,528,4532,555"/>
+<area shape="rect" id="node146" href="$de/dc4/GSLwrapper_8h.html" title="functions that wrap GSL routines for integration, root finding and minimization" alt="" coords="10610,155,10779,181"/>
+<area shape="rect" id="node184" href="$db/dad/CUBAwrapper_8h.html" title="class CUBAwrapper that wrap CUBA routines for multidimensional integration" alt="" coords="10923,155,11104,181"/>
+<area shape="rect" id="node186" href="$d1/d8e/EigenWrapper_8h.html" title="functions that wrap Eigen routines" alt="" coords="10353,379,10535,405"/>
+<area shape="rect" id="node188" href="$d9/d73/ChainMesh_8h.html" title="Implementation of the chain&#45;mesh data structure." alt="" coords="11805,379,11969,405"/>
+<area shape="rect" id="node190" href="$da/d3d/FITSwrapper_8h.html" title="class FITSwrapper that wrap CCfits routines to manage FITS files" alt="" coords="12333,610,12505,637"/>
+<area shape="rect" id="node192" href="$d7/db2/Histogram_8h.html" title="Class used to handle binned variables." alt="" coords="12173,707,12333,733"/>
+<area shape="rect" id="node194" href="$d0/d5b/ParameterFile_8h.html" title="The class ParameterFile." alt="" coords="12333,155,12515,181"/>
+<area shape="rect" id="node196" href="$d5/df7/ReadParameters_8h.html" title="The class ReadParameters." alt="" coords="12539,155,12738,181"/>
+<area shape="rect" id="node198" href="$d2/d00/Kernel_8cpp.html" title="Useful generic functions." alt="" coords="12762,155,12897,181"/>
+<area shape="rect" id="node199" href="$d3/db5/Logo_8cpp.html" title="Generic methods of the class Cosmology" alt="" coords="12921,155,13036,181"/>
+<area shape="rect" id="node4" href="$d9/d0a/CAMB_8cpp.html" title="functions that wrap CAMB routines" alt="" coords="4231,610,4361,637"/>
+<area shape="rect" id="node5" href="$da/dd2/Cosmology_8h.html" title="The class Cosmology." alt="" coords="4385,610,4548,637"/>
+<area shape="rect" id="node6" href="$dc/d86/Halo__occupation__distribution_8cpp_source.html" title=" " alt="" coords="6561,803,6761,845"/>
+<area shape="rect" id="node7" href="$d4/d2d/3PCF_8cpp.html" title="Methods of the class Cosmology used to model two&#45;point statistics." alt="" coords="5403,707,5583,733"/>
+<area shape="rect" id="node8" href="$de/d2d/BAO_8cpp.html" title="Methods of the class Cosmology used to model the BAO." alt="" coords="6345,707,6522,733"/>
+<area shape="rect" id="node9" href="$d1/ddc/Bias_8cpp.html" title="Methods of the class Cosmology used to model the bias." alt="" coords="2193,707,2370,733"/>
+<area shape="rect" id="node10" href="$da/dcf/Bias__vector_8cpp_source.html" title=" " alt="" coords="2394,699,2545,741"/>
+<area shape="rect" id="node11" href="$d1/d67/Cosmology_8cpp.html" title="Generic methods of the class Cosmology" alt="" coords="2569,707,2789,733"/>
+<area shape="rect" id="node12" href="$d8/d15/MassFunction_8cpp.html" title="Methods of the class Cosmology used to model the mass function." alt="" coords="2813,707,3051,733"/>
+<area shape="rect" id="node13" href="$d8/d3b/MassFunction__vector_8cpp_source.html" title=" " alt="" coords="3076,699,3287,741"/>
+<area shape="rect" id="node14" href="$d5/d53/MassGrowth_8cpp.html" title="Methods of the class Cosmology used to model the cosmic mass accretion history." alt="" coords="3311,707,3542,733"/>
+<area shape="rect" id="node15" href="$d8/df0/NG_8cpp.html" title="Methods of the class Cosmology for cosmologies with primordial non&#45;Gaussianity." alt="" coords="3566,707,3735,733"/>
+<area shape="rect" id="node16" href="$d1/deb/PkXi_8cpp.html" title="Methods of the class Cosmology used to model two&#45;point statistics." alt="" coords="7016,707,7195,733"/>
+<area shape="rect" id="node17" href="$da/db2/PkXiNonLinear_8cpp.html" title="Methods of the class Cosmology used to model two&#45;point statistics." alt="" coords="3760,707,4003,733"/>
+<area shape="rect" id="node18" href="$d6/dc2/PkXizSpace_8cpp.html" title="Methods of the class Cosmology used to model two&#45;point statistics in redshift&#45;space." alt="" coords="4027,707,4251,733"/>
+<area shape="rect" id="node19" href="$da/d5e/RSD_8cpp.html" title="Methods of the class Cosmology used to model redshift&#45;space distortions." alt="" coords="4275,707,4451,733"/>
+<area shape="rect" id="node20" href="$d0/dcf/Sigma_8cpp.html" title="Methods of the class Cosmology used to model the amplitude of the matter power spectrum." alt="" coords="4475,707,4666,733"/>
+<area shape="rect" id="node21" href="$da/d1b/SizeFunction_8cpp.html" title="Methods of the class Cosmology used to model the mass function." alt="" coords="4690,707,4921,733"/>
+<area shape="rect" id="node22" href="$dc/d5d/Velocities_8cpp.html" title="Methods of the class Cosmology used to model the peculiar velocities." alt="" coords="4945,707,5157,733"/>
+<area shape="rect" id="node23" href="$d7/d9f/Catalogue_8h.html" title="The class Catalogue" alt="" coords="8618,707,8777,733"/>
+<area shape="rect" id="node49" href="$dc/d0c/ModelFunction__NumberCounts_8h.html" title="Global functions to model number counts of any type." alt="" coords="9023,1011,9198,1053"/>
+<area shape="rect" id="node81" href="$db/d06/Modelling__MassObservableRelation_8h.html" title="The class Modelling_MassObservableRelation." alt="" coords="7035,907,7293,949"/>
+<area shape="rect" id="node82" href="$d3/d44/ModelFunction__TwoPointCorrelation_8h.html" title="Global functions to model two&#45;point correlation functions of any type." alt="" coords="6941,1011,7115,1053"/>
+<area shape="rect" id="node90" href="$dd/d34/StackedDensityProfile_8h.html" title="The class StackedDensityProfile." alt="" coords="7317,915,7552,941"/>
+<area shape="rect" id="node92" href="$d6/de4/Modelling__Distribution_8h.html" title="The class Modelling_Distribution." alt="" coords="6050,915,6289,941"/>
+<area shape="rect" id="node107" href="$d1/da6/SuperSampleCovariance_8h.html" title="The class SuperSampleCovariance." alt="" coords="9796,707,10047,733"/>
+<area shape="rect" id="node112" href="$d6/dc3/HaloProfile_8h.html" title="The class HaloProfile." alt="" coords="6107,707,6269,733"/>
+<area shape="rect" id="node115" href="$d0/de9/ModelFunction__Cosmology_8h.html" title="Global functions to model two&#45;point correlation functions of any type." alt="" coords="5245,803,5419,845"/>
+<area shape="rect" id="node116" href="$dc/d47/Modelling__Cosmology_8h.html" title="The class Modelling_Cosmology." alt="" coords="4953,915,5188,941"/>
+<area shape="rect" id="node119" href="$d8/dbd/Modelling__Cosmology__DistancePrior_8h.html" title="The class Modelling_Cosmology." alt="" coords="5859,699,6083,741"/>
+<area shape="rect" id="node120" href="$d7/d5a/ModelFunction__PowerSpectrum__Angular_8h.html" title="Global functions to model the angular power spectrum." alt="" coords="5181,699,5379,741"/>
+<area shape="rect" id="node124" href="$d6/d29/ModelFunction__ThreePointCorrelation_8h.html" title="Functions to model the three&#45;point correlation function." alt="" coords="434,1011,617,1053"/>
+<area shape="rect" id="node129" href="$d0/d27/ModelFunction__ThreePointCorrelation__angular__connected_8h.html" title="Functions to model the connected three&#45;point correlation function in angular coordinates." alt="" coords="785,692,959,748"/>
+<area shape="rect" id="node131" href="$d2/d9b/ModelFunction__ThreePointCorrelation__angular__reduced_8h.html" title="Functions to model the reduced three&#45;point correlation function in angular coordinates." alt="" coords="178,692,353,748"/>
+<area shape="rect" id="node133" href="$d2/d42/ModelFunction__ThreePointCorrelation__comoving__connected_8h.html" title="Functions to model the connected three&#45;point correlation function in comoving coordinates." alt="" coords="1092,1004,1271,1060"/>
+<area shape="rect" id="node134" href="$d6/d68/ModelFunction__TwoPointCorrelation1D__angular_8h.html" title="Functions to model the angular two&#45;point correlation function." alt="" coords="1035,692,1213,748"/>
+<area shape="rect" id="node136" href="$d6/d9d/ModelFunction__TwoPointCorrelation1D__filtered_8h.html" title="Functions to model the filtered two&#45;point correlation function." alt="" coords="1266,692,1443,748"/>
+<area shape="rect" id="node138" href="$d5/d5a/ModelFunction__TwoPointCorrelation2D__polar_8h.html" title="Functions to model the 2D two&#45;point correlation function in polar coordinates." alt="" coords="1542,692,1719,748"/>
+<area shape="rect" id="node140" href="$d4/dfd/ModelFunction__TwoPointCorrelation__deprojected_8h.html" title="Functions to model the deprojected two&#45;point correlation function." alt="" coords="1942,692,2117,748"/>
+<area shape="rect" id="node142" href="$dd/d5c/ModelFunction__TwoPointCorrelation__multipoles_8h.html" title="Functions to model the multipoles of the two&#45;point correlation function." alt="" coords="1743,692,1918,748"/>
+<area shape="rect" id="node144" href="$d4/d0d/ModelFunction__TwoPointCorrelation__wedges_8h.html" title="Functions to model the wedges of the two&#45;point correlation function." alt="" coords="5659,692,5834,748"/>
+<area shape="rect" id="node24" href="$db/d43/Catalogue_8cpp.html" title="Methods of the class Catalogue." alt="" coords="9322,811,9507,837"/>
+<area shape="rect" id="node25" href="$da/d74/FITSCatalogue_8cpp.html" title="Methods of the class Catalogue to construct catalogues from FITS files." alt="" coords="10380,811,10593,837"/>
+<area shape="rect" id="node26" href="$da/d46/GadgetCatalogue_8cpp.html" title="Methods of the class Catalogue to construct catalogues." alt="" coords="9532,811,9764,837"/>
+<area shape="rect" id="node27" href="$d1/d79/HODCatalogue_8cpp_source.html" title=" " alt="" coords="8043,811,8258,837"/>
+<area shape="rect" id="node28" href="$de/d4f/Object_8cpp.html" title="Methods of the class Object." alt="" coords="8282,811,8443,837"/>
+<area shape="rect" id="node29" href="$d9/dd6/RandomCatalogue_8cpp.html" title="Methods of the class Catalogue to construct random catalogues." alt="" coords="10853,811,11091,837"/>
+<area shape="rect" id="node30" href="$de/d71/RandomCatalogueVIPERS_8cpp.html" title="Methods of the class Catalogue to construct random catalogues for VIPERS." alt="" coords="8467,803,8679,845"/>
+<area shape="rect" id="node31" href="$db/db6/VoidCatalogue_8cpp.html" title="Methods of the class Catalogue to construct Void catalogues." alt="" coords="8749,1019,8963,1045"/>
+<area shape="rect" id="node32" href="$da/d7e/CatalogueChainMesh_8h.html" title="The class catalogue::CatalogueChainMesh." alt="" coords="8965,811,9195,837"/>
+<area shape="rect" id="node34" href="$dc/d5e/ChainMesh__Catalogue_8h.html" title="Implementation of the chain&#45;mesh data structure." alt="" coords="8703,811,8940,837"/>
+<area shape="rect" id="node47" href="$d0/d3d/Measure_8h.html" title="The class Measure." alt="" coords="7361,811,7509,837"/>
+<area shape="rect" id="node48" href="$d5/d38/NumberCounts_8h.html" title="The class NumberCounts." alt="" coords="10121,915,10311,941"/>
+<area shape="rect" id="node94" href="$dd/dcb/Triplet_8h.html" title="The class Triplet." alt="" coords="7023,811,7155,837"/>
+<area shape="rect" id="node98" href="$d0/de5/LogNormal_8h.html" title="Implementation of the log&#45;normal data structure." alt="" coords="6836,811,6999,837"/>
+<area shape="rect" id="node100" href="$d0/d05/LogNormalFull_8h.html" title="Implementation of the log&#45;normal data structure." alt="" coords="7592,811,7779,837"/>
+<area shape="rect" id="node102" href="$dc/dba/Pair_8h.html" title="The class Pair." alt="" coords="7803,811,7917,837"/>
+<area shape="rect" id="node106" href="$d1/d3d/AngularPowerSpectrum_8cpp.html" title="Methods of the class PowerSpectrum_angular" alt="" coords="10121,803,10356,845"/>
+<area shape="rect" id="node33" href="$d0/dc1/CatalogueChainMesh_8cpp.html" title="Methods of the class Catalogue to construct chainmesh catalogues." alt="" coords="9011,907,9205,949"/>
+<area shape="rect" id="node35" href="$dc/dde/ChainMesh__Catalogue_8cpp.html" title="Methods of the class ChainMesh_Catalogue." alt="" coords="8822,907,8986,949"/>
+<area shape="rect" id="node36" href="$de/d7d/ThreePointCorrelation_8h.html" title="The class ThreePointCorrelation." alt="" coords="6681,1019,6916,1045"/>
+<area shape="rect" id="node43" href="$d0/dd1/TwoPointCorrelation_8h.html" title="The class TwoPointCorrelation." alt="" coords="8474,915,8697,941"/>
+<area shape="rect" id="node45" href="$d4/db1/ThreePointCorrelation__comoving__multipoles__all_8cpp.html" title="Methods of the class ThreePointCorrelation_comoving_multipoles_all used to compute the the multipoles..." alt="" coords="10335,900,10574,956"/>
+<area shape="rect" id="node46" href="$d6/d7b/ThreePointCorrelation__comoving__multipoles__single_8cpp.html" title="Methods of the class ThreePointCorrelation_comoving_multipoles_single used to compute the the multipo..." alt="" coords="10598,900,10837,956"/>
+<area shape="rect" id="node37" href="$d0/dd4/Modelling__ThreePointCorrelation_8h.html" title="The class Modelling_ThreePointCorrelation." alt="" coords="923,1115,1144,1157"/>
+<area shape="rect" id="node38" href="$dc/d7c/Modelling__ThreePointCorrelation__angular__connected_8h.html" title="The class Modelling_ThreePointCorrelation_angular_connected." alt="" coords="654,1219,890,1261"/>
+<area shape="rect" id="node40" href="$d6/d4c/Modelling__ThreePointCorrelation_8cpp.html" title="Methods of the class Modelling_ThreePointCorrelation, used to model three&#45;point correlation functions..." alt="" coords="856,1405,1123,1447"/>
+<area shape="rect" id="node41" href="$d5/d13/Modelling__ThreePointCorrelation__comoving__connected_8h.html" title="The class Modelling_ThreePointCorrelation_comoving_connected." alt="" coords="915,1219,1165,1261"/>
+<area shape="rect" id="node39" href="$d5/d0a/Modelling__ThreePointCorrelation__angular__reduced_8h.html" title="The class Modelling_ThreePointCorrelation_angular_reduced." alt="" coords="471,1316,692,1357"/>
+<area shape="rect" id="node42" href="$da/d6c/Modelling__ThreePointCorrelation__comoving__reduced_8h.html" title="The class Modelling_ThreePointCorrelation_comoving_reduced." alt="" coords="717,1316,953,1357"/>
+<area shape="rect" id="node44" href="$df/d38/Modelling__TwoPointCorrelation_8h.html" title="The class Modelling_TwoPointCorrelation." alt="" coords="7521,1115,7730,1157"/>
+<area shape="rect" id="node65" href="$d3/de8/Modelling__NumberCounts_8h.html" title="The class Modelling_NumberCounts." alt="" coords="10049,1115,10252,1157"/>
+<area shape="rect" id="node71" href="$d6/dec/NumberCounts1D_8h.html" title="The class NumberCounts1D." alt="" coords="10598,1019,10805,1045"/>
+<area shape="rect" id="node77" href="$d2/ddf/NumberCounts2D_8h.html" title="The class NumberCounts2D." alt="" coords="11339,1019,11546,1045"/>
+<area shape="rect" id="node80" href="$dd/d21/NumberCounts_8cpp.html" title="Methods of the class NumberCounts." alt="" coords="10000,1011,10179,1053"/>
+<area shape="rect" id="node50" href="$d6/dc2/ModelFunction__NumberCounts1D__Mass_8h.html" title="Global functions to model number counts." alt="" coords="8315,1115,8512,1157"/>
+<area shape="rect" id="node53" href="$d7/dea/ModelFunction__NumberCounts1D__MassProxy_8h.html" title="Global functions to model number counts as a function of a mass proxy." alt="" coords="8536,1115,8768,1157"/>
+<area shape="rect" id="node56" href="$d8/d61/ModelFunction__NumberCounts1D__Redshift_8h.html" title="Global functions to model number counts." alt="" coords="8857,1115,9073,1157"/>
+<area shape="rect" id="node59" href="$d5/d48/ModelFunction__NumberCounts1D__Size_8h.html" title="Global functions to model number counts." alt="" coords="9117,1115,9307,1157"/>
+<area shape="rect" id="node62" href="$d8/dc3/ModelFunction__NumberCounts2D__RedshiftMass_8h.html" title="Global functions to model number counts." alt="" coords="9580,1115,9831,1157"/>
+<area shape="rect" id="node69" href="$d9/d2d/Modelling__MassObservableRelation_8cpp.html" title="Methods of the class Modelling_MassObservableRelation." alt="" coords="7755,1108,8013,1164"/>
+<area shape="rect" id="node70" href="$db/d27/ModelFunction__NumberCounts_8cpp.html" title="Functions to model the number counts." alt="" coords="8038,1115,8290,1157"/>
+<area shape="rect" id="node51" href="$d6/d3e/ModelFunction__NumberCounts1D__Mass_8cpp.html" title="Functions to model the mass number counts." alt="" coords="7862,1212,8095,1268"/>
+<area shape="rect" id="node52" href="$dd/d97/Modelling__NumberCounts1D__Mass_8cpp.html" title="Methods of the class Modelling_NumberCounts1D_Mass." alt="" coords="7626,1212,7838,1268"/>
+<area shape="rect" id="node54" href="$d1/d3c/ModelFunction__NumberCounts1D__MassProxy_8cpp.html" title="Functions to model the mass number counts as a function of a mass proxy." alt="" coords="8355,1212,8589,1268"/>
+<area shape="rect" id="node55" href="$d3/d06/Modelling__NumberCounts1D__MassProxy_8cpp.html" title="Methods of the class Modelling_NumberCounts1D_MassProxy." alt="" coords="8119,1212,8331,1268"/>
+<area shape="rect" id="node57" href="$d7/dae/ModelFunction__NumberCounts1D__Redshift_8cpp.html" title="Functions to model the redshift number counts." alt="" coords="8849,1212,9082,1268"/>
+<area shape="rect" id="node58" href="$df/d6c/Modelling__NumberCounts1D__Redshift_8cpp.html" title="Methods of the class Modelling_NumberCounts1D_Redshift." alt="" coords="8613,1212,8825,1268"/>
+<area shape="rect" id="node60" href="$df/df2/ModelFunction__NumberCounts1D__Size_8cpp.html" title="Functions to model the size number counts." alt="" coords="9342,1212,9575,1268"/>
+<area shape="rect" id="node61" href="$d6/daa/Modelling__NumberCounts1D__Size_8cpp.html" title="Methods of the class Modelling_NumberCounts1D_Size." alt="" coords="9106,1212,9318,1268"/>
+<area shape="rect" id="node63" href="$d7/df6/ModelFunction__NumberCounts2D__RedshiftMass_8cpp.html" title="Functions to model the redshift&#45;mass number counts." alt="" coords="9835,1212,10069,1268"/>
+<area shape="rect" id="node64" href="$dd/dba/Modelling__NumberCounts2D__RedshiftMass_8cpp.html" title="Methods of the class Modelling_NumberCounts2D_RedshiftMass." alt="" coords="9599,1212,9811,1268"/>
+<area shape="rect" id="node66" href="$d6/d8f/Modelling__NumberCounts1D_8h.html" title="The class Modelling_NumberCounts1D." alt="" coords="10565,1219,10768,1261"/>
+<area shape="rect" id="node67" href="$d1/d18/Modelling__NumberCounts2D_8h.html" title="The class Modelling_NumberCounts2D." alt="" coords="10093,1219,10296,1261"/>
+<area shape="rect" id="node68" href="$dc/d1b/Modelling__NumberCounts_8cpp.html" title="Methods of the class Modelling_NumberCounts." alt="" coords="10320,1219,10541,1261"/>
+<area shape="rect" id="node72" href="$d8/d3a/NumberCounts1D__Mass_8h.html" title="The class NumberCounts1D_Mass." alt="" coords="10932,1115,11127,1157"/>
+<area shape="rect" id="node73" href="$d2/d89/NumberCounts1D__MassProxy_8h.html" title="The class NumberCounts1D_MassProxy." alt="" coords="10276,1115,10471,1157"/>
+<area shape="rect" id="node74" href="$db/d83/NumberCounts1D__Redshift_8h.html" title="The class NumberCounts1D_Redshift." alt="" coords="10495,1115,10689,1157"/>
+<area shape="rect" id="node75" href="$d7/de7/NumberCounts1D__Size_8h.html" title="The class NumberCounts1D_Size." alt="" coords="10713,1115,10908,1157"/>
+<area shape="rect" id="node76" href="$d0/d75/NumberCounts1D_8cpp.html" title="Methods of the class NumberCounts1D." alt="" coords="11151,1115,11329,1157"/>
+<area shape="rect" id="node78" href="$d3/de3/NumberCounts2D__RedshiftMass_8h.html" title="The class NumberCounts2D_RedshiftMass." alt="" coords="11556,1115,11751,1157"/>
+<area shape="rect" id="node79" href="$d1/d7d/NumberCounts2D_8cpp.html" title="Methods of the class NumberCounts2D." alt="" coords="11353,1115,11532,1157"/>
+<area shape="rect" id="node88" href="$d9/d32/Modelling__DensityProfile_8h.html" title="The class Modelling_DensityProfile." alt="" coords="7139,1011,7341,1053"/>
+<area shape="rect" id="node83" href="$d9/d33/ModelFunction__TwoPointCorrelation1D_8h.html" title="Global functions to model 1D two&#45;point correlation functions of any type." alt="" coords="6545,1115,6735,1157"/>
+<area shape="rect" id="node84" href="$dd/dc5/ModelFunction__TwoPointCorrelation2D_8h.html" title="Global functions to model 2D two&#45;point correlation functions of any type." alt="" coords="6759,1115,6948,1157"/>
+<area shape="rect" id="node85" href="$d5/d5e/ModelFunction__TwoPointCorrelation_8cpp.html" title="Global functions to model two&#45;point correlation functions of any type." alt="" coords="6972,1115,7257,1157"/>
+<area shape="rect" id="node86" href="$d4/d73/ModelFunction__TwoPointCorrelation__multipoles_8cpp.html" title="Functions to model the multipoles of the two&#45;point correlation function." alt="" coords="3389,1108,3648,1164"/>
+<area shape="rect" id="node87" href="$da/d92/ModelFunction__TwoPointCorrelation__wedges_8cpp.html" title="Functions to model the wedges of the two&#45;point correlation function." alt="" coords="5604,1108,5863,1164"/>
+<area shape="rect" id="node89" href="$d3/ddc/Modelling__DensityProfile_8cpp.html" title="Methods of the class Modelling_DensityProfile." alt="" coords="7282,1115,7497,1157"/>
+<area shape="rect" id="node91" href="$d2/dd3/StackedDensityProfile_8cpp.html" title="Methods of the class StackedDensityProfile." alt="" coords="7416,1011,7640,1053"/>
+<area shape="rect" id="node93" href="$df/d08/Modelling__Distribution_8cpp.html" title="Methods of the class Modelling_Distribution, used for modelling different kinds of distributions." alt="" coords="6069,1011,6269,1053"/>
+<area shape="rect" id="node95" href="$db/d1d/Triplet1D_8h.html" title="The class Triplet1D." alt="" coords="6583,915,6734,941"/>
+<area shape="rect" id="node96" href="$d2/d84/Triplet_8cpp.html" title="Methods of the class Triplet" alt="" coords="6433,1011,6657,1053"/>
+<area shape="rect" id="node97" href="$d9/d69/Triplet2D_8h.html" title="The class Triplet2D." alt="" coords="6758,915,6909,941"/>
+<area shape="rect" id="node99" href="$d7/d63/LogNormal_8cpp.html" title="Functions for the LogNormal data structure." alt="" coords="6313,915,6508,941"/>
+<area shape="rect" id="node101" href="$d0/dc7/LogNormalFull_8cpp.html" title="Functions for the LogNormalFull data structure." alt="" coords="7576,915,7795,941"/>
+<area shape="rect" id="node103" href="$d7/d64/Pair1D_8h.html" title="The classes Pair1D*." alt="" coords="8214,915,8349,941"/>
+<area shape="rect" id="node104" href="$d7/da7/Pair2D_8h.html" title="The classes Pair2D*." alt="" coords="7819,915,7954,941"/>
+<area shape="rect" id="node105" href="$dc/dc5/Pair_8cpp.html" title="Methods of the class Pair" alt="" coords="7978,907,8190,949"/>
+<area shape="rect" id="node108" href="$dd/d16/SuperSampleCovariance_8cpp.html" title="Methods of the class SuperSampleCovariance." alt="" coords="9839,803,10047,845"/>
+<area shape="rect" id="node109" href="$db/d8e/CombinedPosterior_8h.html" title="The class CombinedPosterior." alt="" coords="11167,811,11382,837"/>
+<area shape="rect" id="node110" href="$db/d46/CombinedModelling_8h.html" title="The class CombinedModelling." alt="" coords="11166,915,11389,941"/>
+<area shape="rect" id="node111" href="$d0/deb/CombinedPosterior_8cpp.html" title="Methods of the class CombinedPosterior." alt="" coords="12278,915,12514,941"/>
+<area shape="rect" id="node113" href="$d0/ddd/HaloProfile_8cpp.html" title="Methods of the class HaloProfile." alt="" coords="6049,811,6269,837"/>
+<area shape="rect" id="node114" href="$d1/dcc/ModelFunction__TwoPointCorrelation1D__monopole_8cpp.html" title="Functions to model the monopole of the two&#45;point correlation function." alt="" coords="5507,796,5773,852"/>
+<area shape="rect" id="node118" href="$d9/d3f/ModelFunction__Cosmology_8cpp.html" title="Global functions to model cosmological measurements." alt="" coords="5212,907,5439,949"/>
+<area shape="rect" id="node117" href="$d5/d9a/Modelling__Cosmology_8cpp.html" title="Methods of the class Modelling_Cosmology." alt="" coords="5176,1011,5371,1053"/>
+<area shape="rect" id="node121" href="$d7/de1/Modelling__PowerSpectrum__Angular_8h.html" title="The class Modelling_PowerSpectrum_angular." alt="" coords="2400,803,2653,845"/>
+<area shape="rect" id="node123" href="$d0/da7/ModelFunction__PowerSpectrum__Angular_8cpp.html" title="Functions to model the angular power spectrum." alt="" coords="4636,796,4879,852"/>
+<area shape="rect" id="node122" href="$d3/d80/Modelling__PowerSpectrum__Angular_8cpp.html" title="Methods of the class Modelling_PowerSpectrum_angular." alt="" coords="2385,907,2668,949"/>
+<area shape="rect" id="node125" href="$dd/db4/ModelFunction__ThreePointCorrelation__comoving__reduced_8h.html" title="Functions to model the reduced three&#45;point correlation function in comoving coordinates." alt="" coords="365,1108,539,1164"/>
+<area shape="rect" id="node127" href="$da/d08/ModelFunction__ThreePointCorrelation_8cpp.html" title="Functions to model the three&#45;point correlation function." alt="" coords="43,1115,341,1157"/>
+<area shape="rect" id="node128" href="$db/d40/ModelFunction__ThreePointCorrelation__comoving__connected_8cpp.html" title="Functions to model the connected three&#45;point correlation function in comoving coordinates." alt="" coords="563,1108,834,1164"/>
+<area shape="rect" id="node126" href="$d3/dda/ModelFunction__ThreePointCorrelation__comoving__reduced_8cpp.html" title="Functions to model the reduced three&#45;point correlation function in comoving coordinates." alt="" coords="309,1212,579,1268"/>
+<area shape="rect" id="node130" href="$d8/d30/ModelFunction__ThreePointCorrelation__angular__connected_8cpp.html" title="Functions to model the connected three&#45;point correlation function in angular coordinates." alt="" coords="563,796,834,852"/>
+<area shape="rect" id="node132" href="$d7/da5/ModelFunction__ThreePointCorrelation__angular__reduced_8cpp.html" title="Functions to model the reduced three&#45;point correlation function in angular coordinates." alt="" coords="130,796,401,852"/>
+<area shape="rect" id="node135" href="$d9/d35/ModelFunction__TwoPointCorrelation1D__angular_8cpp.html" title="Functions to model the angular two&#45;point correlation function." alt="" coords="909,796,1176,852"/>
+<area shape="rect" id="node137" href="$d7/d4a/ModelFunction__TwoPointCorrelation1D__filtered_8cpp.html" title="Functions to model the filtered two&#45;point correlation function." alt="" coords="1200,796,1467,852"/>
+<area shape="rect" id="node139" href="$d2/d1f/ModelFunction__TwoPointCorrelation2D__polar_8cpp.html" title="Functions to model the 2D two&#45;point correlation function in polar coordinates." alt="" coords="1541,796,1808,852"/>
+<area shape="rect" id="node141" href="$d8/d2c/ModelFunction__TwoPointCorrelation__deprojected_8cpp.html" title="Functions to model the deprojected two&#45;point correlation function." alt="" coords="2117,796,2376,852"/>
+<area shape="rect" id="node143" href="$db/d5d/Modelling__TwoPointCorrelation__multipoles_8h.html" title="The class Modelling_TwoPointCorrelation_multipoles." alt="" coords="1833,803,2042,845"/>
+<area shape="rect" id="node145" href="$d9/d93/Modelling__TwoPointCorrelation__wedges_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation_wedges." alt="" coords="5797,796,6024,852"/>
+<area shape="rect" id="node147" href="$d5/d38/FuncGrid_8h.html" title="Class used to handle functions stored on a grid." alt="" coords="10717,229,10867,256"/>
+<area shape="rect" id="node181" href="$dc/d22/FuncGrid__Bspline_8h.html" title="Class used to handle functions interpolated using a basis spline http://mathworld...." alt="" coords="7067,229,7271,256"/>
+<area shape="rect" id="node183" href="$d7/d48/GSLwrapper_8cpp.html" title="functions that wrap GSL routines for integration, root finding and minimization" alt="" coords="10501,229,10693,256"/>
+<area shape="rect" id="node148" href="$d5/df4/FuncGrid_8cpp.html" title="Methods of the class FuncGrid." alt="" coords="10709,304,10875,331"/>
+<area shape="rect" id="node149" href="$da/ddd/FFTlog_8h.html" title="Wrapper for fftlog wripper." alt="" coords="10398,304,10533,331"/>
+<area shape="rect" id="node150" href="$d9/d14/FFTlog_8cpp.html" title="Wrapper for fftlog wripper." alt="" coords="10210,379,10329,405"/>
+<area shape="rect" id="node151" href="$d9/d17/RandomNumbers_8h.html" title="Class functions used to generate random numbers." alt="" coords="10560,379,10765,405"/>
+<area shape="rect" id="node152" href="$d2/d8a/Func_8h.html" title="Useful generic functions." alt="" coords="10344,453,10467,480"/>
+<area shape="rect" id="node153" href="$d1/d00/Func_2Func_8cpp_source.html" title=" " alt="" coords="10093,610,10206,637"/>
+<area shape="rect" id="node154" href="$d6/d15/FuncMultipoles_8cpp.html" title="Functions used to analyse the multipoles of the two&#45;point correlation function." alt="" coords="9913,528,10095,555"/>
+<area shape="rect" id="node155" href="$db/d87/FuncXi_8cpp.html" title="Functions used to model the two&#45;point correlation function." alt="" coords="10119,528,10246,555"/>
+<area shape="rect" id="node156" href="$d6/df6/Data_8h.html" title="The class Data." alt="" coords="9664,528,9787,555"/>
+<area shape="rect" id="node163" href="$d5/d4d/Distribution_8h.html" title="The class Distribution." alt="" coords="11193,528,11361,555"/>
+<area shape="rect" id="node173" href="$df/dd0/CovarianceMatrix_8h.html" title="The class CovarianceMatrix." alt="" coords="10578,528,10785,555"/>
+<area shape="rect" id="node175" href="$dd/d1d/LegendrePolynomials_8h.html" title="Class to manage Legendre polymials computation." alt="" coords="10271,528,10503,555"/>
+<area shape="rect" id="node177" href="$d9/de5/SphericalHarmonics__Coefficients_8h.html" title="Generic functions that use one or more classes of the CosmoBolognaLib." alt="" coords="10617,803,10828,845"/>
+<area shape="rect" id="node179" href="$da/d75/Table_8h.html" title="The class Table." alt="" coords="11417,528,11543,555"/>
+<area shape="rect" id="node157" href="$df/dc1/CovarianceMatrix_8cpp.html" title="Methods of the class CovarianceMatrix." alt="" coords="9870,610,10069,637"/>
+<area shape="rect" id="node158" href="$d8/db3/Data_8cpp.html" title="Methods of the class Data." alt="" coords="10223,707,10337,733"/>
+<area shape="rect" id="node159" href="$db/d0e/TaperedCovarianceMatrix_8cpp.html" title="Methods of the class TaperedCovarianceMatrix." alt="" coords="10580,707,10831,733"/>
+<area shape="rect" id="node160" href="$d1/dfe/Data2D_8h.html" title="The class Data2D." alt="" coords="9655,610,9796,637"/>
+<area shape="rect" id="node161" href="$df/db4/Field3D_8h.html" title="The class field3D." alt="" coords="9223,610,9364,637"/>
+<area shape="rect" id="node162" href="$da/d20/Data1D_8h.html" title="The class Data1D." alt="" coords="9439,610,9580,637"/>
+<area shape="rect" id="node164" href="$dd/da2/Distribution_8cpp.html" title="Methods of the class Distribution." alt="" coords="11159,610,11364,637"/>
+<area shape="rect" id="node165" href="$d8/de3/Prior_8h.html" title="The class Prior." alt="" coords="11214,707,11335,733"/>
+<area shape="rect" id="node167" href="$db/d9f/CombinedDistribution_8h.html" title="The class CombinedDistribution." alt="" coords="11633,610,11868,637"/>
+<area shape="rect" id="node170" href="$db/dbb/PosteriorDistribution_8h.html" title="The class PosteriorDistribution." alt="" coords="10908,610,11135,637"/>
+<area shape="rect" id="node171" href="$d1/dd5/Sampler_8h.html" title="The class Sampler." alt="" coords="12061,610,12206,637"/>
+<area shape="rect" id="node166" href="$dc/d6a/ModelParameters_8h.html" title="The class ModelParameters." alt="" coords="11406,811,11613,837"/>
+<area shape="rect" id="node168" href="$d1/d1e/CombinedDistribution_8cpp.html" title="Methods of the class CombinedDistribution." alt="" coords="11582,707,11853,733"/>
+<area shape="rect" id="node169" href="$db/d6c/PriorDistribution_8h.html" title="The class PriorDistribution." alt="" coords="11359,707,11558,733"/>
+<area shape="rect" id="node172" href="$de/d6a/Posterior_8cpp.html" title="Methods of the class Posterior." alt="" coords="11928,707,12099,733"/>
+<area shape="rect" id="node174" href="$db/d4f/TaperedCovarianceMatrix_8h.html" title="The class TaperedCovarianceMatrix." alt="" coords="10629,603,10833,644"/>
+<area shape="rect" id="node176" href="$d7/de3/LegendrePolynomials_8cpp_source.html" title=" " alt="" coords="10281,610,10503,637"/>
+<area shape="rect" id="node178" href="$d3/df0/SphericalHarmonics__Coefficients_8cpp_source.html" title=" " alt="" coords="10861,907,11048,949"/>
+<area shape="rect" id="node180" href="$dd/db0/Table_8cpp.html" title="Methods of the class Table." alt="" coords="11439,610,11558,637"/>
+<area shape="rect" id="node182" href="$d9/da8/FuncGrid__Bspline_8cpp.html" title="Methods of the class FuncGrid_Bspline." alt="" coords="6910,304,7133,331"/>
+<area shape="rect" id="node185" href="$d8/d7f/CUBAwrapper_8cpp.html" title="functions that wrap CUBA routines for multidimensional integration, root finding and minimization" alt="" coords="10911,229,11115,256"/>
+<area shape="rect" id="node187" href="$d1/d24/EigenWrapper_8cpp.html" title="functions that wrap Eigen routines for vector and matrix manipulation" alt="" coords="9861,453,10067,480"/>
+<area shape="rect" id="node189" href="$db/d01/ChainMesh_8cpp.html" title="Methods of the class ChainMesh." alt="" coords="11788,453,11985,480"/>
+<area shape="rect" id="node191" href="$da/db1/FITSwrapper_8cpp.html" title="functions that wrap FITS routines to manage .fits files" alt="" coords="12459,707,12653,733"/>
+<area shape="rect" id="node193" href="$da/dc6/Histogram_8cpp.html" title="Methods of the class Histogram." alt="" coords="12144,811,12333,837"/>
+<area shape="rect" id="node195" href="$dd/dc7/ParameterFile_8cpp.html" title="Methods of the class ParameterFile used to read parameter files." alt="" coords="12333,229,12566,256"/>
+<area shape="rect" id="node197" href="$d3/d40/ReadParameters_8cpp.html" title="Methods of the class ReadParameters used to read parameter files." alt="" coords="12591,229,12841,256"/>
+</map>
