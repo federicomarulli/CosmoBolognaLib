@@ -66,6 +66,7 @@ int main () {
     const std::string HODFileHeader = "(1)galaxyTag" + sep + "(2)X [Mpc/h]" + sep + "(3)Y [Mpc/h]" + sep + "(4)Z [Mpc/h]" + sep + "(5)M_vir (M_sub)[M_sun/h]" + sep + "(6)M_infall [M_sun/h]" + sep + "(7)M_star [M_sun/h]";
     
     // store the HOD catalogue
+    if (system("mkdir -p "+output_path).c_str()) {}
     HOD.write_data(output_path+HodCatalogueFileName, varsToPrint, sep, HODFileHeader);
     
   }
