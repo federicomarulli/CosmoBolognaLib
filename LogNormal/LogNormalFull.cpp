@@ -43,7 +43,7 @@ using namespace catalogue;
 // ============================================================================
 
 
-cbl::lognormal::LogNormalFull::LogNormalFull (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int n_redshift_bins, const std::string author)
+cbl::lognormal::LogNormalFull::LogNormalFull (const cosmology::Cosmology cosmology, const double redshift_min, const double redshift_max, const int n_redshift_bins, const std::string author)
 {
   set_cosmo_function(cosmology, redshift_min, redshift_max, n_redshift_bins, author);
 }
@@ -52,7 +52,7 @@ cbl::lognormal::LogNormalFull::LogNormalFull (const Cosmology cosmology, const d
 // ============================================================================
 
 
-cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int n_redshift_bins, const std::string author)
+cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const cosmology::Cosmology cosmology, const double redshift_min, const double redshift_max, const int n_redshift_bins, const std::string author)
 {
   set_grid_parameters(rmin, xMin, xMax, yMin, yMax, zMin, zMax);
 
@@ -63,7 +63,7 @@ cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const double xM
 // ============================================================================
 
 
-cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad, const Cosmology cosmology, const double redshift_min, const double redshift_max, const int n_redshift_bins, const std::string author)
+cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad, const cosmology::Cosmology cosmology, const double redshift_min, const double redshift_max, const int n_redshift_bins, const std::string author)
 {
   set_grid_parameters(rmin, random, pad);
 
@@ -74,7 +74,7 @@ cbl::lognormal::LogNormalFull::LogNormalFull (const double rmin, const std::vect
 // ============================================================================
 
 
-void cbl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const std::string author)
+void cbl::lognormal::LogNormalFull::set_cosmo_function (const cosmology::Cosmology cosmology, const double redshift_min, const double redshift_max, const int nredshift, const std::string author)
 {
   m_cosmology = make_shared<Cosmology>(cosmology);
 
@@ -104,10 +104,8 @@ void cbl::lognormal::LogNormalFull::set_cosmo_function (const Cosmology cosmolog
   int nk = 500;
   double kmin = 1.e-4;
   double kmax = 1.e2;
-  vector<double> kk = logarithmic_bin_vector(nk, kmin, kmax), Pk;
-  
-  for (auto &&KK : kk)
-    Pk.push_back(m_cosmology->Pk_matter(KK, m_author, 0, 0.));
+  vector<double> kk = logarithmic_bin_vector(nk, kmin, kmax);
+  vector<double> Pk = m_cosmology->Pk_matter(kk, m_author, 0, 0.);
 
   m_func_pk = make_shared<glob::FuncGrid>(glob::FuncGrid(kk, Pk, "Spline"));
 }

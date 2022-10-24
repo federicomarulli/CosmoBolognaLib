@@ -34,100 +34,10 @@
 #ifndef __KERNEL__
 #define __KERNEL__
 
-// Save compiler switches
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wpedantic"
-#pragma GCC diagnostic ignored "-Wparentheses"
-#pragma GCC diagnostic ignored "-Wmisleading-indentation"
-#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
-#pragma GCC diagnostic ignored "-Wunused-variable"
-
-#include <iostream>
-#include <sstream>
-#include <unordered_map>
-#include <fstream>
-#include <cmath>
-#include <complex>
-#include <iomanip>
-#include <vector>
-#include <limits>
-#include <algorithm>
-#include <memory>
-#include <numeric>
-#include <functional>
-#include <stdlib.h>
-#include <unistd.h>
-#include <random>
-#include <map>
-#include <omp.h>
-#include <stdio.h>
-#include <time.h>
-#include <fcntl.h>
-#include <ctype.h>
-#include <sys/stat.h>
-#include <errno.h>
-
-
-#ifdef LINUX
-#include "sys/types.h"
-#include "sys/sysinfo.h"
-#endif
-
-/// @cond GSLinc
-#include <gsl/gsl_errno.h>
-#include <gsl/gsl_deriv.h>
-#include <gsl/gsl_integration.h>
-#include <gsl/gsl_fit.h>
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_monte_vegas.h>
-#include <gsl/gsl_vector.h>
-#include <gsl/gsl_spline.h>
-#include <gsl/gsl_interp2d.h>
-#include <gsl/gsl_spline2d.h>
-#include <gsl/gsl_roots.h>
-#include <gsl/gsl_min.h>
-#include <gsl/gsl_histogram.h>
-#include <gsl/gsl_histogram2d.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_fft_real.h>
-#include <gsl/gsl_fft_halfcomplex.h>
-#include <gsl/gsl_multimin.h>
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_linalg.h>
-#include <gsl/gsl_eigen.h>
-#include <gsl/gsl_cblas.h>
-#include <gsl/gsl_sf.h>
-#include <gsl/gsl_sf_bessel.h>
-#include <gsl/gsl_sf_legendre.h>
-#include <gsl/gsl_sf_expint.h>
-#include <gsl/gsl_statistics_double.h>
-#include <gsl/gsl_poly.h>
-#include <gsl/gsl_sf_erf.h>
-#include <gsl/gsl_bspline.h>
-#include <gsl/gsl_multifit.h>
-/// @endcond
-
-/// @cond FFTWinc
-#include <fftw3.h>
-/// @endcond
-
-/// @cond BOOSTinc
-#include <boost/numeric/odeint.hpp>
-#include <boost/math/special_functions/binomial.hpp>
-#include <boost/math/special_functions/beta.hpp>
-/// @endcond
-
-/// @cond FFTWinc
-#include <Eigen/Dense>
-/// @endcond
-
-// Restore compiler switches
-#pragma GCC diagnostic pop
-
+#include "Path.h"
 #include "Constants.h"
 #include "EnumCast.h"
 #include "Exception.h"
-
 
 // ============================================================================================
 
@@ -255,6 +165,12 @@
  *  objects
  */
 /**
+ *  @example catalogueHOD.cpp
+ *
+ *  This example shows how to construct a Halo Occupation Distribution
+ *  (HOD) galaxy catalogue
+ */
+/**
  *  @example lognormal.cpp
  *
  *  This example shows how to construct a log-normal density field
@@ -344,10 +260,16 @@
  * This example shows how to model the reduced 
  * three-point correlation function
  */
- /**
+/**
  * @example power_spectrum_angular.cpp
  *
  * This example shows how to measure the angular 
+ * power spectrum 
+ */
+ /**
+ * @example model_power_spectrum_angular.cpp
+ *
+ * This example shows how to model the angular 
  * power spectrum 
  */
 /**
@@ -545,6 +467,7 @@
  *  notebook</a>
  */
 
+
 /**
  *  @brief The global namespace of the <B> \e CosmoBolognaLib </B>
  *  
@@ -552,7 +475,7 @@
  *  classes of the CosmoBolognaLib
  */
 namespace cbl {
-
+  
   /**
    *  @enum Dim
    *  @brief the dimension, used e.g. for pair and triplet vectors
@@ -809,18 +732,6 @@ namespace cbl {
 
   /// CBL print message
 #define coutCBL std::cout << headerCBL
-
-  
-  /**
-   *  @brief set the default directories
-   *
-   *  @param input_DirCosmo directory where the CosmoBolognaLib are
-   *  stored
-   *
-   *  @param input_DirLoc local directory of the main code
-   */
-  inline void SetDirs (const std::string input_DirCosmo, const std::string input_DirLoc)
-  { par::DirCosmo = input_DirCosmo; par::DirLoc = input_DirLoc; }
   
   /**
    *  @brief internal CBL warning message
@@ -942,6 +853,46 @@ namespace cbl {
       if (vect[ind++]<par::defaultDouble*1.000001) is = false;
     return is;
   }
+  
+   /**
+   *  @brief check if the values of a [unsigned int] std::vector have already
+   *  been set
+   *
+   *  @param vect a vactor of double values
+   *
+   *  @return if vect[i]<par::defaultDouble \f$\forall\f$ i \f$ \rightarrow \f$ false;
+   *  else \f$ \rightarrow \f$ true
+   */
+  inline bool isSet (const std::vector<unsigned int> vect) 
+  {
+    bool is = true;
+    size_t ind = 0;
+    while (is && ind<vect.size()) 
+      if (vect[ind++]<par::defaultInt*1.000001) is = false;
+    return is;
+  }
+  
+   /**
+   *  @brief check if the values of a [unsigned int] std::vector<std::vector> have already
+   *  been set
+   *
+   *  @param vect a vactor of double values
+   *
+   *  @return if vect[i]<par::defaultDouble \f$\forall\f$ i \f$ \rightarrow \f$ false;
+   *  else \f$ \rightarrow \f$ true
+   */
+  inline bool isSet (const std::vector<std::vector<unsigned int>> vect) 
+  {
+    bool is = true;
+    size_t ind = 0;
+    size_t i=0;
+    while (is && i<vect.size()) {
+    	while (is && ind<vect[i].size()) 
+     		if (vect[i][ind++]<par::defaultInt*1.000001) is = false;
+     	i++;
+    }
+    return is;
+  }
 
   /**
    *  @brief convert a number to a std::string
@@ -1032,18 +983,6 @@ namespace cbl {
   template <typename T>
   T closest (T x, std::vector<T> values)
   { return values[index_closest(x, values)]; }
-  
-  /**
-   *  @brief substitute ~ with the full path
-   *
-   *  @param path the relative path
-   *
-   *  @param isDir true \f$\rightarrow\f$ directory path, false
-   *  \f$\rightarrow\f$ otherwise
-   *
-   *  @return std::string containing the full path
-   */
-  std::string fullpath (std::string path, const bool isDir=true);
   
   /**
    *  @brief endian conversion of a short variable
@@ -2067,7 +2006,6 @@ namespace cbl {
   std::vector<std::vector<double>> read_file (const std::string file_name, const std::string path_name, const std::vector<int> column_data, const std::string delimiter, const char comment='#');
   
   ///@}
-  
 }
 
 

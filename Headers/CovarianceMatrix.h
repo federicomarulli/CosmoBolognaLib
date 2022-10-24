@@ -34,7 +34,6 @@
 #define __COVMAT__
 
 #include "Func.h"
-#include "SuperSampleCovariance.h"
 
 namespace cbl {
 
@@ -86,12 +85,6 @@ namespace cbl {
       /// The hartlap factor, only set when
       // the covariance is measured from multiple dataset
       double m_hartlap_factor;
-      
-      /// pointer to the SuperSampleCovariance object
-      std::shared_ptr<cbl::statistics::SuperSampleCovariance> m_SSC = NULL;
-      
-      /// bool flagging the presence of the super-sample covariance
-      bool m_isSSC = false;
 
       /**
        * @brief set internal attributes to
@@ -108,21 +101,17 @@ namespace cbl {
        *
        * @param prec the precision required in the inversion of the
        * covariance matrix
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void m_set (const std::vector<double> matrix, const double nmeasures=-1, const double prec=1.e-10);
 
       /**
-       * @brief compute the hartlap 
-       * factor. This is used to de-bias
-       * precision matrix measured from covariance
-       * measured from limited number of datasets
+       * @brief compute the hartlap factor. This is used to de-bias
+       * precision matrix measured from covariance measured from
+       * limited number of datasets
        *
        *  \f[
-       *  \hat{\Psi}=\left(1-\frac{N_{\mathrm{b}}+1}{N_{\mathrm{s}}-1}\right) \hat{\mathrm{c}}^{-1}
-       *  \f]
+       *  \hat{\Psi}=\left(1-\frac{N_{\mathrm{b}}+1}{N_{\mathrm{s}}-1}\right)
+       *  \hat{\mathrm{c}}^{-1} \f]
        *
        * @param order the matrix order (or the number of data points)
        *
@@ -161,24 +150,6 @@ namespace cbl {
        */
       CovarianceMatrix (std::vector<std::vector<double>> covariance_matrix, const double nmeasures=-1, const double prec=1.e-10) 
       { set_from_matrix(covariance_matrix, nmeasures, prec); }
-      
-      /**
-       *  @brief constructor which sets the
-       *  covariance matrix
-       *
-       *  @param covariance_matrix array containing the covariance matrix
-       *
-       *  @param SSC SuperSampleCovariance object
-       *
-       *  @param nmeasures number of measures used to compute the covariance
-       *
-       *  @param prec the precision required in the inversion of the
-       *  covariance matrix
-       *
-       *  
-       */
-      CovarianceMatrix (std::vector<std::vector<double>> covariance_matrix, std::shared_ptr<cbl::statistics::SuperSampleCovariance> SSC, const double nmeasures=-1, const double prec=1.e-10) 
-      { set_from_matrix(covariance_matrix, nmeasures, prec); m_SSC = SSC; m_isSSC = true; }
 
       /**
        *  @brief constructor which gets the data from an input vector
@@ -368,20 +339,6 @@ namespace cbl {
        *   @return the covariance matrix order 
        */
       size_t order () const { return m_order; }
-      
-      /**
-       *   @brief return true if the super-sample covariance is set
-       *
-       *   @return true if the super-sample covariance is set 
-       */
-      bool isSet_SSC () const { return m_isSSC; }
-      
-      /**
-       *  @brief return the pointer to the super-sample covariance object
-       *
-       *  @return pointer to the super-sample covariance object
-       */    
-      std::shared_ptr<cbl::statistics::SuperSampleCovariance> SSC () const;
 
       ///@}
       
@@ -419,13 +376,14 @@ namespace cbl {
        *
        * This use the standard estimator of the covariance
        *
-       * \f[
-       * \hat{C}_{i j}=\frac{f}{N_{\mathrm{s}}-1} \sum_{k=1}^{N_{\mathrm{s}}}
+       * \f[ \hat{C}_{i j}=\frac{f}{N_{\mathrm{s}}-1}
+       * \sum_{k=1}^{N_{\mathrm{s}}}
        * \left(D_{i}^{k}-\bar{D}_{i}\right)\left(D_{j}^{k}-\bar{D}_{j}\right)
        * \f]
        *
-       * where \f$D_{i}\f$ is the i-th measure \f$ \bar{D}_{i}\f$ the mean.
-       * \f$f\f$ is a normalization factor the user can provide in input.
+       * where \f$D_{i}\f$ is the i-th measure \f$ \bar{D}_{i}\f$ the
+       * mean.  \f$f\f$ is a normalization factor the user can provide
+       * in input.
        *
        * @param dataset vector of pointers of object of type Data
        *

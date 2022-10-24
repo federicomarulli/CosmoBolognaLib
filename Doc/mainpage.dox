@@ -18,8 +18,10 @@ calculations http://arxiv.org/abs/1511.00012
 The specific tools to analyse cosmic void catalogues are presented in
 https://arxiv.org/abs/1703.07848
 
-This is the full list of scientific publications that used the
-CosmoBolognaLib: <a href="../../Doc/papers.txt">publications</a>
+These are the scientific publications that used the CosmoBolognaLib:
+<a
+href="https://ui.adsabs.harvard.edu/abs/2016A%26C....14...35M/citations">publications
+I</a> and <a href="../../Doc/papers.txt">publications II</a>
 
 -----------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------
@@ -29,6 +31,8 @@ Author and BDFL:
 
 Main contributors:
   - Sofia Contarini (voids, python, CBL logo, etc.)
+  - Giorgio Lesci (cluster number counts, weak-lensing profiles,
+    super-sample covariance, conda virtual environment, CAMB wrapper, etc.)
   - Michele Moresco (three-point correlation)
   - Alfonso Veropalumbo (two-point angular correlation, clustering
     wedges, jackknife and bootstrap, lognormal mocks, BAO modelling,
@@ -40,12 +44,13 @@ Other contributors:
   - Giovanni Gandolfi (HOD modelling)
   - Jorge Enrique García-Farieta (two-point correlation modelling)
   - Carlo Giocoli (mass accretion history)
-  - Giorgio Lesci (cluster number counts, weak-lensing profiles, super-sample covariance, conda virtual environment, etc.)
   - Jacopo Neri (mass function)
   - Davide Pelliciari (probe combination)
   - Massimiliano Romanello (angular clustering)
   - Mauro Roncarelli (fast comoving distance estimator) 
   - Tommaso Ronconi (void number counts)
+  - Simone Sartori (void detection)
+  - Luca Stabellini (HOD)
   - Alessandro Benati, Elena Sarpa, Akke Viitanen (code validation)
 
 
@@ -58,21 +63,6 @@ CosmoBolognaLib is available here:
 \n
 https://apps.difa.unibo.it/files/people/Str957-cluster/astro/CosmoBolognaLib_VM/Ubuntu_CBL.ova
 \n the password is: ilovecbl
-
-It is also possible to create a @b conda @b environment for the CosmoBolognaLib, called "cbl".
-\n In CosmoBolognaLib/ run
-
-> <KBD> $ conda env create -f environment_ubuntu.yml </KBD>
-
-> <KBD> $ conda activate cbl </KBD>
-
-In order to compile the CosmoBolognaLib in the conda environment, run
-
-> <KBD> $ python environment_compile.py </KBD>
-
-To run e.g. make clean in the conda environment (see instructions below), run
-
-> <KBD> $ python environment_compile.py clean </KBD>
 
 Alternatively, to @b install @b the @b CosmoBolognaLib on a custom
 Unix/Mac distribution, please follow the instructions below:
@@ -109,7 +99,7 @@ at https://gitlab.com/federicomarulli/CosmoBolognaLib/archive/master.zip
 > <KBD> $ make </KBD> 
     
 by default, make will compile the full set of libraries using the GNU
-project g++ compile (>=v4.8.4 is required); both the compiler and the
+project g++ compile (>=v11.2.0 is required); both the compiler and the
 compilation flags can be specified by modifying the variables C and
 FLAGS defined in the Makefile (e.g.: make C=icpc FLAGS="-O0 -g")
 
@@ -147,6 +137,31 @@ FLAGS defined in the Makefile (e.g.: make C=icpc FLAGS="-O0 -g")
 > <KBD> $ make MPTbreeze </KBD> 
 
 > <KBD> $ make mangle </KBD>
+
+It is also possible to create a @b conda @b environment for the CosmoBolognaLib, called "cbl".
+\n In `CosmoBolognaLib/`, run
+
+> <KBD> $ conda env create -f environment.yml </KBD>
+
+> <KBD> $ conda activate cbl </KBD>
+
+In order to compile the CosmoBolognaLib in the conda environment, run
+
+> <KBD> $ python environment_compile.py </KBD>
+
+To run e.g. `make clean` in the conda environment, run
+
+> <KBD> $ python environment_compile.py clean </KBD>
+
+In order to compile scripts that include CosmoBolognaLib, it is necessary to specify the library path for the compiler.
+\n
+For example, in Ubuntu add the following line to the `.bashrc` file:
+
+> <KBD> export LD_LIBRARY_PATH=/path/to/CosmoBolognaLib/ </KBD>
+
+Then, to compile for example a script named `script.cpp`, run
+
+> <KBD> $ make script CXX=$GXX HOME=$CONDA_PREFIX </KBD>
 
 */
 	

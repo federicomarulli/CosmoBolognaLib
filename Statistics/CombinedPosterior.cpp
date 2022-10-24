@@ -50,7 +50,6 @@ cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::sh
   m_Nposteriors = m_posteriors.size();
   std::vector<bool> is_from_chain(m_Nposteriors);
 
-  // eventualmente dentro una funzione che controlla e setta is_from_chain
   for(int N=0; N<m_Nposteriors; N++)
     if(m_posteriors[N]->m_get_seed() != -1) is_from_chain[N] = true;
     else is_from_chain[N] = false;
@@ -79,9 +78,12 @@ cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::sh
 // ============================================================================================
 
 
-cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::vector<std::shared_ptr<Posterior>>> posteriors, const std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par)
+cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::vector<std::shared_ptr<Posterior>>> posteriors, const std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par, const std::vector<std::shared_ptr<cbl::cosmology::SuperSampleCovariance>> SSC)
 {
-  // Check the likelihood types and the covariance matrices
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+  //                        Check the likelihood types and the covariance matrices
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+  
   int N_userdefined = 0;
   std::vector<bool> userdefined;
   for (size_t i=0; i<posteriors.size(); i++) {
@@ -130,10 +132,16 @@ cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::ve
     ErrorCBL("The number of sets of dependent posteriors must match the number of likelihood types!", "CombinedPosterior", "CombinedPosterior.cpp");
 
   if (posteriors.size() != covariance.size()+N_userdefined)
-    ErrorCBL("The number of sets of dependent posteriors must match the number of covariance matrices!", "CombinedPosterior", "CombinedPosterior.cpp");  
+    ErrorCBL("The number of sets of dependent posteriors must match the number of covariance matrices!", "CombinedPosterior", "CombinedPosterior.cpp");
+
+  if (SSC.size() != 0 && SSC.size() != posteriors.size())
+    ErrorCBL("The length of SSC must be either 0 or equal to number of sets of posteriors!", "CombinedPosterior", "CombinedPosterior.cpp");
   
+
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+  //                                         Set the core variables
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
   
-  // Set the core variables
   m_Nposteriors = posteriors.size();
 
   m_parameter_indexes.resize(m_Nposteriors);
@@ -144,7 +152,11 @@ cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::ve
   m_log_likelihood_functions_grid.resize(m_Nposteriors);
   m_likelihood_functions_grid.resize(m_Nposteriors);
 
-  // Set parameters and priors
+
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+  //                                        Set parameters and priors
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+  
   std::vector<std::shared_ptr<Posterior>> dummy_posteriors;
   for (size_t i=0; i<posteriors.size(); i++)
     for (size_t j=0; j<posteriors[i].size(); j++)
@@ -153,8 +165,12 @@ cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::ve
   m_set_parameters_priors(dummy_posteriors, repeated_par, common_repeated_par);
 
   m_parameter_indexes2.resize(dummy_posteriors.size());
+
   
-  // Set the models and the likelihood functions
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+  //                              Set the models and the likelihood functions
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+  
   int name_idx = 0;
   for (size_t i=0; i<posteriors.size(); i++) {
     auto inputs = make_shared<STR_DependentProbes_data_model>(m_data_model);
@@ -163,18 +179,25 @@ cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::ve
       {
 	
       case (LikelihoodType::_Gaussian_Covariance_): case (LikelihoodType::_Poissonian_):
-
-	if (covariance[i]->isSet_SSC())
-	  if (covariance[i]->SSC()->Sij_dimension() != (int)(posteriors[i].size()))
-	    ErrorCBL("The dimension of the Sij matrix in the super-sample covariance is "+cbl::conv(covariance[i]->SSC()->Sij_dimension(), cbl::par::fINT)+", but posteriors["+cbl::conv((int)(i), cbl::par::fINT)+" contains "+cbl::conv((int)(posteriors.size()), cbl::par::fINT)+" Posterior objects! These dimensions must be the same.", "CombinedPosterior", "CombinedPosterior.cpp");
 	
 	inputs->models.resize(posteriors[i].size(), NULL);
+	if (SSC.size() != 0) {
+	  if (SSC[i] != NULL) {
+	    inputs->responses.resize(posteriors[i].size(), NULL);
+	  }
+	}
 	inputs->xx.resize(posteriors[i].size());
 	inputs->par_indexes.resize(posteriors[i].size());
 	for (size_t j=0; j<posteriors[i].size(); j++) {
 	  if (posteriors[i][j]->get_m_model()->dimension() != Dim::_1D_)
 	    ErrorCBL("The model dimension of the statistically dependent probes must be 1!", "CombinedPosterior", "CombinedPosterior.cpp");
 	  inputs->models[j] = posteriors[i][j]->get_m_model();
+	  if (SSC.size() != 0) {
+	    if (SSC[i] != NULL) {
+	      inputs->responses[j] = posteriors[i][j]->get_response_function();
+	      inputs->Sij = SSC[i];
+	    }
+	  }
 	  m_models.emplace_back(posteriors[i][j]->get_m_model());  // Used only for writing the models at percentiles
 	  m_datasets.emplace_back(posteriors[i][j]->get_m_data()); // Used only for writing the models at percentiles
 	  inputs->xx[j] = posteriors[i][j]->get_m_data()->xx();
@@ -215,16 +238,25 @@ cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::ve
     switch (likelihood_types[i])
       {      
       case (LikelihoodType::_Gaussian_Covariance_):
-	if (covariance[i]->isSet_SSC())
-	  ErrorCBL("The super-sample covariance in the Gaussian likelihood case is not available yet!", "CombinedPosterior", "CombinedPosterior.cpp");
-	m_log_likelihood_functions[i] = &LogLikelihood_Gaussian_combined;
+	if (SSC.size() != 0) {
+	  if (SSC[i] != NULL) {
+	    ErrorCBL("The super-sample covariance in the Gaussian likelihood case is not available yet!", "CombinedPosterior", "CombinedPosterior.cpp");
+	  } else {
+	    m_log_likelihood_functions[i] = &LogLikelihood_Gaussian_combined;
+	  }
+	} else 
+	  m_log_likelihood_functions[i] = &LogLikelihood_Gaussian_combined;
 	m_likelihood_inputs[i] = inputs;
 	break;
 	
       case (LikelihoodType::_Poissonian_):
-	if (covariance[i]->isSet_SSC())
-	  m_log_likelihood_functions[i] = &LogLikelihood_Poissonian_SSC_combined;
-	else
+	if (SSC.size() != 0) {
+	  if (SSC[i] != NULL) {
+	    m_log_likelihood_functions[i] = &LogLikelihood_Poissonian_SSC_combined;
+	  } else {
+	    m_log_likelihood_functions[i] = &LogLikelihood_Poissonian_combined;
+	  }
+	} else
 	  m_log_likelihood_functions[i] = &LogLikelihood_Poissonian_combined;
 	m_likelihood_inputs[i] = inputs;
 	break;
@@ -1139,7 +1171,7 @@ void cbl::statistics::CombinedPosterior::write_chain_fits (const string output_d
 // ============================================================================================
 
 
-void cbl::statistics::CombinedPosterior::write_model_from_chain (const std::string output_dir, const std::string output_file, const int start, const int thin)
+void cbl::statistics::CombinedPosterior::write_model_from_chain (const std::string output_dir, const std::string output_file, const int start, const int thin, const std::vector<double> xx, const std::vector<double> yy)
 {
   for(size_t N=0; N<m_models.size(); N++) {
   
@@ -1147,15 +1179,15 @@ void cbl::statistics::CombinedPosterior::write_model_from_chain (const std::stri
 
     case Dim::_1D_:
       {
-	vector<double> xvec = m_datasets[N]->xx();
+	vector<double> xvec = (xx.size() > 0) ? xx : m_datasets[N]->xx();
 	m_models[N]->write_from_chains(output_dir, std::to_string(N)+"_"+output_file, xvec, start, thin);
       }
       break;
     
     case Dim::_2D_:
       {
-	vector<double> xvec = m_datasets[N]->xx();
-	vector<double> yvec = m_datasets[N]->yy();
+	vector<double> xvec = (xx.size() > 0) ? xx : m_datasets[N]->xx();
+	vector<double> yvec = (yy.size() > 0) ? yy : m_datasets[N]->yy();
 	m_models[N]->write_from_chains(output_dir, std::to_string(N)+"_"+output_file, xvec, yvec, start, thin);
       }
       break;
@@ -1323,7 +1355,7 @@ double cbl::statistics::LogLikelihood_Poissonian_SSC_combined (std::vector<doubl
   for (size_t i=0; i<cosmoPar.size(); i++)
     cosmoPar[i] = likelihood_parameter[pp->cosmoPar_indexes[i]];  
   
-  std::vector<std::vector<double>> Sij = cov.SSC()->operator()(cosmoPar);
+  std::vector<std::vector<double>> Sij = pp->Sij->operator()(cosmoPar);
   vector<vector<double>> invSij; cbl::invert_matrix(Sij, invSij);
   const double detSij = cbl::determinant_matrix(Sij);
 
@@ -1343,7 +1375,7 @@ double cbl::statistics::LogLikelihood_Poissonian_SSC_combined (std::vector<doubl
     for (size_t jj=0; jj<single_par.size(); jj++)
       single_par[jj] = likelihood_parameter[pp->par_indexes[i][jj]];
     std::vector<double> single_probe_model = pp->models[i]->operator()(pp->xx[i], single_par);
-    std::vector<double> single_probe_response = cov.SSC()->get_response(i, pp->xx[i], single_par);
+    std::vector<double> single_probe_response = pp->responses[i]->operator()(pp->xx[i], single_par);
     for (size_t kk=0; kk<single_probe_model.size(); kk++) {
       computed_model.emplace_back(single_probe_model[kk]);
       computed_response.emplace_back(single_probe_response[kk]);

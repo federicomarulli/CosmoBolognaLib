@@ -8,16 +8,13 @@ import CosmoBolognaLib as cbl
 from CosmoBolognaLib import DoubleVector as dv
 import os
 
-# set the CosmoBolognaLib and the current directories
-cbl.SetDirs(os.getcwd()+"/../../../", os.getcwd()+"/")
-
 ''' Define the cosmology '''
 cosmo = cbl.Cosmology(cbl.CosmologicalModel__Planck15_)
 
 ''' Compute Pk '''
 redshift = 1
 kk = np.logspace(-4, 2, 200)
-Pk_matter = np.array( [cosmo.Pk_matter(_kk, "CAMB", False, redshift) for _kk in kk] )
+Pk_matter = np.array( cosmo.Pk_matter(kk, "CAMB", False, redshift) )
 
 ''' Parameters for 3pt signal '''
 rr = dv(np.linspace(1., 300, 200))

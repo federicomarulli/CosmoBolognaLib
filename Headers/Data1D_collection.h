@@ -369,8 +369,6 @@ namespace cbl {
        *  @brief print the data on screen
        *
        *  @param precision the float precision
-       *
-       *  @return none
        */
       virtual void Print (const int precision=4) const override;
       

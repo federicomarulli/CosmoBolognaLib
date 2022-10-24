@@ -49,19 +49,33 @@ namespace cbl {
     namespace angularpk {
       
       /**
-       * @enum cbl::measure::angularpk::Estimator
+	 *  @brief read mixing matrix from file
+	 *
+	 *  @param dir input directory
+	 *
+	 *  @param file input file
+	 *
+	 *  @param ll vector of multipoles
+	 *
+	 *  @param matrix mixing_matrix
+	 *
+	 */
+      void read_mixing_matrix (const std::string dir, const std::string file, std::vector<double> &ll, std::vector<std::vector<double>> &matrix);
+       
+      /**
+       * @enum AngularEstimator
        *
        * @brief the angular two-point correlation estimator type
-       *
-       * @var cbl::measure::angularpk::Estimator::\_Fast\_
-       *
-       * @brief the faset estimator
-       *
-       * @var cbl::measure::angularpk::Estimator::\_SphericalArmonic\_
-       *
-       * @brief the spherical armonic estimator
        */
-      enum class Estimator { _Fast_, _SphericalArmonic_ };
+      enum class AngularEstimator {
+
+	/// the fast estimator
+	_Fast_,
+
+	/// the spherical armonic estimator
+	_SphericalArmonic_
+
+      };
       
       /**
        *  @class PowerSpectrum_angular
@@ -84,21 +98,45 @@ namespace cbl {
 	
 	///vector containing the angular correlation function error
 	std::vector<double> m_w_err;
+
+	///vector containing the x coordinate read from file
+	std::vector<double> m_x;
+	
+	///vector containing the y coordinate read from file
+	std::vector<double> m_y;
+	
+	///vector containing the y errors read from file
+	std::vector<double> m_y_err;
 	
 	///vector containing the multipoles at which power spectrum is computed
-	std::vector<double> m_ell;
+	std::vector<double> m_l;
+
+	///vector containing the angular power spectrum
+	std::vector<double> m_AngularPowerSpectrum;
 	
-	/// the minimum multipole
-	double m_ell_min;
+	///vector containing the average of the multipoles
+	std::vector<double> m_l_av;
+
+	///vector containing the angular power spectrum average
+	std::vector<double> m_AngularPowerSpectrum_av;
+	
+	///the minimum multipole
+	double m_l_min;
 	
 	///the maximum multipole
-	double m_ell_max;
+	double m_l_max;
+
+	///the number of multipoles at which the angular power spectrum is computed
+	double m_Nl;
 	
 	///the number of multipoles at which the angular power spectrum is computed
-	double m_Nell;
-	
-	///vector containing the angular power spectrum
-	std::vector<double> m_Celle;
+	double m_nbins;
+
+	///vector containing the angular power spectrum of the window function
+	std::vector<double> m_Wl;
+
+	///the mixing matrix
+	std::vector<std::vector<double>> m_RR;
 	
 	///the directory to read w
 	std::string m_dir_correlation_input;
@@ -126,6 +164,33 @@ namespace cbl {
 	
 	///variable that store the constructor for the measure of angular correlation function
 	std::shared_ptr<twopt::TwoPointCorrelation1D_angular> m_TwoPointCorrelation1D_angular;
+
+	///variable that store the constructor for the catalogue
+	std::shared_ptr<catalogue::Catalogue> m_catalogue;
+
+	///vector containing the colatitude vector of the mask
+	std::vector<double> m_theta_mask;
+
+	///vector containing the min colatitude vector of the mask
+	std::vector<double> m_theta_mask_min;
+	
+	///vector containing the max colatitude vector of the mask
+	std::vector<double> m_theta_mask_max;
+	
+	///vector containing the RA vector of the mask
+	std::vector<double> m_RA_mask;
+	
+	///vector containing the min RA vector of the mask
+	std::vector<double> m_RA_mask_min;
+	
+	///vector containing the max RA vector of the mask
+	std::vector<double> m_RA_mask_max;
+
+	///pixel area
+	double m_pixel_area;
+	
+	///the survey area
+	double m_survey_area;
 	
 	/**
 	 *  @brief converts the input angle in radians
@@ -156,6 +221,37 @@ namespace cbl {
 	 *  @return the error vector
 	 */
 	std::vector<double> m_error (const BinType binType, std::vector<double> w_err);
+
+	/**
+	 *  @brief set the catalogue for Spherical armonic estimator 
+	 *
+	 *  @param catalogue the catalogue to set
+	 *  
+	 */
+	
+	void set_catalogue (cbl::catalogue::Catalogue catalogue);
+
+
+	/**
+	 *  @brief compute the average of the power spectrum
+	 *
+	 */
+	void m_averagePowerSpectrum ();
+
+	
+	/**
+	 *  @brief read the angular mask from file
+	 *
+	 *  @param mask_file the file with pixel mask positions
+	 *
+	 *  @param mask_type "Healpix" in case of binary mask produced with pixelfunc.pix2ang in healpix. Else other case
+	 *
+	 *  @param pixel_area the pixel area of healpix mask
+	 *
+	 *  @param n_lines_header the header lines to skip
+	 *
+	 */
+	void m_read_angular_mask (const std::string mask_file, std::string mask_type, double pixel_area, int n_lines_header=1);
 	
       public:
 	
@@ -178,11 +274,11 @@ namespace cbl {
 	 *  @param random of class Catalogue containing the random
 	 *  data catalogue
 	 *
-	 *  @param ell_min Minimum angular power spectrum multipole
+	 *  @param l_min Minimum angular power spectrum multipole
 	 *
-	 *  @param ell_max Maximum angular power spectrum multipole
+	 *  @param l_max Maximum angular power spectrum multipole
 	 *
-	 *  @param Nell number of multipoles
+	 *  @param Nl number of multipoles
 	 *
 	 *  @param binType binning type
 	 *
@@ -200,8 +296,45 @@ namespace cbl {
 	 *  @param angularUnits angular units (of the output angular
 	 *  correlation file)
 	 *
+	 *  @param correlation_binType the bin type of the 
+	 *  correlation function
+	 *
 	 */     
-	PowerSpectrum_angular (const catalogue::Catalogue data, const catalogue::Catalogue random, const double ell_min, const double ell_max, const int Nell, const BinType binType, const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordinateUnits angularUnits);   
+	PowerSpectrum_angular (const catalogue::Catalogue data, const catalogue::Catalogue random, const double l_min, const double l_max, const int Nl, const BinType binType, const double thetaMin, const double thetaMax, const int nbins, const double shift, const CoordinateUnits angularUnits, const BinType correlation_binType);   
+	
+	/**
+	 *  @brief constructor
+	 *
+	 *  @param data object of class Catalogue containing the input
+	 *  catalogue
+	 *
+	 *  @param l_min Minimum angular power spectrum multipole
+	 *
+	 *  @param l_max Maximum angular power spectrum multipole
+	 *
+	 *  @param bandwidth the bandwidth
+	 *
+	 *  @param mask_file the file containing the pixel center
+	 *  positions of the mask in colatitude-RA for every pixel
+	 *  (obtained with Healpix pixelfunc.pix2ang), or theta,
+	 *  theta_min, theta_max, ra, ra_min, ra_max and pixel_area,
+	 *  for every pixel, i.e. pixel centers, borders and
+	 *  area. Leave it empty if there is not a mask file, in this
+	 *  case the survey area will be computed as \f$
+	 *  (cos(\theta_{min})-cos(\theta_{max}))*(RA_{max}-RA_{min})\f$
+	 *
+	 *  @param mask_type the mask_type. "Healpix" if the mask file
+	 *  is obtained with the healpix function
+	 *  pixelfunc.pix2ang. Anything else if themask is obtained in
+	 *  other way
+	 *
+	 *  @param pixel_area the average pixel area 
+	 *
+	 *  @param n_lines_header the number of lines to skip when
+	 *  reading the mask file
+	 */     
+	PowerSpectrum_angular (const catalogue::Catalogue data, const double l_min, const double l_max, const int bandwidth=1, const std::string mask_file="", const std::string mask_type="", const double pixel_area=0, const int n_lines_header=1);   
+	
 	
 	/**
 	 *  @brief default destructor
@@ -216,7 +349,7 @@ namespace cbl {
 	 *
 	 *  @param binType the binning type, linear or logarithmic 
 	 */
-	void set_ell_output (const BinType binType);
+	void set_l_output (const BinType binType);
 	
 	/**
 	 *  @brief measure the angular power spectrum
@@ -248,26 +381,91 @@ namespace cbl {
 	 *  @param nMocks number of mocks for bootstrap
 	 *
 	 */
-	void measure (const Estimator estimator=Estimator::_Fast_, const std::string dir_correlation_input="", const std::string file_correlation_input="", const int n_lines_header=1, CoordinateUnits inputUnits=CoordinateUnits::_arcminutes_, BinType input_binType=BinType::_logarithmic_, cbl::measure::ErrorType errorType=ErrorType::_Poisson_, const std::string dir_correlation_output= par::defaultString, const std::string file_correlation_output="xi_angular.dat", const int nMocks=0);
+	void measure (const AngularEstimator estimator=AngularEstimator::_Fast_, const std::string dir_correlation_input="", const std::string file_correlation_input="", const int n_lines_header=1, CoordinateUnits inputUnits=CoordinateUnits::_arcminutes_, BinType input_binType=BinType::_logarithmic_, cbl::measure::ErrorType errorType=ErrorType::_Poisson_, const std::string dir_correlation_output= par::defaultString, const std::string file_correlation_output="xi_angular.dat", const int nMocks=0);
+
+	/**
+	 *  @brief measure the angular power spectrum with fast estimator
+	 *
+	 *  @param dir_correlation_input Angular correlation function
+	 *  input directory
+	 *
+	 *  @param file_correlation_input Angular correlation function
+	 *  input file
+	 *
+	 *  @param n_lines_header the header lines to skip
+	 *
+	 *  @param inputUnits angular units in input file
+	 *
+	 *  @param input_binType the binning type, linear or
+	 *  logarithmic
+	 *
+	 *  @param errorType the error type, _Poisson_, _Jackknife_ or
+	 *  _Bootstrap_
+	 *
+	 *  @param dir_correlation_output Angular correlation function
+	 *  ouput directory (if measured by CBL)
+	 *
+	 *  @param file_correlation_output Angular correlation
+	 *  function ouput file (if measured by CBL)
+	 *
+	 *  @param nMocks number of mocks for bootstrap
+	 *
+	 */
+	void measureFast (const std::string dir_correlation_input="", const std::string file_correlation_input="", const int n_lines_header=1, CoordinateUnits inputUnits=CoordinateUnits::_arcminutes_, BinType input_binType=BinType::_logarithmic_, cbl::measure::ErrorType errorType=ErrorType::_Poisson_, const std::string dir_correlation_output= par::defaultString, const std::string file_correlation_output="xi_angular.dat", const int nMocks=0);
+
+	/**
+	 *  @brief measure the angular power spectrum with spherical 
+	 *  armonic estimator
+	 *
+	 */
+	void measureSphericalArmonic ();
 	
 	/**
 	 * @brief get the private member m_theta
 	 * @return the angular separation vector
 	 */
 	std::vector<double> theta () { return m_theta; }
-	
+
 	/**
-	 * @brief get the private member Celle
+	 * @brief get the private member Wl
+	 * @return the angular power spectrum of the window function vector
+	 */
+	std::vector<double> Wl () { return m_Wl; }
+
+	/**
+	 * @brief get the private member AngularPowerSpectrum
 	 * @return the angular power spectrum vector
 	 */
-	std::vector<double> Celle () { return m_Celle; }
+	std::vector<double> AngularPowerSpectrum () { return m_AngularPowerSpectrum; }
 	
 	/**
-	 * @brief get the private member m_theta
+	 * @brief get the private member m_l
 	 * @return the multipoles vector
 	 */
-	std::vector<double> ell () { return m_ell; }
+	std::vector<double> l () { return m_l; }
 	
+	/**
+	 *  @brief compute the mixing matrix
+	 *
+	 *  @param dir_window_input input directory harmonic coefficients of the mask 
+	 *
+	 *  @param file_window_input input file harmonic coefficients of the mask 
+	 *
+	 */
+	void compute_mixing_matrix(std::string dir_window_input="", std::string file_window_input="");
+
+	/**
+	 *  @brief include the binary angular mask
+	 *
+	 *  @param theta the colatitude to evaluate 
+	 *
+	 *  @param RA the right ascension to evaluate
+	 *
+	 *  @return 0 if theta, RA is within a masked pixel, 1 otherwise
+	 *
+	 */
+	double angular_mask(double theta, double RA);
+
 	/**
 	 *  @name Input/Output methods
 	 */
@@ -275,10 +473,53 @@ namespace cbl {
 	
 	/**
 	 *  @brief write the angular power spectrum on file
+	 *
 	 *  @param dir output directory
+	 *
 	 *  @param file output file
+	 *
 	 */
 	void write (const std::string dir, const std::string file);
+
+	/**
+	 *  @brief write the angular power spectrum on file
+	 *
+	 *  @param dir output directory
+	 *
+	 *  @param file output file
+	 *
+	 */
+	void write_average (const std::string dir, const std::string file);
+	
+	/**
+	 *  @brief write the angular power spectrum on file
+	 *
+	 *  @param dir output directory
+	 *
+	 *  @param file output file
+	 *	 
+	 *  @param store_window true → store the harmonic coefficients of the mask; false → do not store the harmonic coefficients of the mask 
+	 *
+	 */
+	void write_mixing_matrix (const std::string dir, const std::string file,  bool store_window=false);
+ 
+	/**
+	 *  @brief read data from file
+	 *
+	 *  @param dir output directory
+	 *
+	 *  @param file output file
+	 *
+	 *  @param column_x vector of x column
+	 *
+	 *  @param column_y vector of y column
+	 *
+	 *  @param column_error vector of error column
+	 *
+	 *  @param n_lines_header the header lines to skip
+	 *
+	 */
+      void read (const std::string dir, const std::string file, const std::vector<int> column_x={1}, const std::vector<int> column_y={2}, const std::vector<int> column_error={3}, const int n_lines_header=1);
 	
 	///@}
 	

@@ -12,7 +12,7 @@ if os.environ['CONDA_DEFAULT_ENV'] != "cbl":
 
 cmd = "%s "
 
-cmd += " CC=$GCC CXX=$GXX  F=$GFORTRAN "
+cmd += " CC=$GCC CXX=$GXX F=$GFORTRAN CXX_OLD=$GXX "
 cmd += " dir_INC_FFTW=$CONDA_BUILD_SYSROOT/include " 
 cmd += " dir_INC_cfitsio=$CONDA_PREFIX/include "
 cmd += " dir_INC_GSL=$CONDA_PREFIX/include "

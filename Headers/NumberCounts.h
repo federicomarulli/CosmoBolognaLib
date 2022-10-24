@@ -190,7 +190,7 @@ namespace cbl {
 	 *  @brief function to get the protected member m_data
 	 *  @return return the protected member m_data
 	 */
-	catalogue::Catalogue catalogue () { return m_data; }
+	std::shared_ptr<catalogue::Catalogue> catalogue () { return m_data; }
 
 	///@}
 	/**
@@ -214,9 +214,6 @@ namespace cbl {
 	 *  the distribution; false &rarr; do not convolve
 	 *
 	 *  @param sigma &sigma; of the Gaussian kernel
-	 *
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_resample=par::defaultString, const int nResamplings=0, const int seed=3213, const bool conv=false, const double sigma=0.)
 	{ (void)errorType; (void)dir_output_resample; (void)nResamplings; (void)seed; (void)conv; (void)sigma; ErrorCBL("", "measure", "NumberCounts.h"); }
@@ -233,8 +230,6 @@ namespace cbl {
 	 *  @param dir output directory
 	 *  @param file output file
 	 *  @param rank cpu index (for mpi usage)
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void write (const std::string dir=par::defaultString, const std::string file=par::defaultString, const int rank=0) const
 	{ (void)dir; (void)file; (void)rank; ErrorCBL("", "write", "NumberCounts.h"); }
@@ -252,8 +247,6 @@ namespace cbl {
 	 *  matrix
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void write_covariance (const std::string dir, const std::string file) const
 	{ (void)dir; (void)file; ErrorCBL("", "write_covariance", "NumberCounts.h"); }
@@ -264,8 +257,6 @@ namespace cbl {
 	 *  used to compute the covariance matrix
 	 *  @param JK true &rarr; compute the jackknife covariance
 	 *  matrix; false compute the standard covariance matrix
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void compute_covariance (const std::vector<std::shared_ptr<glob::Histogram>> histo, const bool JK)
 	{ (void)histo; (void)JK; ErrorCBL("", "compute_covariance", "NumberCounts.h"); }

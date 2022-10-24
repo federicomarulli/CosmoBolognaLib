@@ -6,7 +6,7 @@
 from __future__ import print_function
 
 # import the CosmoBolognaLib 
-import CosmoBolognaLib as cbl
+import cblCatalogue as cbl
 from CosmoBolognaLib import StringVector as sv
 
 

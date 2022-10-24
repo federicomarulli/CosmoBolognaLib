@@ -39,25 +39,6 @@ using namespace cbl;
 using namespace glob;
 
 
-// ============================================================================
-
-
-string cbl::fullpath (std::string path, const bool isDir)
-{ 
-  const string find = "~";
-  const string replace = getenv("HOME");
-  char buff[PATH_MAX];
-
-  size_t pos = 0;
-  while ((pos=path.find(find, pos))!=string::npos) {
-    path.replace(pos, find.length(), replace);
-    pos += replace.length();
-  }
-
-  return string(realpath(path.c_str(),buff))+((isDir) ? "/" : "");
-}
-
-
 // ============================================================================================
 
 

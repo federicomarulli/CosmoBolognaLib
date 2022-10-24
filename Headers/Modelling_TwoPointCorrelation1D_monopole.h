@@ -742,12 +742,14 @@ namespace cbl {
 	/**
 	 *  @brief Set the parameters to model the monopole of the
 	 *  two-point correlation function in redshift space, where
-	 *  the masses are given by a mass-observable scaling relation
+	 *  the effective bias can be computed in two ways, depending
+	 *  on the cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set\_data\_model used.
+	 *  In one case, the masses are given by a mass-observable scaling relation
 	 *  with the following functional form:
 	 *
 	 *  \f[ \log \frac{M}{M_{\rm piv}} = \alpha+
 	 *  \beta  \log \frac{\lambda}{\lambda_{\rm piv}}+
-	 *  \gamma  \log f(z) + \sigma_{\rm intr}, \f]
+	 *  \gamma  \log f(z;z_{\rm piv}) + \sigma_{\rm intr}, \f]
 	 *
 	 *  where \f$\lambda\f$ is the mass proxy and
 	 *  the intrinsic scatter, \f$\sigma_{\rm intr}\f$, should
@@ -757,18 +759,22 @@ namespace cbl {
 	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{M} 
 	 *  \log (M/M_{\rm piv})^{e_{M}} + \sigma_z \log (f(z))^{e_z}. \f$
 	 *
-	 *  If the input parameters z_err and proxy_err are given,
-	 *  then the scaling relation has the follwing 
-	 *  functional form:
+	 *  The bias is then computed for each object in correspondence of
+	 *  such masses, and then averaged to obtain the effective bias.
 	 *
-	 *  \f[\log \frac{M}{M_{\rm piv}} = \alpha + \beta 
-	 *  \int_0^\infty {\rm d}\lambda\,\, \log \frac{\lambda}{\lambda_{\rm piv}}
-	 *   P(\lambda|\lambda_{\rm obs}) + 
-	 *  \gamma \int_0^\infty {\rm d}z\,\, \log (f(z))P(z|z_{\rm obs}).\f]
+	 *  In the second case, the effective bias is derived as follows:
 	 *
-	 *  where \f$ P(\lambda|\lambda_{\rm obs}) \f$ and \f$ P(z|z_{\rm obs}) \f$ are Gaussian distributions, 
-	 *  with mean equal to \f$\lambda_{\rm obs}\f$ or \f$z_{\rm obs}\f$ and rms given by 
-	 *  z_err or proxy_err.
+	 *  \f$ b_{\rm eff} = \frac{1}{N}\sum_{i=1}^N b(z_{{\rm ob},i},\lambda_{{\rm ob},i}) = 
+	 *  \frac{1}{N}\sum_{i=1}^N\int_0^\infty {\rm d}z\,\int_0^\infty{\rm d}\lambda\,\int_0^\infty{\rm d}M\,\, b(M,z) \, 
+	 *  P(M|\lambda,z) \, P(z|z_{{\rm ob},i}) \, P(\lambda|\lambda_{{\rm ob},i}), \f$
+	 *
+	 *  where \f$N\f$ is the number of objects, \f$z_{{\rm ob},i}\f$ and \f$\lambda_{{\rm ob},i}\f$
+	 *  are the observed redshift and mass proxy of the \f$i\f$th object, respectively,
+	 *  \f$P(M|\lambda,z)\f$ is a log-normal whose mean is the mass proxy - mass relation and whose
+	 *  rms is the intrinsic scatter of such relation (for details, see e.g. 
+	 *  cbl::modelling::massobsrel::Modelling_MassObservableRelation), while \f$P(z|z_{{\rm ob},i})\f$
+	 *  and \f$P(\lambda|\lambda_{{\rm ob},i})\f$ are Gaussian distributions whose standard deviations
+	 *  are given by the errors on redshift and proxy, respectively.
 	 * 
 	 *  Redshift-space distorsions are modelled in the Kaiser
 	 *  limit, that is neglecting non-linearities in dynamics
@@ -816,13 +822,9 @@ namespace cbl {
 	 *  @param z_evo functional form of the redshift evolution
 	 *  function in the scaling relation. See the documentation
 	 *  of cbl::modelling::massobsrel::Modelling_MassObservableRelation
-	 *
-	 *  @param z_err the error on the redshift
-	 *
-	 *  @param proxy_err the error on the effective proxy
 	 *  
 	 */
-	void set_model_scaling_relation_sigmaz_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution sigmaz_prior, const std::string z_evo, const std::vector<double> z_err={}, const std::vector<double> proxy_err={});
+	void set_model_scaling_relation_sigmaz_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution sigmaz_prior, const std::string z_evo);
 
 	///@}
 

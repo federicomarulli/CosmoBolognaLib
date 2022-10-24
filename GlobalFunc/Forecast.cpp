@@ -76,11 +76,11 @@ std::vector<double> cbl::fit_covariance_matrix_2PCF_monopole (const std::vector<
   double pk4_fact = 8./35*beta+beta;
 
   if (sigma_NL==0 or NL==true) {
+    vector<double> pkDM = cosmo.Pk_matter(kk, method_Pk, NL, redshift);
     for (size_t i=0; i<kk.size(); i++) {
-      double pkDM = cosmo.Pk_matter(kk[i], method_Pk, NL, redshift);
-      Pk0[i] = pkDM*pk0_fact;
-      Pk2[i] = pkDM*pk2_fact;
-      Pk4[i] = pkDM*pk4_fact;
+      Pk0[i] = pkDM[i]*pk0_fact;
+      Pk2[i] = pkDM[i]*pk2_fact;
+      Pk4[i] = pkDM[i]*pk4_fact;
     }
   }
   else {
@@ -175,11 +175,11 @@ std::shared_ptr<cbl::data::Data> cbl::generate_mock_2PCF_multipoles (const cbl::
   double pk4_fact = 8./35*beta+beta;
 
   if (sigma_NL==0 or NL==true) {
+    vector<double> pkDM = cosmo.Pk_matter(kk, method_Pk, NL, redshift);
     for (size_t i=0; i<kk.size(); i++) {
-      double pkDM = cosmo.Pk_matter(kk[i], method_Pk, NL, redshift);
-      Pk0[i] = pkDM*pk0_fact;
-      Pk2[i] = pkDM*pk2_fact;
-      Pk4[i] = pkDM*pk4_fact;
+      Pk0[i] = pkDM[i]*pk0_fact;
+      Pk2[i] = pkDM[i]*pk2_fact;
+      Pk4[i] = pkDM[i]*pk4_fact;
     }
   }
   else {

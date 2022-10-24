@@ -6,7 +6,7 @@
 from __future__ import print_function
 
 # import the CosmoBolognaLib 
-import CosmoBolognaLib as cbl
+import cblCatalogue as cbl
 from CosmoBolognaLib import StringVector as sv
 
 # define a std::vector of input files (in this case with dim=1) 

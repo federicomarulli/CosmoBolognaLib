@@ -1,6 +1,9 @@
 // SWIG Interface to RandomNumbers
 
-%module cblRandomNumbers
+%module cblRandom
+
+%import "Path.i"
+%import "Kernel.i"
 
 %shared_ptr(cbl::glob::RandomNumbers);
 %shared_ptr(cbl::glob::ConstantRandomNumbers);

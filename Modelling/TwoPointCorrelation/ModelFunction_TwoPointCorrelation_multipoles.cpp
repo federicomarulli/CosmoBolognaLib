@@ -61,13 +61,13 @@ std::vector<double> cbl::modelling::twopt::xiMultipoles (const std::vector<doubl
   if (pp->Pk_mu_model=="dispersion_dewiggled") {
     pk_interp[0] = pp->func_Pk;
     pk_interp[1] = pp->func_Pk_NW;
-    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, {parameter[2], parameter[3], parameter[4]/pp->sigma8_z, parameter[5]/pp->sigma8_z, parameter[6] }, pk_interp, pp->prec, parameter[0], parameter[1]);
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[2], parameter[3], parameter[4]/pp->sigma8_z, parameter[5]/pp->sigma8_z, parameter[6] }, pk_interp, pp->prec, parameter[0], parameter[1]);
   }
   
   else if (pp->Pk_mu_model=="dispersion_modecoupling") {
     pk_interp[0] = pp->func_Pk;
     pk_interp[1] = pp->func_Pk1loop;
-    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, {parameter[2]/pp->sigma8_z, parameter[3]/pp->sigma8_z, parameter[4], parameter[5] }, pk_interp, pp->prec, parameter[0], parameter[1]);
+    Xi_ll = Xi_l(rad, pp->dataset_order, pp->use_pole, pp->Pk_mu_model, { parameter[2]/pp->sigma8_z, parameter[3]/pp->sigma8_z, parameter[4], parameter[5] }, pk_interp, pp->prec, parameter[0], parameter[1]);
   }
   
   else if (pp->Pk_mu_model=="dispersion_Gauss" || pp->Pk_mu_model=="dispersion_Lorentz") {

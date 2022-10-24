@@ -4,12 +4,6 @@
 
 #include "Sampler.h"
 
-// these two variables contain the name of the CosmoBolognaLib
-// directory and the name of the current directory (useful when
-// launching the code on remote systems)
-std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
-
-
 double func (std::vector<double> &x)
 {
   return -(100.*pow(x[1]-x[0]*x[0], 2)+pow(1.-x[0], 2))/20.;
@@ -39,7 +33,7 @@ int main () {
     std::vector<double> center= {0,0};
     std::vector<std::vector<double>> start = starting_values(nwalkers, center, radius);
   
-    std::string dir_output = cbl::par::DirLoc+"../output/";
+    std::string dir_output = "../output/";
     cbl::statistics::Sampler sampler(npar, &func);
 
     // sample the likelihood

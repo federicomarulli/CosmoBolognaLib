@@ -60,7 +60,7 @@ std::vector<double> cbl::modelling::numbercounts::mass_function_mass (const std:
   // compute the power spectrum
   std::vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
-  return cbl::modelling::numbercounts::mass_function (mass, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
+  return cbl::modelling::numbercounts::mass_function (mass, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, pp->kk, Pk, "Spline", pp->k_max);
 }
 
 
@@ -85,7 +85,7 @@ std::vector<double> cbl::modelling::numbercounts::number_density_mass (const std
   // compute the power spectrum
   std::vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
-  std::vector<double> mass_function = cbl::modelling::numbercounts::mass_function (pp->Mass_vector, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
+  std::vector<double> mass_function = cbl::modelling::numbercounts::mass_function (pp->Mass_vector, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, pp->kk, Pk, "Spline", pp->k_max);
 
   glob::FuncGrid interp_MF (pp->Mass_vector, mass_function, "Spline");
 
@@ -126,7 +126,7 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_mass (const std:
   std::vector<double> number_counts(pp->edges_x.size()-1);
 
   for (size_t j=0; j<pp->edges_x.size()-1; j++) {
-    number_counts[j] = cbl::modelling::numbercounts::number_counts(pp->z_min, pp->z_max, pp->edges_x[j], pp->edges_x[j+1], cosmo, pp->area_rad, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, interp[0], interp[1]);
+    number_counts[j] = cbl::modelling::numbercounts::number_counts(pp->z_min, pp->z_max, pp->edges_x[j], pp->edges_x[j+1], cosmo, pp->area_rad, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, interp[0], interp[1]);
   }
 
   return number_counts;
@@ -156,7 +156,7 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_mass_snapshot (c
   // compute the power spectrum
   std::vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
-  std::vector<double> mass_function = cbl::modelling::numbercounts::mass_function (pp->Mass_vector, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_Vir, pp->kk, Pk, "Spline", pp->k_max);
+  std::vector<double> mass_function = cbl::modelling::numbercounts::mass_function (pp->Mass_vector, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, pp->kk, Pk, "Spline", pp->k_max);
 
   glob::FuncGrid interp_MF (pp->Mass_vector, mass_function, "Spline");
 

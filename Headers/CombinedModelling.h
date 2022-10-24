@@ -116,25 +116,25 @@ namespace cbl {
       
       /**
        *  @brief Constructor used to set the modelling of
-       *  statistically dependent probes. For each vector of Modelling
-       *  objects in the \f$modelling\f$ argument, a CovarianceMatrix
+       *  statistically dependent probes. For each vector of cbl::statistics::Posterior
+       *  objects in the \e posteriors argument, a cbl::data::CovarianceMatrix
        *  object must be defined. The probes in each vector within
-       *  \f$modelling\f$ are described by the same likelihood function.
-       *  The final likelihood is given by the sum of the logarithms
+       *  \e posteriors are described by the same likelihood function.
+       *  The final log-likelihood is given by the sum of the logarithms
        *  of each likelihood describing a set of dependent probes.
        *
-       *  It should be noted that a set of probe can also be described
-       *  by a Poissonian likelihood.
+       *  If sets of probes are described by user-defined likelihoods,
+       *  then the cbl::data::CovarianceMatrix objects must not be provided
+       *  for such sets.
        *
        *  @param modelling vector of vectors of pointers 
-       *  to Modelling objects. In each vector a set of
+       *  to Modelling objects. In each vector, a set of
        *  probes is contained, with a covariance matrix
-       *  defined by the corresponding CovarianceMatrix object
+       *  defined by the corresponding cbl::data::CovarianceMatrix object
        *  given as input in the second argument of this constructor
        *
        *  @param covariance objects defining the covariance
-       *  matrices for the Posterior objects given in input through
-       *  the posteriors argument
+       *  matrices for the Posterior objects
        *  
        *  @param likelihood_types likelihood types for each set of probes
        *
@@ -163,8 +163,14 @@ namespace cbl {
        *  only "par2" must be shared by more than one probe, then leave blank the
        *  vector of vectors corresponding to "par1" in common_repeated_par.
        *
+       *  @param SSC vector of pointers to cbl::cosmology::SuperSampleCovariance
+       *  objects, for the computation of the \f$S_{ij}\f$ matrices. If, for example,
+       *  the sets of probes A, B, C, are considered, and only for A and C the 
+       *  super-sample covariance must be computed, then set the second element of
+       *  \e SSC equal to \e NULL.
+       *
        */
-      CombinedModelling (std::vector<std::vector<std::shared_ptr<modelling::Modelling>>> modelling, const std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={});
+      CombinedModelling (std::vector<std::vector<std::shared_ptr<modelling::Modelling>>> modelling, const std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={}, const std::vector<std::shared_ptr<cosmology::SuperSampleCovariance>> SSC={});
 
       /**
        *  @brief default destructor 
@@ -362,8 +368,16 @@ namespace cbl {
        * @param start the minimum chain position to be written
        *
        * @param thin the step used for dilution on screen
+       *
+       * @param xx x points where the model is computed. If
+       * not provided, the x points set for the MCMC
+       * are considered.
+       *
+       * @param yy y points where the model is computed. If
+       * not provided, the y points set for the MCMC
+       * are considered.
        */
-      void write_model_from_combined_chain (const std::string output_dir, const std::string output_file, const int start, const int thin);
+      void write_model_from_combined_chain (const std::string output_dir, const std::string output_file, const int start, const int thin, const std::vector<double> xx={}, const std::vector<double> yy={});
       
       ///@}
       

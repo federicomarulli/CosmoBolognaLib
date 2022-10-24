@@ -312,8 +312,6 @@ namespace cbl {
        *  bin edge values in the input file; if it is not provided,
        *  the third and four columns after the column of x values will
        *  be used; if these columns do no exist the edges are not read
-       *
-       *  @return none
        */
       virtual void read (const std::string input_file, const int skip_nlines=0, const std::vector<int> column={1, 2}, const std::vector<int> column_data={}, const std::vector<int> column_errors={}, const std::vector<int> column_edges={}) override;
 
@@ -321,8 +319,6 @@ namespace cbl {
        *  @brief print the data on screen
        *
        *  @param precision the float precision
-       *  
-       *  @return none
        */
       virtual void Print (const int precision=4) const override;
       
@@ -339,7 +335,6 @@ namespace cbl {
        *  file
        *  @param ww number of characters to be used as field width
        *  @param rank cpu index (for MPI usage)
-       *  @return none
        */
       virtual void write (const std::string dir, const std::string file, const std::string header, const bool full, const int prec=4, const int ww=8, const int rank=0) const override;
       

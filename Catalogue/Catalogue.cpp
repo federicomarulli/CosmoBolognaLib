@@ -33,6 +33,7 @@
 
 #include "Field3D.h"
 #include "Catalogue.h"
+#include "Object.h"
 
 using namespace std;
 
@@ -52,6 +53,7 @@ template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::Galaxy>);
 template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::Cluster>);
 template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::Void>);
 template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::HostHalo>);
+template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::ChainMeshCell>);
 
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::RandomObject);
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Mock);
@@ -60,6 +62,7 @@ template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Galaxy);
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Cluster);
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Void);
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::HostHalo);
+template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::ChainMeshCell);
 
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::RandomObject>);
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Mock>);
@@ -68,6 +71,7 @@ template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Gal
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Cluster>);
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Void>);
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::HostHalo>);
+template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::ChainMeshCell>);
 
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::RandomObject>);
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::Mock>);
@@ -76,6 +80,7 @@ template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue:
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::Cluster>);
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::Void>);
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::HostHalo>);
+template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::ChainMeshCell>);
 
 /// @endcond
 
@@ -666,7 +671,7 @@ double cbl::catalogue::Catalogue::var (int index, Var var_name) const
   case Var::_ID_:
     vv = m_object[index]->ID();
     break;
-    
+
   case Var::_Nsub_:
     vv = m_object[index]->nsub();
     break;
@@ -689,6 +694,35 @@ double cbl::catalogue::Catalogue::var (int index, Var var_name) const
 
 // ============================================================================
 
+int cbl::catalogue::Catalogue::var_int (int index, Var var_name) const
+{
+	int vv;
+
+  switch (var_name) {
+
+  case Var::_ID_:
+    vv = m_object[index]->ID();
+    break;
+  
+		default:
+    ErrorCBL("no such a variable in the list!", "var", "Catalogue.cpp");
+  }
+
+	return vv;
+}
+
+// ============================================================================
+
+std::vector<int> cbl::catalogue::Catalogue::var_int (Var var_name) const
+{ 
+  vector<int> vv(m_object.size(), 0.);
+  
+  for (size_t i=0; i<nObjects(); ++i) vv[i] = var(i, var_name);
+
+  return vv;
+}
+
+// ============================================================================
 
 std::vector<double> cbl::catalogue::Catalogue::var (Var var_name) const
 { 
@@ -1484,33 +1518,23 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<i
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::stats_var (const Var var_name, std::vector<double> &stats) const
+std::vector<double> cbl::catalogue::Catalogue::stats_var (const Var var_name) const
 {
-  stats.erase(stats.begin(), stats.end());
-  stats.resize(4);
-  
-  stats[0] = Average(var(var_name)); 
-  stats[2] = Sigma(var(var_name));
-  
-  stats[1] = Quartile(var(var_name))[1];
-  stats[3] = Quartile(var(var_name))[2]-Quartile(var(var_name))[0];
+  return { Average(var(var_name)), Sigma(var(var_name)), Quartile(var(var_name))[1], Quartile(var(var_name))[2]-Quartile(var(var_name))[0] };
 }
 
 
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::stats_var (const std::vector<Var> var_name, std::vector<std::vector<double>> &stats) const
+std::vector<std::vector<double>> cbl::catalogue::Catalogue::stats_var (const std::vector<Var> var_name) const
 {
-  stats.erase(stats.begin(),stats.end());
+  vector<vector<double>> stats;
 
-  for (unsigned int i=0; i<var_name.size(); i++) {
+  for (auto &&vv : var_name) 
+    stats.emplace_back(stats_var(vv));
 
-    vector<double> stats_temp;
-    stats_var(var_name[i],stats_temp);
-
-    stats.push_back(stats_temp);
-  }
+  return stats;
 }
 
 
@@ -1726,9 +1750,6 @@ void cbl::catalogue::Catalogue::Order ()
 }
 
 
-// ============================================================================
-
-
 double cbl::catalogue::Catalogue::weightedN () const
 {
   double nn = 0.;
@@ -1811,7 +1832,7 @@ void cbl::catalogue::Catalogue::write_data (const std::string outputFile, const 
 
     for (size_t i=0; i<nObjects(); ++i) {
       for (size_t j=0; j<data.size(); j++)
-	fout << data[j][i] << sep;
+				fout << data[j][i] << sep;
       fout << endl;
     }
     
@@ -1889,12 +1910,127 @@ Catalogue cbl::catalogue::Catalogue::sub_catalogue (const Var var_name, const do
 // ============================================================================
 
 
+Catalogue cbl::catalogue::Catalogue::sub_catalogue (catalogue::Catalogue &data, const double tile_width_RA, const double tile_width_Dec, const bool write_tiles, const std::string dir_tiles, const std::string file_tiles)
+{  
+  const double RA_hw = 0.5 * tile_width_RA * (par::pi/180.); // half tile width in radians along R.A.
+  const double Dec_hw = 0.5 * tile_width_Dec * (par::pi/180.); // along Dec
+  
+
+  // Set the vector of tile numbers
+  std::vector<long int> dummy_tiles = data.region();
+  std::sort(dummy_tiles.begin(), dummy_tiles.end());
+  std::vector<long int> unique_tile_numbers = cbl::different_elements (dummy_tiles);
+  const int n_tiles = (int)(unique_tile_numbers.size());
+  
+  
+  // Define the vectors of min/max R.A./Dec,
+  // and check if the internal variables are properly set
+  std::vector<double> RA_min (n_tiles);
+  std::vector<double> RA_max (n_tiles);
+  std::vector<double> Dec_min (n_tiles);
+  std::vector<double> Dec_max (n_tiles);
+
+  std::vector<bool> isSet_region (n_tiles);
+  
+  for (size_t i=0; i<data.nObjects(); i++) {
+
+    if (data.isSetVar(i, catalogue::Var::_TileRA_) == false)
+      ErrorCBL("The tile central R.A. for the object "+cbl::conv(i,cbl::par::fINT)+" in the data catalogue is not set.", "sub_catalogue", "Catalogue.cpp");
+    if (data.isSetVar(i, catalogue::Var::_TileDec_) == false)
+      ErrorCBL("The tile central Dec for the object "+cbl::conv(i,cbl::par::fINT)+" in the data catalogue is not set.", "sub_catalogue", "Catalogue.cpp");
+    if (data.isSetVar(i, catalogue::Var::_Region_) == false)
+      ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the data catalogue is not set.", "sub_catalogue", "Catalogue.cpp");
+    if (data.var(i, catalogue::Var::_Region_) < 0)
+      ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the data catalogue is <0. The tile numbers must be all the integers between 0 and N, where N is the highest tile number.", "sub_catalogue", "Catalogue.cpp");
+
+    if (data.region(i) < n_tiles)
+      isSet_region[data.region(i)] = true;
+    else
+      ErrorCBL("The tile number "+cbl::conv(i,cbl::par::fINT)+" in the data catalogue is greater than the number of tiles. The tile numbers must be all the integers between 0 and N, where N is the highest tile number.", "sub_catalogue", "Catalogue.cpp");    
+
+    // Set min/max R.A./Dec for each tile
+    double candidate_RA_min = data.ra_tile(i) - RA_hw/cos(std::abs(data.dec_tile(i)));
+    if (candidate_RA_min < 0)
+      candidate_RA_min = 2*cbl::par::pi + candidate_RA_min;
+
+    double candidate_RA_max = data.ra_tile(i) + RA_hw/cos(std::abs(data.dec_tile(i)));
+    if (candidate_RA_max > 2*cbl::par::pi)
+      candidate_RA_max = candidate_RA_max - 2*cbl::par::pi;
+    
+    double candidate_Dec_min = data.dec_tile(i) - Dec_hw;    
+    double candidate_Dec_max = data.dec_tile(i) + Dec_hw;
+    
+    RA_min[data.region(i)] = candidate_RA_min;
+    RA_max[data.region(i)] = candidate_RA_max;
+    Dec_min[data.region(i)] = candidate_Dec_min;
+    Dec_max[data.region(i)] = candidate_Dec_max;
+
+  }
+
+  for (int i=0; i<n_tiles; i++)
+    if (isSet_region[i] == false)
+      ErrorCBL("The tile number "+cbl::conv(i,cbl::par::fINT)+" in the original catalogue (data) is missing. The tile numbers must be all the integers between 0 and N, where N is the highest tile number.", "sub_catalogue", "Catalogue.cpp"); 
+
+  std::vector<bool>().swap(isSet_region);
+  
+
+  // Write the tiles file
+  if (write_tiles) {
+    std::string mkdir = "mkdir -p "+dir_tiles; if (system(mkdir.c_str())) {}
+    std::ofstream myfile; myfile.open(dir_tiles+file_tiles);
+    myfile << "# RA_min   RA_max   Dec_min   Dec_max   [all in degrees]" <<std::endl;
+    for (int i=0; i<n_tiles; i++)
+      myfile << RA_min[i]*(180./cbl::par::pi) << std::setw(20) << RA_max[i]*(180./cbl::par::pi) << std::setw(20) << Dec_min[i]*(180./cbl::par::pi) << std::setw(20) << Dec_max[i]*(180./cbl::par::pi) << std::endl;
+    myfile.close();
+    coutCBL<<"I wrote the file "+dir_tiles+file_tiles<<std::endl;
+  }
+  
+  
+  // Collect the objects falling in the tiles
+  std::vector<shared_ptr<Object>> objects;
+  
+  for (size_t i=0; i<this->nObjects(); i++) {
+
+    for (int j=0; j<n_tiles; j++) {
+
+      if (Dec_min[j] < this->dec(i) && Dec_max[j] > this->dec(i)) {
+	
+	if (RA_max[j] > RA_min[j]) { // To manage the cases in which a tile lies at the zero of R.A.
+	  
+	  if (RA_min[j] < this->ra(i) && RA_max[j] > this->ra(i)) {
+	    
+	    objects.push_back(m_object[i]);
+	    break;
+	  }
+      
+	} else {
+
+	  if (RA_min[j] < this->ra(i) || RA_max[j] > this->ra(i)) { // To manage the cases in which a tile lies at the zero of R.A.
+	      
+	    objects.push_back(m_object[i]);
+	    break;
+	  }
+	  
+	}
+      }
+    }
+  }
+
+  return Catalogue{objects};
+  
+}
+
+
+// ============================================================================
+
+
 Catalogue cbl::catalogue::Catalogue::mangle_cut (const std::string mangle_mask, const bool excl) const
 {
 
   vector<shared_ptr<Object>> objects;
 
-  string mangle_dir = par::DirCosmo+"/External/mangle/";
+  cbl::Path path;
+  string mangle_dir = path.DirCosmo()+"/External/mangle/";
 
   string mangle_working_dir = mangle_dir+"output/";
   string mkdir = "mkdir -p "+mangle_working_dir;
@@ -2432,19 +2568,64 @@ void cbl::catalogue::Catalogue::shuffle (const int seed)
 
 // ============================================================================
 
-
-void cbl::catalogue::Catalogue::compute_catalogueProperties (const double boxside)
+std::vector<double> cbl::catalogue::Catalogue::compute_catalogueProperties_box (const double boxside)
 {
-  m_volume = (boxside > 0.) ? pow(boxside, 3.) :
-    (cbl::Max(var(Var::_X_)) - cbl::Min(var(Var::_X_)))*
-    (cbl::Max(var(Var::_Y_)) - cbl::Min(var(Var::_Y_)))*
-    (cbl::Max(var(Var::_Z_)) - cbl::Min(var(Var::_Z_)));
-  coutCBL << "Sample volume = " << m_volume << " (Mpc/h)^3" << endl;
+  std::vector<double> prop(5);
+  double vol = volume(boxside);
+  double ndensity = m_object.size()/vol;
+  double mps = pow(ndensity, -1./3.);
+  double numdensity_error = pow(m_object.size(), 1./2)/vol;
+  double mps_error = mps*(1./3)*(numdensity_error/ndensity);
+
+  coutCBL << "Sample volume = " << vol << " (Mpc/h)^3" << endl;
+  coutCBL << "Sample density = " << ndensity <<  " \u00b1 " << numdensity_error << " (Mpc/h)^-3" << endl;
+  coutCBL << "Sample mps = " << mps <<  " \u00b1 " << mps_error << " Mpc/h" << endl; 
+
+  prop[0]=vol;
+  prop[1]=ndensity;
+  prop[2]=mps;
+  prop[3]=numdensity_error;
+  prop[4]=mps_error;
   
-  m_numdensity = m_object.size()/m_volume;
-  coutCBL << "Sample density = " << m_numdensity << " (Mpc/h)^-3" << endl;
-  
-  m_mps = pow(m_numdensity, -1./3.);
-  coutCBL << "Sample mps = " << m_mps << " Mpc/h" << endl; 
+  return prop;
 }
+
+// ============================================================================
+
+std::vector<std::vector<double>> cbl::catalogue::Catalogue::compute_catalogueProperties_lightCone (cbl::cosmology::Cosmology cosmology, const std::vector<double> RA_range, const std::vector<double> DEC_range, const unsigned int nbin)
+{
+  std::vector<vector<double>> prop(7, vector<double>(nbin));
+  prop[0] = z_bins(nbin); 
+  std::vector<double> bin_limits = linear_bin_vector(nbin+1, cbl::Min(var(Var::_Redshift_)), cbl::Max(var(Var::_Redshift_)));
+  
+  double THETA_min = -DEC_range[1]+par::pi/2, THETA_max = -DEC_range[0]+par::pi/2;
+  double delta_PHI = RA_range[1]-RA_range[0];
+  double vol=0.;
+
+  for (int i=0; i<(int)nbin; i++) {
+    auto temp_cat = sub_catalogue(Var::_Redshift_, bin_limits[i], bin_limits[i+1]);
+    prop[1][i]=temp_cat.nObjects(); //number of objects
+    prop[2][i]=(-(std::cos(THETA_max)-std::cos(THETA_min))*delta_PHI)/(4*cbl::par::pi)*
+            (volume_sphere(cosmology.D_C(bin_limits[i+1]))-volume_sphere(cosmology.D_C(bin_limits[i]))); //volume
+    prop[3][i]=temp_cat.nObjects()/prop[2][i]; //numdensity
+    prop[4][i]=pow(prop[3][i], -1./3.);  //mps
+    vol = vol + prop[2][i];
+    prop[5][i]=sqrt(prop[1][0])/prop[2][i]; //numdensity error
+    prop[6][i]=prop[4][i]*(1./3)*(prop[5][i]/prop[3][i]); //mps error
+  }
+
+  double numdensity = m_object.size()/vol;
+  double mps = pow(numdensity, -1./3.);
+  double numdensity_error = pow(m_object.size(), 1./2)/vol;
+  double mps_error = mps*(1./3)*(numdensity_error/numdensity);
+  cout << endl;
+  coutCBL << "Sample volume = " << vol << " (Mpc/h)^3" << endl;
+  coutCBL << "Sample density = " << numdensity <<  " \u00b1 " << numdensity_error << " (Mpc/h)^-3" << endl;
+  coutCBL << "Sample mps = " << mps <<  " \u00b1 " << mps_error << " Mpc/h" << endl; 
+  coutCBL << "In addiction, volume, density and mps (with errors) have been calculated for " << nbin << " slices in redshift, from z = " << bin_limits[0] << " to z = " << bin_limits[nbin] << endl;
+  cout << endl;
+
+  return prop;
+}
+
 

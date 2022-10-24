@@ -646,5 +646,3 @@ void cbl::glob::Histogram2D::write (const string dir, const string file, const H
 
   fout.clear(); fout.close();
 }
-
-

@@ -4,9 +4,6 @@
 using namespace cbl;
 using namespace std;
 
-string par::DirCosmo = DIRCOSMO, par::DirLoc = DIRL;
-
- 
 int main () {
 
   try {

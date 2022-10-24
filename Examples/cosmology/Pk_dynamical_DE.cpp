@@ -6,11 +6,6 @@
 
 using namespace std;
 
-// these two variables contain the name of the CosmoBolognaLib
-// directory and the name of the current directory (useful when
-// launching the code on remote systems)
-std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
-
 int main () {
 
   try {
@@ -49,7 +44,7 @@ int main () {
     const double kk = 10.;
 
     // compute the ratio of the power spectrum computed a the two redshifts
-    const double ratio_Pk = cosm.Pk_matter(kk, "CAMB", false, redshift2)/cosm.Pk_matter(kk, "CAMB", false, redshift1);
+    const double ratio_Pk = cosm.Pk_matter({kk}, "CAMB", false, redshift2)[0]/cosm.Pk_matter({kk}, "CAMB", false, redshift1)[0];
     cout << endl << "P(z=" << redshift2 << ")/P(z=" << redshift1 << ") = " << ratio_Pk << endl;
 
     // compare the latter value with the squared value of the growth factor normalised at z=0

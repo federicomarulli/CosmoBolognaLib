@@ -45,8 +45,8 @@ using namespace measure::stackprofile;
 
 void cbl::measure::stackprofile::StackedDensityProfile::m_check_catalogue_variables ()
 {
-  if (m_galData->isSetVar(cbl::catalogue::Var::_RA_) != true || m_galData->isSetVar(cbl::catalogue::Var::_Dec_) != true || m_galData->isSetVar(cbl::catalogue::Var::_Redshift_) != true || m_galData->isSetVar(cbl::catalogue::Var::_Shear1_) != true || m_galData->isSetVar(cbl::catalogue::Var::_Shear2_) != true || m_galData->isSetVar(cbl::catalogue::Var::_RedshiftMin_) != true || m_galData->isSetVar(cbl::catalogue::Var::_RedshiftMax_) != true || m_galData->isSetVar(cbl::catalogue::Var::_LensingWeight_) != true)
-    cbl::ErrorCBL("You must set the following galaxy catalogue variables: RA, Dec, redshift, redshift_min, redshift_max, shear1, shear2, lensing_weight","m_check_catalogue_variables","StackedDensityProfile.cpp");
+  if (m_galData->isSetVar(cbl::catalogue::Var::_RA_) != true || m_galData->isSetVar(cbl::catalogue::Var::_Dec_) != true || m_galData->isSetVar(cbl::catalogue::Var::_Redshift_) != true || m_galData->isSetVar(cbl::catalogue::Var::_Shear1_) != true || m_galData->isSetVar(cbl::catalogue::Var::_Shear2_) != true || m_galData->isSetVar(cbl::catalogue::Var::_RedshiftMin_) != true || m_galData->isSetVar(cbl::catalogue::Var::_LensingWeight_) != true)
+    cbl::ErrorCBL("You must set the following galaxy catalogue variables: RA, Dec, redshift, redshift_min, shear1, shear2, lensing_weight","m_check_catalogue_variables","StackedDensityProfile.cpp");
   if (m_cluData->isSetVar(cbl::catalogue::Var::_RA_) !=true || m_cluData->isSetVar(cbl::catalogue::Var::_Dec_) !=true || m_cluData->isSetVar(cbl::catalogue::Var::_Redshift_) !=true || m_cluData->isSetVar(cbl::catalogue::Var::_SN_) !=true || m_cluData->isSetVar(cbl::catalogue::Var::_MassProxy_) !=true)
     cbl::ErrorCBL("You must set the following cluster catalogue variables: RA, Dec, redshift, S/N, Mass Proxy","m_check_catalogue_variables","StackedDensityProfile.cpp");
 }
@@ -58,6 +58,9 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_resize (const double r
 {
   if (m_z_binEdges.size()-1 != m_proxy_binEdges.size())
       cbl::ErrorCBL("The number of proxy binnings must be equal to the number of redshift bins!","StackedDensityProfile","StackedDensityProfile.cpp");
+
+  m_background_idx_z.resize(m_z_binEdges.size()-1, std::vector<int>());
+  m_background_idx_colour.resize(m_z_binEdges.size()-1, std::vector<int>());
 
   m_colourSel.resize(m_z_binEdges.size()-1);
   m_photzSel.resize(m_z_binEdges.size()-1);
@@ -306,7 +309,10 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_add_galaxy (const int 
 
     if (selection){
       // Fill the vector of indices of the selected lensed galaxies (used to write files)
-      m_background_idx.emplace_back(i_gal);
+      if (single_selections[0])
+	m_background_idx_colour[cluster_zbin].emplace_back(i_gal);
+      if (single_selections[1])
+	m_background_idx_z[cluster_zbin].emplace_back(i_gal);
       
       // locate correct annulus
       std::vector<double>::iterator it = upper_bound(m_rad_arr.begin(), m_rad_arr.end(), dist);
@@ -684,10 +690,13 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_write(const std::strin
   
   // Write the covariance matrix files
 
-  for (size_t i=0; i<m_z_binEdges.size()-1; i++){
-    for (size_t j=0; j<m_proxy_binEdges[i].size()-1; j++){
+  const std::string cov_dir = output_dir+"/covariance/";
+  const std::string mkdir_cov = "mkdir -p "+cov_dir; if (system(mkdir_cov.c_str())) {}
+
+  for (size_t i=0; i<m_z_binEdges.size()-1; i++) {
+    for (size_t j=0; j<m_proxy_binEdges[i].size()-1; j++) {
       
-      std::string file_path = output_dir+"/covariance_"+cbl::conv(i,cbl::par::fINT)+cbl::conv(j,cbl::par::fINT)+".dat";
+      const std::string file_path = cov_dir+"covariance_"+cbl::conv(i,cbl::par::fINT)+cbl::conv(j,cbl::par::fINT)+".dat";
       std::ofstream cov_file (file_path,std::ios::out);
   
       for (size_t r=0; r<m_rad_arr.size()-1; r++)
@@ -699,6 +708,38 @@ void cbl::measure::stackprofile::StackedDensityProfile::m_write(const std::strin
   
       cov_file.clear(); cov_file.close(); coutCBL << "I wrote the file: " << file_path << std::endl << std::endl;
     }
+  }
+
+  
+  // Write the files containing the indices of the background galaxies
+
+  if (m_write_background) {
+
+    for (size_t i=0; i<m_z_binEdges.size()-1; i++) {
+    
+      const std::string path = output_dir+"/background_galaxies/zbin_"+cbl::conv(i,cbl::par::fINT)+"/";
+      const std::string mkdir_bkg = "mkdir -p "+path; if (system(mkdir_bkg.c_str())) {}
+
+      // Since multiple clusters may share the same sources, build vectors of unique elements
+      const std::vector<int> idx_z = cbl::different_elements(m_background_idx_z[i]);
+      const std::vector<int> idx_c = cbl::different_elements(m_background_idx_colour[i]);
+
+      const std::string z_selection_file_name = path+"redshift_selection.dat";
+      std::ofstream z_selection_file (z_selection_file_name,std::ios::out);
+      for (size_t j=0; j<idx_z.size(); j++) {
+	z_selection_file << idx_z[j] << std::endl;
+      }
+      z_selection_file.clear(); z_selection_file.close(); coutCBL << "I wrote the file: " << z_selection_file_name << std::endl << std::endl;
+
+      const std::string colour_selection_file_name = path+"colour_selection.dat";
+      std::ofstream colour_selection_file (colour_selection_file_name,std::ios::out);
+      for (size_t j=0; j<idx_c.size(); j++) {
+	colour_selection_file << idx_c[j] << std::endl;
+      }
+      colour_selection_file.clear(); colour_selection_file.close(); coutCBL << "I wrote the file: " << colour_selection_file_name << std::endl << std::endl;
+    
+    }
+
   }
   
 }
@@ -792,8 +833,10 @@ void cbl::measure::stackprofile::StackedDensityProfile::set_logic_selection (con
 
 // ============================================================================
 
-void cbl::measure::stackprofile::StackedDensityProfile::measure (const std::vector<int> z_proxy_bin, const std::string output_dir, const std::string output_file_root, const ErrorType errorType, const int n_resampling)
+void cbl::measure::stackprofile::StackedDensityProfile::measure (const std::vector<int> z_proxy_bin, const std::string output_dir, const std::string output_file_root, const ErrorType errorType, const int n_resampling, const bool write_background)
 {
+  m_write_background = write_background;
+  
   for (size_t i=0; i<m_z_binEdges.size()-1; i++) {
     if (m_isSet_colourSel[i] == false)
       cbl::ErrorCBL("The colour selection for the redshift bin "+cbl::conv(i,cbl::par::fINT)+" is not set!","measure","StackedDensityProfile.cpp");
@@ -833,59 +876,6 @@ void cbl::measure::stackprofile::StackedDensityProfile::write (const std::string
   m_dataset->write(dir, file, header, 4, 8);  
 }
 
-// ============================================================================
-
-void cbl::measure::stackprofile::StackedDensityProfile::write_background_properties (const std::string out_dir, const std::string out_file_root, const std::string ID_file, const int ID_column, const int skip_lines)
-{
-  if (m_measure_is_read)
-    m_make_bootstrap({0,0});
-  
-  std::ifstream fin(ID_file.c_str()); checkIO(fin, ID_file);
-  string line;
-  
-  unsigned int n_lines = 0;
-  while(getline(fin, line)) n_lines++;
-  n_lines-=skip_lines;
-  fin.clear(); fin.close();  
-
-  if ((int)(n_lines) != (int)(m_galData->nObjects()))
-    ErrorCBL("The number of rows in the ID file ("+cbl::conv((int)(n_lines),cbl::par::fINT)+") must match the total number of input sources ("+cbl::conv((int)(m_galData->nObjects()),cbl::par::fINT)+").", "write_background_properties", "StackedDensityProfile.cpp");
-    
-  std::vector<std::string> ID (n_lines);
-  
-  std::ifstream Fin (ID_file);
-  std::string Line;
-  
-  if (skip_lines>0)
-    for (int i=0; i<skip_lines; ++i)
-      getline(Fin, Line); 
-  
-  for (unsigned int nn=0; nn<n_lines; ++nn) {
-  
-    getline(Fin, Line);
-    std::stringstream ss(Line);
-    std::vector<std::string> num; std::string NUM;
-    while (ss>>NUM) num.emplace_back(NUM);
-  
-    ID[nn] = num[ID_column-1];
-  }  
-  Fin.clear(); Fin.close();
-
-  // Since multiple clusters may share the same sources, build a vector of unique elements and sort it
-  std::vector<int> indices = cbl::different_elements(m_background_idx);
-  std::sort(indices.begin(), indices.end());
-  
-  // Write the output file
-  std::string mkdir = "mkdir -p "+out_dir; if (system(mkdir.c_str())) {}
-  std::ofstream out_stack (out_dir+"/"+out_file_root+".dat",std::ios::out);
-  
-  out_stack << "# index    ID    RA    Dec    z";
-  out_stack << std::endl;
-  for (size_t i=0; i<indices.size(); i++)
-    out_stack << indices[i] << "  " << ID[indices[i]] << "  " << m_galData->ra(indices[i]) << "  " << m_galData->dec(indices[i]) << "  " << m_galData->redshift(indices[i]) << "  " << std::endl;
-  
-  out_stack.clear(); out_stack.close(); coutCBL << "I wrote the file: " << out_dir+"/"+out_file_root+".dat" << std::endl << std::endl;  
-}
 
 // ============================================================================
 

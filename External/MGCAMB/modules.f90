@@ -41,6 +41,7 @@
 
     logical :: output_file_headers = .true.
 
+    logical :: print_sigma8 = .true.
 
     logical, parameter :: DebugMsgs=.false. !Set to true to view progress and timing
 
@@ -2374,22 +2375,24 @@
     !JD 08/13 Changes in here to PK arrays and variables
     integer j_PK
 
-    do in=1, CP%InitPower%nn
-        if (CP%InitPower%nn>1)  write(*,*) 'Power spectrum : ', in
-        do j_PK=1, CP%Transfer%PK_num_redshifts
-            j = CP%Transfer%PK_redshifts_index(j_PK)
-            write(*,'("at z =",f7.3," sigma8 (all matter) = ",f7.4)') &
-                CP%Transfer%redshifts(j), MTrans%sigma_8(j_PK,in)
-        end do
-        if (get_growth_sigma8) then
-            do j_PK=1, CP%Transfer%PK_num_redshifts
+    if (print_sigma8) then 
+       do in=1, CP%InitPower%nn
+          if (CP%InitPower%nn>1)  write(*,*) 'Power spectrum : ', in
+          do j_PK=1, CP%Transfer%PK_num_redshifts
+             j = CP%Transfer%PK_redshifts_index(j_PK)
+             write(*,'("at z =",f7.3," sigma8 (all matter) = ",f7.4)') &
+                  CP%Transfer%redshifts(j), MTrans%sigma_8(j_PK,in)
+          end do
+          if (get_growth_sigma8) then
+             do j_PK=1, CP%Transfer%PK_num_redshifts
                 j = CP%Transfer%PK_redshifts_index(j_PK)
                 write(*,'("at z =",f7.3," sigma8^2_vd/sigma8  = ",f7.4)') &
-                    CP%Transfer%redshifts(j), MTrans%sigma2_vdelta_8(j_PK,in)/MTrans%sigma_8(j_PK,in)
-            end do
-        end if
-    end do
-
+                     CP%Transfer%redshifts(j), MTrans%sigma2_vdelta_8(j_PK,in)/MTrans%sigma_8(j_PK,in)
+             end do
+          end if
+       end do
+    end if
+    
     end subroutine Transfer_output_Sig8
 
     subroutine Transfer_Allocate(MTrans)

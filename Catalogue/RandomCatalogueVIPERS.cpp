@@ -55,7 +55,8 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
   
   vector<double> xx, yy, err;
 
-  string file_nz = par::DirLoc+"file_nz";
+  cbl::Path path;
+  string file_nz = path.DirLoc()+"/file_nz";
   
   if (isSpectroscopic) {
     vector<double> redshift = catalogue_for_nz.var(Var::_Redshift_); 
@@ -73,7 +74,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
   
   if (isSpectroscopic) {
     
-    string file_pointings = par::DirCosmo+"External/VIPERS/masks/pointings/"+pointing_file;
+    string file_pointings = path.DirCosmo()+"/External/VIPERS/masks/pointings/"+pointing_file;
     ifstream fin_pointings(file_pointings); checkIO(fin_pointings, file_pointings);
     
     string line, Field, Quadrant;
@@ -103,7 +104,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
     if (!isSpectroscopic) where.push_back("outside");
 
     const int nRandom = catalogue.nObjects()*N_R*10.;
-    const string Dir_venice = par::DirCosmo+"External/VIPERS/"+dir_venice+"/";
+    const string Dir_venice = path.DirCosmo()+"/External/VIPERS/"+dir_venice+"/";
 
     // compile venice
     const string MAKE = /*"make clean -C "+Dir_venice+" && "+*/ "make CC=gcc -C "+Dir_venice+" ; ";
@@ -112,8 +113,8 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
     
     if (!isSpectroscopic) { 
       for (size_t i=0; i<where.size(); ++i) {
-	file_input.emplace_back(par::DirLoc+"temp"+conv(i, par::fINT));
-	string DO = Dir_venice+"venice -m "+mask+" -r -f "+where[i]+" -npart "+conv(nRandom, par::fINT)+" -o "+par::DirLoc+"temp"+conv(i, par::fINT);
+	file_input.emplace_back(path.DirLoc()+"/temp"+conv(i, par::fINT));
+	string DO = Dir_venice+"venice -m "+mask+" -r -f "+where[i]+" -npart "+conv(nRandom, par::fINT)+" -o "+path.DirLoc()+"/temp"+conv(i, par::fINT);
 	if (do_zdistr_with_venice && isSpectroscopic) DO += " -nz "+file_nz;
 	coutCBL << endl << "--> " << MAKE << endl << endl;
 	if (system(DO.c_str())) {}
@@ -124,7 +125,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
       
       for (size_t i=0; i<where.size(); ++i) {
       
-	file_input.emplace_back(par::DirLoc+"temp"+conv(i, par::fINT));
+	file_input.emplace_back(path.DirLoc()+"/temp"+conv(i, par::fINT));
 
 
 	// set how many random galaxies put in each pointing
@@ -143,11 +144,11 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
   
 	for (size_t mm=0; mm<pointing.size(); ++mm) {
 	
-	  file = par::DirLoc+"temp"+conv(i, par::fINT)+"_"+conv(mm, par::fINT);
+	  file = path.DirLoc()+"/temp"+conv(i, par::fINT)+"_"+conv(mm, par::fINT);
 
 	  Mask = mask+"mask_"+pointing[mm]+".reg";
 	
-	  string DO = par::DirCosmo+"External/VIPERS/"+dir_venice+"/venice -m "+Mask+" -r -f "+where[i]+" -npart "+conv(rnd_pnt[mm], par::fINT)+" -o "+file;
+	  string DO = path.DirCosmo()+"/External/VIPERS/"+dir_venice+"/venice -m "+Mask+" -r -f "+where[i]+" -npart "+conv(rnd_pnt[mm], par::fINT)+" -o "+file;
 	  if (do_zdistr_with_venice && isSpectroscopic) DO += " -nz "+file_nz;
 
 	  //coutCBL << endl << "--> " << DO << endl << endl;
@@ -172,7 +173,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
 	
 	}
 
-	string Merge = "cat "+filelist+" > "+par::DirLoc+"temp"+conv(i, par::fINT)+"; rm -f "+par::DirLoc+"temp*_*";
+	string Merge = "cat "+filelist+" > "+path.DirLoc()+"/temp"+conv(i, par::fINT)+"; rm -f "+path.DirLoc()+"/temp*_*";
 	if (system(Merge.c_str())) {}
       
       }
@@ -274,7 +275,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
 
   // ----- remove temporary files -----
   
-  string RM = "rm -rf "+par::DirLoc+"temp* "+file_nz;
+  string RM = "rm -rf "+path.DirLoc()+"/temp* "+file_nz;
   if (system(RM.c_str())) {}
   
 }

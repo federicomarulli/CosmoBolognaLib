@@ -433,43 +433,6 @@ namespace cbl {
    *  @param nz number of redshift sub-samples
    */
   void set_ObjectRegion_Tiles_Redshift (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nz);
-  
-  /**
-   *  @brief set data and random objects' regions 
-   *  given R.A.-Dec tiles and a number of redshift
-   *  sub-samples. The user must set in the input data catalogue
-   *  the identification number of the tiles (cbl::catalogue::Var::\_Region\_) 
-   *  with cbl::catalogue::Catalogue::set\_region()
-   *  and the central R.A. and Dec (cbl::catalogue::Var::\_TileRA\_ / \_TileDec\_)
-   *  of the tiles with cbl::catalogue::Catalogue::set\_ra\_dec\_tile().
-   *
-   *  @author Giorgio Lesci (giorgio.lesci2@unibo.it)
-   *
-   *  @param data input data catalogue
-   *
-   *  @param random random catalogue
-   *
-   *  @param nz number of redshift sub-samples
-   *
-   *  @param tile_width_RA the width of each tile, in degrees
-   *  (from side to side), along R.A. direction
-   *
-   *  @param tile_width_Dec the width of each tile, in degrees
-   *  (from side to side), along Dec direction
-   *
-   *  @param write_tiles if true, write RA and Dec limits of
-   *  the tiles on file
-   *
-   *  @param dir_tiles directory of the tiles file
-   *
-   *  @param file_tiles tiles file
-   *
-   *  @warning This function cannot manage the situations in
-   *  which a tile crosses one of the poles, i.e. if it has
-   *  a side after the pole and the opposite side in the other
-   *  side.
-   */
-  void set_ObjectRegion_Tiles_Redshift (catalogue::Catalogue &data, catalogue::Catalogue &random, const int nz, const double tile_width_RA, const double tile_width_Dec, const bool write_tiles=false, const std::string dir_tiles=cbl::par::DirLoc, const std::string file_tiles="tiles_coordinates.txt");
 
   /**
    *  @brief set the object region in angular SubBoxes

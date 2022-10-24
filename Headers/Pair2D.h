@@ -64,15 +64,11 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none, or an error message if the derived object does
-       *  not have this member  
        */
       virtual void m_set_parameters_nbins () = 0;
   
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void m_set_parameters_binSize () = 0;
   
@@ -371,15 +367,11 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void m_set_parameters_nbins () = 0;
   
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void m_set_parameters_binSize () = 0;
   
@@ -1152,15 +1144,11 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void m_set_parameters_nbins () = 0;
   
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void m_set_parameters_binSize () = 0;
   

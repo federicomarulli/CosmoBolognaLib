@@ -68,6 +68,12 @@ namespace cbl {
 	
 	/// mass-observable scaling relation
 	std::shared_ptr<modelling::massobsrel::Modelling_MassObservableRelation> scaling_relation;
+	
+	/// typical absolute error on redshift
+	double z_abs_err = -1;
+	
+	/// typical relative error on mass proxy
+	double proxy_rel_err = -1;
 
 	/// redshift
 	double redshift;
@@ -312,14 +318,14 @@ namespace cbl {
 	/// fiducial \f$H(z)\f$
 	double HHfid;
 
-	/// &Delta;: the overdensity, defined as the mean interior density relative to the background
+	/// &Delta;, the overdensity
 	double Delta;
 	
 	/// the input overdensity
 	double Delta_input;
 
-	/// isDelta_Vir
-	bool isDelta_Vir;
+	/// isDelta_critical
+	bool isDelta_critical;
 
 	/// Pointer to normal random numbers generator
 	std::shared_ptr<cbl::random::NormalRandomNumbers> gau_ran;

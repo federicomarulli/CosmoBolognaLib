@@ -121,6 +121,17 @@ namespace cbl {
 	: Object() {}
 
       /**
+       * @brief function that allows copying private variables of the class 
+       * when an object of class Catalogue is copied
+       * 
+       * @return a shared pointer to the Object
+       *
+       */	
+      std::shared_ptr<Object> getShared() {
+        return std::make_shared<Galaxy>(*this);
+      }
+
+      /**
        *  @brief constructor that uses comoving coordinates
        *
        *  @param coord structure containing the comoving coordinates
@@ -833,7 +844,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_IDHost
        *  @param IDHost the Id of the halo that host galaxy
-       *  @return none
        */
       void set_IDHost (const int IDHost=par::defaultInt) override
       { m_IDHost = IDHost; }
@@ -841,7 +851,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_galaxyTag
        *  @param galaxyTag the tag of a galaxy
-       *  @return none
        */
       void set_galaxyTag (const double galaxyTag) override
       { m_galaxyTag = galaxyTag; }
@@ -849,7 +858,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_mstar
        *  @param mstar the stellar mass of the galaxy
-       *  @return none
        */
       void set_mstar (const double mstar=par::defaultDouble) override
       { m_mstar = mstar; }
@@ -857,7 +865,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_massinfall
        *  @param massinfall the infall mass of the substructure
-       *  @return none
        */
       void set_massinfall (const double massinfall=par::defaultDouble) override
       { m_massinfall = massinfall; }

@@ -32,5 +32,5 @@ clean:
 
 
 readParameterFile.o: readParameterFile.cpp makefile $(dirLib)*.$(ES)
-	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) $(varDIR) -c readParameterFile.cpp
+	$(CXX) $(FLAGS0) $(FLAGS) $(FLAGS_INC) -c readParameterFile.cpp
 

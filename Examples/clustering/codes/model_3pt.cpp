@@ -4,12 +4,6 @@
 
 #include "Modelling_ThreePointCorrelation_comoving_reduced.h"
 
-// these two variables contain the name of the CosmoBolognaLib
-// directory and the name of the current directory (useful when
-// launching the code on remote systems)
-std::string cbl::par::DirCosmo = DIRCOSMO, cbl::par::DirLoc = DIRL;
-
-
 int main () {
 
   try {
@@ -25,7 +19,7 @@ int main () {
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
   
-    std::string file_catalogue = cbl::par::DirLoc+"../input/cat.dat";
+    std::string file_catalogue = "../input/cat.dat";
 
     cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -53,7 +47,7 @@ int main () {
   
     // output data
   
-    const std::string dir_output = cbl::par::DirLoc+"../output/";
+    const std::string dir_output = "../output/";
     const std::string dir_triplets = dir_output;
     const std::string dir_2pt = dir_output;
     const std::string file_output = "3pt.dat";
@@ -72,7 +66,7 @@ int main () {
     // ---------------- read Q dark matter (DEMNUNI) ----------------
     // --------------------------------------------------------------
 
-    const std::string file_Q = cbl::par::DirLoc+"../input/zeta_lin_DM_z1.1_u2s5.00.dat";
+    const std::string file_Q = "../input/zeta_lin_DM_z1.1_u2s5.00.dat";
     std::ifstream fin(file_Q); cbl::checkIO(fin, file_Q);
 
     double theta, Q, err;

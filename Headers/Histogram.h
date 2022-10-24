@@ -48,20 +48,20 @@ namespace cbl {
      */
     enum class HistogramType {
 
-			      /// the binned counts, \f$N_V[i]\f$
-			      _N_V_,
+      /// the binned counts, \f$N_V[i]\f$
+      _N_V_,
 
-			      /// the normalised binned counts, i.e. \f$n_V[i]=N_V[i]/fact\f$, where the factor \f$fact\f$ is a number provided in input
-			      _n_V_,
+      /// the normalised binned counts, i.e. \f$n_V[i]=N_V[i]/fact\f$, where the factor \f$fact\f$ is a number provided in input
+      _n_V_,
 
-			      /// \f$n_V[i]/(edge[i+1]-edge[i])\f$, where \f$edge\f$ are the bin limits
-			      _dn_dV_,
+      /// \f$n_V[i]/(edge[i+1]-edge[i])\f$, where \f$edge\f$ are the bin limits
+      _dn_dV_,
 
-			      /// \f$n_V[i]/(\log_{10}(edge[i+1])-\log_{10}(edge[i]))\f$, where \f$edge\f$ are the bin limits
-			      _dn_dlogV_,
+      /// \f$n_V[i]/(\log_{10}(edge[i+1])-\log_{10}(edge[i]))\f$, where \f$edge\f$ are the bin limits
+      _dn_dlogV_,
 
-			      /// \f$n_V[i]/(\ln(edge[i+1])-\ln(edge[i]))\f$, where \f$edge\f$ are the bin limits
-			      _dn_dlnV_
+      /// \f$n_V[i]/(\ln(edge[i+1])-\ln(edge[i]))\f$, where \f$edge\f$ are the bin limits
+      _dn_dlnV_
 
     };
 
@@ -134,6 +134,7 @@ namespace cbl {
        *  @name Functions to set the private members of the class
        */
       ///@{
+      
       /**
        * @brief set the histogram variables
        *
@@ -143,9 +144,6 @@ namespace cbl {
        * @param shift the shift of the bin
        * @param bin_type the binning type
        * @param vec_edges the bin edges, used only if bin_type is custom
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void set (const size_t nbins, const double minVar=par::defaultDouble, const double maxVar=par::defaultDouble, const double shift=0.5, const BinType bin_type=BinType::_linear_, const std::vector<double> vec_edges={})
       { (void)nbins; (void)minVar; (void)maxVar; (void)shift; (void)bin_type; (void)vec_edges; ErrorCBL("", "set", "Histogram.h"); }
@@ -176,9 +174,6 @@ namespace cbl {
        * @param var value of the var
        *
        * @param weight weight of the var
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void put (const double var, const double weight)
       { (void)var; (void)weight; ErrorCBL("", "put", "Histogram.h"); }
@@ -189,9 +184,6 @@ namespace cbl {
        * @param var values of the var
        *
        * @param weight weights of the var
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void put (const std::vector<double> var, const std::vector<double> weight)
       { (void)var; (void)weight; ErrorCBL("", "put", "Histogram.h"); }
@@ -204,9 +196,6 @@ namespace cbl {
        * @param weight weight of the var
        *
        * @param var value of the var
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void put (const int bin, const double weight, const double var)
       { (void)bin; (void)weight; (void)var; ErrorCBL("", "put", "Histogram.h"); }
@@ -219,9 +208,6 @@ namespace cbl {
        * @param weight weights of the var
        *
        * @param var values of the var
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void put (const std::vector<int> bins, const std::vector<double> weight, const std::vector<double> var)
       { (void)bins; (void)weight; (void)var; ErrorCBL("", "put", "Histogram.h"); }
@@ -239,11 +225,10 @@ namespace cbl {
        *  @param shift2 bin shift for the second variable
        *  @param bin_type1 the binning type for the first variable
        *  @param bin_type2 the binning type for the second variable
-       *  @param vec_edges1 the first variable bin edges, used only if bin_type is custom
-       *  @param vec_edges2 the second variable bin edges, used only if bin_type is custom
-       *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @param vec_edges1 the first variable bin edges, used only if
+       *  bin_type is custom
+       *  @param vec_edges2 the second variable bin edges, used only
+       *  if bin_type is custom
        */
       virtual void set (const size_t nbins1, const size_t nbins2, const double minVar1=par::defaultDouble, const double maxVar1=par::defaultDouble, const double minVar2=par::defaultDouble, const double maxVar2=par::defaultDouble, const double shift1=0.5, const double shift2=0.5, const BinType bin_type1=BinType::_linear_, const BinType bin_type2=BinType::_linear_, const std::vector<double> vec_edges1={}, const std::vector<double> vec_edges2={})
       { (void)nbins1; (void)minVar1; (void)maxVar1; (void)nbins2; (void)minVar2; (void)maxVar2; (void)shift1; (void)shift2; (void)bin_type1; (void)bin_type2; (void)vec_edges1; (void)vec_edges2; ErrorCBL("", "set", "Histogram.h"); }
@@ -278,9 +263,6 @@ namespace cbl {
        * @param var2 value of the second var
        *
        * @param weight weight of the var
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void put (const double var1, const double var2, const double weight)
       { (void)var1; (void)var2; (void)weight; ErrorCBL("", "put", "Histogram.h"); }
@@ -293,9 +275,6 @@ namespace cbl {
        * @param var2 values of the second var
        *
        * @param weight weights of the var
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void put (const std::vector<double> var1, const std::vector<double> var2, const std::vector<double> weight)
       { (void)var1; (void)var2; (void)weight; ErrorCBL("", "put", "Histogram.h"); }
@@ -312,9 +291,6 @@ namespace cbl {
        * @param var1 value of the first var
        *
        * @param var2 value of the second var
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void put (const int bin1, const int bin2, const double weight, const double var1, const double var2)
       { (void)bin1; (void)bin2; (void)weight; (void)var1; (void)var2; ErrorCBL("", "put", "Histogram.h"); }
@@ -329,9 +305,6 @@ namespace cbl {
        * @param var1 values of the first var
        *
        * @param var2 values of the second var
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void put (const std::vector<std::vector<int>> bins, const std::vector<double> weight, const std::vector<double> var1, const std::vector<double> var2)
       { (void)bins; (void)weight; (void)var1; (void)var2; ErrorCBL("", "put", "Histogram.h"); }
@@ -835,9 +808,6 @@ namespace cbl {
        *
        * @param fact the factor used to normalized the
        * histogram
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void write (const std::string dir, const std::string file, const HistogramType hist_type, const double fact=1.) const
       { (void)dir; (void)file; (void)hist_type; (void)fact; ErrorCBL("", "write", "Histogram.h"); }

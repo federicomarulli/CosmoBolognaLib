@@ -208,6 +208,9 @@ namespace cbl {
 	 */
 	void m_write(const std::string output_dir, const std::string output_file);
 	
+	/// if true, create the folder containing the background galaxies indices
+	bool m_write_background;
+	
 	/// input cosmology
 	std::shared_ptr<cosmology::Cosmology> m_cosm;
 	
@@ -235,8 +238,11 @@ namespace cbl {
 	/// vector for checking if the logic selection linking colour and z selections is set in all the z bins
 	std::vector<bool> m_isSet_logicSel;
 	
-	/// vector of indices of the selected background galaxies
-	std::vector<int> m_background_idx;
+	/// vector of indices of the background galaxies selected through the redshift selection
+	std::vector<std::vector<int>> m_background_idx_z;
+	
+	/// vector of indices of the background galaxies selected through the colour selection
+	std::vector<std::vector<int>> m_background_idx_colour;
 	
 	/// bool stating if the measure is read from file
 	bool m_measure_is_read;
@@ -610,13 +616,27 @@ namespace cbl {
 	 *
 	 *  Note that with this function the stacking is performed in all the
 	 *  redshift and proxy bins, and the results are written on file. 
-	 *
 	 *  In the first line of the header of such file, all the 
 	 *  parameters used for the stacking (colour and redshift selections,
 	 *  binnings, ...) are written, as well as the cosmological parameters. 
-	 *
 	 *  If such a file has already been written, the code reads it instead
 	 *  of performing again the stacking procedure.
+	 *
+	 *  In addition, this function creates the following folders:
+	 *
+	 *  - covariance/: it contains \f$N\f$ files, where \f$N\f$ is
+	 *  the number of redshift-proxy bins. Each file name contains
+	 *  a string of two integers (e.g. "00"), where the first integer
+	 *  corresponds to the index of the redshift bin, while the second
+	 *  integer represents the index of the proxy bin.
+	 *
+	 *  - background_galaxies/: created if write_background is set to true.
+	 *  This folder contains sub-folders, one for each 
+	 *  redshift bin. In such folders, two files are stored: one containing
+	 *  the indices of the galaxies selected with the redshift selection,
+	 *  while the second file contains the indices of those galaxies selected
+	 *  through the colour selection. Such indices correspond to those
+	 *  of the input catalogue of galaxies, and start from 0.
 	 *
 	 *  @param z_proxy_bin vector containing the indices of the redshift
 	 *  and proxy bins to be stored, respectively
@@ -634,8 +654,11 @@ namespace cbl {
 	 *  @param n_resampling number of resampling regions for the bootstrap
 	 *  procedure used to evaluate the uncertainty on \f$\Delta\Sigma(r)\f$
 	 *
+	 *  @param write_background if true, create the background_galaxies/ folder.
+	 *  WARNING: this folder may be very large
+	 *
 	 */
-	void measure(const std::vector<int> z_proxy_bin, const std::string output_dir, const std::string output_file_root, const ErrorType errorType=ErrorType::_Bootstrap_, const int n_resampling=10000);
+	void measure(const std::vector<int> z_proxy_bin, const std::string output_dir, const std::string output_file_root, const ErrorType errorType=ErrorType::_Bootstrap_, const int n_resampling=10000, const bool write_background=false);
 	
 	///@}
 	
@@ -654,29 +677,6 @@ namespace cbl {
 	 *
 	 */
 	void write(const std::string dir, const std::string file);
-	
-	/**
-	 *  @brief write a file containing index, ID, RA, Dec, z of the
-	 *  selected lensed galaxies. If multiple clusters share 
-	 *  the same source, the row is NOT repeated.
-	 *
-	 *  The file is sorted from the lower to the highest index, 
-	 *  starting the count from 0.
-	 *
-	 *  @param out_dir output directory
-	 *
-	 *  @param out_file_root root name of the output file
-	 *
-	 *  @param ID_file input ASCII file where the ID
-	 *  entries are stored
-	 *
-	 *  @param ID_column int identifying the ID column
-	 *  (starting the count from 1)
-	 *
-	 *  @param skip_lines lines to skip
-	 *
-	 */
-	void write_background_properties(const std::string out_dir, const std::string out_file_root, const std::string ID_file, const int ID_column, const int skip_lines=0);
 	
 	///@}
 	

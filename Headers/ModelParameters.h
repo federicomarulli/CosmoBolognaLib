@@ -133,12 +133,8 @@ namespace cbl {
       /// indexes of the derived parameters
       std::vector<unsigned int> m_derived_parameter;
 
-
       /**
-       * @brief private member to set the parameter
-       * types
-       *
-       * @return none
+       * @brief private member to set the parameter types
        */
       virtual void m_set_parameter_type ();
 	
@@ -185,8 +181,6 @@ namespace cbl {
 	
       /**
        * @brief reset the parameter vectors
-       *
-       * @return none
        */
       virtual void reset ()
       { set_parameters(m_nparameters, m_parameter_type, m_parameter_name); } 
@@ -225,6 +219,13 @@ namespace cbl {
        */
       size_t nparameters_derived () const;
 
+      /**
+       * @brief return the number of correlated parameters
+       *
+       * @return the number of correlated parameters
+       */
+      size_t nparameters_correlated () const;
+      
       /**
        * @brief return the private member m_derived_parameter
        *
@@ -298,9 +299,7 @@ namespace cbl {
        *
        *  @param parameterTypes the parameter types
        *
-       *  @param parameterNames the parameter names*
-       *
-       *  @return none
+       *  @param parameterNames the parameter names
        */
       virtual void set_parameters (const size_t nparameters, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames);
       
@@ -310,8 +309,6 @@ namespace cbl {
        *  @param nparameters the number of parameters
        *
        *  @param parameterNames the parameter names
-       *
-       *  @return none
        */
       virtual void set_parameters (const size_t nparameters, std::vector<std::string> parameterNames);
 
@@ -324,9 +321,7 @@ namespace cbl {
        *
        *  @param parameterTypes the parameter types
        *
-       *  @param parameterNames the parameter names*
-       *
-       *  @return none
+       *  @param parameterNames the parameter names
        */
       virtual void set_parameters (const size_t nparameters, const std::vector<std::shared_ptr<PriorDistribution>> priorDistributions, std::vector<ParameterType> parameterTypes, std::vector<std::string> parameterNames)
       { (void)nparameters; (void)priorDistributions; (void)parameterTypes, (void)parameterNames; ErrorCBL("", "set_parameters", "ModelParameters.h"); }
@@ -380,34 +375,28 @@ namespace cbl {
       ///@{
 		
       /**
-       * @brief set m_fixed to false;
+       * @brief set m_fixed to false
        * 
        * @param p the p-th parameter
-       *
-       * @return none
        */
       virtual void free (const int p)
       { (void)p; ErrorCBL("", "free", "ModelParameters.h"); }
 
       /**
-       * @brief fix the parameter at the input value;
+       * @brief fix the parameter at the input value
        * 
        * @param p the p-th parameter
        *
        * @param value the input value
-       *
-       * @return none
        */
       virtual void fix (const int p, const double value)
       { (void)p; (void)value; ErrorCBL("", "fix", "ModelParameters.h"); }
 
       /**
-       * @brief fix the parameter at the bestfit value,
-       * contained in m_bestfit_value
+       * @brief fix the parameter at the bestfit value, contained in
+       * m_bestfit_value
        *
        * @param p the p-th parameter
-       *
-       * @return none
        */
       virtual void fix_at_bestfit (const int p)
       { (void)p; ErrorCBL("", "fix_at_bestfit", "ModelParameters.h"); }
@@ -438,8 +427,6 @@ namespace cbl {
        *  @brief set the protected member m_bestfit_value
        *
        *  @param bestfit_value parameter bestfit values
-       *
-       *  @return none
        */
       virtual void set_bestfit_values (const std::vector<double> bestfit_value)
       { (void)bestfit_value; ErrorCBL("", "set_bestfit_values", "ModelParameters.h"); }
@@ -454,16 +441,12 @@ namespace cbl {
        *  @param nbins the number of bins
        *
        *  @param seed seed for random extraction
-       *
-       *  @return none
        */
       virtual void set_bestfit_values (const int start, const int thin, const int nbins, const int seed) 
       { (void)start; (void)thin; (void)nbins; (void)seed; ErrorCBL("", "set_bestfit_values", "ModelParameters.h"); }
 	
       /**
        *  @brief write the bestfit info
-       *
-       *  @return none
        */
       virtual void write_bestfit_info ()
       { ErrorCBL("", "write_bestfit_info", "ModelParameters.h"); }
@@ -483,8 +466,6 @@ namespace cbl {
        * @param p the p-th parameter
        *
        * @param priorDistribution the prior distribution
-       *
-       * @return none
        */
       virtual void set_prior_distribution (const int p, const std::shared_ptr<PriorDistribution> priorDistribution)
       { (void)p; (void)priorDistribution; ErrorCBL("", "set_prior_distribution", "ModelParameters.h"); }
@@ -494,8 +475,6 @@ namespace cbl {
        * parameters
        *
        * @param priorDistributions the prior distributions
-       *
-       * @return none
        */
       virtual void set_prior_distribution (const std::vector<std::shared_ptr<PriorDistribution>> priorDistributions)
       { (void)priorDistributions; ErrorCBL("", "set_prior_distribution", "ModelParameters.h"); }
@@ -505,8 +484,6 @@ namespace cbl {
        * parameters
        *
        * @param ran_generator the random generator
-       *
-       * @return none
        */
       virtual void set_prior_distribution_seed (const std::shared_ptr<random::UniformRandomNumbers_Int> ran_generator)
       { (void)ran_generator; ErrorCBL("", "set_prior_distribution_seed", "ModelParameters.h"); } 
@@ -541,16 +518,13 @@ namespace cbl {
       { ErrorCBL("", "prior", "ModelParameters.h"); return NULL; }
 
       ///@}
-			
+      
       /**
-       * @brief set the internal method
-       *  m_parameter_covariance
+       * @brief set the internal method m_parameter_covariance
        *
        * @param start the starting position 
        *
        * @param thin number of jumped indexes in the chain
-       *
-       * @return none
        */
       virtual void set_parameter_covariance (const int start=0, const int thin=1)
       { (void)start; (void)thin; ErrorCBL("", "set_parameter_covariance", "ModelParameters.h"); }
@@ -581,7 +555,7 @@ namespace cbl {
        *  @name Member functions used to interact with posterior distribution
        */
       ///@{
-			
+
       /**
        * @brief set the prior distribution for the p-th 
        * parameter
@@ -595,8 +569,6 @@ namespace cbl {
        * @param seed seed for random extraction
        *
        * @param weight chain weight
-       *
-       * @return none
        */
       virtual void set_posterior_distribution (const int start, const int thin, const int nbins, const int seed=34121, const std::vector<double> weight={})
       { (void)start; (void)thin; (void)nbins; (void)seed; (void)weight; ErrorCBL("", "set_posterior_distribution", "ModelParameters.h"); }
@@ -637,8 +609,6 @@ namespace cbl {
        * dataset
        *
        * @param weight chain weight
-       *
-       * @return none
        */
       virtual void show_results (const int start, const int thin, const int nbins, const int seed=34121, const bool show_mode=false, const int ns=-1, const int nb=-1, const std::vector<double> weight={})
       { (void)start; (void)thin; (void)nbins; (void)seed; (void)show_mode; (void)ns; (void)nb; (void)weight; ErrorCBL("", "show_results", "ModelParameters.h"); }
@@ -669,8 +639,6 @@ namespace cbl {
        * dataset
        *
        * @param weight chain weight
-       *
-       * @return none
        */
       virtual void write_results (const std::string dir, const std::string file, const int start, const int thin, const int nbins, const int seed=34121, const bool compute_mode=false, const int ns=-1, const int nb=-1, const std::vector<double> weight={})
       { (void)dir; (void)file; (void)start; (void)thin; (void)nbins; (void)seed; (void)compute_mode; (void)ns; (void)nb; (void)weight; ErrorCBL("", "write_results", "ModelParameters.h"); }
@@ -697,16 +665,12 @@ namespace cbl {
        * @param size the chain lenght 
        *
        * @param nwalkers the number of parallel walkers
-       *
-       * @return none
        */
       virtual void set_chain (const size_t size, const size_t nwalkers)
       { (void)size; (void)nwalkers; ErrorCBL("", "set_chain", "ModelParameters.h"); }
 
       /**
        * @brief reset the chain using m_size and m_nwalkers
-       *
-       * @return none
        */
       virtual void reset_chain ()
       { ErrorCBL("", "reset_chain", "ModelParameters.h"); }
@@ -714,9 +678,7 @@ namespace cbl {
       /**
        * @brief expand the already existing chain
        *
-       * @param append the lenght of the empty chunk of the chain 
-       *
-       * @return none
+       * @param append the lenght of the empty chunk of the chain
        */
       virtual void expand_chain (const int append)
       { (void)append; ErrorCBL("", "expand_chain", "ModelParameters.h"); }
@@ -774,8 +736,6 @@ namespace cbl {
        * @param ww the walker index
        *
        * @param value the chain value
-       *
-       * @return none
        */
       virtual void set_chain_value (const int param, const int pos, const int ww, const double value) 
       { (void)param; (void)pos; (void)ww; (void)value; ErrorCBL("", "set_chain_value", "ModelParameters.h"); }
@@ -786,8 +746,6 @@ namespace cbl {
        *  @param values the input chain values
        *
        *  @param nwalkers the number of parallel walkers
-       *
-       *  @return none
        */
       virtual void set_chain_values (const std::vector<std::vector<double>> values, const int nwalkers)
       { (void)values; (void)nwalkers; ErrorCBL("", "set_chain_values", "ModelParameters.h"); }
@@ -796,8 +754,6 @@ namespace cbl {
        *  @brief set the chain values
        *
        *  @param values the input chain values
-       *
-       *  @return none
        */
       virtual void set_chain_values (const std::vector<std::vector<std::vector<double>>> values)
       { (void)values;  ErrorCBL("", "set_chain_values", "ModelParameters.h"); }
@@ -806,8 +762,6 @@ namespace cbl {
        * @brief initialize the chain values
        *
        * @param values the starting values
-       *
-       * @return none
        */
       virtual void initialize_chain (const std::vector<std::vector<double>> values)
       { (void)values;  ErrorCBL("", "initialize_chain", "ModelParameters.h"); }
@@ -815,8 +769,6 @@ namespace cbl {
       /**
        * @brief initialize the chain values
        * random sampling the parameter priors
-       *
-       * @return none
        */
       virtual void initialize_chain_from_prior ()
       { ErrorCBL("", "initialize_chain_from_prior", "ModelParameters.h"); }
@@ -829,8 +781,6 @@ namespace cbl {
        * @param radius the ball radius
        *
        * @param seed the random number generator seed
-       *
-       * @return none
        */
       virtual void initialize_chain_ball (const std::vector<double> center, const double radius, const double seed)
       { (void)center; (void)radius; (void)seed; ErrorCBL("", "initialize_chain_ball", "ModelParameters.h"); }
@@ -842,8 +792,6 @@ namespace cbl {
        * @param radius the ball radius
        *
        * @param seed the random number generator seed
-       *
-       * @return none
        */
       virtual void initialize_chain_ball_bestfit (const double radius, const double seed)
       { (void)radius; (void)seed;  ErrorCBL("", "initialize_chain_ball_bestfit", "ModelParameters.h"); }

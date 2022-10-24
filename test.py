@@ -142,6 +142,7 @@ check("clustering/codes", "3pt", "C++")
 check("clustering/codes", "3pt_multipoles", "C++")
 
 check("powerSpectrum_angular/codes", "power_spectrum_angular", "C++") 
+check("powerSpectrum_angular/codes", "model_power_spectrum_angular", "C++") 
 
 check("clustering/codes", "model_2pt_monopole_BAO", "C++")
 check("clustering/codes", "model_2pt_monopole_RSD", "C++")
@@ -187,7 +188,10 @@ check("wrappers", "fft_fftlog.py", "python")
 check("wrappers", "fft_fftlog.py", "python3")
 
 check("cosmology", "distances.py", "python") 
-check("cosmology", "distances.py", "python3") 
+check("cosmology", "distances.py", "python3")
+
+#check("cosmology", "massFunction_fR.py", "python") 
+#check("cosmology", "massFunction_fR.py", "python3") 
 
 check("statistics/codes", "prior.py", "python")
 check("statistics/codes", "prior.py", "python3")

@@ -2,11 +2,12 @@
 
 %module cblStat
 
-%include "stl.i"
-%include "stdint.i"
-%include "std_string.i"
-%include "std_vector.i"
-%include <std_shared_ptr.i>
+%include "Path.i"
+%import "Kernel.i"
+%import "Distribution.i"
+%import "Data.i"
+
+%ignore *::operator[];
 
 %shared_ptr(cbl::statistics::PriorDistribution);
 %shared_ptr(cbl::statistics::PosteriorDistribution);
@@ -26,6 +27,12 @@
 %shared_ptr(cbl::statistics::SuperSampleCovariance);
 
 %{
+#include "Data.h"
+#include "Data1D.h"
+#include "Data1D_extra.h"
+#include "Data1D_collection.h"
+#include "TaperedCovarianceMatrix.h"
+
 #include "PriorDistribution.h"
 #include "PosteriorDistribution.h"
 #include "Prior.h"
@@ -41,8 +48,6 @@
 #include "Sampler.h"
 #include "Posterior.h"
 #include "CombinedPosterior.h"
-#include "SuperSampleCovariance.h"
-
 %}
 
 %include "PriorDistribution.h"
@@ -60,7 +65,6 @@
 %include "Sampler.h"
 %include "Posterior.h"
 %include "CombinedPosterior.h"
-%include "SuperSampleCovariance.h"
 
 %template(ParameterTypeVector) std::vector<cbl::statistics::ParameterType>;
 %template(PriorDistributionVector) std::vector<cbl::statistics::PriorDistribution>;
@@ -68,3 +72,4 @@
 %template(PosteriorDistributionVector) std::vector<cbl::statistics::PosteriorDistribution>;
 %template(PosteriorDistributionPtrVector) std::vector<std::shared_ptr<cbl::statistics::PosteriorDistribution>>;
 %template(PosteriorPtrVector) std::vector<std::shared_ptr<cbl::statistics::Posterior>>;
+

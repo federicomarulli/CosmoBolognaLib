@@ -58,7 +58,7 @@ cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::shared_pt
 // ============================================================================================
 
 
-cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::vector<std::shared_ptr<modelling::Modelling>>> modelling, std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par)
+cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::vector<std::shared_ptr<modelling::Modelling>>> modelling, std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par, const std::vector<std::shared_ptr<cosmology::SuperSampleCovariance>> SSC)
 {
   std::vector<std::vector<std::shared_ptr<statistics::Posterior>>> posteriors(modelling.size());
   for (size_t i=0; i<modelling.size(); i++) {
@@ -69,7 +69,7 @@ cbl::modelling::CombinedModelling::CombinedModelling (std::vector<std::vector<st
       posteriors[i][j] = std::move(posterior_ptr);
     }
   }
-  m_combined_posterior = make_shared<statistics::CombinedPosterior>(statistics::CombinedPosterior(posteriors, covariance, likelihood_types, repeated_par, common_repeated_par));
+  m_combined_posterior = make_shared<statistics::CombinedPosterior>(statistics::CombinedPosterior(posteriors, covariance, likelihood_types, repeated_par, common_repeated_par, SSC));
 }
 
 
@@ -124,7 +124,7 @@ void cbl::modelling::CombinedModelling::write_combined_results (const std::strin
 // ============================================================================================
 
 
-void cbl::modelling::CombinedModelling::write_model_from_combined_chain (const std::string output_dir, const std::string output_file, const int start, const int thin)
+void cbl::modelling::CombinedModelling::write_model_from_combined_chain (const std::string output_dir, const std::string output_file, const int start, const int thin, const std::vector<double> xx, const std::vector<double> yy)
 {
-  m_combined_posterior->write_model_from_chain(output_dir, output_file, start, thin);
+  m_combined_posterior->write_model_from_chain(output_dir, output_file, start, thin, xx, yy);
 }

@@ -35,7 +35,7 @@
 
 
 #include "ModelFunction_TwoPointCorrelation1D_monopole.h"
-#include "Cluster.h"
+#include "HaloProfile.h"
 
 using namespace std;
 
@@ -470,6 +470,8 @@ std::vector<double> cbl::modelling::twopt::xi0_damped_scaling_relation_sigmaz_co
   for (size_t i=0; i<pp->Cpar.size(); ++i)
     cosmo.set_parameter(pp->Cpar[i], parameter[i]);
 
+  auto cosmo_ptr = std::make_shared<cbl::cosmology::Cosmology>(cosmo);
+
   // damping scale
   const double SigmaS = par::cc*parameter[parameter.size()-2]/cosmo.HH(pp->redshift);
   
@@ -480,36 +482,195 @@ std::vector<double> cbl::modelling::twopt::xi0_damped_scaling_relation_sigmaz_co
   for (size_t i=pp->Cpar.size(); i<parameter.size()-2; i++)
     scalRel_pars.emplace_back(parameter[i]);
 
+  const double alpha = scalRel_pars[scalRel_pars.size()-8];
+  const double beta = scalRel_pars[scalRel_pars.size()-7];
+  const double gamma = scalRel_pars[scalRel_pars.size()-6];
+  const double scatter0 = scalRel_pars[scalRel_pars.size()-5];
+  const double scatterM = scalRel_pars[scalRel_pars.size()-4];
+  const double scatterM_exp = scalRel_pars[scalRel_pars.size()-3];
+  const double scatterz = scalRel_pars[scalRel_pars.size()-2];
+  const double scatterz_exp = scalRel_pars[scalRel_pars.size()-1];
+
   // compute the power spectrum
   vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, pp->NL, pp->redshift, false, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
 
   std::shared_ptr<glob::FuncGrid> Pk_interp = make_shared<glob::FuncGrid>(glob::FuncGrid(pp->kk, Pk, "Spline"));
+  
+  
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+  // Derive the effective bias from the scaling relation
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
 
-  // bias computation
-  vector<double> _bias(pp->scaling_relation->data()->xx().size());
+  // Interpolate sigmaM
+  const std::vector<double> Mass_vector = cbl::logarithmic_bin_vector(300, 1.e10, 1.e16);
+  std::vector<double> sigmaM (Mass_vector.size(), 0.);
+  for (size_t i=0; i<sigmaM.size(); i++)
+    sigmaM[i] = sqrt( cosmo.sigma2M(Mass_vector[i], pp->method_Pk, 0., false, "test", "Linear", 100.) );
 
+  cbl::glob::FuncGrid sigmaM_interp (Mass_vector, sigmaM, "Spline");
+
+  // Compute the bias
   double log_base = (pp->scaling_relation)->data_model().log_base;
   double mass_pivot = (pp->scaling_relation)->data_model().mass_pivot;
-  double proxy_pivot = (pp->scaling_relation)->data_model().proxy_or_mass_pivot;
+  double proxy_pivot = (pp->scaling_relation)->data_model().proxy_pivot;
   double redshift_pivot = (pp->scaling_relation)->data_model().redshift_pivot;
+  
+  double bias = 0;
 
-  auto cosmo_ptr = std::make_shared<cbl::cosmology::Cosmology>(cosmo);
+  if (pp->z_abs_err == -1 && pp->proxy_rel_err == -1) {
 
-  for (size_t i=0; i<pp->scaling_relation->data()->xx().size(); i++) {
-    double log_lambda = log(pp->scaling_relation->data()->xx(i)/proxy_pivot)/log(log_base);
-    double log_fz = log( (pp->scaling_relation)->data_model().fz((pp->scaling_relation)->data_model().redshift[i],redshift_pivot,cosmo_ptr) )/log(log_base);
+    // Interpolate the normalised amplitude of the growing mode
+    const std::vector<double> z_for_DN = cbl::linear_bin_vector(100, 0.0001, cbl::Max((pp->scaling_relation)->data_model().redshift));
+    std::vector<double> DN (z_for_DN.size(), 0.);
+    for (size_t i=0; i<z_for_DN.size(); i++)
+      DN[i] = cosmo.DN(z_for_DN[i]);
+    cbl::glob::FuncGrid DN_interp (z_for_DN, DN, "Spline");
     
-    double sigma_intr = scalRel_pars[scalRel_pars.size()-5] + scalRel_pars[scalRel_pars.size()-4]*pow(log_lambda, scalRel_pars[scalRel_pars.size()-3]) + scalRel_pars[scalRel_pars.size()-2]*pow(log_fz, scalRel_pars[scalRel_pars.size()-1]);
+    vector<double> _bias(pp->scaling_relation->data()->xx().size());
+
+    for (size_t i=0; i<pp->scaling_relation->data()->xx().size(); i++) {
+      
+      double log_lambda = log(pp->scaling_relation->data()->xx(i)/proxy_pivot)/log(log_base);
+      double log_fz = log( (pp->scaling_relation)->data_model().fz((pp->scaling_relation)->data_model().redshift[i],redshift_pivot,cosmo_ptr) )/log(log_base);
     
-    double log_mass = (pp->scaling_relation)->likelihood()->get_m_model()->operator()(pp->scaling_relation->data()->xx(i), scalRel_pars) + sigma_intr;
-    double mass = pow(log_base, log_mass) * mass_pivot;
+      double scatter_intr = scatter0 + scatterM*pow(log_lambda, scatterM_exp) + scatterz*pow(log_fz, scatterz_exp);
+    
+      double log_mass = (pp->scaling_relation)->likelihood()->get_m_model()->operator()(pp->scaling_relation->data()->xx(i), scalRel_pars) + scatter_intr;
+      double mass = pow(log_base, log_mass) * mass_pivot;
 
-    double Delta = (pp->isDelta_Vir) ? cosmo.Delta_vir(pp->Delta_input, (pp->scaling_relation)->data_model().redshift[i]) : pp->Delta_input;
+      double Delta = (pp->isDelta_critical) ? pp->Delta_input/cosmo.OmegaM((pp->scaling_relation)->data_model().redshift[i]) : pp->Delta_input;
+      double z = (pp->scaling_relation)->data_model().redshift[i];
+      
+      _bias[i] = cosmo.bias_halo(mass, sigmaM_interp(mass), z, DN_interp(z), pp->model_bias, false, par::defaultString, "Linear", Delta, -1, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->method_Pk);
+      
+    }
 
-    _bias[i] = cosmo.bias_halo(mass, (pp->scaling_relation)->data_model().redshift[i], pp->model_bias, pp->method_Pk, false, par::defaultString, "Linear", Delta, -1, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par);
+    bias = Average(_bias);
+
+  } else {
+
+    // !!
+    // WARNING: actually we only integrate over M, neglecting the integrals over z and proxy (such integrations are negligible).
+    // !!
+    // To verify yourself that integrating over z and proxy produces negligible differences, uncomment the commented "integrand" as well as the following line:
+    //
+    // _bias[i] = CW.IntegrateVegas(integration_limits,false);
+    //
+    // Beware that, in an example test, computing such full integral increases the time from 2 second to 3 minutes!
+    // Definitely not worthy to compute.
+
+    // Interpolate the normalised amplitude of the growing mode
+    const std::vector<double> z_for_DN = cbl::linear_bin_vector(100, 0.0001, cbl::Max((pp->scaling_relation)->data_model().redshift)+5.*pp->z_abs_err);
+    std::vector<double> DN (z_for_DN.size(), 0.);
+    for (size_t i=0; i<z_for_DN.size(); i++)
+      DN[i] = cosmo.DN(z_for_DN[i]);
+    cbl::glob::FuncGrid DN_interp (z_for_DN, DN, "Spline");
+
+    // Define the integrand
+    double dummy_proxy, dummy_z;
+    std::shared_ptr<void> ptr;
+
+    auto integrand = [&] (const double x)
+		     {
+		       double mass = pow(log_base,x)*mass_pivot;
+		       
+		       // Compute P(M|lambda,z)
+		       double log_lambda = log(dummy_proxy/proxy_pivot)/log(log_base);
+		       double log_f_z = log( (pp->scaling_relation)->data_model().fz(dummy_z, redshift_pivot, cosmo_ptr) )/log(log_base);
+		       
+		       double mean = alpha + beta*log_lambda + gamma*log_f_z;
+		       double scatter_intr = std::abs(scatter0 + scatterM*pow(log_lambda, scatterM_exp) + scatterz*pow(log_f_z, scatterz_exp));
+		       double P_M__lambda_z = cbl::gaussian(x, ptr, {mean,scatter_intr});
+
+		       // Compute the halo bias
+		       double Delta = (pp->isDelta_critical) ? pp->Delta_input/cosmo.OmegaM(dummy_z) : pp->Delta_input;
+		       double bias_halo = cosmo.bias_halo(mass, sigmaM_interp(mass), dummy_z, DN_interp(dummy_z), pp->model_bias, false, par::defaultString, "Linear", Delta, -1, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->method_Pk);
+		       
+		       return bias_halo * P_M__lambda_z;
+		     }; 
+    /*
+    auto integrand = [&] (const std::vector<double> x)
+		     {
+
+		       double mass = pow(log_base,x[0])*mass_pivot;
+		       
+		       // Compute P(M|lambda,z)
+		       double log_lambda = log(x[2]/proxy_pivot)/log(log_base);
+		       double log_f_z = log( (pp->scaling_relation)->data_model().fz(x[1], redshift_pivot, cosmo_ptr) )/log(log_base);
+		       
+		       double mean = alpha + beta*log_lambda + gamma*log_f_z;
+		       double scatter_intr = scatter0 + scatterM*pow(log_lambda, scatterM_exp) + scatterz*pow(log_f_z, scatterz_exp);
+		       double P_M__lambda_z = (cbl::gaussian(x[0], ptr, {mean,scatter_intr}));
+
+		       // Compute P(z|z_ob)
+		       double Pz = cbl::gaussian(x[1], ptr, {dummy_z,pp->z_abs_err});
+
+		       // Compute P(proxy|proxy_ob)
+		       double Pproxy = cbl::gaussian(x[2], ptr, {dummy_proxy,pp->proxy_rel_err*dummy_proxy});
+
+		       // Compute the halo bias
+		       double Delta = (pp->isDelta_critical) ? pp->Delta_input/cosmo.OmegaM(x[1]) : pp->Delta_input;
+		       double bias_halo = cosmo.bias_halo(mass, sigmaM_interp(mass), x[1], DN_interp(x[1]), pp->model_bias, false, par::defaultString, "Linear", Delta, -1, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->method_Pk);
+		       
+		       return bias_halo * P_M__lambda_z * Pz * Pproxy;
+		     
+		     };
+    std::vector<std::vector<double>> integration_limits(3);
+    cbl::wrapper::cuba::CUBAwrapper CW (integrand, (int)(integration_limits.size()));
+    */
+    
+    
+    // Compute the bias    
+    vector<double> _bias(pp->scaling_relation->data()->xx().size());
+
+    for (size_t i=0; i<pp->scaling_relation->data()->xx().size(); i++) {
+
+      dummy_proxy = pp->scaling_relation->data()->xx(i);
+      dummy_z = (pp->scaling_relation)->data_model().redshift[i];
+
+      // Find the minimum and maximum masses, given the parameters of the scaling relation
+      double log_lambda_min = log(dummy_proxy*(1-pp->proxy_rel_err)/proxy_pivot)/log(log_base);
+      double log_lambda_max = log(dummy_proxy*(1+pp->proxy_rel_err)/proxy_pivot)/log(log_base);
+      double log_f_z_min = log( (pp->scaling_relation)->data_model().fz(dummy_z-pp->z_abs_err, redshift_pivot, cosmo_ptr) )/log(log_base);
+      double log_f_z_max = log( (pp->scaling_relation)->data_model().fz(dummy_z+pp->z_abs_err, redshift_pivot, cosmo_ptr) )/log(log_base);
+
+      double logM1 = alpha + beta*log_lambda_min + gamma*log_f_z_min;
+      double logM2 = alpha + beta*log_lambda_max + gamma*log_f_z_min;
+      double logM3 = alpha + beta*log_lambda_min + gamma*log_f_z_max;
+      double logM4 = alpha + beta*log_lambda_max + gamma*log_f_z_max;
+
+      double min1 = std::min(logM1, logM2);
+      double min2 = std::min(min1, logM3);
+      double min_logM = std::min(min2, logM4);
+      double max1 = std::max(logM1, logM2);
+      double max2 = std::max(max1, logM3);
+      double max_logM = std::max(max2, logM4);
+
+      // Find the maximum value of the intrinsic scatter
+      double s1 = std::abs( scatter0 + scatterM*pow(log_lambda_min, scatterM_exp) + scatterz*pow(log_f_z_min, scatterz_exp) );
+      double s2 = std::abs( scatter0 + scatterM*pow(log_lambda_max, scatterM_exp) + scatterz*pow(log_f_z_min, scatterz_exp) );
+      double s3 = std::abs( scatter0 + scatterM*pow(log_lambda_min, scatterM_exp) + scatterz*pow(log_f_z_max, scatterz_exp) );
+      double s4 = std::abs( scatter0 + scatterM*pow(log_lambda_max, scatterM_exp) + scatterz*pow(log_f_z_max, scatterz_exp) );
+
+      double maxs1 = std::max(s1, s2);
+      double maxs2 = std::max(maxs1, s3);
+      double max_scatter_intr = std::max(maxs2, s4);
+
+      // Integrate
+      _bias[i] = wrapper::gsl::GSL_integrate_qag(integrand, std::max(min_logM-3.5*max_scatter_intr,log(cbl::Min(Mass_vector)/mass_pivot)/log(log_base)), std::min(max_logM+3.5*max_scatter_intr,log(cbl::Max(Mass_vector)/mass_pivot)/log(log_base)));
+
+      /*
+      integration_limits[0] = {std::max(min_logM-3.5*max_scatter_intr,log(cbl::Min(Mass_vector)/mass_pivot)/log(log_base)), std::min(max_logM+3.5*max_scatter_intr,log(cbl::Max(Mass_vector)/mass_pivot)/log(log_base))};
+      integration_limits[1] = {cbl::Min(z_for_DN), cbl::Max(z_for_DN)};
+      integration_limits[2] = {std::max(dummy_proxy - 3.5*pp->proxy_rel_err*dummy_proxy, 0.00001), dummy_proxy + 3.5*pp->proxy_rel_err*dummy_proxy};
+      _bias[i] = CW.IntegrateVegas(integration_limits,false);
+      */
+      
+    }
+
+    bias = Average(_bias);
+    
   }
-
-  const double bias = Average(_bias);
 
   // set the value of the bias
   parameter[parameter.size()-1] = bias;
@@ -918,14 +1079,12 @@ double cbl::modelling::twopt::Pk_cs (const double kk, const std::shared_ptr<void
   const double lgM1 = parameter[3];
   const double alpha = parameter[4];
 
-  // build a Cluster object for computing the density profile in Fourier space
-  cbl::catalogue::Cluster cluster;
-  cluster.set_profile(*pp->cosmology, 0., pp->redshift, pp->model_cM, pp->profile, pp->halo_def);
-  
+  // build a HaloProfile object for computing the density profile in Fourier space
+  cbl::cosmology::HaloProfile halo_profile (*pp->cosmology, pp->redshift, "Duffy", 0., 200., pp->profile, pp->halo_def);  
   
   auto Pk_cs_integrand = [&] (const double lgmass) {
-			   cluster.set_mass(pow(10., lgmass));
-			   return pp->interpMF(pow(10., lgmass))*NcNs(pow(10., lgmass), lgMmin, sigmalgM, lgM0, lgM1, alpha)*cluster.density_profile_FourierSpace(kk)*pow(10., lgmass)*log(10.);
+			   halo_profile.set_mass(pow(10., lgmass));
+			   return pp->interpMF(pow(10., lgmass))*NcNs(pow(10., lgmass), lgMmin, sigmalgM, lgM0, lgM1, alpha)*halo_profile.density_profile_FourierSpace(kk)*pow(10., lgmass)*log(10.);
 			 };
 
   return 2./pow(ng(lgMmin, sigmalgM, lgM0, lgM1, alpha, inputs), 2)*wrapper::gsl::GSL_integrate_qag(Pk_cs_integrand, log10(pp->Mh_min), log10(pp->Mh_max));
@@ -948,14 +1107,12 @@ double cbl::modelling::twopt::Pk_ss (const double kk, const std::shared_ptr<void
   const double lgM1 = parameter[3];
   const double alpha = parameter[4];
 
-  // build a Cluster object for computing the density profile in Fourier space
-  cbl::catalogue::Cluster cluster;
-  cluster.set_profile(*pp->cosmology, 0., pp->redshift, pp->model_cM, pp->profile, pp->halo_def);
-  
+  // build a HaloProfile object for computing the density profile in Fourier space
+  cbl::cosmology::HaloProfile halo_profile (*pp->cosmology, pp->redshift, "Duffy", 0., 200., pp->profile, pp->halo_def);   
     
   auto Pk_ss_integrand = [&] (const double lgmass) {
-			   cluster.set_mass(pow(10., lgmass));
-			   return pp->interpMF(pow(10., lgmass))*NsNs1(pow(10., lgmass), parameter[0], parameter[1], parameter[2], parameter[3], parameter[4])*pow(cluster.density_profile_FourierSpace(kk), 2)*pow(10., lgmass)*log(10.);
+			   halo_profile.set_mass(pow(10., lgmass));
+			   return pp->interpMF(pow(10., lgmass))*NsNs1(pow(10., lgmass), parameter[0], parameter[1], parameter[2], parameter[3], parameter[4])*pow(halo_profile.density_profile_FourierSpace(kk), 2)*pow(10., lgmass)*log(10.);
 			 };
   
   return 1./pow(ng(lgMmin, sigmalgM, lgM0, lgM1, alpha, inputs), 2)*wrapper::gsl::GSL_integrate_qag(Pk_ss_integrand, log10(pp->Mh_min), log10(pp->Mh_max));
@@ -986,14 +1143,12 @@ double cbl::modelling::twopt::Pk_2halo (const double kk, const std::shared_ptr<v
   const double lgM1 = parameter[3];
   const double alpha = parameter[4];
 
-  // build a Cluster object for computing the density profile in Fourier space
-  cbl::catalogue::Cluster cluster;
-  cluster.set_profile(*pp->cosmology, 0., pp->redshift, pp->model_cM, pp->profile, pp->halo_def);
-  
+  // build a HaloProfile object for computing the density profile in Fourier space
+  cbl::cosmology::HaloProfile halo_profile (*pp->cosmology, pp->redshift, "Duffy", 0., 200., pp->profile, pp->halo_def); 
 
   auto Pk_2halo_integrand = [&] (const double lgmass) {
-			      cluster.set_mass(pow(10., lgmass));
-			      return pp->interpMF(pow(10., lgmass))*Navg(pow(10., lgmass), parameter[0], parameter[1], parameter[2], parameter[3], parameter[4])*pp->interpBias(pow(10., lgmass))*cluster.density_profile_FourierSpace(kk)*pow(10., lgmass)*log(10.);
+			      halo_profile.set_mass(pow(10., lgmass));
+			      return pp->interpMF(pow(10., lgmass))*Navg(pow(10., lgmass), parameter[0], parameter[1], parameter[2], parameter[3], parameter[4])*pp->interpBias(pow(10., lgmass))*halo_profile.density_profile_FourierSpace(kk)*pow(10., lgmass)*log(10.);
   };
   return pp->interpPk(kk)*1./pow(ng(lgMmin, sigmalgM, lgM0, lgM1, alpha, inputs),2.)*pow(wrapper::gsl::GSL_integrate_qag(Pk_2halo_integrand, log10(pp->Mh_min), log10(pp->Mh_max)), 2.);
 }

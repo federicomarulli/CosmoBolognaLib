@@ -2,6 +2,9 @@
 
 %module cblWrappers
 
+%import "Path.i"
+%import "Kernel.i"
+
 %{
 #include "CUBAwrapper.h"
 #include "FITSwrapper.h"

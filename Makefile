@@ -1,11 +1,15 @@
 # C++ compiler, main compiler, openMP support required
 CXX = g++
 
+# old C++ compiler for CCfits
+CXX_OLD = g++-9
+
 # C compiler, used to compile CUBA libraries
 CC = gcc
 
 # Fortran 90 compiler, used to compile some external libraries
 F = gfortran
+FC = mpif90
 
 # Python, used to compile the python wrapper
 PY = python
@@ -15,6 +19,9 @@ SWIG = swig
 
 # doxygen, used to create the documentation
 Doxygen = doxygen
+
+# the path to CosmoBolognaLib
+dirCOSMO = -DDIRCOSMO=\"$(PWD)\"
 
 # GSL installation directories
 GSL_VERSION = $(shell gsl-config --version)
@@ -40,10 +47,13 @@ dir_LIB_BOOST =
 
 EIGEN_VERSION = 3.4.0
 
+Dir_Path = Path/
 Dir_H = Headers/
 Dir_CCfits = External/CCfits/
 Dir_CUBA = External/Cuba-4.2.1/
 Dir_FFTLOG = External/fftlog-f90-master/
+Dir_CAMB = External/CAMB/fortran/
+Dir_CAMButils = External/CAMB/forutils/
 Dir_Eigen = External/Eigen/eigen-$(EIGEN_VERSION)/
 Dir_Recfast = External/Recfast/
 
@@ -51,6 +61,8 @@ dir_H = $(addprefix $(PWD)/,$(Dir_H))
 dir_CCfits = $(addprefix $(PWD)/,$(Dir_CCfits))
 dir_CUBA = $(addprefix $(PWD)/,$(Dir_CUBA))
 dir_FFTLOG = $(addprefix $(PWD)/,$(Dir_FFTLOG))
+dir_CAMB = $(addprefix $(PWD)/,$(Dir_CAMB))
+dir_CAMButils = $(addprefix $(PWD)/,$(Dir_CAMButils))
 dir_Eigen = $(addprefix $(PWD)/, $(Dir_Eigen))
 dir_Recfast = $(addprefix $(PWD)/, $(Dir_Recfast))
 
@@ -58,17 +70,19 @@ dir_Python = $(PWD)/Python/
 
 HH = $(dir_H)*.h
 
+
 ###################
 ### BASIC FLAGS ###
 ###################
 
-FLAGS0 = -std=c++11 -fopenmp
-FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
-FLAGST = $(FLAGS0) $(FLAGS)
+FLAGS0 = -std=c++14 -fopenmp
+FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror 
+FLAGST = $(FLAGS0) $(FLAGS) $(dirCOSMO)
 
 FLAGS_INC = -I$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H)
 
 FLAGS_LINK = -shared
+
 
 #################
 ### GSL FLAGS ###
@@ -100,6 +114,7 @@ ifeq ($(dir_LIB_GSL),)
   FLAGS_GSL := -Wl,-rpath,$(dir_LIB_GSL) -L$(dir_LIB_GSL) $(FLAGS_GSL)
 endif
 
+
 ##################
 ### FFTW FLAGS ###
 ##################
@@ -126,11 +141,12 @@ FLAGS_CCFITS = -Wl,-rpath,$(dir_CCfits)lib -L$(dir_CCfits)lib -lCCfits
 CCfits_LIB = $(dir_CCfits)lib/libCCfits.$(ES)
 
 ifeq ($(dir_INC_cfitsio),)
-    CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits && sed -i -e "s/bad_cast/bad_cast\&/g" ColumnT.h && ./configure CXX=$(CXX) --prefix=$(dir_CCfits) CXXFLAGS="-w" && make && make install
+    CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.6.tar.gz && cd CCfits && ./configure CXX=$(CXX_OLD) --prefix=$(dir_CCfits) CXXFLAGS="-w" && make && make install
   else
-    CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.5.tar.gz && cd CCfits && sed -i -e "s/bad_cast/bad_cast\&/g" ColumnT.h && ./configure CXX=$(CXX) --with-cfitsio-include=$(dir_INC_cfitsio) --with-cfitsio-libdir=$(dir_LIB_cfitsio) --prefix=$(dir_CCfits) CXXFLAGS="-w" && make && make install
+    CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.6.tar.gz && cd CCfits && ./configure CXX=$(CXX_OLD) --with-cfitsio-include=$(dir_INC_cfitsio) --with-cfitsio-libdir=$(dir_LIB_cfitsio) --prefix=$(dir_CCfits) CXXFLAGS="-w" && make && make install
   FLAGS_INC := $(FLAGS_INC) -I$(dir_INC_cfitsio)
 endif
+
 
 ###################
 ### BOOST FLAGS ###
@@ -142,6 +158,7 @@ ifeq ($(dir_INC_BOOST),)
   FLAGS_INC :=  $(FLAGS_INC) -I$(dir_INC_BOOST)
 endif
 
+
 ####################
 ### FFTLOG FLAGS ###
 ####################
@@ -152,15 +169,29 @@ ifeq "$(GCCVERSION)" "1"
     FLAGS_FFTLOG += -fallow-argument-mismatch
 endif
 
+
+##################
+### CAMB FLAGS ###
+##################
+
+FLAGS_CAMB = -cpp -w -fPIC -ffast-math -MMD -fopenmp -ffree-line-length-none -Ofast -O3 -march=native -lstdc++
+ifeq "$(GCCVERSION)" "1"
+    FLAGS_CAMB += -fallow-argument-mismatch
+endif
+
+
 #####################
 ### RECFAST FLAGS ###
 #####################
+
 FLAGS_Recfast = -Wall -O3 -fPIC -D RECFASTPPPATH=\"$(PWD)/External/Recfast/\"
 FLAGST_Recfast = $(FLAGS0) $(FLAGS_Recfast)
+
 
 ##################
 ### CUBA FLAGS ###
 ##################
+
 CUBA_LIB = $(dir_CUBA)libcuba.a
 CUBA_COMPILE = cd $(dir_CUBA) && ./configure CC=$(CC) CFLAGS=-fPIC && make lib CC=$(CC)" -w" FC=$(F)" -w"
 
@@ -168,6 +199,7 @@ CUBA_COMPILE = cd $(dir_CUBA) && ./configure CC=$(CC) CFLAGS=-fPIC && make lib C
 ####################
 ### PYTHON FLAGS ###
 ####################
+
 python_version_full := $(wordlist 2,4,$(subst ., ,$(shell $(PY) --version 2>&1)))
 python_version_major := $(word 1,${python_version_full})
 python_version_minor := $(word 2,${python_version_full})
@@ -185,6 +217,8 @@ ifeq ($(python_version_major),3)
 	SWIG_FLAG = -python -c++ -py3 -threads
 	PYVERSION = $(python_version_major).$(python_version_minor)$(ABIFLAGS)
 endif
+
+SWIG_FLAG_ADD = -Wno-stringop-overflow -Wno-uninitialized -Wno-missing-field-initializers -Wno-unused-parameter -Wno-deprecated-declarations
 
 PFLAGS = -I$(PYINC)/python$(PYVERSION)
 
@@ -206,8 +240,10 @@ endif
 
 ##### CBL directories #####
 
+Dir_PATH = Path/
 Dir_KERNEL = Kernel/
-Dir_WRAP = Wrappers/
+Dir_WRAP_CAMB = Wrappers/CAMBwrapper/
+Dir_WRAP_LIB = Wrappers/Libraries/
 Dir_FUNCGRID = FuncGrid/
 Dir_FFT = FFT/
 Dir_RAN = RandomNumbers/
@@ -233,11 +269,14 @@ Dir_MODEL_DENSITYPROFILE = Modelling/DensityProfile/
 Dir_MODEL_NC = Modelling/NumberCounts/
 Dir_MODEL_TWOP = Modelling/TwoPointCorrelation/
 Dir_MODEL_THREEP = Modelling/ThreePointCorrelation/
+Dir_MODEL_ANGPOW = Modelling/AngularPowerSpectrum/
 Dir_GLOB = GlobalFunc/
 Dir_PARF = ParameterFile/
 
+dir_PATH = $(addprefix $(PWD)/,$(Dir_PATH))
 dir_KERNEL = $(addprefix $(PWD)/,$(Dir_KERNEL))
-dir_WRAP = $(addprefix $(PWD)/,$(Dir_WRAP))
+dir_WRAP_CAMB = $(addprefix $(PWD)/,$(Dir_WRAP_CAMB))
+dir_WRAP_LIB = $(addprefix $(PWD)/,$(Dir_WRAP_LIB))
 dir_FUNCGRID = $(addprefix $(PWD)/,$(Dir_FUNCGRID))
 dir_FFT = $(addprefix $(PWD)/,$(Dir_FFT))
 dir_RAN = $(addprefix $(PWD)/,$(Dir_RAN))
@@ -263,6 +302,7 @@ dir_MODEL_DENSITYPROFILE = $(addprefix $(PWD)/,$(Dir_MODEL_DENSITYPROFILE))
 dir_MODEL_NC = $(addprefix $(PWD)/,$(Dir_MODEL_NC))
 dir_MODEL_TWOP = $(addprefix $(PWD)/,$(Dir_MODEL_TWOP))
 dir_MODEL_THREEP = $(addprefix $(PWD)/,$(Dir_MODEL_THREEP))
+dir_MODEL_ANGPOW = $(addprefix $(PWD)/,$(Dir_MODEL_ANGPOW))
 dir_GLOB = $(addprefix $(PWD)/,$(Dir_GLOB))
 dir_PARF = $(addprefix $(PWD)/,$(Dir_PARF))
 
@@ -272,21 +312,32 @@ dir_PARF = $(addprefix $(PWD)/,$(Dir_PARF))
 OBJ_FFTLOG = $(dir_FFTLOG)drffti.o $(dir_FFTLOG)drfftb.o $(dir_FFTLOG)drfftf.o $(dir_FFTLOG)fftlog.o $(dir_FFTLOG)cdgamma.o
 
 
+##### CAMB object files #####
+
+OBJ_CAMButils = $(dir_CAMButils)MiscUtils.o $(dir_CAMButils)MpiUtils.o $(dir_CAMButils)ArrayUtils.o $(dir_CAMButils)StringUtils.o $(dir_CAMButils)FileUtils.o $(dir_CAMButils)IniObjects.o $(dir_CAMButils)ObjectLists.o $(dir_CAMButils)Interpolation.o $(dir_CAMButils)MatrixUtils.o $(dir_CAMButils)RandUtils.o $(dir_CAMButils)RangeUtils.o
+
+OBJ_CAMB = $(dir_CAMB)constants.o $(dir_CAMB)config.o $(dir_CAMB)MathUtils.o $(dir_CAMB)classes.o $(dir_CAMB)SourceWindows.o $(dir_CAMB)DarkEnergyInterface.o $(dir_CAMB)massive_neutrinos.o $(dir_CAMB)model.o $(dir_CAMB)results.o $(dir_CAMB)DarkEnergyFluid.o $(dir_CAMB)DarkEnergyPPF.o $(dir_CAMB)bessels.o $(dir_CAMB)DarkAge21cm.o $(dir_CAMB)recfast.o $(dir_CAMB)equations.o $(dir_CAMB)InitialPower.o $(dir_CAMB)halofit.o $(dir_CAMB)lensing.o $(dir_CAMB)SeparableBispectrum.o $(dir_CAMB)cmbmain.o $(dir_CAMB)PowellMinimize.o $(dir_CAMB)DarkEnergyQuintessence.o $(dir_CAMB)reionization.o $(dir_CAMB)SecondOrderPK.o $(dir_CAMB)subroutines.o $(dir_CAMB)camb.o $(dir_CAMB)inidriver.o
+
+
 ##### RECfast++ object files #####
 
-OBJ_RECfast = $(dir_Recfast)/src/cosmology.Recfast.o \
-	   	$(dir_Recfast)/src/evalode.Recfast.o \
-	   	$(dir_Recfast)/src/recombination.Recfast.o \
-	   	$(dir_Recfast)/src/ODE_solver.Recfast.o \
-	   	$(dir_Recfast)/src/DM_annihilation.Recfast.o \
-	  	$(dir_Recfast)/src/Rec_corrs_CT.Recfast.o
+OBJ_RECfast = $(dir_Recfast)src/cosmology.Recfast.o \
+	   	$(dir_Recfast)src/evalode.Recfast.o \
+	   	$(dir_Recfast)src/recombination.Recfast.o \
+	   	$(dir_Recfast)src/ODE_solver.Recfast.o \
+	   	$(dir_Recfast)src/DM_annihilation.Recfast.o \
+	  	$(dir_Recfast)src/Rec_corrs_CT.Recfast.o
 
 
 ##### CBL object files #####
 
+OBJ_PATH = $(dir_PATH)Path.o
+
 OBJ_KERNEL = $(dir_KERNEL)Kernel.o
 
-OBJ_WRAP = $(dir_WRAP)EigenWrapper.o $(dir_WRAP)GSLwrapper.o $(dir_WRAP)CUBAwrapper.o $(dir_WRAP)FITSwrapper.o
+OBJ_WRAP_CAMB = $(OBJ_CAMButils) $(OBJ_CAMB) $(dir_WRAP_CAMB)CAMBinterface.o $(dir_WRAP_CAMB)CAMB.o
+
+OBJ_WRAP_LIB = $(dir_WRAP_LIB)EigenWrapper.o $(dir_WRAP_LIB)GSLwrapper.o $(dir_WRAP_LIB)CUBAwrapper.o $(dir_WRAP_LIB)FITSwrapper.o
 
 OBJ_FUNCGRID = $(dir_FUNCGRID)FuncGrid.o $(dir_FUNCGRID)FuncGrid_Bspline.o
 
@@ -306,11 +357,11 @@ OBJ_HIST = $(dir_HIST)Histogram.o
 
 OBJ_DISTR = $(dir_DISTR)Distribution.o $(dir_DISTR)CombinedDistribution.o
 
-OBJ_COSM = $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)PkXiNonLinear.o $(dir_COSM)MassFunction.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)SizeFunction.o  $(dir_COSM)3PCF.o $(OBJ_RECfast) $(dir_COSM)MassFunction_vector.o $(dir_COSM)Bias_vector.o
+OBJ_COSM = $(dir_COSM)Cosmology.o $(dir_COSM)Sigma.o $(dir_COSM)PkXi.o $(dir_COSM)PkXizSpace.o $(dir_COSM)PkXiNonLinear.o $(dir_COSM)MassFunction.o $(dir_COSM)Bias.o $(dir_COSM)RSD.o $(dir_COSM)Velocities.o $(dir_COSM)MassGrowth.o $(dir_COSM)NG.o $(dir_COSM)BAO.o $(dir_COSM)SizeFunction.o  $(dir_COSM)3PCF.o $(OBJ_RECfast) $(dir_COSM)MassFunction_vector.o $(dir_COSM)Bias_vector.o $(dir_COSM)HaloProfile.o $(dir_COSM)SuperSampleCovariance.o
 
-OBJ_STAT =  $(dir_STAT)Prior.o $(dir_STAT)ModelParameters.o $(dir_STAT)LikelihoodParameters.o $(dir_STAT)PosteriorParameters.o $(dir_STAT)Model.o $(dir_STAT)Model1D.o $(dir_STAT)Model2D.o $(dir_STAT)LikelihoodFunction.o $(dir_STAT)Likelihood.o $(dir_STAT)Chi2.o $(dir_STAT)Sampler.o $(dir_STAT)Posterior.o $(dir_STAT)SuperSampleCovariance.o $(dir_STAT)CombinedPosterior.o
+OBJ_STAT =  $(dir_STAT)Prior.o $(dir_STAT)ModelParameters.o $(dir_STAT)LikelihoodParameters.o $(dir_STAT)PosteriorParameters.o $(dir_STAT)Model.o $(dir_STAT)Model1D.o $(dir_STAT)Model2D.o $(dir_STAT)LikelihoodFunction.o $(dir_STAT)Likelihood.o $(dir_STAT)Chi2.o $(dir_STAT)Sampler.o $(dir_STAT)Posterior.o $(dir_STAT)CombinedPosterior.o
 
-OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $(dir_CAT)ChainMesh_Catalogue.o $(dir_CAT)RandomCatalogueVIPERS.o $(dir_CAT)VoidCatalogue.o $(dir_CAT)GadgetCatalogue.o $(dir_CAT)FITSCatalogue.o $(dir_CAT)Cluster.o $(dir_CAT)HODCatalogue.o
+OBJ_CAT = $(dir_CAT)Object.o $(dir_CAT)Catalogue.o $(dir_CAT)RandomCatalogue.o $(dir_CAT)CatalogueChainMesh.o $(dir_CAT)ChainMesh_Catalogue.o $(dir_CAT)RandomCatalogueVIPERS.o $(dir_CAT)VoidCatalogue.o $(dir_CAT)GadgetCatalogue.o $(dir_CAT)FITSCatalogue.o $(dir_CAT)HODCatalogue.o
 
 OBJ_LN = $(dir_LN)LogNormal.o $(dir_LN)LogNormalFull.o
 
@@ -322,9 +373,9 @@ OBJ_TWOP = $(dir_TWOP)Pair.o $(dir_TWOP)Pair1D.o $(dir_TWOP)Pair2D.o $(dir_TWOP)
 
 OBJ_THREEP = $(dir_THREEP)Triplet.o $(dir_THREEP)ThreePointCorrelation.o $(dir_THREEP)ThreePointCorrelation_angular_connected.o $(dir_THREEP)ThreePointCorrelation_angular_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_connected.o $(dir_THREEP)ThreePointCorrelation_comoving_reduced.o $(dir_THREEP)ThreePointCorrelation_comoving_multipoles.o $(dir_THREEP)ThreePointCorrelation_comoving_multipoles_single.o $(dir_THREEP)ThreePointCorrelation_comoving_multipoles_all.o
 
-OBJ_ANGPOW = $(dir_ANGPOW)Celle.o
+OBJ_ANGPOW = $(dir_ANGPOW)AngularPowerSpectrum.o
 
-OBJ_MODEL_GLOB = $(dir_MODEL_GLOB)Modelling.o  $(dir_MODEL_GLOB)Modelling1D.o $(dir_MODEL_GLOB)Modelling2D.o $(dir_MODEL_GLOB)CombinedModelling.o $(dir_MODEL_GLOB)Modelling_Distribution.o
+OBJ_MODEL_GLOB = $(dir_MODEL_GLOB)Modelling.o  $(dir_MODEL_GLOB)Modelling1D.o $(dir_MODEL_GLOB)Modelling2D.o $(dir_MODEL_GLOB)CombinedModelling.o $(dir_MODEL_GLOB)Modelling_Distribution.o  
 
 OBJ_MODEL_COSM = $(dir_MODEL_COSM)ModelFunction_Cosmology.o $(dir_MODEL_COSM)Modelling_Cosmology.o
 
@@ -338,18 +389,20 @@ OBJ_MODEL_TWOP = $(dir_MODEL_TWOP)Modelling_TwoPointCorrelation.o $(dir_MODEL_TW
 
 OBJ_MODEL_THREEP = $(dir_MODEL_THREEP)Modelling_ThreePointCorrelation.o $(dir_MODEL_THREEP)ModelFunction_ThreePointCorrelation.o $(dir_MODEL_THREEP)Modelling_ThreePointCorrelation_angular_connected.o $(dir_MODEL_THREEP)ModelFunction_ThreePointCorrelation_angular_connected.o $(dir_MODEL_THREEP)Modelling_ThreePointCorrelation_angular_reduced.o $(dir_MODEL_THREEP)ModelFunction_ThreePointCorrelation_angular_reduced.o $(dir_MODEL_THREEP)Modelling_ThreePointCorrelation_comoving_connected.o $(dir_MODEL_THREEP)ModelFunction_ThreePointCorrelation_comoving_connected.o $(dir_MODEL_THREEP)Modelling_ThreePointCorrelation_comoving_reduced.o $(dir_MODEL_THREEP)ModelFunction_ThreePointCorrelation_comoving_reduced.o
 
+OBJ_MODEL_ANGPOW = $(dir_MODEL_ANGPOW)Modelling_PowerSpectrum_Angular.o $(dir_MODEL_ANGPOW)ModelFunction_PowerSpectrum_Angular.o 
+
 OBJ_GLOB = $(dir_GLOB)FuncCosmology.o $(dir_GLOB)Func.o $(dir_GLOB)SubSample.o $(dir_GLOB)Reconstruction.o $(dir_GLOB)Forecast.o
 
 OBJ_PARF = $(dir_PARF)ReadParameters.o $(dir_PARF)ParameterFile.o
 
-OBJ_CBL = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_STACKPROFILE) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_ANGPOW) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_MASSOBSERVABLEREL) $(OBJ_MODEL_DENSITYPROFILE) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_PARF)
+OBJ_CBL = $(OBJ_PATH) $(OBJ_KERNEL) $(OBJ_WRAP_CAMB) $(OBJ_WRAP_LIB) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_STACKPROFILE) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_ANGPOW) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_MASSOBSERVABLEREL) $(OBJ_MODEL_DENSITYPROFILE) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_MODEL_ANGPOW) $(OBJ_GLOB) $(OBJ_PARF)
 
 OBJ_ALL = $(OBJ_CBL) $(PWD)/External/CAMB/fortran/Release/*.o $(PWD)/External/CLASS/*.o $(PWD)/External/mangle/*.o $(PWD)/External/MPTbreeze-v1/*.o $(OBJ_CBL) $(PWD)/External/CPT_Library/*.o $(PWD)/External/CAMB_SPT_private/*.o $(PWD)/External/MGCAMB/*.o
 
 
 # objects for python compilation -> if OBJ_PYTHON=OBJ_CBL then all the CBL will be converted in python modules
 
-OBJ_PYTHON = $(OBJ_KERNEL) $(OBJ_WRAP) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_STACKPROFILE) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_MASSOBSERVABLEREL) $(OBJ_MODEL_DENSITYPROFILE) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_GLOB) $(OBJ_PARF)
+OBJ_PYTHON = $(OBJ_PATH) $(OBJ_KERNEL) $(OBJ_WRAP_CAMB) $(OBJ_WRAP_LIB) $(OBJ_FUNCGRID) $(OBJ_FFT) $(OBJ_RAN) $(OBJ_FUNC) $(OBJ_DATA) $(OBJ_FIELD) $(OBJ_HIST) $(OBJ_DISTR) $(OBJ_STAT) $(OBJ_COSM) $(OBJ_CM) $(OBJ_CAT) $(OBJ_LN) $(OBJ_NC) $(OBJ_STACKPROFILE) $(OBJ_TWOP) $(OBJ_THREEP) $(OBJ_MODEL_GLOB) $(OBJ_MODEL_COSM) $(OBJ_MODEL_MASSOBSERVABLEREL) $(OBJ_MODEL_DENSITYPROFILE) $(OBJ_MODEL_NC) $(OBJ_MODEL_TWOP) $(OBJ_MODEL_THREEP) $(OBJ_MODEL_ANGPOW) $(OBJ_GLOB) $(OBJ_PARF)
 
 
 ##### CBL source files #####
@@ -366,6 +419,10 @@ define colorecho
       @tput sgr0
 endef
 
+define insertLine
+	grep -qxF $(1) $(2) || echo $(1) >> $(2)
+endef
+
 ALL:
 	make Eigen
 	make CUBA
@@ -377,10 +434,14 @@ ALL:
 	make CPT_Library
 	#make CAMB_SPT_private
 	make MGCAMB
+	$(call colorecho, "\n"Compiling the library: libPATH... "\n")
+	make -j3 libPATH
 	$(call colorecho, "\n"Compiling the library: libKERNEL... "\n")
 	make -j3 libKERNEL
-	$(call colorecho, "\n"Compiling the library: libWRAP... "\n")
-	make -j3 libWRAP
+	$(call colorecho, "\n"Compiling the library: libWRAP_CAMB... "\n")
+	make libWRAP_CAMB
+	$(call colorecho, "\n"Compiling the library: libWRAP_LIB... "\n")
+	make -j3 libWRAP_LIB
 	$(call colorecho, "\n"Compiling the library: libFUNCGRID... "\n")
 	make -j3 libFUNCGRID
 	$(call colorecho, "\n"Compiling the library: libFFT... "\n")
@@ -431,6 +492,8 @@ ALL:
 	make -j3 libMODEL_TWOP
 	$(call colorecho, "\n"Compiling the library: libMODEL_THREEP... "\n")
 	make -j3 libMODEL_THREEP
+	$(call colorecho, "\n"Compiling the library: libMODEL_ANGPOW... "\n")
+	make -j3 libMODEL_ANGPOW
 	$(call colorecho, "\n"Compiling the library: libGLOB... "\n")
 	make -j3 libGLOB
 	$(call colorecho, "\n"Compiling the library: libPARF... "\n")
@@ -439,95 +502,104 @@ ALL:
 	make -j3 libCBL
 	make logo
 
-libKERNEL: $(OBJ_KERNEL) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libKERNEL.$(ES) $(OBJ_KERNEL) -lgfortran -lgomp
+libPATH: $(OBJ_PATH) $(PWD)/Makefile
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libPATH.$(ES) $(OBJ_PATH) -lgfortran -lgomp
 
-libWRAP: $(OBJ_WRAP) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libWRAP.$(ES) $(OBJ_WRAP) $(CUBA_LIB) $(FLAGS_CCFITS) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL
+libKERNEL: $(OBJ_KERNEL) $(PWD)/Makefile
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libKERNEL.$(ES) $(OBJ_KERNEL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH
+
+libWRAP_CAMB: $(OBJ_WRAP_CAMB) $(PWD)/Makefile
+	$(CXX) $(FLAGS_CAMB) $(FLAGS_LINK) $(OBJ_WRAP_CAMB) -o $(PWD)/libWRAP_CAMB.$(ES) -llapack -lblas -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lgfortran
+
+libWRAP_LIB: $(OBJ_WRAP_LIB) $(PWD)/Makefile
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libWRAP_LIB.$(ES) $(OBJ_WRAP_LIB) $(CUBA_LIB) $(FLAGS_CCFITS) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB
 
 libFUNCGRID: $(OBJ_FUNCGRID) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libFUNCGRID.$(ES) $(OBJ_FUNCGRID) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libFUNCGRID.$(ES) $(OBJ_FUNCGRID) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB
 
 libFFT: $(OBJ_FFT) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libFFT.$(ES) $(OBJ_FFT) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lgfortran
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libFFT.$(ES) $(OBJ_FFT) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lgfortran
 
 libRAN: $(OBJ_RAN) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libRAN.$(ES) $(OBJ_RAN) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libRAN.$(ES) $(OBJ_RAN) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT
 
 libCM: $(OBJ_CM) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCM.$(ES) $(OBJ_CM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCM.$(ES) $(OBJ_CM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN
 
 libFUNC: $(OBJ_FUNC) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libFUNC.$(ES) $(OBJ_FUNC) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libFUNC.$(ES) $(OBJ_FUNC) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM
 
 libDATA: $(OBJ_DATA) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libDATA.$(ES) $(OBJ_DATA) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libDATA.$(ES) $(OBJ_DATA) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC
 
 libFIELD: $(OBJ_FIELD) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libFIELD.$(ES) $(OBJ_FIELD) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libFIELD.$(ES) $(OBJ_FIELD) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA
 
 libHIST: $(OBJ_HIST) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libHIST.$(ES) $(OBJ_HIST) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libHIST.$(ES) $(OBJ_HIST) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD
 
 libDISTR: $(OBJ_DISTR) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libDISTR.$(ES) $(OBJ_DISTR) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libDISTR.$(ES) $(OBJ_DISTR) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST
 
 libCOSM: $(OBJ_COSM) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCOSM.$(ES) $(OBJ_COSM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCOSM.$(ES) $(OBJ_COSM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR
 
 libSTAT: $(OBJ_STAT) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libSTAT.$(ES) $(OBJ_STAT) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libSTAT.$(ES) $(OBJ_STAT) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM
 
 libCAT: $(OBJ_CAT) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCAT.$(ES) $(OBJ_CAT) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCAT.$(ES) $(OBJ_CAT) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT
 
 libLN: $(OBJ_LN) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libLN.$(ES) $(OBJ_LN) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libLN.$(ES) $(OBJ_LN) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT
 
 libNC: $(OBJ_NC) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libNC.$(ES) $(OBJ_NC) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libNC.$(ES) $(OBJ_NC) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN
 
 libSTACKPROFILE: $(OBJ_STACKPROFILE) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libSTACKPROFILE.$(ES) $(OBJ_STACKPROFILE) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libSTACKPROFILE.$(ES) $(OBJ_STACKPROFILE) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC
 
 libTWOP: $(OBJ_TWOP) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libTWOP.$(ES) $(OBJ_TWOP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libTWOP.$(ES) $(OBJ_TWOP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC -lSTACKPROFILE
 
 libTHREEP: $(OBJ_THREEP) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libTHREEP.$(ES) $(OBJ_THREEP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libTHREEP.$(ES) $(OBJ_THREEP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP
 
 libANGPOW: $(OBJ_ANGPOW) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libANGPOW.$(ES) $(OBJ_ANGPOW) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libANGPOW.$(ES) $(OBJ_ANGPOW) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP
 
 libMODEL_GLOB: $(OBJ_MODEL_GLOB) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_GLOB.$(ES) $(OBJ_MODEL_GLOB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_GLOB.$(ES) $(OBJ_MODEL_GLOB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW
 
 libMODEL_COSM: $(OBJ_MODEL_COSM) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_COSM.$(ES) $(OBJ_MODEL_COSM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_COSM.$(ES) $(OBJ_MODEL_COSM) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB
 
 libMODEL_DENSITYPROFILE: $(OBJ_MODEL_DENSITYPROFILE) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_DENSITYPROFILE.$(ES) $(OBJ_MODEL_DENSITYPROFILE) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_DENSITYPROFILE.$(ES) $(OBJ_MODEL_DENSITYPROFILE) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM
 
 libMODEL_MASSOBSERVABLEREL: $(OBJ_MODEL_MASSOBSERVABLEREL) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_MASSOBSERVABLEREL.$(ES) $(OBJ_MODEL_MASSOBSERVABLEREL) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_MASSOBSERVABLEREL.$(ES) $(OBJ_MODEL_MASSOBSERVABLEREL) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE
 
 libMODEL_NC: $(OBJ_MODEL_NC) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_NC.$(ES) $(OBJ_MODEL_NC) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_NC.$(ES) $(OBJ_MODEL_NC) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE
 
 libMODEL_TWOP: $(OBJ_MODEL_TWOP) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_TWOP.$(ES) $(OBJ_MODEL_TWOP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_TWOP.$(ES) $(OBJ_MODEL_TWOP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC
 
 libMODEL_THREEP: $(OBJ_MODEL_THREEP) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_THREEP.$(ES) $(OBJ_MODEL_THREEP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lCM -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_THREEP.$(ES) $(OBJ_MODEL_THREEP) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lCM -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP
+
+libMODEL_ANGPOW: $(OBJ_MODEL_ANGPOW) $(PWD)/Makefile
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libMODEL_ANGPOW.$(ES) $(OBJ_MODEL_ANGPOW) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lFUNC -lDATA -lFIELD -lCM -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP
 
 libGLOB: $(OBJ_GLOB) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libGLOB.$(ES) $(OBJ_GLOB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libGLOB.$(ES) $(OBJ_GLOB) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP -lMODEL_ANGPOW
 
 libPARF: $(OBJ_PARF) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libPARF.$(ES) $(OBJ_PARF) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lKERNEL -lWRAP -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lSTAT -lCOSM -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP -lGLOB
+	$(CXX) $(FLAGS_LINK) -o $(PWD)/libPARF.$(ES) $(OBJ_PARF) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -Wl,-rpath,$(PWD) -L$(PWD)/ -lPATH -lKERNEL -lWRAP_CAMB -lWRAP_LIB -lFUNCGRID -lFFT -lRAN -lCM -lFUNC -lDATA -lFIELD -lHIST -lDISTR -lCOSM -lSTAT -lCAT -lLN -lNC -lSTACKPROFILE -lTWOP -lTHREEP -lANGPOW -lMODEL_GLOB -lMODEL_COSM -lMODEL_DENSITYPROFILE -lMODEL_NC -lMODEL_TWOP -lMODEL_THREEP -lMODEL_ANGPOW -lGLOB
 
 libCBL: $(OBJ_CBL) $(PWD)/Makefile
-	$(CXX) $(FLAGS_LINK) -o $(PWD)/libCBL.$(ES) $(OBJ_CBL) $(CUBA_LIB) $(FLAGS_CCFITS) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
+	$(CXX) $(FLAGS_CAMB) $(FLAGS_LINK) $(OBJ_CBL) -o $(PWD)/libCBL.$(ES) -llapack -lblas $(CUBA_LIB) $(FLAGS_CCFITS) $(FLAGS_GSL) -lgomp $(FLAGS_FFTW) -lgfortran
 
 Eigen: $(PWD)/External/Eigen/eigen-$(EIGEN_VERSION)/Eigen/Dense
 
@@ -600,6 +672,8 @@ allExamples:
 	cd $(PWD)/Examples/statistics/codes ; make sampler CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: catalogue.cpp ... "\n")
 	cd $(PWD)/Examples/catalogue ; make catalogue CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
+	$(call colorecho, "\n"Compiling the example code: catalogueHOD.cpp ... "\n")
+	cd $(PWD)/Examples/HOD/codes ; make catalogueHOD CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: lognormal.cpp ... "\n")
 	cd $(PWD)/Examples/lognormal/codes ; make lognormal CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: numberCounts.cpp ... "\n")
@@ -636,6 +710,8 @@ allExamples:
 	cd $(PWD)/Examples/clustering/codes ; make model_3pt CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: power_spectrum_angular.cpp ... "\n")
 	cd $(PWD)/Examples/powerSpectrum_angular/codes ; make power_spectrum_angular CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
+	$(call colorecho, "\n"Compiling the example code: model_power_spectrum_angular.cpp ... "\n")
+	cd $(PWD)/Examples/powerSpectrum_angular/codes ; make model_power_spectrum_angular CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: sizeFunction.cpp ... "\n")
 	cd $(PWD)/Examples/cosmicVoids/codes ; make sizeFunction CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: cleanVoidCatalogue.cpp ... "\n")
@@ -644,12 +720,44 @@ allExamples:
 	cd $(PWD)/Examples/cosmicVoids/codes ; make modelling_VoidAbundances CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 	$(call colorecho, "\n"Compiling the example code: parameterFile.cpp ... "\n")
 	cd $(PWD)/Examples/parameterFile/ ; make CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
-	$(call colorecho, "\n"Compiling the example code: catalogueHOD.cpp ... "\n")
-	cd $(PWD)/Examples/HOD/codes ; make catalogueHOD CXX=$(CXX) FLAGS_INC='$(FLAGS_INC)'
 
-python: Eigen CUBA CCfits CAMB CLASS MPTbreeze mangle CPT_Library MGCAMB $(dir_Python)CBL_wrap.o $(dir_Python)CBL.i $(PWD)/Makefile
+
+python:	
 	make ALL
-	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_CosmoBolognaLib.so  $(dir_Python)CBL_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+	make pythonPath
+	make pythonKernel
+	make pythonWrappers
+	make pythonFuncGrid
+	make pythonFFT
+	make pythonCAMB
+	make pythonRandom
+	make pythonFunc
+	make pythonData
+	make pythonField
+	make pythonHistogram
+	make pythonDistribution
+	make pythonStat
+	make pythonCosmology
+	make pythonChainMesh
+	make pythonCatalogue
+	make pythonLogNormal
+	make pythonMeasure
+	make pythonNumberCounts
+	make pythonStackedDensityProfile
+	make pythonTwoPointCorrelation
+	make pythonThreePointCorrelation
+	make pythonPowerSpectrumAngular
+	make pythonModelling
+	make pythonModelling_Cosmology
+	make pythonModelling_DensityProfile
+	make pythonModelling_MassObservableRelation
+	make pythonModelling_NumberCounts
+	make pythonModelling_TwoPointCorrelation
+	make pythonModelling_ThreePointCorrelation
+	make pythonModelling_PowerSpectrumAngular
+	make pythonGlobalFunc
+	make pythonReadParameters
+	$(call colorecho, "\n"The CosmoBolognaLib have been fully wrapped in python!"\n")
 
 documentation:
 	rm -rf Doc/html/* Doc/xml/*
@@ -685,15 +793,11 @@ cleanExamples:
 
 
 cleanpy:
-	rm -f $(dir_Python)*~ $(dir_Python)CBL_wrap.h $(dir_Python)CBL_wrap.o $(dir_Python)CBL_wrap.cxx $(dir_Python)CosmoBolognaLib.py*
-	rm -f $(dir_Python)Lib/*~ $(dir_Python)Lib/*.o $(dir_Python)Lib/*.cxx $(dir_Python)Lib/*.py
-	rm -f $(dir_Python)CosmoBolognaLib/*CosmoBolognaLib* $(dir_Python)CosmoBolognaLib/*~ $(dir_Python)CosmoBolognaLib/*.pyc
-	rm -f $(dir_Python)_CosmoBolognaLib.so $(dir_Python)CosmoBolognaLib.py
-	rm -rf $(dir_Python)dist $(dir_Python)build $(dir_Python)CosmoBolognaLib.egg-info $(dir_Python)__pycache__
-
+	rm -rf $(dir_Python)CosmoBolognaLib $(dir_Python)Build $(dir_Python)__pycache__
+	rm -f $(dir_Python)*.py $(dir_Python)*.so
 
 cleanTEMP:
-	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_KERNEL)*~ $(dir_WRAP)*~ $(dir_FUNCGRID)*~ $(dir_FFT)*~ $(dir_RAN)*~ $(dir_FUNC)*~ $(dir_DATA)*~ $(dir_FIELD)*~ $(dir_HIST)*~ $(dir_DISTR)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_NC)*~ $(dir_STACKPROFILE)*~ $(dir_TWOP)*~ $(dir_ANGPOW)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_MASSOBSERVABLEREL)*~ $(dir_MODEL_DENSITYPROFILE)*~ $(dir_MODEL_NC)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_PARF)*~ $(dir_H)*~ $(PWD)/\#* $(dir_KERNEL)\#* $(dir_WRAP)\#* $(dir_FUNCGRID)\#* $(dir_FFT)\#* $(dir_RAN)\#* $(dir_FUNC)\#* $(dir_DATA)\#* $(dir_FIELD)\#* $(dir_HIST)\#*  $(dir_DISTR)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_MASSOBSERVABLEREL)\#* $(dir_MODEL_DENSITYPROFILE)\#* $(dir_MODEL_MASSOBSERVABLEREL)\#* $(dir_MODEL_DENSITYPROFILE)\#* $(dir_MODEL_NC)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_GLOB)\#* $(dir_PARF)\#* $(dir_H)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
+	rm -f $(OBJ_ALL) core* $(PWD)/*~ $(dir_PATH)*~ $(dir_KERNEL)*~ $(dir_WRAP_CAMB)*~ $(dir_WRAP_LIB)*~ $(dir_FUNCGRID)*~ $(dir_FFT)*~ $(dir_RAN)*~ $(dir_FUNC)*~ $(dir_DATA)*~ $(dir_FIELD)*~ $(dir_HIST)*~ $(dir_DISTR)*~ $(dir_STAT)*~ $(dir_COSM)*~ $(dir_CM)*~ $(dir_CAT)*~ $(dir_LN)*~ $(dir_NC)*~ $(dir_STACKPROFILE)*~ $(dir_TWOP)*~ $(dir_ANGPOW)*~ $(dir_MODEL_GLOB)*~ $(dir_MODEL_COSM)*~ $(dir_MODEL_MASSOBSERVABLEREL)*~ $(dir_MODEL_DENSITYPROFILE)*~ $(dir_MODEL_NC)*~ $(dir_MODEL_TWOP)*~ $(dir_MODEL_THREEP)*~ $(dir_THREEP)*~ $(dir_GLOB)*~ $(dir_PARF)*~ $(dir_H)*~ $(PWD)/\#* $(dir_KERNEL)\#* $(dir_WRAP_CAMB)\#* $(dir_WRAP_LIB)\#* $(dir_FUNCGRID)\#* $(dir_FFT)\#* $(dir_RAN)\#* $(dir_FUNC)\#* $(dir_DATA)\#* $(dir_FIELD)\#* $(dir_HIST)\#*  $(dir_DISTR)\#* $(dir_STAT)\#* $(dir_COSM)\#* $(dir_CM)\#* $(dir_CAT)\#* $(dir_LN)\#* $(dir_TWOP)\#* $(dir_THREEP)\#* $(dir_MODEL_GLOB)\#* $(dir_MODEL_COSM)\#* $(dir_MODEL_MASSOBSERVABLEREL)\#* $(dir_MODEL_DENSITYPROFILE)\#* $(dir_MODEL_MASSOBSERVABLEREL)\#* $(dir_MODEL_DENSITYPROFILE)\#* $(dir_MODEL_NC)\#* $(dir_MODEL_TWOP)\#* $(dir_MODEL_THREEP)\#* $(dir_MODEL_ANGPOW)\#* $(dir_GLOB)\#* $(dir_PARF)\#* $(dir_H)\#* $(PWD)/Doc/WARNING_LOGFILE* $(PWD)/Doc/*~
 
 clean:
 	make cleanExamples
@@ -710,7 +814,7 @@ purgeALL:
 	rm -rf Cosmology/Tables/*
 	rm -rf External/EisensteinHu/output_linear/*
 	rm -rf External/Eigen/eigen-$(EIGEN_VERSION)/
-	cd External/CAMB/forutils ; make clean F90C=$(F)
+	cd External/CAMB/forutils ; make clean F90C=$(F) ; rm -f *.mod
 	cd External/CAMB/fortran ; make clean F90C=$(F) COMPILER=$(F)
 	rm -rf External/CAMB/fortran/camb
 	rm -rf External/CAMB/fortran/test_*
@@ -743,6 +847,13 @@ purgeALL:
 	rm -rf External/MGCAMB/test_*
 	rm -rf External/MGCAMB/NULL*
 	rm -rf Logo/logo
+	rm -f Wrapper/CAMBwrapper/*.d Wrapper/CAMBwrapper/*.mod
+
+####################################################################
+
+
+$(dir_PATH)Path.o: $(dir_PATH)Path.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_PATH)Path.cpp -o $(dir_PATH)Path.o
 
 
 ####################################################################
@@ -754,17 +865,25 @@ $(dir_KERNEL)Kernel.o: $(dir_KERNEL)Kernel.cpp $(HH) $(PWD)/Makefile
 
 ####################################################################
 
-$(dir_WRAP)EigenWrapper.o: $(dir_WRAP)EigenWrapper.cpp $(HH) $(PWD)/Makefile
-	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP)EigenWrapper.cpp -o $(dir_WRAP)EigenWrapper.o
 
-$(dir_WRAP)GSLwrapper.o: $(dir_WRAP)GSLwrapper.cpp $(HH) $(PWD)/Makefile
-	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP)GSLwrapper.cpp -o $(dir_WRAP)GSLwrapper.o
+$(dir_WRAP_CAMB)CAMB.o: $(dir_WRAP_CAMB)CAMB.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP_CAMB)CAMB.cpp -o $(dir_WRAP_CAMB)CAMB.o
 
-$(dir_WRAP)CUBAwrapper.o: $(dir_WRAP)CUBAwrapper.cpp $(HH) $(PWD)/Makefile
-	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP)CUBAwrapper.cpp -o $(dir_WRAP)CUBAwrapper.o
 
-$(dir_WRAP)FITSwrapper.o: $(dir_WRAP)FITSwrapper.cpp $(HH) $(PWD)/Makefile
-	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP)FITSwrapper.cpp -o $(dir_WRAP)FITSwrapper.o
+####################################################################
+
+
+$(dir_WRAP_LIB)EigenWrapper.o: $(dir_WRAP_LIB)EigenWrapper.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP_LIB)EigenWrapper.cpp -o $(dir_WRAP_LIB)EigenWrapper.o
+
+$(dir_WRAP_LIB)GSLwrapper.o: $(dir_WRAP_LIB)GSLwrapper.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP_LIB)GSLwrapper.cpp -o $(dir_WRAP_LIB)GSLwrapper.o
+
+$(dir_WRAP_LIB)CUBAwrapper.o: $(dir_WRAP_LIB)CUBAwrapper.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP_LIB)CUBAwrapper.cpp -o $(dir_WRAP_LIB)CUBAwrapper.o
+
+$(dir_WRAP_LIB)FITSwrapper.o: $(dir_WRAP_LIB)FITSwrapper.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(Dvar) -c -fPIC $(FLAGS_INC) $(dir_WRAP_LIB)FITSwrapper.cpp -o $(dir_WRAP_LIB)FITSwrapper.o
 
 
 ####################################################################
@@ -923,6 +1042,12 @@ $(dir_COSM)BAO.o: $(dir_COSM)BAO.cpp $(HH) $(PWD)/Makefile
 $(dir_COSM)3PCF.o: $(dir_COSM)3PCF.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)3PCF.cpp -o $(dir_COSM)3PCF.o
 
+$(dir_COSM)HaloProfile.o: $(dir_COSM)HaloProfile.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)HaloProfile.cpp -o $(dir_COSM)HaloProfile.o
+
+$(dir_COSM)SuperSampleCovariance.o: $(dir_COSM)SuperSampleCovariance.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_COSM)SuperSampleCovariance.cpp -o $(dir_COSM)SuperSampleCovariance.o
+
 
 ####################################################################
 
@@ -963,9 +1088,6 @@ $(dir_STAT)Sampler.o: $(dir_STAT)Sampler.cpp $(HH) $(PWD)/Makefile
 $(dir_STAT)Posterior.o: $(dir_STAT)Posterior.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)Posterior.cpp -o $(dir_STAT)Posterior.o
 
-$(dir_STAT)SuperSampleCovariance.o: $(dir_STAT)SuperSampleCovariance.cpp $(HH) $(PWD)/Makefile
-	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)SuperSampleCovariance.cpp -o $(dir_STAT)SuperSampleCovariance.o
-
 $(dir_STAT)CombinedPosterior.o: $(dir_STAT)CombinedPosterior.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_STAT)CombinedPosterior.cpp -o $(dir_STAT)CombinedPosterior.o
 
@@ -982,6 +1104,9 @@ $(dir_CAT)Catalogue.o: $(dir_CAT)Catalogue.cpp $(HH) $(PWD)/Makefile
 $(dir_CAT)RandomCatalogue.o: $(dir_CAT)RandomCatalogue.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)RandomCatalogue.cpp -o $(dir_CAT)RandomCatalogue.o
 
+$(dir_CAT)CatalogueChainMesh.o: $(dir_CAT)CatalogueChainMesh.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)CatalogueChainMesh.cpp -o $(dir_CAT)CatalogueChainMesh.o
+
 $(dir_CAT)ChainMesh_Catalogue.o: $(dir_CAT)ChainMesh_Catalogue.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)ChainMesh_Catalogue.cpp -o $(dir_CAT)ChainMesh_Catalogue.o
 
@@ -996,9 +1121,6 @@ $(dir_CAT)GadgetCatalogue.o: $(dir_CAT)GadgetCatalogue.cpp $(HH) $(PWD)/Makefile
 
 $(dir_CAT)FITSCatalogue.o: $(dir_CAT)FITSCatalogue.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)FITSCatalogue.cpp -o $(dir_CAT)FITSCatalogue.o
-
-$(dir_CAT)Cluster.o: $(dir_CAT)Cluster.cpp $(HH) $(PWD)/Makefile
-	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)Cluster.cpp -o $(dir_CAT)Cluster.o
 
 $(dir_CAT)HODCatalogue.o: $(dir_CAT)HODCatalogue.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_CAT)HODCatalogue.cpp -o $(dir_CAT)HODCatalogue.o
@@ -1157,8 +1279,8 @@ $(dir_THREEP)ThreePointCorrelation_comoving_multipoles_all.o: $(dir_THREEP)Three
 ####################################################################
 
 
-$(dir_ANGPOW)Celle.o: $(dir_ANGPOW)Celle.cpp $(HH) $(PWD)/Makefile
-	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_ANGPOW)Celle.cpp -o $(dir_ANGPOW)Celle.o
+$(dir_ANGPOW)AngularPowerSpectrum.o: $(dir_ANGPOW)AngularPowerSpectrum.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_ANGPOW)AngularPowerSpectrum.cpp -o $(dir_ANGPOW)AngularPowerSpectrum.o
 
 
 ####################################################################
@@ -1362,6 +1484,16 @@ $(dir_MODEL_THREEP)ModelFunction_ThreePointCorrelation_comoving_reduced.o: $(dir
 ####################################################################
 
 
+$(dir_MODEL_ANGPOW)Modelling_PowerSpectrum_Angular.o: $(dir_MODEL_ANGPOW)Modelling_PowerSpectrum_Angular.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_ANGPOW)Modelling_PowerSpectrum_Angular.cpp -o $(dir_MODEL_ANGPOW)Modelling_PowerSpectrum_Angular.o
+
+$(dir_MODEL_ANGPOW)ModelFunction_PowerSpectrum_Angular.o: $(dir_MODEL_ANGPOW)ModelFunction_PowerSpectrum_Angular.cpp $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_MODEL_ANGPOW)ModelFunction_PowerSpectrum_Angular.cpp -o $(dir_MODEL_ANGPOW)ModelFunction_PowerSpectrum_Angular.o
+
+
+####################################################################
+
+
 $(dir_GLOB)FuncCosmology.o: $(dir_GLOB)FuncCosmology.cpp $(HH) $(PWD)/Makefile
 	$(CXX) $(FLAGST) -c -fPIC $(FLAGS_INC) $(dir_GLOB)FuncCosmology.cpp -o $(dir_GLOB)FuncCosmology.o
 
@@ -1410,35 +1542,588 @@ $(dir_FFTLOG)cdgamma.o: $(dir_FFTLOG)cdgamma.f
 ####################################################################
 
 
-$(dir_Recfast)/src/cosmology.Recfast.o: $(dir_Recfast)/src/cosmology.Recfast.cpp
-	$(CXX) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/cosmology.Recfast.cpp -o $(dir_Recfast)/src/cosmology.Recfast.o
+$(dir_WRAP_CAMB)CAMBinterface.o: $(dir_WRAP_CAMB)CAMBinterface.f90
+	$(F) -I$(dir_CAMB) -J$(dir_WRAP_CAMB) $(FLAGS_CAMB) -c $(dir_WRAP_CAMB)CAMBinterface.f90 -o $(dir_WRAP_CAMB)CAMBinterface.o
 
-$(dir_Recfast)/src/evalode.Recfast.o: $(dir_Recfast)/src/evalode.Recfast.cpp
-	$(CXX) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/evalode.Recfast.cpp -o $(dir_Recfast)/src/evalode.Recfast.o
+$(dir_CAMButils)ArrayUtils.o: $(dir_CAMButils)ArrayUtils.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMButils) $(FLAGS_CAMB) -c $(dir_CAMButils)ArrayUtils.f90 -o $(dir_CAMButils)ArrayUtils.o
 
-$(dir_Recfast)/src/recombination.Recfast.o: $(dir_Recfast)/src/recombination.Recfast.cpp
-	$(CXX) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/recombination.Recfast.cpp -o $(dir_Recfast)/src/recombination.Recfast.o
+$(dir_CAMButils)FileUtils.o: $(dir_CAMButils)FileUtils.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMButils) $(FLAGS_CAMB) -c $(dir_CAMButils)FileUtils.f90 -o $(dir_CAMButils)FileUtils.o
 
-$(dir_Recfast)/src/ODE_solver.Recfast.o: $(dir_Recfast)/src/ODE_solver.Recfast.cpp
-	$(CXX) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/ODE_solver.Recfast.cpp -o $(dir_Recfast)/src/ODE_solver.Recfast.o
+$(dir_CAMButils)IniObjects.o: $(dir_CAMButils)IniObjects.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMButils) $(FLAGS_CAMB) -c $(dir_CAMButils)IniObjects.f90 -o $(dir_CAMButils)IniObjects.o
 
-$(dir_Recfast)/src/DM_annihilation.Recfast.o: $(dir_Recfast)/src/DM_annihilation.Recfast.cpp
-	$(CXX) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/DM_annihilation.Recfast.cpp -o $(dir_Recfast)/src/DM_annihilation.Recfast.o
+$(dir_CAMButils)Interpolation.o: $(dir_CAMButils)Interpolation.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMButils) $(FLAGS_CAMB) -c $(dir_CAMButils)Interpolation.f90 -o $(dir_CAMButils)Interpolation.o
 
-$(dir_Recfast)/src/Rec_corrs_CT.Recfast.o: $(dir_Recfast)/src/Rec_corrs_CT.Recfast.cpp
-	$(CXX) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)/src/Rec_corrs_CT.Recfast.cpp -o $(dir_Recfast)/src/Rec_corrs_CT.Recfast.o
+$(dir_CAMButils)MatrixUtils.o: $(dir_CAMButils)MatrixUtils.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMButils) $(FLAGS_CAMB) -c $(dir_CAMButils)MatrixUtils.f90 -o $(dir_CAMButils)MatrixUtils.o
+
+$(dir_CAMButils)MiscUtils.o: $(dir_CAMButils)MiscUtils.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMButils) $(FLAGS_CAMB) -c $(dir_CAMButils)MiscUtils.f90 -o $(dir_CAMButils)MiscUtils.o
+
+$(dir_CAMButils)MpiUtils.o: $(dir_CAMButils)MpiUtils.f90
+	$(FC) -I$(dir_CAMButils) -J$(dir_CAMButils) $(FLAGS_CAMB) -c $(dir_CAMButils)MpiUtils.f90 -o $(dir_CAMButils)MpiUtils.o
+
+$(dir_CAMButils)ObjectLists.o: $(dir_CAMButils)ObjectLists.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMButils) $(FLAGS_CAMB) -c $(dir_CAMButils)ObjectLists.f90 -o $(dir_CAMButils)ObjectLists.o
+
+$(dir_CAMButils)RandUtils.o: $(dir_CAMButils)RandUtils.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMButils) $(FLAGS_CAMB) -c $(dir_CAMButils)RandUtils.f90 -o $(dir_CAMButils)RandUtils.o
+
+$(dir_CAMButils)RangeUtils.o: $(dir_CAMButils)RangeUtils.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMButils) $(FLAGS_CAMB) -c $(dir_CAMButils)RangeUtils.f90 -o $(dir_CAMButils)RangeUtils.o
+
+$(dir_CAMButils)StringUtils.o: $(dir_CAMButils)StringUtils.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMButils) $(FLAGS_CAMB) -c $(dir_CAMButils)StringUtils.f90 -o $(dir_CAMButils)StringUtils.o
+
+$(dir_CAMB)bessels.o: $(dir_CAMB)bessels.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMButils) $(FLAGS_CAMB) -c $(dir_CAMB)bessels.f90 -o $(dir_CAMB)bessels.o
+
+$(dir_CAMB)classes.o: $(dir_CAMB)classes.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)classes.f90 -o $(dir_CAMB)classes.o
+
+$(dir_CAMB)cmbmain.o: $(dir_CAMB)cmbmain.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)cmbmain.f90 -o $(dir_CAMB)cmbmain.o
+
+$(dir_CAMB)config.o: $(dir_CAMB)config.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)config.f90 -o $(dir_CAMB)config.o
+
+$(dir_CAMB)constants.o: $(dir_CAMB)constants.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)constants.f90 -o $(dir_CAMB)constants.o
+
+$(dir_CAMB)DarkAge21cm.o: $(dir_CAMB)DarkAge21cm.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)DarkAge21cm.f90 -o $(dir_CAMB)DarkAge21cm.o
+
+$(dir_CAMB)DarkEnergyFluid.o: $(dir_CAMB)DarkEnergyFluid.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)DarkEnergyFluid.f90 -o $(dir_CAMB)DarkEnergyFluid.o
+
+$(dir_CAMB)DarkEnergyInterface.o: $(dir_CAMB)DarkEnergyInterface.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)DarkEnergyInterface.f90 -o $(dir_CAMB)DarkEnergyInterface.o
+
+$(dir_CAMB)DarkEnergyPPF.o: $(dir_CAMB)DarkEnergyPPF.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)DarkEnergyPPF.f90 -o $(dir_CAMB)DarkEnergyPPF.o
+
+$(dir_CAMB)DarkEnergyQuintessence.o: $(dir_CAMB)DarkEnergyQuintessence.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)DarkEnergyQuintessence.f90 -o $(dir_CAMB)DarkEnergyQuintessence.o
+
+$(dir_CAMB)equations.o: $(dir_CAMB)equations.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)equations.f90 -o $(dir_CAMB)equations.o
+
+$(dir_CAMB)halofit.o: $(dir_CAMB)halofit.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)halofit.f90 -o $(dir_CAMB)halofit.o
+
+$(dir_CAMB)inidriver.o: $(dir_CAMB)inidriver.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)inidriver.f90 -o $(dir_CAMB)inidriver.o
+
+$(dir_CAMB)InitialPower.o: $(dir_CAMB)InitialPower.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)InitialPower.f90 -o $(dir_CAMB)InitialPower.o
+
+$(dir_CAMB)lensing.o: $(dir_CAMB)lensing.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)lensing.f90 -o $(dir_CAMB)lensing.o
+
+$(dir_CAMB)massive_neutrinos.o: $(dir_CAMB)massive_neutrinos.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)massive_neutrinos.f90 -o $(dir_CAMB)massive_neutrinos.o
+
+$(dir_CAMB)MathUtils.o: $(dir_CAMB)MathUtils.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)MathUtils.f90 -o $(dir_CAMB)MathUtils.o
+
+$(dir_CAMB)model.o: $(dir_CAMB)model.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)model.f90 -o $(dir_CAMB)model.o
+
+$(dir_CAMB)PowellMinimize.o: $(dir_CAMB)PowellMinimize.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)PowellMinimize.f90 -o $(dir_CAMB)PowellMinimize.o
+
+$(dir_CAMB)recfast.o: $(dir_CAMB)recfast.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)recfast.f90 -o $(dir_CAMB)recfast.o
+
+$(dir_CAMB)reionization.o: $(dir_CAMB)reionization.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)reionization.f90 -o $(dir_CAMB)reionization.o
+
+$(dir_CAMB)results.o: $(dir_CAMB)results.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)results.f90 -o $(dir_CAMB)results.o
+
+$(dir_CAMB)SecondOrderPK.o: $(dir_CAMB)SecondOrderPK.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)SecondOrderPK.f90 -o $(dir_CAMB)SecondOrderPK.o
+
+$(dir_CAMB)SeparableBispectrum.o: $(dir_CAMB)SeparableBispectrum.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)SeparableBispectrum.f90 -o $(dir_CAMB)SeparableBispectrum.o
+
+$(dir_CAMB)SourceWindows.o: $(dir_CAMB)SourceWindows.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)SourceWindows.f90 -o $(dir_CAMB)SourceWindows.o
+
+$(dir_CAMB)subroutines.o: $(dir_CAMB)subroutines.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)subroutines.f90 -o $(dir_CAMB)subroutines.o
+
+$(dir_CAMB)camb.o: $(dir_CAMB)camb.f90
+	$(F) -I$(dir_CAMButils) -J$(dir_CAMB) $(FLAGS_CAMB) -c $(dir_CAMB)camb.f90 -o $(dir_CAMB)camb.o
 
 
 ####################################################################
 
 
-$(dir_Python)CBL_wrap.o: $(dir_Python)CBL_wrap.cxx $(dir_Python)CBL.i $(HH) $(PWD)/Makefile
-	$(call colorecho, "\n"Compiling the python wrapper. It may take a few minutes ... "\n")
-	$(CXX) $(FLAGST) -Wno-stringop-overflow -Wno-uninitialized -Wno-missing-field-initializers -Wno-unused-parameter $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)CBL_wrap.cxx -o $(dir_Python)CBL_wrap.o
+$(dir_Recfast)src/cosmology.Recfast.o: $(dir_Recfast)src/cosmology.Recfast.cpp
+	$(CXX) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)src/cosmology.Recfast.cpp -o $(dir_Recfast)src/cosmology.Recfast.o
 
-$(dir_Python)CBL_wrap.cxx: $(dir_Python)CBL.i $(HH) $(PWD)/Makefile
-	$(call colorecho, "\n"Running swig. It may take a few minutes ... "\n")
-	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -I$(dir_EH) $(dir_Python)CBL.i
+$(dir_Recfast)src/evalode.Recfast.o: $(dir_Recfast)src/evalode.Recfast.cpp
+	$(CXX) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)src/evalode.Recfast.cpp -o $(dir_Recfast)src/evalode.Recfast.o
+
+$(dir_Recfast)src/recombination.Recfast.o: $(dir_Recfast)src/recombination.Recfast.cpp
+	$(CXX) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)src/recombination.Recfast.cpp -o $(dir_Recfast)src/recombination.Recfast.o
+
+$(dir_Recfast)src/ODE_solver.Recfast.o: $(dir_Recfast)src/ODE_solver.Recfast.cpp
+	$(CXX) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)src/ODE_solver.Recfast.cpp -o $(dir_Recfast)src/ODE_solver.Recfast.o
+
+$(dir_Recfast)src/DM_annihilation.Recfast.o: $(dir_Recfast)src/DM_annihilation.Recfast.cpp
+	$(CXX) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)src/DM_annihilation.Recfast.cpp -o $(dir_Recfast)src/DM_annihilation.Recfast.o
+
+$(dir_Recfast)src/Rec_corrs_CT.Recfast.o: $(dir_Recfast)src/Rec_corrs_CT.Recfast.cpp
+	$(CXX) $(FLAGST_Recfast) -c -I$(dir_Recfast)include/ $(dir_Recfast)src/Rec_corrs_CT.Recfast.cpp -o $(dir_Recfast)src/Rec_corrs_CT.Recfast.o
+
+
+####################################################################
+
+
+pythonPath: $(dir_Python)/Build $(dir_Python)Build/Path_wrap.o $(dir_Python)Lib/Path.i
+	$(call insertLine, "from cblPath import *",  $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Path_wrap.cxx: $(dir_Python)Lib/Path.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Path with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Path_wrap.cxx $(dir_Python)Lib/Path.i
+
+$(dir_Python)Build/Path_wrap.o: $(dir_Python)Build/Path_wrap.cxx $(dir_Python)Lib/Path.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Path_wrap.cxx -o $(dir_Python)Build/Path_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblPath.so $(dir_Python)Build/Path_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonKernel: $(dir_Python)/Build $(dir_Python)Build/Kernel_wrap.o $(dir_Python)Lib/Kernel.i
+	$(call insertLine, "from cblKernel import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Kernel_wrap.cxx: $(dir_Python)Lib/Kernel.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Kernel with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Kernel_wrap.cxx $(dir_Python)Lib/Kernel.i
+
+$(dir_Python)Build/Kernel_wrap.o: $(dir_Python)Build/Kernel_wrap.cxx $(dir_Python)Lib/Kernel.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Kernel_wrap.cxx -o $(dir_Python)Build/Kernel_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblKernel.so $(dir_Python)Build/Kernel_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonWrappers: $(dir_Python)/Build $(dir_Python)Build/Wrappers_wrap.o $(dir_Python)Lib/Wrappers.i
+	$(call insertLine, "from cblWrappers import *",  $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Wrappers_wrap.cxx: $(dir_Python)Lib/Wrappers.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Wrappers with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Wrappers_wrap.cxx $(dir_Python)Lib/Wrappers.i
+
+$(dir_Python)Build/Wrappers_wrap.o: $(dir_Python)Build/Wrappers_wrap.cxx $(dir_Python)Lib/Wrappers.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Wrappers_wrap.cxx -o $(dir_Python)Build/Wrappers_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblWrappers.so $(dir_Python)Build/Wrappers_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonFuncGrid: $(dir_Python)/Build $(dir_Python)Build/FuncGrid_wrap.o $(dir_Python)Lib/FuncGrid.i
+	$(call insertLine, "from cblFuncGrid import *", $(dir_Python)CosmoBolognaLib/__init__.py)	
+
+$(dir_Python)Build/FuncGrid_wrap.cxx: $(dir_Python)Lib/FuncGrid.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping FuncGrid with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/FuncGrid_wrap.cxx $(dir_Python)Lib/FuncGrid.i
+
+$(dir_Python)Build/FuncGrid_wrap.o: $(dir_Python)Build/FuncGrid_wrap.cxx $(dir_Python)Lib/FuncGrid.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/FuncGrid_wrap.cxx -o $(dir_Python)Build/FuncGrid_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblFuncGrid.so $(dir_Python)Build/FuncGrid_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonFFT: $(dir_Python)/Build $(dir_Python)Build/FFT_wrap.o $(dir_Python)Lib/FFT.i
+	$(call insertLine, "from cblFFT import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/FFT_wrap.cxx: $(dir_Python)Lib/FFT.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping FFT with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/FFT_wrap.cxx $(dir_Python)Lib/FFT.i
+
+$(dir_Python)Build/FFT_wrap.o: $(dir_Python)Build/FFT_wrap.cxx $(dir_Python)Lib/FFT.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/FFT_wrap.cxx -o $(dir_Python)Build/FFT_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblFFT.so $(dir_Python)Build/FFT_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonCAMB: $(dir_Python)/Build $(dir_Python)Build/CAMB_wrap.o $(dir_Python)Lib/CAMB.i
+	$(call insertLine, "from cblCAMB import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/CAMB_wrap.cxx: $(dir_Python)Lib/CAMB.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping CAMB with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/CAMB_wrap.cxx $(dir_Python)Lib/CAMB.i
+
+$(dir_Python)Build/CAMB_wrap.o: $(dir_Python)Build/CAMB_wrap.cxx $(dir_Python)Lib/CAMB.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/CAMB_wrap.cxx -o $(dir_Python)Build/CAMB_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblCAMB.so $(dir_Python)Build/CAMB_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonRandom: $(dir_Python)/Build $(dir_Python)Build/Random_wrap.o $(dir_Python)Lib/Random.i
+	$(call insertLine, "from cblRandom import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Random_wrap.cxx: $(dir_Python)Lib/Random.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Random with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Random_wrap.cxx $(dir_Python)Lib/Random.i
+
+$(dir_Python)Build/Random_wrap.o: $(dir_Python)Build/Random_wrap.cxx $(dir_Python)Lib/Random.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Random_wrap.cxx -o $(dir_Python)Build/Random_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblRandom.so $(dir_Python)Build/Random_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonFunc: $(dir_Python)/Build $(dir_Python)Build/Func_wrap.o $(dir_Python)Lib/Func.i
+	$(call insertLine, "from cblFunc import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Func_wrap.cxx: $(dir_Python)Lib/Func.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Func with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Func_wrap.cxx $(dir_Python)Lib/Func.i
+
+$(dir_Python)Build/Func_wrap.o: $(dir_Python)Build/Func_wrap.cxx $(dir_Python)Lib/Func.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Func_wrap.cxx -o $(dir_Python)Build/Func_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblFunc.so $(dir_Python)Build/Func_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonData: $(dir_Python)/Build $(dir_Python)Build/Data_wrap.o $(dir_Python)Lib/Data.i
+	$(call insertLine, "from cblData import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Data_wrap.cxx: $(dir_Python)Lib/Data.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Data with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Data_wrap.cxx $(dir_Python)Lib/Data.i
+
+$(dir_Python)Build/Data_wrap.o: $(dir_Python)Build/Data_wrap.cxx $(dir_Python)Lib/Data.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Data_wrap.cxx -o $(dir_Python)Build/Data_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblData.so $(dir_Python)Build/Data_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonField: $(dir_Python)/Build $(dir_Python)Build/Field_wrap.o $(dir_Python)Lib/Field.i
+	$(call insertLine, "from cblField import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Field_wrap.cxx: $(dir_Python)Lib/Field.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Field with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Field_wrap.cxx $(dir_Python)Lib/Field.i
+
+$(dir_Python)Build/Field_wrap.o: $(dir_Python)Build/Field_wrap.cxx $(dir_Python)Lib/Field.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Field_wrap.cxx -o $(dir_Python)Build/Field_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblField.so $(dir_Python)Build/Field_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonHistogram: $(dir_Python)/Build $(dir_Python)Build/Histogram_wrap.o $(dir_Python)Lib/Histogram.i
+	 $(call insertLine, "from cblHistogram import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Histogram_wrap.cxx: $(dir_Python)Lib/Histogram.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Histogram with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Histogram_wrap.cxx $(dir_Python)Lib/Histogram.i
+
+$(dir_Python)Build/Histogram_wrap.o: $(dir_Python)Build/Histogram_wrap.cxx $(dir_Python)Lib/Histogram.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Histogram_wrap.cxx -o $(dir_Python)Build/Histogram_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblHistogram.so $(dir_Python)Build/Histogram_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonDistribution: $(dir_Python)/Build $(dir_Python)Build/Distribution_wrap.o $(dir_Python)Lib/Distribution.i
+	$(call insertLine, "from cblDistribution import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Distribution_wrap.cxx: $(dir_Python)Lib/Distribution.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Distribution with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Distribution_wrap.cxx $(dir_Python)Lib/Distribution.i
+
+$(dir_Python)Build/Distribution_wrap.o: $(dir_Python)Build/Distribution_wrap.cxx $(dir_Python)Lib/Distribution.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Distribution_wrap.cxx -o $(dir_Python)Build/Distribution_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblDistribution.so $(dir_Python)Build/Distribution_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonStat: $(dir_Python)/Build $(dir_Python)Build/Stat_wrap.o $(dir_Python)Lib/Stat.i
+	$(call insertLine, "from cblStat import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Stat_wrap.cxx: $(dir_Python)Lib/Stat.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Stat with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Stat_wrap.cxx $(dir_Python)Lib/Stat.i
+
+$(dir_Python)Build/Stat_wrap.o: $(dir_Python)Build/Stat_wrap.cxx $(dir_Python)Lib/Stat.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Stat_wrap.cxx -o $(dir_Python)Build/Stat_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblStat.so $(dir_Python)Build/Stat_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonCosmology: $(dir_Python)/Build $(dir_Python)Build/Cosmology_wrap.o $(dir_Python)Lib/Cosmology.i
+	$(call insertLine, "from cblCosmology import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Cosmology_wrap.cxx: $(dir_Python)Lib/Cosmology.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Cosmology with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Cosmology_wrap.cxx $(dir_Python)Lib/Cosmology.i
+
+$(dir_Python)Build/Cosmology_wrap.o: $(dir_Python)Build/Cosmology_wrap.cxx $(dir_Python)Lib/Cosmology.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Cosmology_wrap.cxx -o $(dir_Python)Build/Cosmology_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblCosmology.so $(dir_Python)Build/Cosmology_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonChainMesh: $(dir_Python)/Build $(dir_Python)Build/ChainMesh_wrap.o $(dir_Python)Lib/ChainMesh.i
+	$(call insertLine, "from cblChainMesh import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/ChainMesh_wrap.cxx: $(dir_Python)Lib/ChainMesh.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping ChainMesh with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/ChainMesh_wrap.cxx $(dir_Python)Lib/ChainMesh.i
+
+$(dir_Python)Build/ChainMesh_wrap.o: $(dir_Python)Build/ChainMesh_wrap.cxx $(dir_Python)Lib/ChainMesh.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/ChainMesh_wrap.cxx -o $(dir_Python)Build/ChainMesh_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblChainMesh.so $(dir_Python)Build/ChainMesh_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonCatalogue: $(dir_Python)/Build $(dir_Python)Build/Catalogue_wrap.o $(dir_Python)Lib/Catalogue.i
+	$(call insertLine, "from cblCatalogue import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Catalogue_wrap.cxx: $(dir_Python)Lib/Catalogue.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Catalogue with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Catalogue_wrap.cxx $(dir_Python)Lib/Catalogue.i
+
+$(dir_Python)Build/Catalogue_wrap.o: $(dir_Python)Build/Catalogue_wrap.cxx $(dir_Python)Lib/Catalogue.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Catalogue_wrap.cxx -o $(dir_Python)Build/Catalogue_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblCatalogue.so $(dir_Python)Build/Catalogue_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonLogNormal: $(dir_Python)/Build $(dir_Python)Build/LogNormal_wrap.o $(dir_Python)Lib/LogNormal.i
+	$(call insertLine, "from cblLogNormal import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/LogNormal_wrap.cxx: $(dir_Python)Lib/LogNormal.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping LogNormal with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/LogNormal_wrap.cxx $(dir_Python)Lib/LogNormal.i
+
+$(dir_Python)Build/LogNormal_wrap.o: $(dir_Python)Build/LogNormal_wrap.cxx $(dir_Python)Lib/LogNormal.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/LogNormal_wrap.cxx -o $(dir_Python)Build/LogNormal_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblLogNormal.so $(dir_Python)Build/LogNormal_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonMeasure: $(dir_Python)/Build $(dir_Python)Build/Measure_wrap.o $(dir_Python)Lib/Measure.i
+	$(call insertLine, "from cblMeasure import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Measure_wrap.cxx: $(dir_Python)Lib/Measure.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Measure with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Measure_wrap.cxx $(dir_Python)Lib/Measure.i
+
+$(dir_Python)Build/Measure_wrap.o: $(dir_Python)Build/Measure_wrap.cxx $(dir_Python)Lib/Measure.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Measure_wrap.cxx -o $(dir_Python)Build/Measure_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblMeasure.so $(dir_Python)Build/Measure_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonNumberCounts: $(dir_Python)/Build $(dir_Python)Build/NumberCounts_wrap.o $(dir_Python)Lib/NumberCounts.i
+	$(call insertLine, "from cblNumberCounts import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/NumberCounts_wrap.cxx: $(dir_Python)Lib/NumberCounts.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping NumberCounts with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/NumberCounts_wrap.cxx $(dir_Python)Lib/NumberCounts.i
+
+$(dir_Python)Build/NumberCounts_wrap.o: $(dir_Python)Build/NumberCounts_wrap.cxx $(dir_Python)Lib/NumberCounts.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/NumberCounts_wrap.cxx -o $(dir_Python)Build/NumberCounts_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblNumberCounts.so $(dir_Python)Build/NumberCounts_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonStackedDensityProfile: $(dir_Python)/Build $(dir_Python)Build/StackedDensityProfile_wrap.o $(dir_Python)Lib/StackedDensityProfile.i
+	$(call insertLine, "from cblStackedDensityProfile import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/StackedDensityProfile_wrap.cxx: $(dir_Python)Lib/StackedDensityProfile.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping StackedDensityProfile with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/StackedDensityProfile_wrap.cxx $(dir_Python)Lib/StackedDensityProfile.i
+
+$(dir_Python)Build/StackedDensityProfile_wrap.o: $(dir_Python)Build/StackedDensityProfile_wrap.cxx $(dir_Python)Lib/StackedDensityProfile.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/StackedDensityProfile_wrap.cxx -o $(dir_Python)Build/StackedDensityProfile_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblStackedDensityProfile.so $(dir_Python)Build/StackedDensityProfile_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonMassObservableRelation: $(dir_Python)/Build $(dir_Python)Build/MassObservableRelation_wrap.o $(dir_Python)Lib/MassObservableRelation.i
+	$(call insertLine, "from cblMassObservableRelation import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/MassObservableRelation_wrap.cxx: $(dir_Python)Lib/MassObservableRelation.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping MassObservableRelation with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/MassObservableRelation_wrap.cxx $(dir_Python)Lib/MassObservableRelation.i
+
+$(dir_Python)Build/MassObservableRelation_wrap.o: $(dir_Python)Build/MassObservableRelation_wrap.cxx $(dir_Python)Lib/MassObservableRelation.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/MassObservableRelation_wrap.cxx -o $(dir_Python)Build/MassObservableRelation_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblMassObservableRelation.so $(dir_Python)Build/MassObservableRelation_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonTwoPointCorrelation: $(dir_Python)/Build $(dir_Python)Build/TwoPointCorrelation_wrap.o $(dir_Python)Lib/TwoPointCorrelation.i
+	$(call insertLine, "from cblTwoPointCorrelation import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/TwoPointCorrelation_wrap.cxx: $(dir_Python)Lib/TwoPointCorrelation.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping TwoPointCorrelation with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/TwoPointCorrelation_wrap.cxx $(dir_Python)Lib/TwoPointCorrelation.i
+
+$(dir_Python)Build/TwoPointCorrelation_wrap.o: $(dir_Python)Build/TwoPointCorrelation_wrap.cxx $(dir_Python)Lib/TwoPointCorrelation.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/TwoPointCorrelation_wrap.cxx -o $(dir_Python)Build/TwoPointCorrelation_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblTwoPointCorrelation.so $(dir_Python)Build/TwoPointCorrelation_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonThreePointCorrelation: $(dir_Python)/Build $(dir_Python)Build/ThreePointCorrelation_wrap.o $(dir_Python)Lib/ThreePointCorrelation.i
+	$(call insertLine, "from cblThreePointCorrelation import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/ThreePointCorrelation_wrap.cxx: $(dir_Python)Lib/ThreePointCorrelation.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping ThreePointCorrelation with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/ThreePointCorrelation_wrap.cxx $(dir_Python)Lib/ThreePointCorrelation.i
+
+$(dir_Python)Build/ThreePointCorrelation_wrap.o: $(dir_Python)Build/ThreePointCorrelation_wrap.cxx $(dir_Python)Lib/ThreePointCorrelation.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/ThreePointCorrelation_wrap.cxx -o $(dir_Python)Build/ThreePointCorrelation_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblThreePointCorrelation.so $(dir_Python)Build/ThreePointCorrelation_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonPowerSpectrumAngular: $(dir_Python)/Build $(dir_Python)Build/PowerSpectrumAngular_wrap.o $(dir_Python)Lib/PowerSpectrumAngular.i
+	$(call insertLine, "from cblPowerSpectrumAngular import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/PowerSpectrumAngular_wrap.cxx: $(dir_Python)Lib/PowerSpectrumAngular.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping PowerSpectrumAngular with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/PowerSpectrumAngular_wrap.cxx $(dir_Python)Lib/PowerSpectrumAngular.i
+
+$(dir_Python)Build/PowerSpectrumAngular_wrap.o: $(dir_Python)Build/PowerSpectrumAngular_wrap.cxx $(dir_Python)Lib/PowerSpectrumAngular.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/PowerSpectrumAngular_wrap.cxx -o $(dir_Python)Build/PowerSpectrumAngular_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblPowerSpectrumAngular.so $(dir_Python)Build/PowerSpectrumAngular_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonModelling: $(dir_Python)/Build $(dir_Python)Build/Modelling_wrap.o $(dir_Python)Lib/Modelling.i
+	$(call insertLine, "from cblModelling import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Modelling_wrap.cxx: $(dir_Python)Lib/Modelling.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Modelling with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Modelling_wrap.cxx $(dir_Python)Lib/Modelling.i
+
+$(dir_Python)Build/Modelling_wrap.o: $(dir_Python)Build/Modelling_wrap.cxx $(dir_Python)Lib/Modelling.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Modelling_wrap.cxx -o $(dir_Python)Build/Modelling_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblModelling.so $(dir_Python)Build/Modelling_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonModelling_Cosmology: $(dir_Python)/Build $(dir_Python)Build/Modelling_Cosmology_wrap.o $(dir_Python)Lib/Modelling_Cosmology.i
+	$(call insertLine, "from cblModelling_Cosmology import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Modelling_Cosmology_wrap.cxx: $(dir_Python)Lib/Modelling_Cosmology.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Modelling_Cosmology with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Modelling_Cosmology_wrap.cxx $(dir_Python)Lib/Modelling_Cosmology.i
+
+$(dir_Python)Build/Modelling_Cosmology_wrap.o: $(dir_Python)Build/Modelling_Cosmology_wrap.cxx $(dir_Python)Lib/Modelling_Cosmology.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Modelling_Cosmology_wrap.cxx -o $(dir_Python)Build/Modelling_Cosmology_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblModelling_Cosmology.so $(dir_Python)Build/Modelling_Cosmology_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonModelling_DensityProfile: $(dir_Python)/Build $(dir_Python)Build/Modelling_DensityProfile_wrap.o $(dir_Python)Lib/Modelling_DensityProfile.i
+	$(call insertLine, "from cblModelling_DensityProfile import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Modelling_DensityProfile_wrap.cxx: $(dir_Python)Lib/Modelling_DensityProfile.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Modelling_DensityProfile with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Modelling_DensityProfile_wrap.cxx $(dir_Python)Lib/Modelling_DensityProfile.i
+
+$(dir_Python)Build/Modelling_DensityProfile_wrap.o: $(dir_Python)Build/Modelling_DensityProfile_wrap.cxx $(dir_Python)Lib/Modelling_DensityProfile.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Modelling_DensityProfile_wrap.cxx -o $(dir_Python)Build/Modelling_DensityProfile_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblModelling_DensityProfile.so $(dir_Python)Build/Modelling_DensityProfile_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonModelling_MassObservableRelation: $(dir_Python)/Build $(dir_Python)Build/Modelling_MassObservableRelation_wrap.o $(dir_Python)Lib/Modelling_MassObservableRelation.i
+	$(call insertLine, "from cblModelling_MassObservableRelation import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Modelling_MassObservableRelation_wrap.cxx: $(dir_Python)Lib/Modelling_MassObservableRelation.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Modelling_MassObservableRelation with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Modelling_MassObservableRelation_wrap.cxx $(dir_Python)Lib/Modelling_MassObservableRelation.i
+
+$(dir_Python)Build/Modelling_MassObservableRelation_wrap.o: $(dir_Python)Build/Modelling_MassObservableRelation_wrap.cxx $(dir_Python)Lib/Modelling_MassObservableRelation.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Modelling_MassObservableRelation_wrap.cxx -o $(dir_Python)Build/Modelling_MassObservableRelation_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblModelling_MassObservableRelation.so $(dir_Python)Build/Modelling_MassObservableRelation_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonModelling_NumberCounts: $(dir_Python)/Build $(dir_Python)Build/Modelling_NumberCounts_wrap.o $(dir_Python)Lib/Modelling_NumberCounts.i
+	$(call insertLine, "from cblModelling_NumberCounts import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Modelling_NumberCounts_wrap.cxx: $(dir_Python)Lib/Modelling_NumberCounts.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Modelling_NumberCounts with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Modelling_NumberCounts_wrap.cxx $(dir_Python)Lib/Modelling_NumberCounts.i
+
+$(dir_Python)Build/Modelling_NumberCounts_wrap.o: $(dir_Python)Build/Modelling_NumberCounts_wrap.cxx $(dir_Python)Lib/Modelling_NumberCounts.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Modelling_NumberCounts_wrap.cxx -o $(dir_Python)Build/Modelling_NumberCounts_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblModelling_NumberCounts.so $(dir_Python)Build/Modelling_NumberCounts_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonModelling_TwoPointCorrelation: $(dir_Python)/Build $(dir_Python)Build/Modelling_TwoPointCorrelation_wrap.o $(dir_Python)Lib/Modelling_TwoPointCorrelation.i
+	$(call insertLine, "from cblModelling_TwoPointCorrelation import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Modelling_TwoPointCorrelation_wrap.cxx: $(dir_Python)Lib/Modelling_TwoPointCorrelation.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Modelling_TwoPointCorrelation with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Modelling_TwoPointCorrelation_wrap.cxx $(dir_Python)Lib/Modelling_TwoPointCorrelation.i
+
+$(dir_Python)Build/Modelling_TwoPointCorrelation_wrap.o: $(dir_Python)Build/Modelling_TwoPointCorrelation_wrap.cxx $(dir_Python)Lib/Modelling_TwoPointCorrelation.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Modelling_TwoPointCorrelation_wrap.cxx -o $(dir_Python)Build/Modelling_TwoPointCorrelation_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblModelling_TwoPointCorrelation.so $(dir_Python)Build/Modelling_TwoPointCorrelation_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonModelling_ThreePointCorrelation: $(dir_Python)/Build $(dir_Python)Build/Modelling_ThreePointCorrelation_wrap.o $(dir_Python)Lib/Modelling_ThreePointCorrelation.i
+	$(call insertLine, "from cblModelling_ThreePointCorrelation import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Modelling_ThreePointCorrelation_wrap.cxx: $(dir_Python)Lib/Modelling_ThreePointCorrelation.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Modelling_ThreePointCorrelation with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Modelling_ThreePointCorrelation_wrap.cxx $(dir_Python)Lib/Modelling_ThreePointCorrelation.i
+
+$(dir_Python)Build/Modelling_ThreePointCorrelation_wrap.o: $(dir_Python)Build/Modelling_ThreePointCorrelation_wrap.cxx $(dir_Python)Lib/Modelling_ThreePointCorrelation.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Modelling_ThreePointCorrelation_wrap.cxx -o $(dir_Python)Build/Modelling_ThreePointCorrelation_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblModelling_ThreePointCorrelation.so $(dir_Python)Build/Modelling_ThreePointCorrelation_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonModelling_PowerSpectrumAngular: $(dir_Python)/Build $(dir_Python)Build/Modelling_PowerSpectrumAngular_wrap.o $(dir_Python)Lib/Modelling_PowerSpectrumAngular.i
+	$(call insertLine, "from cblModelling_PowerSpectrumAngular import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/Modelling_PowerSpectrumAngular_wrap.cxx: $(dir_Python)Lib/Modelling_PowerSpectrumAngular.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping Modelling_PowerSpectrumAngular with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/Modelling_PowerSpectrumAngular_wrap.cxx $(dir_Python)Lib/Modelling_PowerSpectrumAngular.i
+
+$(dir_Python)Build/Modelling_PowerSpectrumAngular_wrap.o: $(dir_Python)Build/Modelling_PowerSpectrumAngular_wrap.cxx $(dir_Python)Lib/Modelling_PowerSpectrumAngular.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/Modelling_PowerSpectrumAngular_wrap.cxx -o $(dir_Python)Build/Modelling_PowerSpectrumAngular_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblModelling_PowerSpectrumAngular.so $(dir_Python)Build/Modelling_PowerSpectrumAngular_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonGlobalFunc: $(dir_Python)/Build $(dir_Python)Build/GlobalFunc_wrap.o $(dir_Python)Lib/GlobalFunc.i
+	$(call insertLine, "from cblGlobalFunc import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/GlobalFunc_wrap.cxx: $(dir_Python)Lib/GlobalFunc.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping GlobalFunc with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/GlobalFunc_wrap.cxx $(dir_Python)Lib/GlobalFunc.i
+
+$(dir_Python)Build/GlobalFunc_wrap.o: $(dir_Python)Build/GlobalFunc_wrap.cxx $(dir_Python)Lib/GlobalFunc.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/GlobalFunc_wrap.cxx -o $(dir_Python)Build/GlobalFunc_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblGlobalFunc.so $(dir_Python)Build/GlobalFunc_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
+
+###
+
+pythonReadParameters: $(dir_Python)/Build $(dir_Python)Build/ReadParameters_wrap.o $(dir_Python)Lib/ReadParameters.i
+	$(call insertLine, "from cblReadParameters import *", $(dir_Python)CosmoBolognaLib/__init__.py)
+
+$(dir_Python)Build/ReadParameters_wrap.cxx: $(dir_Python)Lib/ReadParameters.i $(HH) $(PWD)/Makefile
+	$(call colorecho, "\n"Wrapping ReadParameters with swig... "\n")	
+	$(SWIG) $(SWIG_FLAG) -I$(dir_H) -outdir $(dir_Python) -o $(dir_Python)Build/ReadParameters_wrap.cxx $(dir_Python)Lib/ReadParameters.i
+
+$(dir_Python)Build/ReadParameters_wrap.o: $(dir_Python)Build/ReadParameters_wrap.cxx $(dir_Python)Lib/ReadParameters.i $(HH) $(PWD)/Makefile
+	$(CXX) $(FLAGST) $(SWIG_FLAG_ADD) $(PFLAGS) -c -fPIC $(FLAGS_INC) $(dir_Python)Build/ReadParameters_wrap.cxx -o $(dir_Python)Build/ReadParameters_wrap.o
+	$(CXX) $(FLAGS_LINK) -o $(dir_Python)_cblReadParameters.so $(dir_Python)Build/ReadParameters_wrap.o -Wl,-rpath,$(PWD)/ -L$(PWD)/ -lCBL
 
 
 ####################################################################
@@ -1481,4 +2166,9 @@ $(PWD)/External/MGCAMB/camb:
 	cd $(PWD)/External/MGCAMB ; make clean F90C=$(F) COMPILER=$(F) && make F90C=$(F) COMPILER=$(F)" -w" && make clean F90C=$(F) COMPILER=$(F) && cd ../../
 
 $(PWD)/Logo/logo:
-	$(CXX) $(PWD)/Logo/Logo.cpp -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(PWD) -L$(PWD) $(FLAGS_INC) -lKERNEL -o $(PWD)/Logo/logo ; $(PWD)/Logo/logo
+	$(CXX) $(PWD)/Logo/Logo.cpp -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(PWD) -L$(PWD) $(FLAGS_INC) -lPATH -lKERNEL -o $(PWD)/Logo/logo ; $(PWD)/Logo/logo
+
+$(dir_Python)/Build:
+	mkdir -p $(dir_Python)Build
+	mkdir -p $(dir_Python)CosmoBolognaLib
+	cd $(dir_Python)CosmoBolognaLib && touch -a __init__.py

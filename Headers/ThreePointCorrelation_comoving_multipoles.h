@@ -169,8 +169,6 @@ namespace cbl {
 	 *  @param TL pointer to an object of class Triplet
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void m_write_triplets (const std::vector<double> TL, const std::string dir, const std::string file) const = 0;
 
@@ -179,8 +177,6 @@ namespace cbl {
 	 *  @param [out] TL pointer to an object of class Triplet
 	 *  @param [in] dir input directory
 	 *  @param [in] file input file
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void m_read_triplets (std::vector<double> &TL, const std::vector<std::string> dir, const std::string file) = 0;
 
@@ -230,9 +226,6 @@ namespace cbl {
 	 * @param r13Min the minimum triangle second side
 	 * @param r13Max the maximum triangle second side
 	 * @param nOrders the number of Legendre multipoles
-	 *
-	 * @return none, or an error message if the derived object
-	 * does not have this member
 	 */
 	virtual void set_parameters (const double r12Min, const double r12Max, const double r13Min, const double r13Max, const size_t nOrders)
 	{
@@ -257,7 +250,8 @@ namespace cbl {
 	
 	
 	/**
-	 *  @name Input/Output member functions (customized in all the derived classes)
+	 *  @name Input/Output member functions (customized in all the
+	 *  derived classes)
 	 */
 	///@{
 	
@@ -265,8 +259,6 @@ namespace cbl {
 	 *  @brief write the measured three-point correlation
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void write (const std::string dir, const std::string file) const = 0;
 
@@ -292,9 +284,6 @@ namespace cbl {
 	 *  @param bin true \f$\rightarrow\f$ average legendre
 	 *  polynomials, false \f$\rightarrow\f$ compute legendre
 	 *  polynomial at the bin center
-	 *
-	 *  @return none, or an error message if the derived object
-	 *  does not have this member
 	 */
 	virtual void resum (const std::string dir, const std::string file, const cbl::triplets::TripletType tripletType, const int nBins, const bool bin=true) const = 0;
 

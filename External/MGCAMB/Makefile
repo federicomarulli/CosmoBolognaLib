@@ -60,7 +60,7 @@ COMPILER = gfortran
 F90C     = gfortran
 SFFLAGS =  -shared -fPIC
 
-FFLAGS =  -O3 -fopenmp -ffast-math -ffree-line-length-none -fmax-errors=4 -cpp
+FFLAGS =  -O3 -fopenmp -ffast-math -ffree-line-length-none -fmax-errors=4 -ffpe-summary='none' -cpp
 DEBUGFLAGS = -cpp -g -fbounds-check -fbacktrace -ffree-line-length-none -fmax-errors=4 -ffpe-trap=invalid,overflow,zero -DDEBUG
 MODOUT =  -J$(OUTPUT_DIR)
 SMODOUT = -J$(DLL_DIR)

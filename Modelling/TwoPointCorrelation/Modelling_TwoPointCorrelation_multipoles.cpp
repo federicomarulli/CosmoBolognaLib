@@ -538,7 +538,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_fullShape_DeWiggled (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution SigmaNL_perpendicular_prior, const statistics::PriorDistribution SigmaNL_parallel_prior, statistics::PriorDistribution fsigma8_prior, statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution SigmaS_prior, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_fullShape_DeWiggled (const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution SigmaNL_perpendicular_prior, const statistics::PriorDistribution SigmaNL_parallel_prior, const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution SigmaS_prior, const bool compute_PkDM)
 {
   m_data_model->Pk_mu_model = "dispersion_dewiggled";
 
@@ -615,7 +615,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_dispersion (statistics::PriorDistribution fsigma8_prior, statistics::PriorDistribution bsigma8_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const statistics::PriorDistribution sigmav_prior, const bool DFoG, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_dispersion (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
   if (DFoG) m_data_model->Pk_mu_model = "dispersion_Gauss";
   else m_data_model->Pk_mu_model = "dispersion_Lorentz";
@@ -653,7 +653,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_Scoccimarro (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
   if (DFoG) m_data_model->Pk_mu_model = "Scoccimarro_Gauss";
   else m_data_model->Pk_mu_model = "Scoccimarro_Lorentz";
@@ -691,7 +691,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution kt_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_Scoccimarro_fitPezzotta (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution kt_prior, const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
   if (DFoG) m_data_model->Pk_mu_model = "Scoccimarro_Pezzotta_Gauss";
   else m_data_model->Pk_mu_model = "Scoccimarro_Pezzotta_Lorentz";
@@ -731,7 +731,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution bb_prior, const statistics::PriorDistribution a1_prior, const statistics::PriorDistribution a2_prior, const statistics::PriorDistribution a3_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_Scoccimarro_fitBel (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution kd_prior, const statistics::PriorDistribution bb_prior, const statistics::PriorDistribution a1_prior, const statistics::PriorDistribution a2_prior, const statistics::PriorDistribution a3_prior, const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
   if (DFoG) m_data_model->Pk_mu_model = "Scoccimarro_Bel_Gauss";
   else m_data_model->Pk_mu_model = "Scoccimarro_Bel_Lorentz";
@@ -774,7 +774,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_TNS (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_TNS (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution bsigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
   if (DFoG) m_data_model->Pk_mu_model = "TNS_Gauss";
   else m_data_model->Pk_mu_model = "TNS_Lorentz";
@@ -812,7 +812,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_
 // ============================================================================================
 
 
-void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_eTNS (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution b1sigma8_prior, const statistics::PriorDistribution b2sigma8_prior, const statistics::PriorDistribution sigmav_prior, statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
+void cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles::set_model_eTNS (const statistics::PriorDistribution fsigma8_prior, const statistics::PriorDistribution b1sigma8_prior, const statistics::PriorDistribution b2sigma8_prior, const statistics::PriorDistribution sigmav_prior, const statistics::PriorDistribution alpha_perpendicular_prior, const statistics::PriorDistribution alpha_parallel_prior, const bool DFoG, const bool compute_PkDM)
 {
   if (DFoG) m_data_model->Pk_mu_model = "eTNS_Gauss";
   else m_data_model->Pk_mu_model = "eTNS_Lorentz";

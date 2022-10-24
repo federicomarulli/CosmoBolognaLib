@@ -61,6 +61,9 @@ namespace cbl {
 
       /// void central density
       double m_centralDensity;
+      
+      /// generic variable
+      double m_generic;
 
     public:
     
@@ -68,6 +71,17 @@ namespace cbl {
        *  @name Constructors/destructors
        */
       ///@{
+      
+      /**
+       * @brief function that allows copying private variables of the class 
+       * when an object of class Catalogue is copied
+       * 
+       * @return a shared pointer to the Object
+       *
+       */
+      std::shared_ptr<Object> getShared() {
+        return std::make_shared<Void>(*this);
+      }
       
       /**
        *  @brief default constructor
@@ -355,6 +369,12 @@ namespace cbl {
        */
       double centralDensity () const
       { return m_centralDensity; }
+      
+      /**
+       *  @brief get the private member \e m_generic
+       *  @return the generic variable of the void object
+       */
+      double generic () const override { return m_generic; }
 
       ///@}
   
@@ -388,6 +408,12 @@ namespace cbl {
        */
       void set_centralDensity (const double centralDensity=par::defaultDouble)
       { m_centralDensity = centralDensity; }
+      
+      /**
+       *  @brief set the private member \e m_generic
+       *  @param generic the generic variable of the mock object
+       */
+      void set_generic (const double generic=par::defaultDouble) override { m_generic = generic; }
     
       ///@}
       
@@ -419,6 +445,14 @@ namespace cbl {
        */
       bool isSet_centralDensity ()
       { return (cbl::isSet(m_centralDensity)) ? true : false; }
+      
+      /**
+       *  @brief set the private member \e m_generic
+       *  
+       *  @return true if the generic variable is set; false otherwise
+       */
+      bool isSet_generic () override
+      { return (cbl::isSet(m_generic)) ? true : false; }
     
       ///@}
       

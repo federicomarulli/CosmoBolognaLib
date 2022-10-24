@@ -750,7 +750,8 @@ double cbl::cosmology::Cosmology::D_C (const double redshift) const
   }
   
   else {
-    string dir = fullpath(par::DirCosmo)+"Cosmology/Tables/dc_cDE/";
+    cbl::Path path;
+    string dir = path.DirCosmo()+"Cosmology/Tables/dc_cDE/";
     string file_in;
     if (m_model=="LCDM_Baldi_wmap7") file_in = dir+"LCDM-wmap7-comovingdist.dat"; 
     else if (m_model=="EXP005_Baldi_wmap7") file_in = dir+"EXP005-wmap7-comovingdist.dat";
@@ -792,7 +793,8 @@ double cbl::cosmology::Cosmology::D_C (const double redshift) const
 
 void cbl::cosmology::Cosmology::D_C_table (const std::string file_table, const double z_min, const double z_max, const int step, std::vector<double> &Redshift, std::vector<double> &dc) const
 {
-  string File_table = fullpath(par::DirCosmo)+"Cosmology/Tables/dc/"+file_table;
+  cbl::Path path;
+  string File_table = path.DirCosmo()+"Cosmology/Tables/dc/"+file_table;
  
   ifstream fin;
   fin.open (File_table.c_str());
@@ -1058,7 +1060,8 @@ double cbl::cosmology::Cosmology::Redshift (const double d_c, const double z1_gu
   else {
     WarningMsgCBL("the quantity prec is not used", "Redshift", "Cosmology.h");
 
-    string dir = fullpath(par::DirCosmo)+"Cosmology/Tables/dc_cDE/";
+    cbl::Path path;
+    string dir = path.DirCosmo()+"Cosmology/Tables/dc_cDE/";
     string file_in;
 
     if (m_model=="LCDM_Baldi_wmap7") file_in = dir+"LCDM-wmap7-comovingdist.dat"; 
@@ -1310,24 +1313,6 @@ double cbl::cosmology::Cosmology::Delta_c (const double redshift, const std::str
   }
     
   else return ErrorCBL("author not allowed", "Delta_c", "Cosmology.cpp");
-}
-
-
-// =====================================================================================
-
-
-double cbl::cosmology::Cosmology::Delta_vir (const double Delta_c, const double redshift) const 
-{
-  return Delta_c/OmegaM(redshift);
-}
-
-
-// =====================================================================================
-
-
-double cbl::cosmology::Cosmology::Delta_vir (const double redshift, const std::string author) const
-{
-  return Delta_vir(Delta_c(redshift, author), redshift);
 }
 
 

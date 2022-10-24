@@ -223,7 +223,8 @@ std::vector<double> cbl::cosmology::Cosmology::Pk_ThetaTheta (const std::vector<
 
 std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_AB_multipoles (std::vector<double> kk, const std::string method, const double redshift, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec)
 {
-  string dir = fullpath(par::DirCosmo)+"External/CPT_Library/";
+  cbl::Path path;
+  string dir = path.DirCosmo()+"/External/CPT_Library/";
   string output_tmpCPT = dir+"tmpCPT/";
   string MKout = "mkdir -p " + output_tmpCPT; if (system(MKout.c_str())) {}
   double sigma8_z0 = sigma8_Pk(method, 0., store_output, output_root);
@@ -247,7 +248,7 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_AB_multipoles
        << "3 \n" << n_spec() << "\n"
        << "4 \n" << sigma8_z0 << "\n"
        << "5 \n" << conv(m_Omega_matter, par::fDP6) << "\n"
-       << "6 \n" <<  conv(m_Omega_baryon, par::fDP6) << "\n"
+       << "6 \n" << conv(m_Omega_baryon, par::fDP6) << "\n"
        << "7 \n" << conv(m_w0, par::fDP6) << "\n"
        << "0 \n" << "1 \n" << "0. \n";
   fsAB.close();
@@ -320,7 +321,8 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_AB_1loop (std
 
 std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_AB_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec)
 {
-  string dir = fullpath(par::DirCosmo)+"External/CPT_Library/";
+  cbl::Path path;
+  string dir = path.DirCosmo()+"/External/CPT_Library/";
   string output_tmpCPT = dir+"tmpCPT/";
   string MKout = "mkdir -p " + output_tmpCPT; if (system(MKout.c_str())) {}
   double sigma8_z0 = sigma8_Pk(method, 0., store_output, output_root);
@@ -476,7 +478,8 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_AB_1loop (std
 
 std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_dd_dt_tt (std::vector<double> kk, const std::string method, const double redshift, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec)
 {
-  string dir = fullpath(par::DirCosmo)+"External/CPT_Library/";
+  cbl::Path path;
+  string dir = path.DirCosmo()+"/External/CPT_Library/";
   string output_tmpCPT = dir+"tmpCPT/";
   string MKout = "mkdir -p " + output_tmpCPT; if (system(MKout.c_str())) {}
   double sigma8_z0 = sigma8_Pk(method, 0., store_output, output_root);
@@ -569,13 +572,25 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_TNS_dd_dt_tt (std
 
 std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_eTNS_terms_1loop (std::vector<double> kk, const std::string method, const double redshift, const bool store_output, const std::string output_root, const int norm, const double k_min, const double k_max, const double prec)
 {
-  string dir = fullpath(par::DirCosmo)+"External/CAMB_SPT_private/";
+  cbl::Path path;
+  string dir = path.DirCosmo()+"/External/CAMB_SPT_private/";
   string output_tmpCPT = dir+"tmpCPT_eTNS/";
   string MKout = "mkdir -p " + output_tmpCPT; if (system(MKout.c_str())) {}
   double HH0 = m_hh*100.;
 
   // input Pklin_z0
+  
   const vector<double> Pklin = Pk_matter(kk, method, false, 0., store_output, output_root, norm, k_min, k_max, prec);
+  int Norm = norm;
+  if (Norm==-1) Norm = (m_sigma8>0) ? 1 : 0;
+  if (Norm==1) Pk_0(method, redshift, store_output, output_root, k_min, k_max, prec);
+
+  double PP0 = 1.;
+  if (method=="EisensteinHu") PP0 = m_Pk0_EH;
+  else if (method=="CAMB" || method=="MGCAMB") PP0 = m_Pk0_CAMB;
+  else if (method=="MPTbreeze-v1") PP0 = m_Pk0_MPTbreeze;
+  else if (method=="CLASS") PP0 = m_Pk0_CLASS;
+  
   string file = "Pklin.dat";
   ofstream File_Pklin(output_tmpCPT + file);
   for (size_t nn=0; nn<kk.size(); ++nn)
@@ -661,20 +676,20 @@ std::vector<std::vector<double>> cbl::cosmology::Cosmology::Pk_eTNS_terms_1loop 
   while (finPK >> Kspt >> PKlin >> PDD >> PDV >> PVV >> PB2D >> PB2V >> PB22 >> PBS2D >> PBS2V >> PB2S2 >> PBS22 >> sigma32PKlin >> BB1 >> BB2 >> BBS2)
     if (Kspt>0 && PKlin>0 && PDD>0 && PDV>0 && PVV>0) {
       k_spt.emplace_back(Kspt);
-      Pdd.emplace_back(PDD);
-      Pdv.emplace_back(PDV);
-      Pvv.emplace_back(PVV);
-      Pb2d.emplace_back(PB2D);
-      Pb2v.emplace_back(PB2V);
-      Pb22.emplace_back(PB22);
-      Pbs2d.emplace_back(PBS2D);
-      Pbs2v.emplace_back(PBS2V);
-      Pb2s2.emplace_back(PB2S2);
-      Pbs22.emplace_back(PBS22);
-      sigma32Pklin.emplace_back(sigma32PKlin);
-      Bb1.emplace_back(BB1);
-      Bb2.emplace_back(BB2);
-      Bbs2.emplace_back(BBS2);
+      Pdd.emplace_back(PDD*PP0);
+      Pdv.emplace_back(PDV*PP0);
+      Pvv.emplace_back(PVV*PP0);
+      Pb2d.emplace_back(PB2D*PP0);
+      Pb2v.emplace_back(PB2V*PP0);
+      Pb22.emplace_back(PB22*PP0);
+      Pbs2d.emplace_back(PBS2D*PP0);
+      Pbs2v.emplace_back(PBS2V*PP0);
+      Pb2s2.emplace_back(PB2S2*PP0);
+      Pbs22.emplace_back(PBS22*PP0);
+      sigma32Pklin.emplace_back(sigma32PKlin*PP0);
+      Bb1.emplace_back(BB1*PP0);
+      Bb2.emplace_back(BB2*PP0);
+      Bbs2.emplace_back(BBS2*PP0);
     }
   finPK.clear();
 

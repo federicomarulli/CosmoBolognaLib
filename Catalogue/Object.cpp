@@ -45,13 +45,14 @@ using namespace catalogue;
 
 std::shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType)
 {
-  if (objType==ObjectType::_Random_) return move(unique_ptr<RandomObject>(new RandomObject));
+  if (objType==ObjectType::_Random_) return move(unique_ptr<RandomObject>(new RandomObject()));
   else if (objType==ObjectType::_Mock_) return move(unique_ptr<Mock>(new Mock()));
   else if (objType==ObjectType::_Halo_) return move(unique_ptr<Halo>(new Halo()));
   else if (objType==ObjectType::_Galaxy_) return move(unique_ptr<Galaxy>(new Galaxy()));
   else if (objType==ObjectType::_Cluster_) return move(unique_ptr<Cluster>(new Cluster()));
   else if (objType==ObjectType::_Void_) return move(unique_ptr<Void>(new Void()));
   else if (objType==ObjectType::_HostHalo_) return move(unique_ptr<HostHalo>(new HostHalo()));
+  else if (objType==ObjectType::_ChainMeshCell_) return move(unique_ptr<ChainMeshCell>(new ChainMeshCell()));
   else ErrorCBL("no such type of object!", "Create", "Object.cpp");
   return NULL;
 }
@@ -169,3 +170,11 @@ std::shared_ptr<Object> cbl::catalogue::Object::Create (const ObjectType objType
   else ErrorCBL("no such type of object!", "Create", "Object.cpp");
   return NULL;
 }
+
+// ============================================================================
+std::shared_ptr<Object> cbl::catalogue::Object::Create (const int ID, const std::vector<unsigned int> part, std::vector<std::vector<unsigned int>> nearCells)
+{
+  return move(unique_ptr<ChainMeshCell>(new ChainMeshCell(ID, part, nearCells)));
+}
+
+

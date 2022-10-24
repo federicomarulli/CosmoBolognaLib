@@ -152,15 +152,11 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters given the number of bins
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void m_set_parameters_nbins () = 0;
   
       /**
        *  @brief set the binning parameters given the bin size
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void m_set_parameters_binSize () = 0;
   
@@ -845,9 +841,6 @@ namespace cbl {
        * @brief reset the pair counts
        *
        * @details set to 0 the pair vector elements
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void reset () = 0;
 
@@ -855,8 +848,6 @@ namespace cbl {
        *  @brief set the member m_PP1D[i]
        *  @param i the bin index
        *  @param pp the number of pairs in the bin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_PP1D (const int i, const double pp)
       { (void)i; (void)pp; cbl::ErrorCBL("", "set_PP1D", "Pair.h"); }
@@ -865,8 +856,6 @@ namespace cbl {
        *  @brief set the member m_PP1D_weighted[i]
        *  @param i the bin index
        *  @param pp the number of weighted pairs in the bin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_PP1D_weighted (const int i, const double pp)
       { (void)i; (void)pp; cbl::ErrorCBL("", "set_PP1D_weighted", "Pair.h"); }
@@ -876,8 +865,6 @@ namespace cbl {
        *  @param i the bin index in the first dimension
        *  @param j the bin index in the second dimension
        *  @param pp the number of pairs in the bin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_PP2D (const int i, const int j, const double pp)
       { (void)i; (void)j; (void)pp; cbl::ErrorCBL("", "set_PP2D", "Pair.h"); }
@@ -887,8 +874,6 @@ namespace cbl {
        *  @param i the bin index in the first dimension
        *  @param j the bin index in the second dimension
        *  @param pp the number of weighted pairs in the bin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_PP2D_weighted (const int i, const int j, const double pp)
       { (void)i; (void)j; (void)pp; cbl::ErrorCBL("", "set_PP2D_weighted", "Pair.h"); }
@@ -897,8 +882,6 @@ namespace cbl {
        *  @brief set the protected members by adding new 1D data
        *  @param i the bin index
        *  @param data vector containing the new data to be added
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void add_data1D (const int i, const std::vector<double> data)
       { (void)i; (void)data; cbl::ErrorCBL("", "add_data1D", "Pair.h"); }
@@ -908,8 +891,6 @@ namespace cbl {
        *  @param i the bin index
        *  @param pair pointer to an object of class Pair
        *  @param ww a multiplicative factor used for bootstrap
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void add_data1D (const int i, const std::shared_ptr<pairs::Pair> pair, const double ww=1.)
       { (void)i; (void)pair; (void)ww; cbl::ErrorCBL("", "add_data1D", "Pair.h"); }
@@ -919,8 +900,6 @@ namespace cbl {
        *  @param i the bin index in the first dimension
        *  @param j the bin index in the second dimension
        *  @param data vector containing the new data to be added
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void add_data2D (const int i, const int j, const std::vector<double> data)
       { (void)i; (void)j; (void)data; cbl::ErrorCBL("", "add_data2D", "Pair.h"); }
@@ -931,8 +910,6 @@ namespace cbl {
        *  @param j the bin index in the second dimension
        *  @param pair pair pointer to an object of class Pair
        *  @param ww a multiplicative factor used for bootstrap
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void add_data2D (const int i, const int j, const std::shared_ptr<pairs::Pair> pair, const double ww=1.)
       { (void)i; (void)j; (void)pair; (void)ww; cbl::ErrorCBL("", "add_data2D", "Pair.h"); }
@@ -951,8 +928,6 @@ namespace cbl {
        *  @param obj2 pointer to an object of class Object
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &wkk)
       { (void)obj1; (void)obj2; (void)kk; (void)wkk; cbl::ErrorCBL("", "get", "Pair.h"); }
@@ -964,8 +939,6 @@ namespace cbl {
        *  @param kk index of the pairs
        *  @param cosmu cosine of the angle between objects
        *  @param wkk weight of the pair
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &kk, double &cosmu, double &wkk) 
       { (void)obj1; (void)obj2; (void)kk; (void)cosmu; (void)wkk; cbl::ErrorCBL("", "get", "Pair.h"); }
@@ -977,8 +950,6 @@ namespace cbl {
        *  @param ir the bin index in the first dimension
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void get (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, int &ir, int &jr, double &ww)
       { (void)obj1; (void)obj2; (void)ir; (void)jr; (void)ww; cbl::ErrorCBL("", "get", "Pair.h"); }
@@ -988,8 +959,6 @@ namespace cbl {
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @param weight the weight of the region
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set (const int kk, const double wkk, const double weight=1)
       { (void)kk; (void)wkk; (void)weight; cbl::ErrorCBL("", "get", "Pair.h"); }
@@ -1000,8 +969,6 @@ namespace cbl {
        *  @param kk index of the pairs
        *  @param wkk weight of the pair
        *  @param weight the weght of the region
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set (const double cosmu, const int kk, const double wkk, const double weight=1) 
       { (void)cosmu;  (void)kk; (void)wkk; (void)weight; cbl::ErrorCBL("", "get", "Pair.h"); }
@@ -1012,8 +979,6 @@ namespace cbl {
        *  @param jr the bin index in the second dimension
        *  @param ww weight of the pair
        *  @param weight the weight of the region
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set (const int ir, const int jr, const double ww, const double weight=1)
       { (void)ir; (void)jr; (void)ww; (void)weight; cbl::ErrorCBL("", "get", "Pair.h"); }
@@ -1024,8 +989,6 @@ namespace cbl {
        *
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2) = 0;
 
@@ -1033,8 +996,6 @@ namespace cbl {
        *  @brief sum the number of binned pairs
        *  @param pp an object of class Pair
        *  @param ww the weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void Sum (const std::shared_ptr<Pair> pp, const double ww=1) = 0;
       

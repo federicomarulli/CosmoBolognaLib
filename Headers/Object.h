@@ -69,7 +69,10 @@ namespace cbl {
       _Void_,
     
       /// host halo
-      _HostHalo_
+      _HostHalo_,
+      
+      // chain Mesh cell
+      _ChainMeshCell_
     
     };
 
@@ -80,7 +83,7 @@ namespace cbl {
      * ObjectType names
      */
     inline std::vector<std::string> ObjectTypeNames ()
-    { return {"Random", "Mock", "Halo", "Galaxy", "Cluster", "Void", "HostHalo"}; }
+    { return {"Random", "Mock", "Halo", "Galaxy", "Cluster", "Void", "HostHalo", "ChainMeshCell"}; }
 
     /**
      * @brief cast an enum of type ObjectType
@@ -200,6 +203,15 @@ namespace cbl {
        *  
        */
       Object () = default;
+      
+       /**
+       *  @brief specific constructor for ChainMeshCell
+       *       
+       *  @param ID the object ID
+       *  
+       */
+      Object (const int ID) 
+  : m_ID(ID) {}
       
       /**
        *  @brief constructor that uses comoving coordinates
@@ -440,6 +452,18 @@ namespace cbl {
       : m_xx(xx), m_yy(yy), m_zz(zz), m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(sqrt(xx*xx+yy*yy+zz*zz)), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn)
       {}   
 
+
+      /**
+       * @brief function that allows copying private variables of the class 
+       * when an object of class Catalogue is copied
+       * 
+       * @return a shared pointer to the Object
+       *
+       */
+      virtual std::shared_ptr<Object> getShared() {
+        return std::make_shared<Object>(*this);
+      }
+
       /**
        *  @brief default destructor
        */
@@ -458,7 +482,7 @@ namespace cbl {
        *  providing in input comoving coordinates
        *
        *  @param ObjectType the object type; it can be: GenericObject,
-       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo
+       *  RandomObject, Mock, Halo, Galaxy, Cluster, Void, HostHalo, ChainMeshCell
        * 
        *  @return object of a given type
        */
@@ -691,6 +715,20 @@ namespace cbl {
        */
       static std::shared_ptr<Object> Create (const ObjectType ObjectType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
+
+      /**
+       *  @brief static factory used to construct objects of ChainMeshCell type
+       * 
+       *  @param ID the object ID
+       *
+       *  @param part the particles in the cell
+       *
+       *  @param nearCells the cells near the object, sorted for distance
+       *
+       *  @return object of a given type
+       *
+       */
+      static std::shared_ptr<Object> Create (const int ID=par::defaultInt, const std::vector<unsigned int> part={}, std::vector<std::vector<unsigned int>> nearCells={});
       ///@}
 
     
@@ -788,7 +826,7 @@ namespace cbl {
        *  @return the weight of the object
        */
       double weight () const
-      { return (cbl::isSet(m_weight)) ? m_weight : ErrorCBL("the m_region variable is not defined!", "weight", "Object.h"); }
+      { return (cbl::isSet(m_weight)) ? m_weight : ErrorCBL("the m_weight variable is not defined!", "weight", "Object.h"); }
 
       /**
        *  @brief get the member \e m_region
@@ -883,155 +921,11 @@ namespace cbl {
       { return cbl::ErrorCBL("", "mass", "Object.h"); }
       
       /**
-       *  @brief get the member \e m_logM
-       *  @return the log-mass of the derived object, or an error message if
-       *  the derived object does not have this member
-       */
-      virtual double logM () const
-      { return cbl::ErrorCBL("", "logM", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_concentration
-       *  @return the concentration of the derived cluster object, or an error message if
-       *  the derived object does not have this member
-       */
-      virtual double concentration () const
-      { return cbl::ErrorCBL("", "concentration", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_f_off
-       *  @return the fraction of miscentered clusters of the derived cluster object, or an error message if
-       *  the derived object does not have this member
-       */
-      virtual double f_off () const
-      { return cbl::ErrorCBL("", "f_off", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_sigma_off
-       *  @return the rms of the miscentered population of the derived cluster object, or an error message if
-       *  the derived object does not have this member
-       */
-      virtual double sigma_off () const
-      { return cbl::ErrorCBL("", "sigma_off", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_alpha_scaling_rel
-       *  @return the scaling relation normalization of the derived cluster object, or an error message if
-       *  the derived object does not have this member
-       */
-      virtual double alpha_scaling_rel () const
-      { return cbl::ErrorCBL("", "alpha_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_beta_scaling_rel
-       *  @return the scaling relation slope of the derived cluster object, or an error message if
-       *  the derived object does not have this member
-       */
-      virtual double beta_scaling_rel () const
-      { return cbl::ErrorCBL("", "beta_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_gamma_scaling_rel
-       *  @return the scaling relation z evolution factor of the derived cluster object, or an error message if
-       *  the derived object does not have this member
-       */
-      virtual double gamma_scaling_rel () const
-      { return cbl::ErrorCBL("", "gamma_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_scatter0_scaling_rel
-       *  @return constant term of the intrinsic scatter of 
-       *  the mass-observable cluster scaling relation
-       */
-      virtual double scatter0_scaling_rel () const
-      { return cbl::ErrorCBL("", "scatter0_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_scatterM_scaling_rel
-       *  @return multiplicative factor in the mass/mass proxy dependent 
-       *  term in the intrinsic scatter of the mass-observable scaling relation
-       */
-      virtual double scatterM_scaling_rel () const
-      { return cbl::ErrorCBL("", "scatterM_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_scatterM_exponent_scaling_rel
-       *  @return exponent in the mass/mass proxy dependent 
-       *  term in the intrinsic scatter of the mass-observable scaling relation
-       */
-      virtual double scatterM_exponent_scaling_rel () const
-      { return cbl::ErrorCBL("", "scatterM_exponent_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_scatterz_scaling_rel
-       *  @return multiplicative factor in the redshift dependent
-       *  term in the intrinsic scatter of the mass-observable scaling relation
-       */
-      virtual double scatterz_scaling_rel () const
-      { return cbl::ErrorCBL("", "scatterz_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_scatterz_exponent_scaling_rel
-       *  @return exponent in the redshift dependent 
-       *  term in the intrinsic scatter of the mass-observable scaling relation
-       */
-      virtual double scatterz_exponent_scaling_rel () const
-      { return cbl::ErrorCBL("", "scatterz_exponent_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_zbias
-       *  @return the cluster redshift bias
-       */
-      virtual double zbias () const
-      { return cbl::ErrorCBL("", "zbias", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_proxybias
-       *  @return the cluster mass proxy bias
-       */
-      virtual double proxybias () const
-      { return cbl::ErrorCBL("", "proxybias", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_zerror
-       *  @return the cluster redshift error
-       */
-      virtual double zerror () const
-      { return cbl::ErrorCBL("", "zerror", "Object.h"); }
-      
-      /**
        *  @brief get the member \e m_proxyerror
        *  @return the cluster mass proxy error
        */
       virtual double proxyerror () const
       { return cbl::ErrorCBL("", "proxyerror", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_Plambda_a
-       *  @return \f$ a \f$ term in the function describing the 
-       *  cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, 
-       *  where \f$\lambda\f$ is a mass proxy
-       */
-      virtual double Plambda_a () const
-      { return cbl::ErrorCBL("", "Plambda_a", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_Plambda_b
-       *  @return \f$ b \f$ term in the function describing the 
-       *  cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, 
-       *  where \f$\lambda\f$ is a mass proxy
-       */
-      virtual double Plambda_b () const
-      { return cbl::ErrorCBL("", "Plambda_b", "Object.h"); }
-      
-      /**
-       *  @brief get the member \e m_Plambda_c
-       *  @return \f$ c \f$ term in the function describing the 
-       *  cluster abundance, i.e. \f$ P(\lambda|z) = a \, \lambda^{-b} \, e^{-c\lambda} \f$, 
-       *  where \f$\lambda\f$ is a mass proxy
-       */
-      virtual double Plambda_c () const
-      { return cbl::ErrorCBL("", "Plambda_c", "Object.h"); }
     
       /**
        *  @brief get the member \e m_magnitude
@@ -1337,6 +1231,21 @@ namespace cbl {
       virtual std::vector<std::shared_ptr<Object>> satellites () const
       { cbl::ErrorCBL("", "satellites", "Object.h"); return {}; }
 
+      /**
+       *  @brief get the virtual member \e m_part, member of ChainMeshCell
+       *  @return the particles on the selected cell, or an
+       *  error message if the derived object does not have this member
+       */
+      virtual std::vector<unsigned int> part () const
+      { return {}; }
+
+      /**
+       *  @brief get the virtual member \e m_nearCells, member of ChainMeshCell
+       *  @return the cells near the selected one (sorted for distance), or an
+       *  error message if the derived object does not have this member
+       */
+      virtual std::vector<std::vector<unsigned int>> nearCells () const  
+      { return {}; }
       ///@}
 
     
@@ -1456,8 +1365,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_odds
        *  @param odds the odds
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_odds (const double odds)
       { (void)odds; cbl::ErrorCBL("", "set_odds", "Object.h"); }  
@@ -1465,8 +1372,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_shear1
        *  @param shear1 the first shear component
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_shear1 (const double shear1)
       { (void)shear1; cbl::ErrorCBL("", "set_shear1", "Object.h"); } 
@@ -1474,8 +1379,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_shear2
        *  @param shear2 the second shear component
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_shear2 (const double shear2)
       { (void)shear2; cbl::ErrorCBL("", "set_shear2", "Object.h"); } 
@@ -1483,8 +1386,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_lensingWeight
        *  @param lensingWeight the lensing weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_lensingWeight (const double lensingWeight)
       { (void)lensingWeight; cbl::ErrorCBL("", "set_lensingWeight", "Object.h"); } 
@@ -1492,8 +1393,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_lensingCalib
        *  @param lensingCalib the lensing calibration factor
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_lensingCalib (const double lensingCalib)
       { (void)lensingCalib; cbl::ErrorCBL("", "set_lensingCalib", "Object.h"); } 
@@ -1562,17 +1461,13 @@ namespace cbl {
       /**
        *  @brief set the member \e m_vx
        *  @param vx the peculiar velocity along the x direction
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_vx (const double vx)
       { (void)vx; cbl::ErrorCBL("", "set_vx", "Object.h"); }
       
       /**
        *  @brief set the member \e m_vy
-       *  @param vy the peculiar velocity along the y direction 
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @param vy the peculiar velocity along the y direction
        */
       virtual void set_vy (const double vy)
       { (void)vy; cbl::ErrorCBL("", "set_vy", "Object.h"); }
@@ -1580,8 +1475,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_vz
        *  @param vz the peculiar velocity along the z direction
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_vz (const double vz)
       { (void)vz; cbl::ErrorCBL("", "set_vz", "Object.h"); }
@@ -1589,8 +1482,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_mass
        *  @param mass the mass
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_mass (const double mass)
       { (void)mass; cbl::ErrorCBL("", "set_mass", "Object.h"); }
@@ -1598,15 +1489,13 @@ namespace cbl {
       /**
        *  @brief set the member \e m_IDHost
        *  @param IDHost the ID of host halo 
-       *  @return none
        */
       virtual void set_IDHost (const int IDHost)
       { (void)IDHost; cbl::ErrorCBL("", "set_IDHost", "Object.h"); }
 
       /**
        *  @brief set the member \e m_galaxyTag
-       *  @param galaxyTag the tag of the galaxy indeed "central" or "satellite" 
-       *  @return none
+       *  @param galaxyTag the tag of the galaxy indeed "central" or "satellite"
        */
       virtual void set_galaxyTag (const double galaxyTag)
       { (void)galaxyTag; cbl::ErrorCBL("", "set_galaxyTag", "Object.h"); }
@@ -1614,8 +1503,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_mstar
        *  @param mstar the stellar mass
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_mstar (const double mstar)
       { (void)mstar; cbl::ErrorCBL("", "set_mstar", "Object.h"); }
@@ -1623,188 +1510,20 @@ namespace cbl {
       /**
        *  @brief set the member \e m_massinfall
        *  @param massinfall the infall mass of the substructure
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_massinfall (const double massinfall)
       { (void)massinfall; cbl::ErrorCBL("", "set_massinfall", "Object.h"); }
       
       /**
-       *  @brief set the member \e m_logM
-       *  @param logM the log-mass
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_logM (const double logM)
-      { (void)logM; cbl::ErrorCBL("", "set_logM", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_concentration
-       *  @param conc the cluster concentration
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_concentration (const double conc)
-      { (void)conc; cbl::ErrorCBL("", "set_concentration", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_f_off
-       *  @param f_off the f_off parameter
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_f_off (const double f_off)
-      { (void)f_off; cbl::ErrorCBL("", "set_f_off", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_sigma_off
-       *  @param sigma_off the sigma_off parameter
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_sigma_off (const double sigma_off)
-      { (void)sigma_off; cbl::ErrorCBL("", "set_sigma_off", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_alpha_scaling_rel
-       *  @param alpha_scaling_rel the alpha_scaling_rel parameter
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_alpha_scaling_rel (const double alpha_scaling_rel)
-      { (void)alpha_scaling_rel; cbl::ErrorCBL("", "set_alpha_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_beta_scaling_rel
-       *  @param beta_scaling_rel the beta_scaling_rel parameter
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_beta_scaling_rel (const double beta_scaling_rel)
-      { (void)beta_scaling_rel; cbl::ErrorCBL("", "set_beta_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_gamma_scaling_rel
-       *  @param gamma_scaling_rel the gamma_scaling_rel parameter
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_gamma_scaling_rel (const double gamma_scaling_rel)
-      { (void)gamma_scaling_rel; cbl::ErrorCBL("", "set_gamma_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_scatter0_scaling_rel
-       *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_scatter0_scaling_rel (const double value)
-      { (void)value; cbl::ErrorCBL("", "set_scatter0_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_scatterM_scaling_rel
-       *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_scatterM_scaling_rel (const double value)
-      { (void)value; cbl::ErrorCBL("", "set_scatterM_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_scatterM_exponent_scaling_rel
-       *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_scatterM_exponent_scaling_rel (const double value)
-      { (void)value; cbl::ErrorCBL("", "set_scatterM_exponent_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_scatterz_scaling_rel
-       *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_scatterz_scaling_rel (const double value)
-      { (void)value; cbl::ErrorCBL("", "set_scatterz_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_scatterz_exponent_scaling_rel
-       *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_scatterz_exponent_scaling_rel (const double value)
-      { (void)value; cbl::ErrorCBL("", "set_scatterz_exponent_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_zbias
-       *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_zbias (const double value)
-      { (void)value; cbl::ErrorCBL("", "set_zbias", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_proxybias
-       *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_proxybias (const double value)
-      { (void)value; cbl::ErrorCBL("", "set_proxybias", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_zerror
-       *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_zerror (const double value)
-      { (void)value; cbl::ErrorCBL("", "set_zerror", "Object.h"); }
-      
-      /**
        *  @brief set the member \e m_proxyerror
        *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_proxyerror (const double value)
       { (void)value; cbl::ErrorCBL("", "set_proxyerror", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_Plambda_a
-       *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_Plambda_a (const double value)
-      { (void)value; cbl::ErrorCBL("", "set_Plambda_a", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_Plambda_b
-       *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_Plambda_b (const double value)
-      { (void)value; cbl::ErrorCBL("", "set_Plambda_b", "Object.h"); }
-      
-      /**
-       *  @brief set the member \e m_Plambda_c
-       *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
-       */
-      virtual void set_Plambda_c (const double value)
-      { (void)value; cbl::ErrorCBL("", "set_Plambda_c", "Object.h"); }
     
       /**
        *  @brief set the member \e m_magnitude
        *  @param magnitude the magnitude
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_magnitude (const double magnitude)
       { (void)magnitude; cbl::ErrorCBL("", "set_magnitude", "Object.h"); } 
@@ -1812,8 +1531,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_magnitudeU
        *  @param magnitudeU the u magnitude
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_magnitudeU (const double magnitudeU)
       { (void)magnitudeU; cbl::ErrorCBL("", "set_magnitudeU", "Object.h"); } 
@@ -1821,8 +1538,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_magnitudeG
        *  @param magnitudeG the g magnitude
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_magnitudeG (const double magnitudeG)
       { (void)magnitudeG; cbl::ErrorCBL("", "set_magnitudeG", "Object.h"); } 
@@ -1830,8 +1545,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_magnitudeR
        *  @param magnitudeR the r magnitude
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_magnitudeR (const double magnitudeR)
       { (void)magnitudeR; cbl::ErrorCBL("", "set_magnitudeR", "Object.h"); } 
@@ -1839,8 +1552,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_magnitudeI
        *  @param magnitudeI the i magnitude
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_magnitudeI (const double magnitudeI)
       { (void)magnitudeI; cbl::ErrorCBL("", "set_magnitudeI", "Object.h"); }  
@@ -1848,8 +1559,6 @@ namespace cbl {
       /**
        *  @brief set the private member Galaxy::m_SFR
        *  @param SFR the star formation rate of the galaxy
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_SFR (const double SFR)
       { (void)SFR; cbl::ErrorCBL("", "set_SFR", "Object.h"); }  
@@ -1857,26 +1566,20 @@ namespace cbl {
       /**
        *  @brief set the private member Galaxy::m_sSFR
        *  @param sSFR the specific star formation rate of the galaxy
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_sSFR (const double sSFR)
       { (void)sSFR; cbl::ErrorCBL("", "set_sSFR", "Object.h"); }  
       
       /**
        *  @brief set the member \e m_mass_proxy
-       *  @param mass_proxy the mass proxy 
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @param mass_proxy the mass proxy
        */
       virtual void set_mass_proxy (const double mass_proxy)
       { (void)mass_proxy; cbl::ErrorCBL("", "set_mass_proxy", "Object.h"); }
 
       /**
        *  @brief set the member \e m_mass_proxy_error
-       *  @param mass_proxy_error the mass proxy error 
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @param mass_proxy_error the mass proxy error
        */
       virtual void set_mass_proxy_error (const double mass_proxy_error)
       { (void)mass_proxy_error; cbl::ErrorCBL("", "set_mass_proxy_error", "Object.h"); }
@@ -1886,9 +1589,6 @@ namespace cbl {
        *
        *  @param bias the bias, or an error message if the derived
        *  object does not have this member
-       *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_bias (const double bias)
       { (void)bias; cbl::ErrorCBL("", "set_bias", "Object.h"); }  
@@ -1898,9 +1598,6 @@ namespace cbl {
        *
        *  @param generic the generic variable, or an error message if
        *  the derived object does not have this member
-       *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_generic (const double generic)
       { (void)generic; cbl::ErrorCBL("", "set_generic", "Object.h"); }  
@@ -1908,8 +1605,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_radius
        *  @param radius the radius
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_radius (const double radius)
       { (void)radius; cbl::ErrorCBL("", "set_radius", "Object.h"); }
@@ -1917,8 +1612,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_densityContrast
        *  @param densityContrast the density contrast
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_densityContrast (const double densityContrast)
       { (void)densityContrast; cbl::ErrorCBL("", "set_densityContrast", "Object.h"); }
@@ -1926,8 +1619,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_centralDensity
        *  @param centralDensity the central density
-       *  @return none, or an error message if the derived object does
-       *  not have this member
 
        */
       virtual void set_centralDensity (const double centralDensity)
@@ -1936,8 +1627,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_mass_estimate
        *  @param mass_estimate the mass estimate of the group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_mass_estimate (const double mass_estimate)
       { (void)mass_estimate; cbl::ErrorCBL("", "set_mass_estimate", "Object.h"); }
@@ -1945,8 +1634,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_radius_estimate
        *  @param radius_estimate the radius estimate of the group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_radius_estimate (const double radius_estimate)
       { (void)radius_estimate; cbl::ErrorCBL("", "set_radius_estimate", "Object.h"); }
@@ -1955,8 +1642,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_veldisp_estimate
        *  @param veldisp_estimate the velocity dispersion estimate of the group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_veldisp_estimate (const double veldisp_estimate)
       { (void)veldisp_estimate; cbl::ErrorCBL("", "set_veldisp_estimate", "Object.h"); }
@@ -1964,8 +1649,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_xcm
        *  @param xcm the x-axis coordinate of the centre of mass
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_xcm (const double xcm)
       { (void)xcm; cbl::ErrorCBL("", "set_xcm", "Object.h"); }
@@ -1973,8 +1656,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_ycm
        *  @param ycm the y-axis coordinate of the centre of mass
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_ycm (const double ycm)
       { (void)ycm; cbl::ErrorCBL("", "set_ycm", "Object.h"); }
@@ -1982,8 +1663,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_zcm
        *  @param zcm the z-axis coordinate of the centre of mass
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_zcm (const double zcm)
       { (void)zcm; cbl::ErrorCBL("", "set_zcm", "Object.h"); }
@@ -1991,8 +1670,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_spin_x
        *  @param spin_x the x-axis component of the spin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_spin_x (const double spin_x)
       { (void)spin_x; cbl::ErrorCBL("", "spin_x", "Object.h"); }
@@ -2000,8 +1677,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_spin_y
        *  @param spin_y the y-axis component of the spin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_spin_y (const double spin_y)
       { (void)spin_y; cbl::ErrorCBL("", "set_spin_y", "Object.h"); }
@@ -2009,8 +1684,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_spin_z
        *  @param spin_z the z-axis component of the spin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_spin_z (const double spin_z)
       { (void)spin_z; cbl::ErrorCBL("", "set_spin_z", "Object.h"); }
@@ -2018,8 +1691,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_veldisp
        *  @param veldisp the velocity dispersion of the sub-group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_veldisp (const double veldisp)
       { (void)veldisp; cbl::ErrorCBL("", "set_veldisp", "Object.h"); }
@@ -2027,8 +1698,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_vmax
        *  @param vmax the maximum total velocity of the sub-group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_vmax (const double vmax)
       { (void)vmax; cbl::ErrorCBL("", "set_vmax", "Object.h"); }
@@ -2036,8 +1705,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_vmax_rad
        *  @param vmax_rad the maximum radial velocity of the sub-group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_vmax_rad (const double vmax_rad)
       { (void)vmax_rad; cbl::ErrorCBL("", "set_vmax_rad", "Object.h"); }
@@ -2045,8 +1712,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_tot_mass
        *  @param tot_mass the total mass of the parent halo
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_tot_mass (const double tot_mass)
       { (void)tot_mass; cbl::ErrorCBL("", "set_tot_mass", "Object.h"); }
@@ -2054,8 +1719,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_parent
        *  @param parent the id of the parent group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_parent (const int parent)
       { (void)parent; cbl::ErrorCBL("", "set_parent", "Object.h"); }
@@ -2063,17 +1726,15 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_nsub
        *  @param nsub the number of sub-groups in the group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_nsub (const int nsub)
       { (void)nsub; cbl::ErrorCBL("", "set_nsub", "Object.h"); }
 
       /**
-       *  @brief set the private member \em m_satellites
-       *  @param satellite the shared pointers to be added to the satellite objects pointer vector
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @brief set the private member \em m_satellites 
+       *
+       *  @param satellite the shared pointers to be added to the
+       *  satellite objects pointer vector
        */
       virtual void set_satellite (const std::shared_ptr<Object> satellite)
       {	(void)satellite; cbl::ErrorCBL("", "set_satellite", "Object.h"); }
@@ -2081,11 +1742,25 @@ namespace cbl {
       /**
        *  @brief set the private member \em m_satellites
        *  @param satellites the vector of shared pointers to satellite objects
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_satellites (const std::vector<std::shared_ptr<Object>> satellites)
       {	(void)satellites; cbl::ErrorCBL("", "set_satellites", "Object.h"); }
+
+      /**
+       *  @brief set the virtual private member \em m_part (member of
+       *  ChainMeshCell)
+       *  @param part the vector to be replaced to the particles vector
+       */
+      virtual void set_part (const std::vector<unsigned int> part)
+      {	(void)part; cbl::ErrorCBL("", "set_part", "Object.h"); }
+
+      /**
+       *  @brief set the virtual private member \em m_nearCells
+       *  (member of ChainMeshCell)
+       *  @param nearCells the matrix of near cells to be set 
+       */
+      virtual void set_nearCells (const std::vector<std::vector<unsigned int>> nearCells)
+      {	(void)nearCells; cbl::ErrorCBL("", "set_nearCells", "Object.h"); }
       
       ///@}
 
@@ -2333,76 +2008,6 @@ namespace cbl {
        */
       virtual bool isSet_mass ()
       { return cbl::ErrorCBL("", "isSet_mass", "Object.h"); }
-      
-      /**
-       *  @brief check if the member \e m_logM is set
-       *  
-       *  @return true if the set; false otherwise, or an
-       *  error message if the derived object does not have this
-       *  member
-       */
-      virtual bool isSet_logM ()
-      { return cbl::ErrorCBL("", "isSet_logM", "Object.h"); }
-      
-      /**
-       *  @brief check if the member \e m_concentration is set
-       *  
-       *  @return true if the set; false otherwise, or an
-       *  error message if the derived object does not have this
-       *  member
-       */
-      virtual bool isSet_concentration ()
-      { return cbl::ErrorCBL("", "isSet_concentration", "Object.h"); }
-      
-      /**
-       *  @brief check if the member \e m_f_off is set
-       *  
-       *  @return true if the set; false otherwise, or an
-       *  error message if the derived object does not have this
-       *  member
-       */
-      virtual bool isSet_f_off ()
-      { return cbl::ErrorCBL("", "isSet_f_off", "Object.h"); }
-      
-      /**
-       *  @brief check if the member \e m_sigma_off is set
-       *  
-       *  @return true if the set; false otherwise, or an
-       *  error message if the derived object does not have this
-       *  member
-       */
-      virtual bool isSet_sigma_off ()
-      { return cbl::ErrorCBL("", "isSet_sigma_off", "Object.h"); }
-      
-      /**
-       *  @brief check if the member \e m_alpha_scaling_rel is set
-       *  
-       *  @return true if the set; false otherwise, or an
-       *  error message if the derived object does not have this
-       *  member
-       */
-      virtual bool isSet_alpha_scaling_rel ()
-      { return cbl::ErrorCBL("", "isSet_alpha_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief check if the member \e m_beta_scaling_rel is set
-       *  
-       *  @return true if the set; false otherwise, or an
-       *  error message if the derived object does not have this
-       *  member
-       */
-      virtual bool isSet_beta_scaling_rel ()
-      { return cbl::ErrorCBL("", "isSet_beta_scaling_rel", "Object.h"); }
-      
-      /**
-       *  @brief check if the member \e m_gamma_scaling_rel is set
-       *  
-       *  @return true if the set; false otherwise, or an
-       *  error message if the derived object does not have this
-       *  member
-       */
-      virtual bool isSet_gamma_scaling_rel ()
-      { return cbl::ErrorCBL("", "isSet_gamma_scaling_rel", "Object.h"); }
     
       /**
        *  @brief check if the member \e m_magnitude is set
