@@ -1,6 +1,7 @@
 name: cbl
 channels:
   - conda-forge
+  - woodscn
 dependencies:
   - Cython=0.29.21
   - make
@@ -13,6 +14,8 @@ dependencies:
   - fftw
   - cfitsio
   - ccfits
+  - cuba=4.2
+  - eigen=3
   - swig=4.0.1
   - python=3.6
   - six

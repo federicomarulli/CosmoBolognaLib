@@ -59,11 +59,14 @@ Dir_Recfast = External/Recfast/
 
 dir_H = $(addprefix $(PWD)/,$(Dir_H))
 dir_CCfits = $(addprefix $(PWD)/,$(Dir_CCfits))
+dir_CCfits_root =
 dir_CUBA = $(addprefix $(PWD)/,$(Dir_CUBA))
+dir_CUBA_root =
 dir_FFTLOG = $(addprefix $(PWD)/,$(Dir_FFTLOG))
 dir_CAMB = $(addprefix $(PWD)/,$(Dir_CAMB))
 dir_CAMButils = $(addprefix $(PWD)/,$(Dir_CAMButils))
 dir_Eigen = $(addprefix $(PWD)/, $(Dir_Eigen))
+dir_Eigen_root =
 dir_Recfast = $(addprefix $(PWD)/, $(Dir_Recfast))
 
 dir_Python = $(PWD)/Python/
@@ -79,7 +82,26 @@ FLAGS0 = -std=c++14 -fopenmp
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror 
 FLAGST = $(FLAGS0) $(FLAGS) $(dirCOSMO)
 
-FLAGS_INC = -I$(dir_Eigen) -I$(dir_CUBA) -I$(dir_CCfits)include/ -I$(dir_Recfast)include/ -I$(dir_H)
+FLAGS_INC = -I$(dir_Recfast)include/ -I$(dir_H)
+
+ifeq ($(dir_Eigen_root),)
+  FLAGS_INC := $(FLAGS_INC) -I$(dir_Eigen)
+  else
+  FLAGS_INC := $(FLAGS_INC) -I$(dir_Eigen_root)
+endif
+
+ifeq ($(dir_CUBA_root),)
+  FLAGS_INC := $(FLAGS_INC) -I$(dir_CUBA)
+  else
+  FLAGS_INC := $(FLAGS_INC) -I$(dir_CUBA_root)
+endif
+
+ifeq ($(dir_CCfits_root),)
+  FLAGS_INC := $(FLAGS_INC) -I$(dir_CCfits)include/
+  else
+  FLAGS_INC := $(FLAGS_INC) -I$(dir_CCfits_root)
+  dir_CCfits := dir_CCfits_root
+endif
 
 FLAGS_LINK = -shared
 
@@ -140,11 +162,15 @@ endif
 FLAGS_CCFITS = -Wl,-rpath,$(dir_CCfits)lib -L$(dir_CCfits)lib -lCCfits
 CCfits_LIB = $(dir_CCfits)lib/libCCfits.$(ES)
 
+ifneq ($(dir_CCfits_root),)
+    CCfits_COMPILE =
+else
 ifeq ($(dir_INC_cfitsio),)
     CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.6.tar.gz && cd CCfits && ./configure CXX=$(CXX_OLD) --prefix=$(dir_CCfits) CXXFLAGS="-w" && make && make install
-  else
+else
     CCfits_COMPILE = cd $(dir_CCfits) && tar -xzf CCfits-2.6.tar.gz && cd CCfits && ./configure CXX=$(CXX_OLD) --with-cfitsio-include=$(dir_INC_cfitsio) --with-cfitsio-libdir=$(dir_LIB_cfitsio) --prefix=$(dir_CCfits) CXXFLAGS="-w" && make && make install
-  FLAGS_INC := $(FLAGS_INC) -I$(dir_INC_cfitsio)
+FLAGS_INC := $(FLAGS_INC) -I$(dir_INC_cfitsio)
+endif
 endif
 
 
@@ -192,8 +218,13 @@ FLAGST_Recfast = $(FLAGS0) $(FLAGS_Recfast)
 ### CUBA FLAGS ###
 ##################
 
-CUBA_LIB = $(dir_CUBA)libcuba.a
-CUBA_COMPILE = cd $(dir_CUBA) && ./configure CC=$(CC) CFLAGS=-fPIC && make lib CC=$(CC)" -w" FC=$(F)" -w"
+ifneq ($(dir_CUBA_root),)
+    CUBA_COMPILE =
+    CUBA_LIB =
+else
+    CUBA_COMPILE = cd $(dir_CUBA) && ./configure CC=$(CC) CFLAGS=-fPIC && make lib CC=$(CC)" -w" FC=$(F)" -w"
+    CUBA_LIB = $(dir_CUBA)libcuba.a
+endif
 
 
 ####################

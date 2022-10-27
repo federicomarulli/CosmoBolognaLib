@@ -1284,14 +1284,24 @@ double cbl::statistics::LogLikelihood_Gaussian_combined (std::vector<double> &li
   // ----- compute the model values -----   
   vector<double> computed_model;
   for (size_t i=0; i<pp->models.size(); i++) {
+    
     std::vector<double> single_par ((int)(pp->par_indexes[i].size()));
+    
     for (size_t jj=0; jj<single_par.size(); jj++)
       single_par[jj] = likelihood_parameter[pp->par_indexes[i][jj]];
+    
     std::vector<double> single_probe_model = pp->models[i]->operator()(pp->xx[i], single_par);
+
+    // Update the derived parameters, if present
+    for (size_t jj=0; jj<single_par.size(); jj++)
+      likelihood_parameter[pp->par_indexes[i][jj]] = single_par[jj];
+
+    // Fill the vector containing all the model values
     for (size_t kk=0; kk<single_probe_model.size(); kk++)
       computed_model.emplace_back(single_probe_model[kk]);
+    
   }
-   
+  
   // ----- compute the difference between model and data at each bin -----    
   vector<double> diff(pp->flat_data.size(), 0);
   for (size_t i=0; i<pp->flat_data.size(); i++)
@@ -1305,7 +1315,7 @@ double cbl::statistics::LogLikelihood_Gaussian_combined (std::vector<double> &li
   double LogLikelihood = 0.;
   for (size_t i=0; i<pp->flat_data.size(); i++)
     for (size_t j=0; j<pp->flat_data.size(); j++)
-      LogLikelihood += diff[i]*inverse_covariance[i][j]*diff[j];
+      LogLikelihood += diff[i]*inverse_covariance[i][j]*diff[j];  
 
   return -0.5*LogLikelihood - log(sqrt(pow(2*cbl::par::pi, computed_model.size()) * cov.determinant()));
 }
@@ -1322,12 +1332,21 @@ double cbl::statistics::LogLikelihood_Poissonian_combined (std::vector<double> &
   // ----- compute the model values -----   
   vector<double> computed_model;
   for (size_t i=0; i<pp->models.size(); i++) {
+
     std::vector<double> single_par ((int)(pp->par_indexes[i].size()));
+
     for (size_t jj=0; jj<single_par.size(); jj++)
       single_par[jj] = likelihood_parameter[pp->par_indexes[i][jj]];
     std::vector<double> single_probe_model = pp->models[i]->operator()(pp->xx[i], single_par);
+
+    // Update the derived parameters, if present
+    for (size_t jj=0; jj<single_par.size(); jj++)
+      likelihood_parameter[pp->par_indexes[i][jj]] = single_par[jj];
+
+    // Fill the vector containing all the model values
     for (size_t kk=0; kk<single_probe_model.size(); kk++)
       computed_model.emplace_back(single_probe_model[kk]);
+    
   }
   
   // ----- estimate the Poissonian log-likelihood -----    
@@ -1371,16 +1390,28 @@ double cbl::statistics::LogLikelihood_Poissonian_SSC_combined (std::vector<doubl
   vector<double> computed_model, computed_response;
   vector<double> delta_b_index;
   for (size_t i=0; i<pp->models.size(); i++) {
+    
     std::vector<double> single_par ((int)(pp->par_indexes[i].size()));
+    
     for (size_t jj=0; jj<single_par.size(); jj++)
       single_par[jj] = likelihood_parameter[pp->par_indexes[i][jj]];
+    
     std::vector<double> single_probe_model = pp->models[i]->operator()(pp->xx[i], single_par);
+
+    // Update the derived parameters, if present
+    for (size_t jj=0; jj<single_par.size(); jj++)
+      likelihood_parameter[pp->par_indexes[i][jj]] = single_par[jj];
+
+    // Compute the response function
     std::vector<double> single_probe_response = pp->responses[i]->operator()(pp->xx[i], single_par);
+
+    // Fill the vectors containing all the model values
     for (size_t kk=0; kk<single_probe_model.size(); kk++) {
       computed_model.emplace_back(single_probe_model[kk]);
       computed_response.emplace_back(single_probe_response[kk]);
       delta_b_index.emplace_back(i);
     }
+    
   }
   
   // ----- estimate the log-likelihood -----    
