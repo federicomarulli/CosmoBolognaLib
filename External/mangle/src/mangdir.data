@@ -1,0 +1,9 @@
+c-----------------------------------------------------------------------
+c * mangenv = name of environment variable containing mangle directory.
+c * mangdir = pathname of directory containing mangle code.
+c * These variables are declared in mangdir.inc
+      data mangenv,mangdir /'MANGLEDIR',
+c * DO NOT TRY CHANGING THE FOLLOWING, AS THE NAME WILL BE OVERWRITTEN.
+c * THE DIRECTORY IS OBTAINED FROM THE ENVIRONMENT VARIABLE 'MANGLEDIR'.
+     *  '<pathname_of_directory_containing_mangle>'/
+c

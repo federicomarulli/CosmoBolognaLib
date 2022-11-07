@@ -1,0 +1,1 @@
+gvim ../../Headers/Modelling_Cosmology*.h ../../Headers/ModelFunction_Cosmology*.h *.cpp &

@@ -1,0 +1,100 @@
+The mangle software is written in c and fortran,
+so to compile mangle you will need both c and fortran compilers.
+
+To (re)compile
+--------------
+
+cd <mangle_directory>/src
+make
+
+The executables will be in
+<mangle_directory>/bin
+
+To remove unneeded object files
+-------------------------------
+
+cd <mangle_directory>/src
+make clean
+
+To remove a previous compilation and compile from scratch
+---------------------------------------------------------
+
+cd <mangle_directory>/src
+make cleanest
+make
+
+To generate a new Makefile for your local system and then compile from scratch
+------------------------------------------------------------------------------
+cd <mangle_directory>/src
+configure
+make cleanest
+make
+
+
+To compile a statically linked version suitable for distribution
+----------------------------------------------------------------
+
+cd <mangle_directory>/src
+make cleanest
+make static
+
+Systems on which mangle 2.x has compiled successfully
+-----------------------------------------------------
+
+real*10 version:
+Linux
+ gcc
+ gfortran 4.1.x or later
+
+Mac OSX Intel
+ gcc
+ gfortran 4.1.x or later
+
+see http://gcc.gnu.org/wiki/GFortranBinaries for gfortran for Mac OSX
+may require updated version of cctools from ftp://gcc.gnu.org/pub/gcc/infrastructure/
+
+real*8 version:
+Linux
+ gcc
+ g77
+
+Mac OSX Intel and PowerPC
+ gcc
+ g77
+
+Systems on which mangle1.x has compiled successfully
+----------------------------------------------------
+
+Linux
+ gcc versions 2 or 3
+ g77 or fort77
+
+Solaris
+ cc or gcc
+ f77 or g77
+
+To patch mangle1.4 to mangle1.4.1
+---------------------------------
+cd <mangle_directory>
+patch -p1 < ../path.to.the/mangle1.4_to_1.4.1.patch
+
+You will then need to recompile.
+
+Troubleshooting
+---------------
+If the Makefile gives problems, try using gmake (the gnu version of make)
+in place of make.  More generally, mangle is known to compile and run
+successfully with the gnu versions gcc and g77 of the c and fortran compilers,
+and with the gnu version gmake of the make command.
+To compile the real*10 version, you will need a compiler that supports real*10,
+for example, gfortran version 4.1 or later (though not all distributions
+of gfortran support real*10).  
+
+
+There are bound to be problems with compilation in early stages of the general
+release of mangle, since mangle has been tested only on a limited number of
+systems.  If you are having problems compiling, please contact the mangle development 
+team via Andrew.Hamilton@colorado.edu or tegmark@mit.edu, and we will try to work
+with you to get mangle to compile on your system.
+
+Updated by mecs 25 July 2008

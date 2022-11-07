@@ -1,0 +1,25 @@
+# © M E C Swanson 2008
+#script to set mangle environment variables
+#
+#USAGE: type 'source setup_mangle_environment' in the base mangle directory
+#If environment is setup correctly, typing
+#'echo $MANGLEBINDIR; echo $MANGLESCRIPTSDIR; echo $MANGLEDATADIR'
+#should print out the names of the appropriate directories.
+#
+#If the above command doesn't work, try 'source setup_mangle_environment $PWD/' 
+#
+#
+#You can also use 'source <MANGLEDIR>setup_mangle_environment <MANGLEDIR>'
+#where <MANGLEDIR> is the path to the base mangle directory, e.g., /home/username/mangle2.0/
+#
+#To automatically set up the mangle environment variables when you start your shell, 
+#add the following line to your .bashrc (or .tcshrc, or .cshrc, or .login, or .profile) 
+#(replace <MANGLEDIR> with the path to your mangle installation):
+#
+#source <MANGLEDIR>setup_mangle_environment <MANGLEDIR>
+
+export >& /dev/null
+${1}scripts/make_setup_script.sh $? $1 || return
+source setup_script
+/bin/rm setup_script
+

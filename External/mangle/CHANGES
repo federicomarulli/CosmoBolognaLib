@@ -1,0 +1,456 @@
+5 April 2009
+MANGLE 2.2 RELEASE
+Upgrades from mangle2.1:
+-Added option -B to balkanize to add weights together, or take the maximum or minimum weight instead of just using the last weight in the polygon file
+-Added option -W to polyid to write out the weights of the polygons containing each point rather than the id numbers
+-Snap now renormalizes input vectors to ensure that all vectors are exact unit vectors
+-Fixed bug in weight so that weights are not skipped in file when no midpoint is found
+-Upgraded matlab plotting script to allow for an arbitrary range of weights
+-Changed /dev/null paths in shell scripts to avoid bub in some linux flavors
+-Increased NPOLYSMAX to 90000000 
+-Added compile flags to allow mangle to write files larger than 2G
+
+--Molly Swanson
+--------------------------------------------------------------------------------
+
+25 July 2008
+MANGLE 2.1 RELEASE
+Upgrades from mangle2.0:
+-added versions for Mac OSX (Intel and PowerPC)
+-added versions that use real*8 in fortran and double in C (as opposed to real*10 and long double)
+-compiled binaries statically to allow for greater portability
+-added new example scripts (including an SDSS example) 
+-made extensive improvements to existing scripts
+-added a script to automatically set up mangle environment variables
+-added "snapped" and "balkanized" keywords so polygon files can automatically track whether they've been snapped or balkanized
+-fixed bug in rasterize that assigned the wrong weights to output polygons
+
+--Molly Swanson
+--------------------------------------------------------------------------------
+
+28 Nov 2007
+MANGLE 2.0 RELEASE
+Upgrades from mangle1.4.1:
+-pixelize functions for very speedy processing of masks
+-HEALPix import and export capabilities
+-loads of other new features
+
+Mangle 2.0 website:
+http://space.mit.edu/home/tegmark/mangle/ 
+
+--Molly Swanson, Colin Hill, Max Tegmark
+--------------------------------------------------------------------------------
+26 Nov 2007
+Fixed rasterize so that it outputs polygon files, updated parse_args.c, added pixelized and snapped versions of HEALPix polygons at Nside=1 through 512 to the /masks/healpix/ directory.
+--Colin Hill
+--------------------------------------------------------------------------------
+
+19 Nov 2007
+Assorted minor updates: fixed issue with SDSSPix pixel boundaries, added 2dF230k weight function, added rounding tolerances in rect_to_poly function
+--Molly Swanson
+--------------------------------------------------------------------------------
+
+8 Sept 2007
+Fixed segmentation fault issue when NPOLYSMAX >~ 3000000 by allocating the main polygon arrays globally rather than locally.  Also added calls to free_poly to clean up memory at the end of all programs.
+--Molly Swanson
+--------------------------------------------------------------------------------
+
+3 Sep 2007
+Changed snap and pixelize to use -vo instead of -vn.  
+Updated rasterize.c to use pixelization info in the most efficient manner possible.
+Removed balkanizepolys.c and snappolys.c (put this code back into balkanize.c and snap.c, respectively).
+Rewrote rasterize.c in the same format as the other main programs.
+--Colin Hill
+--------------------------------------------------------------------------------
+
+18 August 2007
+Added a script named healpixpolys.scr which constructs, pixelizes, and snaps the HEALPix pixels at any value of Nside.
+--Colin Hill
+--------------------------------------------------------------------------------
+
+18 August 2007
+Redesigned the rasterize algorithm so that no balkanization is required.  Rasterize now works by computing the area of the intersection between each input mask polygon and each rasterizer polygon, and using each of these areas in the calculation of the area-averaged weight within each rasterizer pixel.  This scheme is completely general and should work for not only the HEALPix pixels, but also other sets of rasterizer pixels.
+--Colin Hill
+--------------------------------------------------------------------------------
+
+2 June 2007
+Changed rasterize.c so that only one array of polygon pointers is used (instead of two).
+--Colin Hill
+
+--------------------------------------------------------------------------------
+30 May 2007
+Changed the way PI is defined in pi.h to ensure it's treated as a long double in the 80 bit version - this solves some issues with pixelizing with SDSSpix in the 80 bit version.  Also made minor fix in sdsspix section of get_pixel.c.
+--Molly Swanson
+
+--------------------------------------------------------------------------------
+22 May 2007
+Added formatted versions of the unformatted fortran files defining the 2df100k and 2qz10k masks and produced unformatted versions with gfortran-compiled code that can be read with the 80-bit version of mangle.  Updated READMEs and HELP.unformatted to instruct people to use the formatted version if they're having trouble.
+
+Also updated balkanize and pixelize to not take the snap angles at the command line since polygons are no longer self-snapped after balkanizing.
+--Molly Swanson
+
+--------------------------------------------------------------------------------
+21 May 2007
+Added "pixelization" as a keyword so that the scheme and resolution are automatically specified in input files, e.g.
+10 polygons
+pixelization 3s
+polygon 0 ....
+
+Most commands now return an error if two input files have mismatched pixelizations, and sets res_max and scheme to the values defined in the input file.  Pixelize ignores any previous pixelization info, and pixelmap uses the value of res_max defined on the command line rather than in the file.
+
+Also took infiles out of the format structure and made it a global variable, for use with the pixelization error checking.  Changed the healpix error-checking to use this global variable, and took out the "fmt.infiles = nfiles;" from all of the programs that read in files.
+--Molly Swanson
+
+--------------------------------------------------------------------------------
+14 May 2007
+Removed small typo in rasterize.c, namely, [-B] in the usage that referred to a now-deleted option.
+--Colin Hill
+
+--------------------------------------------------------------------------------
+2 May 2007
+Fixed memory allocation bug in pixelize - pixel loop now correctly skips over null polygons that have been pruned.
+Changed initial call to pixel_loop from
+  n=pixel_loop(0,np,poly,npolys,polys); //np= only non-null polygons
+to
+  n=pixel_loop(0,npoly,poly,npolys,polys); //npoly = all input polygons including null polygons
+and added null-skipping code in pixel_loop:
+      /* skip null polygons */
+      if (input[j]->np > 0 && input[j]->cm[0] == 0.){
+       poly[j] = 0x0;
+       continue;
+      }
+
+Also added code to automatically set all polygons to be in pixel 0 before pixelizing.
+
+--Molly Swanson
+
+--------------------------------------------------------------------------------
+1 May 2007
+Fixed some formatting issues when compiling on 64-bit system by changing printf statements for size_t type variables from %d to %zd
+Also changed the typedef for "logical" to be int for 64-bit and long for 32-bit (needs to be more robust in figuring out whether you're on a 64-bit system though.)
+
+--Molly Swanson
+
+--------------------------------------------------------------------------------
+
+1 May 2007
+Finally committed many changes that were made during January/February:
+
+- snap.c: split snap up into two files (snap.c and snappolys.c) so that the snap function can be used within rasterize (i.e., had to make snap a global function, not local); similar to what was done earlier with balkanize
+
+- snappolys.c: new source file containing snap function, which used to be located in snap.c
+
+- wrmask.c: added new function wr_healpix_weight, which is used to write output files in healpix_weight format
+
+- manglefn.h: added new functions snap and wr_healpix_weight
+
+- rdmask.c: implemented ability to read healpix_weight input files in full generality, i.e., ignore comments, blank lines, etc.
+
+- gsubs.s.f: changed multiplicative factors in gtol subroutine in attempts to make balkanize work on dr4plus mask
+
+- defines.h: increased NPOLYSMAX to 1565000
+
+- format.h and copy_format.c: added 'int infiles' element to format structure (needed for rasterize/healpix_weight format)
+
+- poly2poly.c: updated so that the old healpix2poly routine is now implemented within poly2poly (i.e., poly2poly -ih); in other words, healpix_weight input files are now processed just like any other input files
+
+- defaults.h: set default value for fmt.infiles to be 1
+
+- parse_args.c: updated to reflect deletion of healpix2poly
+
+- rasterize.c: improved so that polygons are now snapped before balkanization occurs; removed redundant balkanization
+
+- balkanize.c, harmonize.c, pixelize.c, polyid.c, pixelmap.c, poly2poly.c, ransack.c, snap.c, weight.c, unify.c: 
+	added line that is needed for rasterize/healpix_weight to work properly:    fmt.infiles = nfiles;
+
+- GNUmakefile: updated to reflect changes made (deleted old healpix2poly program; added snappolys.c)
+
+
+--Colin Hill
+
+--------------------------------------------------------------------------------
+
+17 April 2007
+Fixed bug causing pixelize to segfault when it hits NPOLYSMAX:
+replaced
+       if (out > out_max) {
+with
+       if (out >= out_max) {
+
+-Molly Swanson
+
+--------------------------------------------------------------------------------
+
+13 April 2007
+Assorted cleanups:
+
+- cleaned up warning messages in snap and unify
+
+- updated Sun makefile
+
+- fixed rdmask so reading in files in old polygon format (no pixel numbers) assigns pixel number 0 rather than reading in the steradian part
+
+- changed wr_poly so it doesn't crash when writing a polygon w/o a "format" structure
+was    if (fmt->healpix_out) fprintf(file, "healpix_weight %d\n\n", fmt->nweights);
+now    if (fmt && fmt->healpix_out) fprintf(file, "healpix_weight %d\n\n", fmt->nweights);
+
+- fixed memory allocation bug in ransack: after pruning, pointers were copied to null slots but still left in the original slots, causing problems when original slots are freed.
+Rather than doing
+poly[np] = poly[ipoly];
+for every polygon that isn't pruned, do
+
+   /*copy down non-null polygons*/
+    k=0;
+    for(ipoly = 0; ipoly < npoly; ipoly++){
+      if(poly[ipoly]){
+       poly[k++]=poly[ipoly];
+      }
+    }
+    /*after copying non-null polygons, k should be equal to np */
+    if(k!=np){
+      fprintf(stderr, "ransack: should be left with %d non-null polygons, but actually have %d\n",np,k);
+    }
+
+    /*nullify the rest of the array, but don't free, since pointers have been copied above*/
+    for(ipoly=np; ipoly < npoly; ipoly++){
+      poly[ipoly]=0x0;
+    }
+
+after pruning is done.  Also made similiar change in poly2poly for consistency, although poly2poly hasn't caused any problems.
+
+
+--Molly Swanson
+
+--------------------------------------------------------------------------------
+
+1 April 2007
+Files for new mangle website added to website directory.
+Still some work to be done: 
+  - new title image;
+  - new 'manual' sections describing rasterize/pixelmap/healpix_weight/etc.;
+  - need shell scripts for 'scripts' section in 'download';
+  - some broken links need to be fixed in the 'polygon formats' and 
+      'troubleshooting' sections in 'manual';
+  - the links and references at the bottom of the old mangle web page need to
+      be added somewhere;
+  - the 'quickstart' section needs to be redone, and the current material can
+      probably be added to the 'manual' section.
+
+--Colin Hill
+
+--------------------------------------------------------------------------------
+9 March 2007
+Fixed bug in ransack.c line 80
+was rp[1] = x;
+now rp[1] = y;
+--Molly Swanson
+
+--------------------------------------------------------------------------------
+mangle1.5
+20 Oct 2006
+
+Changes from Colin Hill:
+Added SDSSpix pixelization scheme
+Added capability to import and export healpix files
+
+New commands: healpix2poly, rasterize
+New functions: get_healpix_poly, get_nside, healpix_verts,cmrpirpj
+
+healpix functions: healpix_ang2pix_nest, pix2vec_nest
+
+sdsspix functions: pix2ang, ang2pix, pix2ang_radec, ang2pix_radec, 
+csurvey2eq,eq2csurvey,superpix,subpix,pix_bound,pix_area,pix2xyz,area_index,
+area_index_stripe,assign_parameters
+
+Put balkanize function in separate balkanizepolys.c file
+Made various other minor edits
+
+--------------------------------------------------------------------------------
+
+Changes from Molly Swanson:
+Fixed bug in polyid created by pixelization stuff
+Added pixelmap function
+Added option to set polygon ids to their pixel numbers
+
+--------------------------------------------------------------------------------
+
+Changes from Andrew Hamilton: 
+14 Sep 2006
+
+Thanks to Colin Hill, working with Max Tegmark and Molly Swanson at MIT,
+for finding a polygon that defeated mangle.
+
+1. The problem was numerical round-off,
+and the immediate fix was to replace line 71 in split_poly.c
+	if (area != area_tot) {			/* boundary intersects poly1 */
+with
+	if (area > area_tot) {			/* boundary intersects poly1 */
+It should never happen that area < area_tot, since removing a boundary
+of a polygon should never decrease its area, but thanks to numerical round-off
+the area did decrease.  Once that happened, mangle span its wheels.
+
+2. The killer polygon that was responsible for the numerical failure of item 1
+is discussed below.  To improve mangle's defence against such polygons,
+I changed the strategy for modifying the tolerance angle to multiple
+intersections.  Originally, if mangle detected an inconsistency in the
+topology of the distribution of vertices around multiple intersections,
+then mangle would double the tolerance angle and try again.
+The new strategy is to try tightening as well as loosening the tolerance angle.
+Mangle now see-saws between and tighter and looser tolerance angles
+successive factors of 2 away from the original input tolerance angle.
+
+3. There was also a bug on line 182 of balkanize.c.
+    for (i = npoly; i < npolys; i++) {
+should have been
+    for (i = 0; i < npolys; i++) {
+This bug became evident as a result of a compiler change.
+When tripped, the bug produces a segmentation violation, so if you never
+experienced this bug before, it should never have caused an error.
+
+This is Colin Hill's killer polygon:
+polygon 6 ( 5 caps, 1.0 weight, 0.000003265281337 str):
+ -0.2972995896945569 -0.5791945044073898 -0.7590432662449000 0.5786075961488696
+ -0.1092635942528740  0.6422417176858356 -0.7586745303718128 0.5279437897883537
+ -0.3927631897959760 -0.5199166454922474 -0.7585669110114012 -0.4794583692304901
+ -0.0457867636138749  0.6498588533234551 -0.7586745303718132 -0.5279437897887224
+ -0.3467216633109536 -0.5515406106135746 -0.7586745303718130 0.5279437897887302
+It is a long (4.3 degrees) thin (36 arcsec) rectangle, split by a diagonal
+which is almost, but not quite, tangent at each end to the long direction.
+Each near tangent end is both almost multiply intersecting, and almost kissing.
+
+If you balkanize the killer polygon with the default tolerance angle
+for multiple intersections of 10^-5 arsec, then mangle1.4.1 will discard the
+polygon as having zero area:
+
+% balkanize killer.poly -
+---------------- balkanize ----------------
+snap angles: axis 2s latitude 2s edge 2s
+multiple intersections closer than 1e-05s will be treated as coincident
+...
+1 polygons read from j6
+warning from balkanize: following polygons have zero area & are being discarded:
+ 0
+...
+ 0 polygons written to output
+
+Well, the polygon is thin, 36 arcsec wide, so maybe you don't mind losing
+the polygon.  But with snap tolerance angles of 2 arcsec, you'd think mangle
+should keep it.  It turns out that the multiple intersections at each end
+of the polygon have separations that vary from 10^-8 arcsec in the thin
+direction to 80 arcsec in the long direction, and this distribution of
+separations conspires so that mangle finds no consistent topology
+(satisfying the 64-bit check number) for tolerance angles to multiple
+intersections anywhere between 10^-8 arcsec and 40 arcsec.  But 40 arcsec
+exceeds the 36 arcsec width of the polygon, so mangle concludes that the
+area is zero.
+
+If the tolerance angle for multiple intersections is tightened to
+5 x 10^-9 arcsec:
+
+% balkanize -m5e-9s killer.poly -
+
+then mangle does find the correct solution.  That is, since the polygon
+is already a valid polygon, balkanize spits back the killer polygon
+unchanged.
+
+Thus the solution to dealing with this polygon is not to loosen the
+tolerance, but to tighten it.  The new mangle strategy does this.
+
+Max Tegmark suggests switching the entire mangle code from double (64-bit)
+to quadruple (128-bit) precision.  This may be a sensible thing to do
+at some point.  The need for high precision was always evident.
+Inevitably, people are messing with masks that have arcsecond precision.
+A 1 x 1 arcsec rectangle has an area of 2 x 10^-11 str, which is 2 x 10^-12
+of the whole sky.  This is a factor of 10^4 larger than the effective
+precision 2 x 10^-16 of 64-bit floats.  The factor of 10^4 is ok,
+but with ever more complicated masks appearing, it may no longer be
+providing a sufficient safety margin.
+
+--------------------------------------------------------------------------------
+5 Sep 2005
+
+Added '\r' to characters considered blank, so polygon files are dos-compatible.
+
+--------------------------------------------------------------------------------
+
+mangle1.4.3
+9 Jan 2006
+Molly Swanson
+
+Added "pixel 0" to the polygon files in masks/allsky
+Commented out self-snapping step in balkanize to avoid creating problematic
+long skinny polygons when running on the sdss mask
+Added "list" output format to be read by matlab script
+Changed defaults snap angles from 2 to .2 arcseconds
+
+
+--------------------------------------------------------------------------------
+mangle1.4.2
+4 Mar 2005
+Molly Swanson
+
+Added pixelization functions to speed up snap, balkanize, unify, and polyid.
+New command: pixelize
+New functions: get_pixel, which_pixel, get_child_pixels, get_parent_pixels, 
+get_res, pixel_list, pixel_start, poly_sort
+Modified polygon format to include pixel number
+Made a variety of other small, minor changes
+
+--------------------------------------------------------------------------------
+
+mangle1.4.1
+30 Mar 2004
+
+Many thanks to Michael Blanton, who is working on the SDSS mask,
+for bringing these two problems to light.
+
+1. In some cases, balkanize creates long, extremely thin polygons that mangle
+cannot subsequently deal with, because the polygons are simply too thin for
+the numerics.  The solution is to add to the balkanization routine a
+penultimate step that snaps the edges of each polygon to each other.
+This is not a bad idea anyway, since polygons produced by balkanization
+should never need additional snapping.
+
+2. Connected with the above problem, in some cases and on some platforms
+vmid fails to find a midpoint of a polygon.  The problematic polygons
+are precisely the long extremely thin polygons mentioned in 1.
+In these cases the barycentre of the polygon provides a satisfactory midpoint.
+Therefore the barycentre is now included as one of the points to test
+as a possible midpoint of a polygon.
+
+In addition to the above, I added "intrinsic" declarations of abs max and min
+to the fortran routines that use those functions, as required by some
+fortran compilers.
+
+--------------------------------------------------------------------------------
+mangle1.4
+3 Sep 2003
+
+Several minor improvements.
+The mangle code has gotten a pretty good workout on the 2dF 230k sample,
+released on 30 June 2003, and there have been no changes in mangle for about
+a month now, so I'm getting pretty happy that the code has converged,
+at least for the time being.
+
+In the future, if demand warrants, there may be an accelerated version of
+mangle that replaces double do loops over polygons with code that is a little
+more intelligent about deciding whether 2 polygons are close to each other.
+
+--------------------------------------------------------------------------------
+mangle1.3.3
+24 June 2003
+
+Implemented spolygon format.
+
+--------------------------------------------------------------------------------
+mangle1.3.2
+17 June 2003
+
+First general public release.
+Major upgrade from mangle1.2; much more robust.
+
+--------------------------------------------------------------------------------
+mangle1.2
+8 Sep 2001
+
+First limited public release.
