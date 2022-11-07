@@ -1,0 +1,12 @@
+#Parameter   Parameter		covariance
+Omega_b*h^2  Omega_b*h^2  	1.286e-7
+Omega_b*h^2  Omega_M*h^2  	-6.033e-7
+Omega_b*h^2  D_M(1090)/r_d	-1.443e-5
+
+Omega_M*h^2  Omega_b*h^2  	-6.033e-7
+Omega_M*h^2  Omega_M*h^2  	7.542e-6
+Omega_M*h^2  D_M(1090)/r_d	-3.605e-5
+
+D_M(1090)/r_d  Omega_b*h^2      1.443e-5
+D_M(1090)/r_d  Omega_M*h^2  	-3.605e-5
+D_M(1090)/r_d  D_M(1090)/r_d	0.004264

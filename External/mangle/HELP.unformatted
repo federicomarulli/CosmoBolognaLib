@@ -1,0 +1,51 @@
+Problem
+-------
+Your fortran refuses to read the unformatted fortran files made on another
+system.
+
+Diagnosis
+---------
+Your computer stores bytes with opposite endianness.
+
+OR
+
+Your version of mangle was compiled using the gfortran fortran compiler, 
+but you are trying to read unformatted fortran files produced with g77 
+fortran code.
+
+Solution
+--------
+Download the formatted version of the masks available in the "data" section
+of the mangle website http://space.mit.edu/home/tegmark/mangle/
+and use these instead.
+
+
+Another Solution
+----------
+WARNING: The following hack works only if each number in the unformatted
+fortran file is a single word, i.e. an INTEGER or REAL (not DOUBLE PRECISION).
+On a 32-bit machine, each word contains 4 bytes.
+
+The following converts files to the opposite endianness using cpio,
+a command famous for its obtuseness.
+
+1. Make a cpio archive file from the original files, as in
+
+ls -1 file1 file2 ... | cpio -o > files.cpio
+
+Notice that the switch -1 is a one, not an ell.
+
+2. Move the cpio archive to another directory where it will not overwrite
+the old files
+
+mv files.cpio other_directory
+
+3. Extract the files from the cpio archive in the new directory
+
+cd other_directory
+cpio -i -b < files.cpio
+
+The -b switch is the thing that does the byte-swapping in each word.
+
+
+
