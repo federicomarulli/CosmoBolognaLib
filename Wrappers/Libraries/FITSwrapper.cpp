@@ -19,14 +19,12 @@
  *******************************************************************/
 
 /**
- *  @file Wrappers/FITSwrapper.cpp
+ *  @file Wrappers/Libraries/FITSwrapper.cpp
  *
- *  @brief functions that wrap FITS routines to
- *  manage .fits files
+ *  @brief functions that wrap FITS routines to manage .fits files
  *
- *  This file contains the implementation of 
- *  wrappers of FITS routines to
- *  manage .fits files
+ *  This file contains the implementation of wrappers of FITS routines
+ *  to manage .fits files
  *
  *  @author Alfonso Veropalumbo
  *

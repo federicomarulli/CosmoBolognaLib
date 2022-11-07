@@ -19,7 +19,7 @@
  *******************************************************************/
 
 /**
- *  @file Wrappers/CUBAwrapper.cpp
+ *  @file Wrappers/Libraries/CUBAwrapper.cpp
  *
  *  @brief functions that wrap CUBA routines for 
  *  multidimensional integration,
@@ -110,8 +110,7 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateVegas (vector<vector<double>> i
   userdata->integration_limits = integration_limits;
 
   if (!parallelize) {
-    int zero = 0;
-    cubacores(&zero, &zero);
+    cubacores(0, 0);
   }
 
   Vegas(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
@@ -143,8 +142,7 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateSuave (vector<vector<double>> i
   userdata->integration_limits = integration_limits;
 
   if (!parallelize) {
-    int zero = 0;
-    cubacores(&zero, &zero);
+    cubacores(0, 0);
   }
   
   Suave(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
@@ -176,8 +174,7 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateDivonne (vector<vector<double>>
   userdata->integration_limits = integration_limits;
 
   if (!parallelize) {
-    int zero = 0;
-    cubacores(&zero, &zero);
+    cubacores(0, 0);
   }
 
   Divonne(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
@@ -211,8 +208,7 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateCuhre (vector<vector<double>> i
   userdata->integration_limits = integration_limits;
 
   if (!parallelize) {
-    int zero = 0;
-    cubacores(&zero, &zero);
+    cubacores(0, 0);
   }
 
   Cuhre(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,

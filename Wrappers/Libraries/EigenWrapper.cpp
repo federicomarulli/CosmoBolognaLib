@@ -19,7 +19,7 @@
  *******************************************************************/
 
 /**
- *  @file Wrappers/EigenWrapper.cpp
+ *  @file Wrappers/Libraries/EigenWrapper.cpp
  *
  *  @brief functions that wrap Eigen routines for vector
  *  and matrix manipulation

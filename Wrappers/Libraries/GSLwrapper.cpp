@@ -19,14 +19,13 @@
  *******************************************************************/
 
 /**
- *  @file Wrappers/GSLwrapper.cpp
+ *  @file Wrappers/Libraries/GSLwrapper.cpp
  *
- *  @brief functions that wrap GSL routines for integration,
- *  root finding and minimization
+ *  @brief functions that wrap GSL routines for integration, root
+ *  finding and minimization
  *
- *  This file contains the implementation of 
- *  wrappers of  GSL routines for integration, 
- *  root finding and minimization
+ *  This file contains the implementation of wrappers of GSL routines
+ *  for integration, root finding and minimization
  *
  *  @author Federico Marulli
  *
