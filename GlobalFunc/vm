@@ -1,0 +1,1 @@
+gvim ../Headers/GlobalFunc.h FuncCosmology.cpp Func.cpp SubSample.cpp Reconstruction.cpp Forecast.cpp &

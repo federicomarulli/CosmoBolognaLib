@@ -1,0 +1,1 @@
+gvim ../Headers/FuncGrid.h ../Headers/FuncGrid_Bspline.h *cpp &
