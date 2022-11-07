@@ -1,7 +1,0 @@
-<map id="Headers/FITSwrapper.h" name="Headers/FITSwrapper.h">
-<area shape="rect" id="node1" title="class FITSwrapper that wrap CCfits routines to manage FITS files" alt="" coords="389,5,561,32"/>
-<area shape="rect" id="node2" href="$da/d74/FITSCatalogue_8cpp.html" title="Methods of the class Catalogue to construct catalogues from FITS files." alt="" coords="5,87,219,114"/>
-<area shape="rect" id="node3" href="$d0/deb/CombinedPosterior_8cpp.html" title="Methods of the class CombinedPosterior." alt="" coords="243,87,479,114"/>
-<area shape="rect" id="node4" href="$de/d6a/Posterior_8cpp.html" title="Methods of the class Posterior." alt="" coords="504,87,675,114"/>
-<area shape="rect" id="node5" href="$da/db1/FITSwrapper_8cpp.html" title="functions that wrap FITS routines to manage .fits files" alt="" coords="699,80,843,121"/>
-</map>
