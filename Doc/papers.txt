@@ -1,0 +1,50 @@
+The following is the list of scientific publications that used the
+CosmoBolognaLib but could not cite the reference CosmoBolognaLib
+paper (http://arxiv.org/abs/1511.00012), as they have been published
+before it:
+
+*   Sereno, Veropalumbo, Marulli, Covone, Moscardini, Cimatti
+    New constraints on sigma8 from a joint analysis of stacked
+    gravitational lensing and clustering of galaxy clusters
+    2015, MNRAS, 449, 4147
+
+*   Moresco, Marulli, Baldi, Moscardini, Cimatti
+    Disentangling interacting dark energy cosmologies with the
+    three-point correlation function
+    2014, MNRAS, 443, 2874
+
+*   Veropalumbo, Marulli, Moscardini, Moresco, Cimatti
+    An improved measurement of baryon acoustic oscillations from the
+    correlation function of galaxy clusters at z~0.3
+    2014, MNRAS, 442, 3275
+   
+*   Villaescusa-Navarro, Marulli, Viel, Branchini, Castorina, Sefusatti, Saito
+    Cosmology with massive neutrinos I: towards a realistic modeling of
+    the relation between matter, haloes and galaxies
+    2014, JCAP, 03, 011
+   
+*   Giocoli, Marulli, Baldi, Moscardini, Metcalf
+    Characterizing dark interactions with the halo mass accretion
+    history and structural properties
+    2013, MNRAS, 434, 2982	   
+
+*   Marulli and the VIPERS team
+    The VIMOS Public Extragalactic Redshift Survey (VIPERS). Luminosity
+    and stellar mass dependence of galaxy clustering at 0.5 < z < 1.1
+    2013, A&A, 557, 17	       
+
+*   Marulli, Bianchi, Branchini, Guzzo, Moscardini, Angulo
+    Cosmology with clustering anisotropies: disentangling dynamic and
+    geometric distortions in galaxy redshift surveys
+    2012, MNRAS, 426, 2566
+
+*   Marulli, Baldi, Moscardini
+    Clustering and redshift-space distortions in interacting dark
+    energy cosmologies
+    2012, MNRAS, 420, 2377
+
+*   Marulli, Carbone, Viel, Moscardini, Cimatti
+    Effects of massive neutrinos on the large-scale structure of the
+    Universe
+    2011, MNRAS, 418, 346
+	
