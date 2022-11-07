@@ -99,7 +99,7 @@ at https://gitlab.com/federicomarulli/CosmoBolognaLib/archive/master.zip
 > <KBD> $ make </KBD> 
     
 by default, make will compile the full set of libraries using the GNU
-project g++ compile (>=v4.8.4 is required); both the compiler and the
+project g++ compile (>=v11.2.0 is required); both the compiler and the
 compilation flags can be specified by modifying the variables C and
 FLAGS defined in the Makefile (e.g.: make C=icpc FLAGS="-O0 -g")
 
@@ -139,9 +139,9 @@ FLAGS defined in the Makefile (e.g.: make C=icpc FLAGS="-O0 -g")
 > <KBD> $ make mangle </KBD>
 
 It is also possible to create a @b conda @b environment for the CosmoBolognaLib, called "cbl".
-\n In CosmoBolognaLib/ run
+\n In `CosmoBolognaLib/`, run
 
-> <KBD> $ conda env create -f environment_ubuntu.yml </KBD>
+> <KBD> $ conda env create -f environment.yml </KBD>
 
 > <KBD> $ conda activate cbl </KBD>
 
@@ -149,9 +149,19 @@ In order to compile the CosmoBolognaLib in the conda environment, run
 
 > <KBD> $ python environment_compile.py </KBD>
 
-To run e.g. make clean in the conda environment, run
+To run e.g. `make clean` in the conda environment, run
 
 > <KBD> $ python environment_compile.py clean </KBD>
+
+In order to compile scripts that include CosmoBolognaLib, it is necessary to specify the library path for the compiler.
+\n
+For example, in Ubuntu add the following line to the `.bashrc` file:
+
+> <KBD> export LD_LIBRARY_PATH=/path/to/CosmoBolognaLib/ </KBD>
+
+Then, to compile for example a script named `script.cpp`, run
+
+> <KBD> $ make script CXX=$GXX HOME=$CONDA_PREFIX </KBD>
 
 */
 	

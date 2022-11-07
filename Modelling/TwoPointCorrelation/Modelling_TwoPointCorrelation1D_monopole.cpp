@@ -429,7 +429,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation1D_monopole::set_model_
   vector<statistics::ParameterType> parameterType(nparameters, statistics::ParameterType::_Base_);
 
   vector<string> parameterName(nparameters);
-  vector<statistics::PriorDistribution> priors(nparameters-1);
+  vector<statistics::PriorDistribution> priors(nparameters);
   
   parameterName[0] = "bias";
   priors[0] = bias_prior;

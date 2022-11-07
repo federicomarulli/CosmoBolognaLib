@@ -1192,11 +1192,10 @@ void cbl::cosmology::Cosmology::Table_XiCodes (const std::string code, const boo
 
   dir_grid += "h"+conv(m_hh, par::fDP6)+"_OmB"+conv(m_Omega_baryon, par::fDP6)+"_OmCDM"+conv(m_Omega_CDM, par::fDP6)+"_OmL"+conv(m_Omega_DE, par::fDP6)+"_OmN"+conv(m_Omega_neutrinos, par::fDP6)+"_Z"+conv(redshift, par::fDP6)+"_scalar_amp"+conv(m_scalar_amp, par::ee3)+"_scalar_pivot"+conv(m_scalar_pivot, par::fDP6)+"_n"+conv(m_n_spec, par::fDP6)+"_w0"+conv(m_w0, par::fDP6)+"_wa"+conv(m_wa, par::fDP6);
 
-  //if (output_root!="test") dir_grid += "_"+output_root;
+  if (output_root!="test") dir_grid += "_"+output_root;
 
   string dir = dir_cosmo+"/External/"+code+"/";
   string dirFFT = dir_cosmo+"/External/fftlog-f90-master/";
-  if (chdir(dirFFT.c_str())) {}
   string dir_output = dir+dir_grid+"/";
 
   string file_in = (code=="MPTbreeze-v1") ? dir_output+"Pk2.dat" : dir_output+"Pk.dat";
@@ -1243,8 +1242,6 @@ void cbl::cosmology::Cosmology::Table_XiCodes (const std::string code, const boo
     string RM = "rm -rf "+dir_grid;
     if (system(RM.c_str())) {}
   }
-
-  if (chdir(dir_loc.c_str())) {}
 }
 
 

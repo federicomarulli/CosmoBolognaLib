@@ -27,8 +27,8 @@ int main () {
     // --------------------------------------------------------------------------------------
     // ---------------- construct the random catalogue (with cubic geometry) ----------------
     // --------------------------------------------------------------------------------------
-
-    const double N_R = 1.; // random/data ratio
+   
+    const double N_R = 100.; // random/data ratio
   
     const cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::RandomType::_createRandom_box_, catalogue, N_R};
     

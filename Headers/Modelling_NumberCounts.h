@@ -426,9 +426,6 @@ namespace cbl {
 	 *  @param Mass_step the number of bins for mass vector
        	 *
 	 *  @param prec the precision
-	 *
-	 *  @return none, or an error message if the derived object
-	 *  does not have this member
 	 */
 	virtual void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4) 
 	{ 

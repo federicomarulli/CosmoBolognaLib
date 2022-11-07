@@ -124,7 +124,7 @@ void cbl::modelling::CombinedModelling::write_combined_results (const std::strin
 // ============================================================================================
 
 
-void cbl::modelling::CombinedModelling::write_model_from_combined_chain (const std::string output_dir, const std::string output_file, const int start, const int thin)
+void cbl::modelling::CombinedModelling::write_model_from_combined_chain (const std::string output_dir, const std::string output_file, const int start, const int thin, const std::vector<double> xx, const std::vector<double> yy)
 {
-  m_combined_posterior->write_model_from_chain(output_dir, output_file, start, thin);
+  m_combined_posterior->write_model_from_chain(output_dir, output_file, start, thin, xx, yy);
 }

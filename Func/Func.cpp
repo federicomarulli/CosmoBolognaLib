@@ -525,55 +525,55 @@ double cbl::interpolated_2D (const double _x1, const double _x2, const std::vect
       ydata[i+j*size_x1] = yy[i][j];
 
   gsl_interp2d *interp = gsl_interp2d_alloc(TT, size_x1, size_x2);
-  gsl_interp2d_init (interp, x1.data(), x2.data(), ydata, size_x1, size_x2);
+  gsl_interp2d_init(interp, x1.data(), x2.data(), ydata, size_x1, size_x2);
 
   double val;
   if (extr)
-    val= gsl_interp2d_eval_extrap(interp, x1.data(), x2.data() , ydata, _x1, _x2, x1acc, x2acc);
+    val= gsl_interp2d_eval_extrap(interp, x1.data(), x2.data(), ydata, _x1, _x2, x1acc, x2acc);
   else
-    val= gsl_interp2d_eval(interp, x1.data(), x2.data() , ydata, _x1, _x2, x1acc, x2acc);
+    val= gsl_interp2d_eval(interp, x1.data(), x2.data(), ydata, _x1, _x2, x1acc, x2acc);
 
   gsl_interp2d_free(interp);
   gsl_interp_accel_free(x1acc);
   gsl_interp_accel_free(x2acc);
-  free(ydata);
+  delete ydata;
 
   return val;
 }
 
 // ============================================================================
 
-std::vector<double> cbl::linear_interpolation_3D(const std::vector<double> min, std::vector<double> max, std::vector<int> steps, std::vector<std::vector<std::vector<double>>> func, const std::vector<std::vector<double>> pos) 
+std::vector<double> cbl::linear_interpolation_3D (const std::vector<double> min, std::vector<double> max, std::vector<int> steps, std::vector<std::vector<std::vector<double>>> func, const std::vector<std::vector<double>> pos) 
 {
-	if (min.size()!= 3 || max.size()!=3 || steps.size() !=3)
+  if (min.size()!= 3 || max.size()!=3 || steps.size() !=3)
     ErrorCBL("the input grid have a wrong dimension", "linear_interpolation_nD", "Func.cpp");
 
-	vector<double> output(pos.size());
-	vector<double> step_dim(3);
-	for (auto i=0; i<3; i++) step_dim[i] = (max[i]-min[i])/steps[i];
+  vector<double> output(pos.size());
+  vector<double> step_dim(3);
+  for (auto i=0; i<3; i++) step_dim[i] = (max[i]-min[i])/steps[i];
 
-	for (size_t i=0; i<pos.size(); i++) {
+  for (size_t i=0; i<pos.size(); i++) {
 
-		vector<int> inds(3);
-		for (int dim=0; dim<3; dim++) {
-			inds[dim] = (pos[i][dim]-min[dim])/step_dim[dim];
-			if (inds[dim]<0 || (inds[dim]+1)*step_dim[dim]+min[dim] > max[dim])
-    		ErrorCBL("Point out of grid", "linear_interpolation_3D", "Func.cpp");
-		}
-		double tempX1 = ((pos[i][0]-(min[0]+inds[0]*step_dim[0]))*func[inds[2]][inds[1]][inds[0]+1] - 
-										(pos[i][0]-(min[0]+(inds[0]+1)*step_dim[0]))*func[inds[2]][inds[1]][inds[0]])/step_dim[0];
-		double tempX2 = ((pos[i][0]-(min[0]+inds[0]*step_dim[0]))*func[inds[2]][inds[1]+1][inds[0]+1] - 
-										(pos[i][0]-(min[0]+(inds[0]+1)*step_dim[0]))*func[inds[2]][inds[1]+1][inds[0]])/step_dim[0];
-		double tempX3 = ((pos[i][0]-(min[0]+inds[0]*step_dim[0]))*func[inds[2]+1][inds[1]][inds[0]+1] - 
-										(pos[i][0]-(min[0]+(inds[0]+1)*step_dim[0]))*func[inds[2]+1][inds[1]][inds[0]])/step_dim[0];
-		double tempX4 = ((pos[i][0]-(min[0]+inds[0]*step_dim[0]))*func[inds[2]+1][inds[1]+1][inds[0]+1] - 
-										(pos[i][0]-(min[0]+(inds[0]+1)*step_dim[0]))*func[inds[2]+1][inds[1]+1][inds[0]])/step_dim[0];
-		double tempY1 = ((pos[i][1]-(min[1]+inds[1]*step_dim[1]))*tempX2 - (pos[i][1]-(min[1]+(inds[1]+1)*step_dim[1]))*tempX1)/step_dim[1];
-		double tempY2 = ((pos[i][1]-(min[1]+inds[1]*step_dim[1]))*tempX4 - (pos[i][1]-(min[1]+(inds[1]+1)*step_dim[1]))*tempX3)/step_dim[1];
-		output[i] = ((pos[i][2]-(min[2]+inds[2]*step_dim[2]))*tempY2 - (pos[i][2]-(min[2]+(inds[2]+1)*step_dim[2]))*tempY1)/step_dim[2];
-	}
+    vector<int> inds(3);
+    for (int dim=0; dim<3; dim++) {
+      inds[dim] = (pos[i][dim]-min[dim])/step_dim[dim];
+      if (inds[dim]<0 || (inds[dim]+1)*step_dim[dim]+min[dim] > max[dim])
+	ErrorCBL("Point out of grid", "linear_interpolation_3D", "Func.cpp");
+    }
+    double tempX1 = ((pos[i][0]-(min[0]+inds[0]*step_dim[0]))*func[inds[2]][inds[1]][inds[0]+1] - 
+		     (pos[i][0]-(min[0]+(inds[0]+1)*step_dim[0]))*func[inds[2]][inds[1]][inds[0]])/step_dim[0];
+    double tempX2 = ((pos[i][0]-(min[0]+inds[0]*step_dim[0]))*func[inds[2]][inds[1]+1][inds[0]+1] - 
+		     (pos[i][0]-(min[0]+(inds[0]+1)*step_dim[0]))*func[inds[2]][inds[1]+1][inds[0]])/step_dim[0];
+    double tempX3 = ((pos[i][0]-(min[0]+inds[0]*step_dim[0]))*func[inds[2]+1][inds[1]][inds[0]+1] - 
+		     (pos[i][0]-(min[0]+(inds[0]+1)*step_dim[0]))*func[inds[2]+1][inds[1]][inds[0]])/step_dim[0];
+    double tempX4 = ((pos[i][0]-(min[0]+inds[0]*step_dim[0]))*func[inds[2]+1][inds[1]+1][inds[0]+1] - 
+		     (pos[i][0]-(min[0]+(inds[0]+1)*step_dim[0]))*func[inds[2]+1][inds[1]+1][inds[0]])/step_dim[0];
+    double tempY1 = ((pos[i][1]-(min[1]+inds[1]*step_dim[1]))*tempX2 - (pos[i][1]-(min[1]+(inds[1]+1)*step_dim[1]))*tempX1)/step_dim[1];
+    double tempY2 = ((pos[i][1]-(min[1]+inds[1]*step_dim[1]))*tempX4 - (pos[i][1]-(min[1]+(inds[1]+1)*step_dim[1]))*tempX3)/step_dim[1];
+    output[i] = ((pos[i][2]-(min[2]+inds[2]*step_dim[2]))*tempY2 - (pos[i][2]-(min[2]+(inds[2]+1)*step_dim[2]))*tempY1)/step_dim[2];
+  }
 
-	return output;
+  return output;
 }
 
 // ============================================================================
@@ -662,6 +662,7 @@ double cbl::determinant_matrix (const std::vector<std::vector<double>> mat)
 
   gsl_matrix_free(mm);
   gsl_permutation_free(perm);
+  
   return det;
 }
 
@@ -1703,8 +1704,8 @@ void cbl::distribution (std::vector<double> &xx, std::vector<double> &fx, std::v
       err.push_back(sqrt(val)/((log10(x2)-log10(x1))*fact));
     }
 
-  else
-    ErrorCBL("the value of string 'bin_type' is not permitted, possible selections are 'Linear', 'Log', 'Log10'!", "distribution", "Func.cpp");
+    else
+      ErrorCBL("the value of string 'bin_type' is not permitted, possible selections are 'Linear', 'Log', 'Log10'!", "distribution", "Func.cpp");
 
 
 
@@ -1815,7 +1816,7 @@ double cbl::Legendre_polynomial_mu_average (const int ll, const double mu, const
 double cbl::Legendre_polynomial_mu_average (const double mu_min, const double mu_max, const int ll)
 {
   double integral = (ll>0) ? (legendre_polynomial(mu_max, ll+1)-legendre_polynomial(mu_max, ll-1)+
-    		    legendre_polynomial(mu_min, ll-1)-legendre_polynomial(mu_min, ll+1))/(mu_max-mu_min) : 1.;
+			      legendre_polynomial(mu_min, ll-1)-legendre_polynomial(mu_min, ll+1))/(mu_max-mu_min) : 1.;
   return integral/(2*ll+1);
 }
 
@@ -2116,19 +2117,19 @@ double cbl::jl_distance_average (const double kk, const int order, const double 
   double Int = cbl::wrapper::gsl::GSL_integrate_qag(integrand, r_down, r_up);
 
   /*
-  cbl::glob::STR_jl_distance_average str;
-  str.order = order;
-  str.k = kk;
+    cbl::glob::STR_jl_distance_average str;
+    str.order = order;
+    str.k = kk;
 
-  gsl_function Func;
+    gsl_function Func;
 
-  Func.function=&cbl::jl_spherical_integrand;
-  Func.params=&str;
+    Func.function=&cbl::jl_spherical_integrand;
+    Func.params=&str;
 
-  double prec=1.e-2;
-  int limit_size = 1000;
+    double prec=1.e-2;
+    int limit_size = 1000;
 
-  double Int = cbl::wrapper::gsl::GSL_integrate_qag(Func, r_down, r_up, prec, limit_size, 6);
+    double Int = cbl::wrapper::gsl::GSL_integrate_qag(Func, r_down, r_up, prec, limit_size, 6);
   */
 
   return Int/volume;
@@ -2583,26 +2584,26 @@ double cbl::three_spherical_bessel_integral (const double r1, const double r2, c
 
 double cbl::average_three_spherical_bessel_integral (const double r1_min, const double r1_max, const double r2_min, const double r2_max, const double r3, const int L1, const int L2, const int L3)
 {
-    // limits of the integral
-    int ndim = 2;
-    std::vector<std::vector<double>> integration_limits(ndim);
-    integration_limits[0] = {pow(r1_min, 3), pow(r1_max, 3)};
-    integration_limits[1] = {pow(r2_min, 3), pow(r2_max, 3)};
+  // limits of the integral
+  int ndim = 2;
+  std::vector<std::vector<double>> integration_limits(ndim);
+  integration_limits[0] = {pow(r1_min, 3), pow(r1_max, 3)};
+  integration_limits[1] = {pow(r2_min, 3), pow(r2_max, 3)};
 
-    double V1 = pow(r1_max, 3)-pow(r1_min, 3);
-    double V2 = pow(r2_max, 3)-pow(r2_min, 3);
+  double V1 = pow(r1_max, 3)-pow(r1_min, 3);
+  double V2 = pow(r2_max, 3)-pow(r2_min, 3);
 
-    // wrapper to CUBA libraries
+  // wrapper to CUBA libraries
 
-    auto integrand = [&] (const vector<double> xx) 
-    {
-        return three_spherical_bessel_integral(pow(xx[0], 1./3), pow(xx[1], 1./3), r3, L1, L2, L3);
-    };
-    cbl::wrapper::cuba::CUBAwrapper CW(integrand, ndim);
-    CW.inputs().SPIN = make_shared<int>(-1);
-    //CW.inputs().NVEC = 2;
+  auto integrand = [&] (const vector<double> xx) 
+  {
+    return three_spherical_bessel_integral(pow(xx[0], 1./3), pow(xx[1], 1./3), r3, L1, L2, L3);
+  };
+  cbl::wrapper::cuba::CUBAwrapper CW(integrand, ndim);
+  CW.inputs().SPIN = make_shared<int>(-1);
+  //CW.inputs().NVEC = 2;
 
-    return CW.IntegrateCuhre(integration_limits)/(V1*V2);
+  return CW.IntegrateCuhre(integration_limits)/(V1*V2);
 }
 
 

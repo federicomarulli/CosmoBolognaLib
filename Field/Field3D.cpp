@@ -526,7 +526,7 @@ void cbl::data::VectorField3D::set_VectorField (const vector<double> value, cons
 // ============================================================================
 
 
-void cbl::data::VectorField3D::set_VectorField_FourierSpace_real(const vector<double> value, const int i, const int j, const int k, const bool add)
+void cbl::data::VectorField3D::set_VectorField_FourierSpace_real (const std::vector<double> value, const int i, const int j, const int k, const bool add)
 {
   m_field_FourierSpace[0][inds_to_index_Fourier(i,j,k)][0] = (add) ? m_field_FourierSpace[0][inds_to_index(i,j,k)][0]+value[0] : value[0];
   m_field_FourierSpace[1][inds_to_index_Fourier(i,j,k)][0] = (add) ? m_field_FourierSpace[1][inds_to_index(i,j,k)][0]+value[1] : value[1];

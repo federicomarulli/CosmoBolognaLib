@@ -285,8 +285,6 @@ namespace cbl {
        *  @brief sum the number of binned pairs
        *  @param pair an object of class Pair
        *  @param ww the weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void Sum (const std::shared_ptr<Pair> pair, const double ww=1) override;
       
@@ -1051,8 +1049,6 @@ namespace cbl {
        *  @brief sum the number of binned pairs
        *  @param pair an object of class Pair
        *  @param ww the weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void Sum (const std::shared_ptr<Pair> pair, const double ww=1) override;
   
@@ -1174,8 +1170,6 @@ namespace cbl {
        *  @brief sum the number of binned pairs
        *  @param pair an object of class Pair
        *  @param ww the weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void Sum (const std::shared_ptr<Pair> pair, const double ww=1) override;
   

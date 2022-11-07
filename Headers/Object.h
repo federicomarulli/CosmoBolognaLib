@@ -1365,8 +1365,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_odds
        *  @param odds the odds
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_odds (const double odds)
       { (void)odds; cbl::ErrorCBL("", "set_odds", "Object.h"); }  
@@ -1374,8 +1372,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_shear1
        *  @param shear1 the first shear component
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_shear1 (const double shear1)
       { (void)shear1; cbl::ErrorCBL("", "set_shear1", "Object.h"); } 
@@ -1383,8 +1379,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_shear2
        *  @param shear2 the second shear component
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_shear2 (const double shear2)
       { (void)shear2; cbl::ErrorCBL("", "set_shear2", "Object.h"); } 
@@ -1392,8 +1386,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_lensingWeight
        *  @param lensingWeight the lensing weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_lensingWeight (const double lensingWeight)
       { (void)lensingWeight; cbl::ErrorCBL("", "set_lensingWeight", "Object.h"); } 
@@ -1401,8 +1393,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_lensingCalib
        *  @param lensingCalib the lensing calibration factor
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_lensingCalib (const double lensingCalib)
       { (void)lensingCalib; cbl::ErrorCBL("", "set_lensingCalib", "Object.h"); } 
@@ -1471,17 +1461,13 @@ namespace cbl {
       /**
        *  @brief set the member \e m_vx
        *  @param vx the peculiar velocity along the x direction
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_vx (const double vx)
       { (void)vx; cbl::ErrorCBL("", "set_vx", "Object.h"); }
       
       /**
        *  @brief set the member \e m_vy
-       *  @param vy the peculiar velocity along the y direction 
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @param vy the peculiar velocity along the y direction
        */
       virtual void set_vy (const double vy)
       { (void)vy; cbl::ErrorCBL("", "set_vy", "Object.h"); }
@@ -1489,8 +1475,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_vz
        *  @param vz the peculiar velocity along the z direction
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_vz (const double vz)
       { (void)vz; cbl::ErrorCBL("", "set_vz", "Object.h"); }
@@ -1498,8 +1482,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_mass
        *  @param mass the mass
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_mass (const double mass)
       { (void)mass; cbl::ErrorCBL("", "set_mass", "Object.h"); }
@@ -1507,15 +1489,13 @@ namespace cbl {
       /**
        *  @brief set the member \e m_IDHost
        *  @param IDHost the ID of host halo 
-       *  @return none
        */
       virtual void set_IDHost (const int IDHost)
       { (void)IDHost; cbl::ErrorCBL("", "set_IDHost", "Object.h"); }
 
       /**
        *  @brief set the member \e m_galaxyTag
-       *  @param galaxyTag the tag of the galaxy indeed "central" or "satellite" 
-       *  @return none
+       *  @param galaxyTag the tag of the galaxy indeed "central" or "satellite"
        */
       virtual void set_galaxyTag (const double galaxyTag)
       { (void)galaxyTag; cbl::ErrorCBL("", "set_galaxyTag", "Object.h"); }
@@ -1523,8 +1503,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_mstar
        *  @param mstar the stellar mass
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_mstar (const double mstar)
       { (void)mstar; cbl::ErrorCBL("", "set_mstar", "Object.h"); }
@@ -1532,8 +1510,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_massinfall
        *  @param massinfall the infall mass of the substructure
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_massinfall (const double massinfall)
       { (void)massinfall; cbl::ErrorCBL("", "set_massinfall", "Object.h"); }
@@ -1541,8 +1517,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_proxyerror
        *  @param value argument value
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_proxyerror (const double value)
       { (void)value; cbl::ErrorCBL("", "set_proxyerror", "Object.h"); }
@@ -1550,8 +1524,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_magnitude
        *  @param magnitude the magnitude
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_magnitude (const double magnitude)
       { (void)magnitude; cbl::ErrorCBL("", "set_magnitude", "Object.h"); } 
@@ -1559,8 +1531,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_magnitudeU
        *  @param magnitudeU the u magnitude
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_magnitudeU (const double magnitudeU)
       { (void)magnitudeU; cbl::ErrorCBL("", "set_magnitudeU", "Object.h"); } 
@@ -1568,8 +1538,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_magnitudeG
        *  @param magnitudeG the g magnitude
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_magnitudeG (const double magnitudeG)
       { (void)magnitudeG; cbl::ErrorCBL("", "set_magnitudeG", "Object.h"); } 
@@ -1577,8 +1545,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_magnitudeR
        *  @param magnitudeR the r magnitude
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_magnitudeR (const double magnitudeR)
       { (void)magnitudeR; cbl::ErrorCBL("", "set_magnitudeR", "Object.h"); } 
@@ -1586,8 +1552,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_magnitudeI
        *  @param magnitudeI the i magnitude
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_magnitudeI (const double magnitudeI)
       { (void)magnitudeI; cbl::ErrorCBL("", "set_magnitudeI", "Object.h"); }  
@@ -1595,8 +1559,6 @@ namespace cbl {
       /**
        *  @brief set the private member Galaxy::m_SFR
        *  @param SFR the star formation rate of the galaxy
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_SFR (const double SFR)
       { (void)SFR; cbl::ErrorCBL("", "set_SFR", "Object.h"); }  
@@ -1604,26 +1566,20 @@ namespace cbl {
       /**
        *  @brief set the private member Galaxy::m_sSFR
        *  @param sSFR the specific star formation rate of the galaxy
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_sSFR (const double sSFR)
       { (void)sSFR; cbl::ErrorCBL("", "set_sSFR", "Object.h"); }  
       
       /**
        *  @brief set the member \e m_mass_proxy
-       *  @param mass_proxy the mass proxy 
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @param mass_proxy the mass proxy
        */
       virtual void set_mass_proxy (const double mass_proxy)
       { (void)mass_proxy; cbl::ErrorCBL("", "set_mass_proxy", "Object.h"); }
 
       /**
        *  @brief set the member \e m_mass_proxy_error
-       *  @param mass_proxy_error the mass proxy error 
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @param mass_proxy_error the mass proxy error
        */
       virtual void set_mass_proxy_error (const double mass_proxy_error)
       { (void)mass_proxy_error; cbl::ErrorCBL("", "set_mass_proxy_error", "Object.h"); }
@@ -1633,9 +1589,6 @@ namespace cbl {
        *
        *  @param bias the bias, or an error message if the derived
        *  object does not have this member
-       *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_bias (const double bias)
       { (void)bias; cbl::ErrorCBL("", "set_bias", "Object.h"); }  
@@ -1645,9 +1598,6 @@ namespace cbl {
        *
        *  @param generic the generic variable, or an error message if
        *  the derived object does not have this member
-       *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_generic (const double generic)
       { (void)generic; cbl::ErrorCBL("", "set_generic", "Object.h"); }  
@@ -1655,8 +1605,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_radius
        *  @param radius the radius
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_radius (const double radius)
       { (void)radius; cbl::ErrorCBL("", "set_radius", "Object.h"); }
@@ -1664,8 +1612,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_densityContrast
        *  @param densityContrast the density contrast
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_densityContrast (const double densityContrast)
       { (void)densityContrast; cbl::ErrorCBL("", "set_densityContrast", "Object.h"); }
@@ -1673,8 +1619,6 @@ namespace cbl {
       /**
        *  @brief set the member \e m_centralDensity
        *  @param centralDensity the central density
-       *  @return none, or an error message if the derived object does
-       *  not have this member
 
        */
       virtual void set_centralDensity (const double centralDensity)
@@ -1683,8 +1627,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_mass_estimate
        *  @param mass_estimate the mass estimate of the group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_mass_estimate (const double mass_estimate)
       { (void)mass_estimate; cbl::ErrorCBL("", "set_mass_estimate", "Object.h"); }
@@ -1692,8 +1634,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_radius_estimate
        *  @param radius_estimate the radius estimate of the group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_radius_estimate (const double radius_estimate)
       { (void)radius_estimate; cbl::ErrorCBL("", "set_radius_estimate", "Object.h"); }
@@ -1702,8 +1642,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_veldisp_estimate
        *  @param veldisp_estimate the velocity dispersion estimate of the group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_veldisp_estimate (const double veldisp_estimate)
       { (void)veldisp_estimate; cbl::ErrorCBL("", "set_veldisp_estimate", "Object.h"); }
@@ -1711,8 +1649,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_xcm
        *  @param xcm the x-axis coordinate of the centre of mass
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_xcm (const double xcm)
       { (void)xcm; cbl::ErrorCBL("", "set_xcm", "Object.h"); }
@@ -1720,8 +1656,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_ycm
        *  @param ycm the y-axis coordinate of the centre of mass
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_ycm (const double ycm)
       { (void)ycm; cbl::ErrorCBL("", "set_ycm", "Object.h"); }
@@ -1729,8 +1663,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_zcm
        *  @param zcm the z-axis coordinate of the centre of mass
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_zcm (const double zcm)
       { (void)zcm; cbl::ErrorCBL("", "set_zcm", "Object.h"); }
@@ -1738,8 +1670,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_spin_x
        *  @param spin_x the x-axis component of the spin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_spin_x (const double spin_x)
       { (void)spin_x; cbl::ErrorCBL("", "spin_x", "Object.h"); }
@@ -1747,8 +1677,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_spin_y
        *  @param spin_y the y-axis component of the spin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_spin_y (const double spin_y)
       { (void)spin_y; cbl::ErrorCBL("", "set_spin_y", "Object.h"); }
@@ -1756,8 +1684,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_spin_z
        *  @param spin_z the z-axis component of the spin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_spin_z (const double spin_z)
       { (void)spin_z; cbl::ErrorCBL("", "set_spin_z", "Object.h"); }
@@ -1765,8 +1691,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_veldisp
        *  @param veldisp the velocity dispersion of the sub-group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_veldisp (const double veldisp)
       { (void)veldisp; cbl::ErrorCBL("", "set_veldisp", "Object.h"); }
@@ -1774,8 +1698,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_vmax
        *  @param vmax the maximum total velocity of the sub-group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_vmax (const double vmax)
       { (void)vmax; cbl::ErrorCBL("", "set_vmax", "Object.h"); }
@@ -1783,8 +1705,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_vmax_rad
        *  @param vmax_rad the maximum radial velocity of the sub-group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_vmax_rad (const double vmax_rad)
       { (void)vmax_rad; cbl::ErrorCBL("", "set_vmax_rad", "Object.h"); }
@@ -1792,8 +1712,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_tot_mass
        *  @param tot_mass the total mass of the parent halo
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_tot_mass (const double tot_mass)
       { (void)tot_mass; cbl::ErrorCBL("", "set_tot_mass", "Object.h"); }
@@ -1801,8 +1719,6 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_parent
        *  @param parent the id of the parent group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_parent (const int parent)
       { (void)parent; cbl::ErrorCBL("", "set_parent", "Object.h"); }
@@ -1810,17 +1726,15 @@ namespace cbl {
       /**
        *  @brief set the private member \e m_nsub
        *  @param nsub the number of sub-groups in the group
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_nsub (const int nsub)
       { (void)nsub; cbl::ErrorCBL("", "set_nsub", "Object.h"); }
 
       /**
-       *  @brief set the private member \em m_satellites
-       *  @param satellite the shared pointers to be added to the satellite objects pointer vector
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @brief set the private member \em m_satellites 
+       *
+       *  @param satellite the shared pointers to be added to the
+       *  satellite objects pointer vector
        */
       virtual void set_satellite (const std::shared_ptr<Object> satellite)
       {	(void)satellite; cbl::ErrorCBL("", "set_satellite", "Object.h"); }
@@ -1828,26 +1742,22 @@ namespace cbl {
       /**
        *  @brief set the private member \em m_satellites
        *  @param satellites the vector of shared pointers to satellite objects
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_satellites (const std::vector<std::shared_ptr<Object>> satellites)
       {	(void)satellites; cbl::ErrorCBL("", "set_satellites", "Object.h"); }
 
       /**
-       *  @brief set the virtual private member \em m_part (member of ChainMeshCell)
+       *  @brief set the virtual private member \em m_part (member of
+       *  ChainMeshCell)
        *  @param part the vector to be replaced to the particles vector
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_part (const std::vector<unsigned int> part)
       {	(void)part; cbl::ErrorCBL("", "set_part", "Object.h"); }
 
       /**
-       *  @brief set the virtual private member \em m_nearCells (member of ChainMeshCell)
+       *  @brief set the virtual private member \em m_nearCells
+       *  (member of ChainMeshCell)
        *  @param nearCells the matrix of near cells to be set 
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_nearCells (const std::vector<std::vector<unsigned int>> nearCells)
       {	(void)nearCells; cbl::ErrorCBL("", "set_nearCells", "Object.h"); }

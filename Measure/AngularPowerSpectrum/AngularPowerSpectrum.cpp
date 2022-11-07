@@ -192,7 +192,7 @@ cbl::measure::angularpk::PowerSpectrum_angular::PowerSpectrum_angular (const cat
 // ============================================================================================
 
 
-cbl::measure::angularpk::PowerSpectrum_angular::PowerSpectrum_angular (const catalogue::Catalogue data, const double l_min, const double l_max, const int bandwidth, const string mask_file, const string mask_type, double pixel_area, int n_lines_header)
+cbl::measure::angularpk::PowerSpectrum_angular::PowerSpectrum_angular (const catalogue::Catalogue data, const double l_min, const double l_max, const int bandwidth, const std::string mask_file, const string mask_type, double pixel_area, int n_lines_header)
 {
   m_l_min = l_min;   
   m_l_max = l_max;

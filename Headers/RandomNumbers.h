@@ -144,8 +144,6 @@ namespace cbl {
       /**
        *  @brief set the mean for Poisson distribution
        *  @param mean the Poisson distribution mean
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_mean (const double mean)
       { (void)mean; ErrorCBL("error!", "set_mean", "RandomNumbers.h"); }
@@ -154,8 +152,6 @@ namespace cbl {
        *  @brief set parameters for Normal distribution
        *  @param mean the Normal distribution mean
        *  @param sigma the Normal distribution standard deviation
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_mean_sigma (const double mean, const double sigma)
       { (void)mean; (void)sigma; ErrorCBL("error!", "set_mean_sigma", "RandomNumbers.h"); }
@@ -164,8 +160,6 @@ namespace cbl {
        *  @brief set parameters for Discrete distribution
        *  @param values the values to be extracted
        *  @param weights the values weights
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_discrete_values (const std::vector<double> values, const std::vector<double> weights)
       { (void)values; (void)weights; ErrorCBL("error!", "set_discrete_values", "RandomNumbers.h"); }
@@ -174,8 +168,6 @@ namespace cbl {
        *  @brief set the parameters for the interpolated distribution
        *  @param values the values to be extracted
        *  @param weights the values weights
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_interpolated_distribution (const std::vector<double> values, const std::vector<double> weights)
       { (void)values; (void)weights; ErrorCBL("error!", "set_interpolated_distribution", "RandomNumbers.h"); }
@@ -190,9 +182,6 @@ namespace cbl {
        *
        *  @param parameter the parameters of the probability
        *  distribution function
-       *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_custom_distribution (const distribution_func func, const std::shared_ptr<void> modelInput, const std::vector<double> parameter)
       { (void)func; (void)modelInput; (void)parameter; ErrorCBL("error!", "set_custom_distribution", "RandomNumbers.h"); }

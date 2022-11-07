@@ -101,21 +101,17 @@ namespace cbl {
        *
        * @param prec the precision required in the inversion of the
        * covariance matrix
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void m_set (const std::vector<double> matrix, const double nmeasures=-1, const double prec=1.e-10);
 
       /**
-       * @brief compute the hartlap 
-       * factor. This is used to de-bias
-       * precision matrix measured from covariance
-       * measured from limited number of datasets
+       * @brief compute the hartlap factor. This is used to de-bias
+       * precision matrix measured from covariance measured from
+       * limited number of datasets
        *
        *  \f[
-       *  \hat{\Psi}=\left(1-\frac{N_{\mathrm{b}}+1}{N_{\mathrm{s}}-1}\right) \hat{\mathrm{c}}^{-1}
-       *  \f]
+       *  \hat{\Psi}=\left(1-\frac{N_{\mathrm{b}}+1}{N_{\mathrm{s}}-1}\right)
+       *  \hat{\mathrm{c}}^{-1} \f]
        *
        * @param order the matrix order (or the number of data points)
        *
@@ -380,13 +376,14 @@ namespace cbl {
        *
        * This use the standard estimator of the covariance
        *
-       * \f[
-       * \hat{C}_{i j}=\frac{f}{N_{\mathrm{s}}-1} \sum_{k=1}^{N_{\mathrm{s}}}
+       * \f[ \hat{C}_{i j}=\frac{f}{N_{\mathrm{s}}-1}
+       * \sum_{k=1}^{N_{\mathrm{s}}}
        * \left(D_{i}^{k}-\bar{D}_{i}\right)\left(D_{j}^{k}-\bar{D}_{j}\right)
        * \f]
        *
-       * where \f$D_{i}\f$ is the i-th measure \f$ \bar{D}_{i}\f$ the mean.
-       * \f$f\f$ is a normalization factor the user can provide in input.
+       * where \f$D_{i}\f$ is the i-th measure \f$ \bar{D}_{i}\f$ the
+       * mean.  \f$f\f$ is a normalization factor the user can provide
+       * in input.
        *
        * @param dataset vector of pointers of object of type Data
        *

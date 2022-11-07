@@ -64,15 +64,13 @@ namespace cbl {
     private:
       
       /**
-       *  @name Member functions used to set the binning parameters (customized in all the derived classes) 
+       *  @name Member functions used to set the binning parameters
+       *  (customized in all the derived classes)
        */
       ///@{
   
       /**
        *  @brief set the binning parameters
-       * 
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_parameters () = 0;
   
@@ -281,15 +279,13 @@ namespace cbl {
     private:
       
       /**
-       *  @name Member functions used to set the binning parameters (customized in all the derived classes) 
+       *  @name Member functions used to set the binning parameters
+       *  (customized in all the derived classes)
        */
       ///@{
   
       /**
        *  @brief set the binning parameters
-       *  
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_parameters () = 0;
   
@@ -803,9 +799,6 @@ namespace cbl {
   
       /**
        *  @brief set the binning parameters
-       *  
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_parameters () = 0;
 

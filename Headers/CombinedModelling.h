@@ -368,8 +368,16 @@ namespace cbl {
        * @param start the minimum chain position to be written
        *
        * @param thin the step used for dilution on screen
+       *
+       * @param xx x points where the model is computed. If
+       * not provided, the x points set for the MCMC
+       * are considered.
+       *
+       * @param yy y points where the model is computed. If
+       * not provided, the y points set for the MCMC
+       * are considered.
        */
-      void write_model_from_combined_chain (const std::string output_dir, const std::string output_file, const int start, const int thin);
+      void write_model_from_combined_chain (const std::string output_dir, const std::string output_file, const int start, const int thin, const std::vector<double> xx={}, const std::vector<double> yy={});
       
       ///@}
       

@@ -520,16 +520,12 @@ namespace cbl {
       
       /**
        * @brief perform the Fourier transform on the field
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void FourierTransformField ()
       { ErrorCBL("", "FourierTransformField", "Field3D.h"); }
 
       /**
        * @brief perform the anti-Fourier transform on the field
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void FourierAntiTransformField ()
       { ErrorCBL("", "FourierAntiTransformField", "Field3D.h"); }
@@ -537,8 +533,6 @@ namespace cbl {
       /**
        * @brief perform a smoothing of the field with a gaussian kernel
        * @param kernel_size size of the gaussian kernel
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void GaussianConvolutionField (const double kernel_size)
       { (void)kernel_size; ErrorCBL("", "GaussianConvolutionField", "Field3D.h"); }
@@ -552,9 +546,6 @@ namespace cbl {
        * @param k the k-th cell along the z-axis
        * @param add 1 &rarr; add to the current value; 0
        *  &rarr; overwrite the value
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void set_ScalarField (const double value, const int i, const int j, const int k, const bool add=0)
       { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("", "set_ScalarField", "Field3D.h"); }
@@ -568,9 +559,6 @@ namespace cbl {
        * @param k the k-th cell along the z-axis
        * @param add 1 &rarr; add to the current value; 0
        *  &rarr; overwrite the value
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void set_VectorField (const std::vector<double> value, const int i, const int j, const int k, const bool add=0)
       { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("", "set_Vectorield", "Field3D.h"); }
@@ -585,9 +573,6 @@ namespace cbl {
        *
        * @param add 1 &rarr; add to the current value; 0 &rarr;
        * overwrite the value
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void set_ScalarField_FourierSpace_real (const double value, const int i, const int j, const int k, const bool add=0)
       { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("", "set_ScalarField_FourierSpace_real", "Field3D.h"); }
@@ -602,53 +587,42 @@ namespace cbl {
        *
        * @param add 1 &rarr; add to the current value; 0 &rarr;
        * overwrite the value
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void set_ScalarField_FourierSpace_complex (const double value, const int i, const int j, const int k, const bool add=0)
       { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("", "set_ScalarField_FourierSpace_complex", "Field3D.h"); }
 
       /**
-       * @brief set the value of the vector field, Fourier space, real part
+       *  @brief set the value of the vector field, Fourier space,
+       *  real part
        * 
        *  @param value vector containing values of the vector field,
        *  Fourier space, real part
        *  @param i the i-th cell along the x-axis
        *  @param j the j-th cell along the y-axis
        *  @param k the k-th cell along the z-axis
-       *  @param add  1 &rarr; add to the current value; 0
-       *  &rarr; overwrite the value
-       *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @param add 1 &rarr; add to the current value; 0 &rarr;
+       *  overwrite the value
        */
       virtual void set_VectorField_FourierSpace_real (const std::vector<double> value, const int i, const int j, const int k, const bool add=0)
       { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("", "set_VectorField_FourierSpace_real", "Field3D.h"); }
 
       /**
-       * @brief set the value of the vector field, Fourier space, complex part
+       * @brief set the value of the vector field, Fourier space,
+       * complex part
        * 
-       * @param value vector containing values of the vector field, 
+       * @param value vector containing values of the vector field,
        * Fourier space, complex part
        * @param i the i-th cell along the x-axis
        * @param j the j-th cell along the y-axis
        * @param k the k-th cell along the z-axis
-       *
        * @param add 1 &rarr; add to the current value; 0 &rarr;
        * overwrite the value
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void set_VectorField_FourierSpace_complex (const std::vector<double> value, const int i, const int j, const int k, const bool add=0)
       { (void)value; (void)i; (void)j; (void)k; (void)add; ErrorCBL("", "set_VectorField_FourierSpace_complex", "Field3D.h"); }
 
       /**
        * @brief set to 0 the fields
-       *
-       * @return none, or an error message if the derived object does
-       * not have this member
        */
       virtual void reset()
       { ErrorCBL("", "reset", "Field3D.h"); }
@@ -983,8 +957,6 @@ namespace cbl {
        * @param k the k-th cell along the z-axis
        * @param add  1 &rarr; add to the current value; 0
        *  &rarr; overwrite the value
-       *
-       * 
        */
       void set_VectorField_FourierSpace_real (const std::vector<double> value, const int i, const int j, const int k, const bool add=0);
 
@@ -999,8 +971,6 @@ namespace cbl {
        * @param k the k-th cell along the z-axis
        * @param add  1 &rarr; add to the current value; 0
        *  &rarr; overwrite the value
-       *
-       * 
        */
       void set_VectorField_FourierSpace_complex (const std::vector<double> value, const int i, const int j, const int k, const bool add=0);
 

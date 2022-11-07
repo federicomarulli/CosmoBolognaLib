@@ -9,7 +9,7 @@ dir_Eigen = $(dirLib)External/Eigen/eigen-3.4.0/
 dir_CCfits = $(dirLib)External/CCfits/include
 dirCUBA = $(dirLib)External/Cuba-4.2.1/
 
-FLAGS_LIB = -Wl,-rpath,$(dirLib) -L$(dirLib) -lWRAP
+FLAGS_LIB = -Wl,-rpath,$(dirLib) -L$(dirLib) -lWRAP_LIB
 FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
 
 OBJ1 = integration_gsl.o

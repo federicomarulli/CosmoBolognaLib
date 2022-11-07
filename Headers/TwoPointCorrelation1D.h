@@ -78,8 +78,6 @@ namespace cbl {
 	 *  @param PP pointer to an object of class Pair
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void write_pairs (const std::shared_ptr<pairs::Pair> PP, const std::string dir, const std::string file) const override;
 
@@ -88,8 +86,6 @@ namespace cbl {
 	 *  @param [out] PP pointer to an object of class Pair
 	 *  @param [in] dir vector of input directories
 	 *  @param [in] file input file
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void read_pairs (std::shared_ptr<pairs::Pair> PP, const std::vector<std::string> dir, const std::string file) const override;
 
@@ -98,8 +94,6 @@ namespace cbl {
 	 *  @param PP pointer to a vector of objects of class Pair
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void write_pairs (const std::vector<std::shared_ptr<pairs::Pair>> PP, const std::string dir, const std::string file) const override;
 
@@ -108,8 +102,6 @@ namespace cbl {
 	 *  @param [out] PP pointer to a vector of objects of class Pair
 	 *  @param [in] dir vector of input directories
 	 *  @param [in] file input file
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void read_pairs (std::vector<std::shared_ptr<pairs::Pair>> PP, const std::vector<std::string> dir, const std::string file) const override;
       
@@ -392,9 +384,6 @@ namespace cbl {
 	 *  to optimize the count of the couples
 	 *
 	 *  @param seed the seed for random number generation
-	 *
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const double fact=0.1, const int seed=3213) = 0;
       
@@ -409,8 +398,6 @@ namespace cbl {
 	 *  @brief read the measured two-point correlation
 	 *  @param dir input directory
 	 *  @param file input file
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void read (const std::string dir, const std::string file)
 	{ (void)dir; (void)file; ErrorCBL("", "read", "TwoPointCorrelation1D.h"); }	
@@ -420,8 +407,6 @@ namespace cbl {
 	 *  @param dir output directory
 	 *  @param file output file
 	 *  @param rank cpu index (for MPI usage)
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void write (const std::string dir, const std::string file, const int rank=0) const
 	{ (void)dir; (void)file; (void)rank; ErrorCBL("", "read", "TwoPointCorrelation1D.h"); }	

@@ -372,9 +372,6 @@ namespace cbl {
 	 *  to optimize the count of the couples
 	 *
 	 *  @param seed the seed for random number generation
-	 *
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void measure (const ErrorType errorType=ErrorType::_Poisson_, const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const std::string dir_output_resample=par::defaultString, const int nMocks=0, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const double fact=0.1, const int seed=3213) = 0;
       
@@ -390,8 +387,6 @@ namespace cbl {
 	 *  @brief read the measured two-point correlation
 	 *  @param dir input directory
 	 *  @param file input file
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void read (const std::string dir, const std::string file)
 	{ (void)dir; (void)file; ErrorCBL("", "read", "TwoPointCorrelation2D.h"); }	
@@ -401,8 +396,6 @@ namespace cbl {
 	 *  @param dir output directory
 	 *  @param file output file
 	 *  @param rank cpu index (for MPI usage)
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void write (const std::string dir, const std::string file, const int rank=0) const
 	{ (void)dir; (void)file; (void)rank; ErrorCBL("", "write", "TwoPointCorrelation2D.h"); }	
@@ -419,8 +412,6 @@ namespace cbl {
 	 *  @brief read the measured covariance matrix
 	 *  @param dir input directory
 	 *  @param file input file
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void read_covariance (const std::string dir, const std::string file)
 	{ (void)dir; (void)file; ErrorCBL("", "read_covariance", "TwoPointCorrelation2D.h"); }
@@ -429,8 +420,6 @@ namespace cbl {
 	 *  @brief write the measured two-point correlation
 	 *  @param dir output directory
 	 *  @param file output file
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void write_covariance (const std::string dir, const std::string file) const
 	{ (void)dir; (void)file; ErrorCBL("", "write_covariance", "TwoPointCorrelation2D.h"); }
@@ -441,8 +430,6 @@ namespace cbl {
 	 *  functions used to compute the covariance matrix
 	 *  @param JK true &rarr; compute the jackknife covariance
 	 *  matrix; false compute the standard covariance matrix
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void compute_covariance (const std::vector<std::shared_ptr<data::Data>> xi, const bool JK)
 	{ (void)xi; (void)JK; ErrorCBL("", "compute_covariance", "TwoPointCorrelation2D.h"); }
@@ -454,8 +441,6 @@ namespace cbl {
 	 *  covariance matrix
 	 *  @param JK true &rarr; compute the jackknife covariance
 	 *  matrix; false compute the standard covariance matrix
-	 *  @return none, or an error message if the derived object does
-	 *  not have this member
 	 */
 	virtual void compute_covariance (const std::vector<std::string> file, const bool JK)
 	{ (void)file; (void)JK; ErrorCBL("", "compute_covariance", "TwoPointCorrelation2D.h"); }

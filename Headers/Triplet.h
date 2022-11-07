@@ -135,15 +135,13 @@ namespace cbl {
     private:
       
       /**
-       *  @name Member functions used to set the binning parameters (customized in all the derived classes) 
+       *  @name Member functions used to set the binning parameters
+       *  (customized in all the derived classes)
        */
       ///@{
   
       /**
        *  @brief set the binning parameters
-       *  
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_parameters () = 0;
   
@@ -429,8 +427,6 @@ namespace cbl {
        *  @brief set the member m_TT1D[i]
        *  @param i the bin index
        *  @param tt the number of triplets in the bin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_TT1D (const int i, const double tt)
       { (void)i; (void)tt; cbl::ErrorCBL("", "set_TT1D", "Triplet.h"); }
@@ -440,8 +436,6 @@ namespace cbl {
        *  the number of triplets
        *  @param i the bin index
        *  @param tt the number of triplets in the bin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void add_TT1D (const int i, const double tt)
       { (void)i; (void)tt; cbl::ErrorCBL("", "add_TT1D", "Triplet.h"); }
@@ -461,8 +455,6 @@ namespace cbl {
        *  @param r13 distance between object1 and object3
        *  @param r23 distance between object2 and object3
        *  @param klin triplet bin
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void get_triplet (const double r12, const double r13, const double r23, int &klin) = 0;   
 
@@ -470,8 +462,6 @@ namespace cbl {
        *  @brief update the triplet
        *  @param klin triplet bin
        *  @param ww the weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void set_triplet (const int klin, const double ww=1.) = 0;   
 
@@ -482,8 +472,6 @@ namespace cbl {
        *  @param r13 distance between object1 and object3
        *  @param r23 distance between object2 and object3
        *  @param ww the weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void put (const double r12, const double r13, const double r23, const double ww=1.) = 0;
 
@@ -493,8 +481,6 @@ namespace cbl {
        *  @param obj1 pointer to an object of class Object
        *  @param obj2 pointer to an object of class Object
        *  @param obj3 pointer to an object of class Object
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void put (const std::shared_ptr<catalogue::Object> obj1, const std::shared_ptr<catalogue::Object> obj2, const std::shared_ptr<catalogue::Object> obj3) = 0;
     
@@ -502,8 +488,6 @@ namespace cbl {
        *  @brief sum the number of triplets
        *  @param tt pointer to an object of class Triplet
        *  @param ww the weight
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void Sum (const std::shared_ptr<Triplet> tt, const double ww=1.) = 0;
 

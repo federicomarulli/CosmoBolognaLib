@@ -63,19 +63,19 @@ namespace cbl {
       void read_mixing_matrix (const std::string dir, const std::string file, std::vector<double> &ll, std::vector<std::vector<double>> &matrix);
        
       /**
-       * @enum cbl::measure::angularpk::AngularEstimator
+       * @enum AngularEstimator
        *
        * @brief the angular two-point correlation estimator type
-       *
-       * @var cbl::measure::angularpk::AngularEstimator::\_Fast\_
-       *
-       * @brief the fast estimator
-       *
-       * @var cbl::measure::angularpk::AngularEstimator::\_SphericalArmonic\_
-       *
-       * @brief the spherical armonic estimator
        */
-      enum class AngularEstimator { _Fast_, _SphericalArmonic_ };
+      enum class AngularEstimator {
+
+	/// the fast estimator
+	_Fast_,
+
+	/// the spherical armonic estimator
+	_SphericalArmonic_
+
+      };
       
       /**
        *  @class PowerSpectrum_angular
@@ -314,13 +314,24 @@ namespace cbl {
 	 *
 	 *  @param bandwidth the bandwidth
 	 *
-	 *  @param mask_file the file containing the pixel center positions of the mask in colatitude-RA for every pixel (obtained with Healpix pixelfunc.pix2ang), or theta, theta_min, theta_max, ra, ra_min, ra_max and pixel_area, for every pixel, i.e. pixel centers, borders and area. Leave it empty if there is not a mask file, in this case the survey area will be computed as \f$ (cos(\theta_{min})-cos(\theta_{max}))*(RA_{max}-RA_{min})\f$
+	 *  @param mask_file the file containing the pixel center
+	 *  positions of the mask in colatitude-RA for every pixel
+	 *  (obtained with Healpix pixelfunc.pix2ang), or theta,
+	 *  theta_min, theta_max, ra, ra_min, ra_max and pixel_area,
+	 *  for every pixel, i.e. pixel centers, borders and
+	 *  area. Leave it empty if there is not a mask file, in this
+	 *  case the survey area will be computed as \f$
+	 *  (cos(\theta_{min})-cos(\theta_{max}))*(RA_{max}-RA_{min})\f$
 	 *
-	 *  @param mask_type the mask_type. "Healpix" if the mask file is obtained with the healpix function pixelfunc.pix2ang. Anything else if themask is obtained in other way
-
+	 *  @param mask_type the mask_type. "Healpix" if the mask file
+	 *  is obtained with the healpix function
+	 *  pixelfunc.pix2ang. Anything else if themask is obtained in
+	 *  other way
+	 *
 	 *  @param pixel_area the average pixel area 
 	 *
-	 *  @param n_lines_header the number of lines to skip when reading the mask file
+	 *  @param n_lines_header the number of lines to skip when
+	 *  reading the mask file
 	 */     
 	PowerSpectrum_angular (const catalogue::Catalogue data, const double l_min, const double l_max, const int bandwidth=1, const std::string mask_file="", const std::string mask_type="", const double pixel_area=0, const int n_lines_header=1);   
 	

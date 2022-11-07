@@ -375,8 +375,6 @@ namespace cbl {
        *  bin edge values in the input file; if it is not provided,
        *  the third and four columns after the column of y values will
        *  be used; if these columns do no exist the edges are not read
-       *
-       *  @return none
        */
       virtual void read (const std::string input_file, const int skip_nlines=0, const std::vector<int> column={1, 2}, const std::vector<int> column_data={}, const std::vector<int> column_errors={}, const std::vector<int> column_edges={}) override;
 
@@ -384,9 +382,6 @@ namespace cbl {
        *  @brief print the data on screen
        *
        *  @param precision the float precision
-       *
-       *  @return none, or an error message if the derived object does
-       *  not have this member
        */
       virtual void Print (const int precision=4) const override;
       

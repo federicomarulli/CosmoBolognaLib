@@ -147,8 +147,6 @@ namespace cbl {
 	 *
 	 *  @param parameter vector containing the input parameters
 	 *  used to compute the model; if this vector i not provided
-	 *  
-	 *  @return none
 	 */
         virtual void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameter) override;
 

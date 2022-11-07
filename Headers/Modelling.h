@@ -181,9 +181,7 @@ namespace cbl {
        *  providing its name string
        *  
        *  @param parameter parameter name to set
-       *  @param value the new value for the parameter 
-       *  @return none, or an error message if the derived object does
-       *  not have this member
+       *  @param value the new value for the parameter
        */
       virtual void set_parameter_from_string (const std::string parameter, const double value)
       { (void)parameter; (void)value; ErrorCBL("", "set_parameter_from_string", "Modelling.h"); }
@@ -709,8 +707,6 @@ namespace cbl {
        *  @param parameters vector containing the input parameters
        *  used to compute the model; if this vector is not provided,
        *  the model will be computed using the best-fit parameters
-       *
-       *  @return none
        */
       virtual void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameters);
 
@@ -730,8 +726,6 @@ namespace cbl {
        *  @param parameters vector containing the input parameters
        *  used to compute the model; if this vector is not provided,
        *  the model will be computed using the best-fit parameters
-       *
-       *  @return none
        */
       virtual void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> parameters);
 
@@ -744,8 +738,6 @@ namespace cbl {
        *  @param output_file the output file
        *
        *  @param xx vector of points at which the model is computed
-       *
-       *  @return none
        */
       virtual void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx);
 
@@ -762,8 +754,6 @@ namespace cbl {
        *
        *  @param yy vector of points at which the model is computed,
        *  second axis
-       *
-       *  @return none
        */
       virtual void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy);
 
@@ -780,8 +770,6 @@ namespace cbl {
        *  @param start the starting position for each chain 
        *
        *  @param thin the position step
-       *
-       *  @return none
        */
       virtual void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start=0, const int thin=1);
 
@@ -802,8 +790,6 @@ namespace cbl {
        *  @param start the starting position for each chain 
        *
        *  @param thin the position step
-       *
-       *  @return none
        */
       virtual void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const int start=0, const int thin=1);
 

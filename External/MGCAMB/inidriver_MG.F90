@@ -318,7 +318,8 @@
         DoTensorNeutrinos = Ini_Read_Logical('do_tensor_neutrinos',DoTensorNeutrinos )
     end if
     FeedbackLevel = Ini_Read_Int('feedback_level',FeedbackLevel)
-
+    print_sigma8 = Ini_Read_Logical('print_sigma8',print_sigma8)
+    
     output_file_headers = Ini_Read_Logical('output_file_headers',output_file_headers)
 
     P%MassiveNuMethod  = Ini_Read_Int('massive_nu_approx',Nu_best)
