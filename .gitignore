@@ -18,6 +18,8 @@
 Tables/
 output*/
 
+External/Eigen/eigen-3.4.0/
+
 External/CAMB/forutils/Release/
 
 External/CAMB/fortran/Release/
@@ -29,7 +31,7 @@ External/CCfits/
 /CCfits/
 /include/
 
-External/Cuba-4.2/
+External/Cuba-4.2.1/
 /config.h
 /config.status
 
