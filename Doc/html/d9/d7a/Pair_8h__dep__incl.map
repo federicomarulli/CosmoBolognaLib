@@ -1,0 +1,76 @@
+<map id="Headers/Pair.h" name="Headers/Pair.h">
+<area shape="rect" id="node1" title="The class Pair." alt="" coords="2213,5,2328,32"/>
+<area shape="rect" id="node2" href="$d7/d64/Pair1D_8h.html" title="The classes Pair1D*." alt="" coords="2078,80,2213,107"/>
+<area shape="rect" id="node68" href="$dc/dc5/Pair_8cpp.html" title="Methods of the class Pair" alt="" coords="2165,244,2377,285"/>
+<area shape="rect" id="node71" href="$d7/da7/Pair2D_8h.html" title="The classes Pair2D*." alt="" coords="2346,80,2481,107"/>
+<area shape="rect" id="node3" href="$d5/dca/Pair1D__extra_8h.html" title="The classes Pair1D_extra*." alt="" coords="2058,162,2233,189"/>
+<area shape="rect" id="node70" href="$df/d58/Pair1D_8cpp.html" title="Methods of the classes Pair1D*" alt="" coords="1822,155,2034,196"/>
+<area shape="rect" id="node4" href="$d0/dd1/TwoPointCorrelation_8h.html" title="The class TwoPointCorrelation." alt="" coords="2401,251,2623,278"/>
+<area shape="rect" id="node69" href="$d1/ddf/Pair1D__extra_8cpp.html" title="Methods of the classes Pair1D_extra*" alt="" coords="1929,244,2141,285"/>
+<area shape="rect" id="node5" href="$db/db6/VoidCatalogue_8cpp.html" title="Methods of the class Catalogue to construct Void catalogues." alt="" coords="5,616,219,643"/>
+<area shape="rect" id="node6" href="$df/d38/Modelling__TwoPointCorrelation_8h.html" title="The class Modelling_TwoPointCorrelation." alt="" coords="3983,333,4193,375"/>
+<area shape="rect" id="node30" href="$df/dc1/TwoPointCorrelation1D_8h.html" title="The class TwoPointCorrelation1D." alt="" coords="1832,430,2072,457"/>
+<area shape="rect" id="node38" href="$d1/df0/TwoPointCorrelation_8cpp.html" title="Methods of the class TwoPointCorrelation." alt="" coords="1878,713,2090,754"/>
+<area shape="rect" id="node52" href="$d0/d3e/TwoPointCorrelation2D_8h.html" title="The class TwoPointCorrelation2D." alt="" coords="2716,341,2956,367"/>
+<area shape="rect" id="node66" href="$d9/dea/TwoPointCorrelationCross_8h.html" title="The class TwoPointCorrelationCross." alt="" coords="3281,423,3492,464"/>
+<area shape="rect" id="node7" href="$d5/d58/Modelling__TwoPointCorrelation1D_8h.html" title="The class Modelling_TwoPointCorrelation1D." alt="" coords="4370,423,4579,464"/>
+<area shape="rect" id="node17" href="$db/dd4/Modelling__TwoPointCorrelation_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation." alt="" coords="4081,817,4335,858"/>
+<area shape="rect" id="node24" href="$d3/d8a/Modelling__TwoPointCorrelation2D_8h.html" title="The class Modelling_TwoPointCorrelation2D." alt="" coords="5354,423,5563,464"/>
+<area shape="rect" id="node8" href="$db/dd2/Modelling__TwoPointCorrelation1D__angular_8h.html" title="The class Modelling_TwoPointCorrelation1D_angular." alt="" coords="4810,512,5019,553"/>
+<area shape="rect" id="node10" href="$d2/d89/Modelling__TwoPointCorrelation1D__monopole_8h.html" title="The class Modelling_TwoPointCorrelation1D_monopole." alt="" coords="4503,512,4713,553"/>
+<area shape="rect" id="node23" href="$dd/d0f/Modelling__TwoPointCorrelation1D_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation1D." alt="" coords="4207,512,4479,553"/>
+<area shape="rect" id="node9" href="$dc/dbe/Modelling__TwoPointCorrelation1D__angular_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation1D_angular." alt="" coords="5200,601,5445,657"/>
+<area shape="rect" id="node11" href="$da/d43/Modelling__TwoPointCorrelation1D__filtered_8h.html" title="The class Modelling_TwoPointCorrelation1D_filtered." alt="" coords="4915,609,5125,650"/>
+<area shape="rect" id="node13" href="$db/d5d/Modelling__TwoPointCorrelation__multipoles_8h.html" title="The class Modelling_TwoPointCorrelation_multipoles." alt="" coords="4178,609,4387,650"/>
+<area shape="rect" id="node15" href="$dc/d0c/Modelling__TwoPointCorrelation__projected_8h.html" title="The class Modelling_TwoPointCorrelation_projected." alt="" coords="3945,609,4154,650"/>
+<area shape="rect" id="node20" href="$d1/d72/Modelling__TwoPointCorrelation__wedges_8h.html" title="The class Modelling_TwoPointCorrelatoin_wedges." alt="" coords="4682,609,4891,650"/>
+<area shape="rect" id="node22" href="$d5/dae/Modelling__TwoPointCorrelation1D__monopole_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation1D_monopole." alt="" coords="4412,601,4657,657"/>
+<area shape="rect" id="node12" href="$d8/d0f/Modelling__TwoPointCorrelation1D__filtered_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation1D_filtered." alt="" coords="4880,705,5125,761"/>
+<area shape="rect" id="node14" href="$d5/dc2/Modelling__TwoPointCorrelation__multipoles_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation_multipoles." alt="" coords="4245,705,4472,761"/>
+<area shape="rect" id="node16" href="$d1/dbf/Modelling__TwoPointCorrelation__deprojected_8h.html" title="The class Modelling_TwoPointCorrelatoin_deprojected." alt="" coords="3659,713,3869,754"/>
+<area shape="rect" id="node19" href="$d2/de6/Modelling__TwoPointCorrelation__projected_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation_projected." alt="" coords="3944,705,4171,761"/>
+<area shape="rect" id="node18" href="$d4/d1e/Modelling__TwoPointCorrelation__deprojected_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation_deprojected." alt="" coords="3651,809,3877,865"/>
+<area shape="rect" id="node21" href="$d9/d93/Modelling__TwoPointCorrelation__wedges_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation_wedges." alt="" coords="4629,705,4856,761"/>
+<area shape="rect" id="node25" href="$dd/d97/Modelling__TwoPointCorrelation2D__cartesian_8h.html" title="The class Modelling_TwoPointCorrelation2D_cartesian." alt="" coords="5757,512,5966,553"/>
+<area shape="rect" id="node27" href="$d0/d5f/Modelling__TwoPointCorrelation2D__polar_8h.html" title="The class Modelling_TwoPointCorrelation2D_polar." alt="" coords="5487,512,5697,553"/>
+<area shape="rect" id="node29" href="$d4/d7b/Modelling__TwoPointCorrelation2D_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation2D." alt="" coords="5191,512,5463,553"/>
+<area shape="rect" id="node26" href="$da/d42/Modelling__TwoPointCorrelation2D__cartesian_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation_cartesian." alt="" coords="5739,601,5984,657"/>
+<area shape="rect" id="node28" href="$d2/db3/Modelling__TwoPointCorrelation2D__polar_8cpp.html" title="Methods of the class Modelling_TwoPointCorrelation2D_polar." alt="" coords="5469,601,5715,657"/>
+<area shape="rect" id="node31" href="$d7/d9c/TwoPointCorrelation1D__angular_8h.html" title="The class TwoPointCorrelation1D_angular." alt="" coords="1843,512,2061,553"/>
+<area shape="rect" id="node40" href="$dc/d46/TwoPointCorrelation1D__monopole_8h.html" title="The class TwoPointCorrelation1D_monopole." alt="" coords="908,512,1127,553"/>
+<area shape="rect" id="node49" href="$da/d97/TwoPointCorrelationCross1D_8h.html" title="The class TwoPointCorrelationCross1D." alt="" coords="2155,512,2365,553"/>
+<area shape="rect" id="node51" href="$dc/de9/TwoPointCorrelation1D_8cpp.html" title="Methods of the class TwoPointCorrelation1D used to measure the monopole of the two&#45;point correlation ..." alt="" coords="1606,512,1818,553"/>
+<area shape="rect" id="node32" href="$d1/d8b/PowerSpectrum__Angular_8h.html" title="The class PowerSpectrum_angular." alt="" coords="1281,609,1463,650"/>
+<area shape="rect" id="node36" href="$d4/de9/TwoPointCorrelationCross1D__angular_8h.html" title="The class TwoPointCorrelationCross1D_angular." alt="" coords="2155,609,2365,650"/>
+<area shape="rect" id="node39" href="$d7/d7f/TwoPointCorrelation1D__angular_8cpp.html" title="Methods of the class TwoPointCorrelation1D_angular used to measure the angular two&#45;point correlation ..." alt="" coords="1824,609,2080,650"/>
+<area shape="rect" id="node33" href="$d7/de1/Modelling__PowerSpectrum__Angular_8h.html" title="The class Modelling_PowerSpectrum_angular." alt="" coords="1285,713,1539,754"/>
+<area shape="rect" id="node35" href="$d1/d3d/AngularPowerSpectrum_8cpp.html" title="Methods of the class PowerSpectrum_angular" alt="" coords="1027,713,1261,754"/>
+<area shape="rect" id="node34" href="$d3/d80/Modelling__PowerSpectrum__Angular_8cpp.html" title="Methods of the class Modelling_PowerSpectrum_angular." alt="" coords="1271,817,1553,858"/>
+<area shape="rect" id="node37" href="$d7/d1f/TwoPointCorrelationCross1D__angular_8cpp.html" title="Methods of the class TwoPointCorrelationCross1D_angular used to measure the angular cross two&#45;point c..." alt="" coords="2154,705,2366,761"/>
+<area shape="rect" id="node41" href="$d2/d5f/TwoPointCorrelation1D__filtered_8h.html" title="The class TwoPointCorrelation1D_filtered." alt="" coords="243,609,461,650"/>
+<area shape="rect" id="node43" href="$dd/d01/TwoPointCorrelation__multipoles__direct_8h.html" title="The class TwoPointCorrelation_multipoles_direct." alt="" coords="1045,609,1256,650"/>
+<area shape="rect" id="node45" href="$d4/d0e/TwoPointCorrelationCross1D__monopole_8h.html" title="The class TwoPointCorrelationCross1D_monopole." alt="" coords="1488,609,1699,650"/>
+<area shape="rect" id="node47" href="$d7/d43/ThreePointCorrelation__comoving__reduced_8cpp.html" title="Methods of the class ThreePointCorrelation_comoving_reduced used to measure the monopole of the three..." alt="" coords="486,601,725,657"/>
+<area shape="rect" id="node48" href="$d0/d95/TwoPointCorrelation1D__monopole_8cpp.html" title="Methods of the class TwoPointCorrelation1D_monopole used to measure the monopole of the two&#45;point cor..." alt="" coords="749,609,1022,650"/>
+<area shape="rect" id="node42" href="$da/d20/TwoPointCorrelation1D__filtered_8cpp.html" title="Methods of the class TwoPointCorrelation1D_filtered used to measure the filtered monopole of the two&#45;..." alt="" coords="225,713,479,754"/>
+<area shape="rect" id="node44" href="$da/d9b/TwoPointCorrelation__multipoles__direct_8cpp.html" title="Methods of the class TwoPointCorrelation_multipoles_direct used to measure the multipoles of the two&#45;..." alt="" coords="771,705,1003,761"/>
+<area shape="rect" id="node46" href="$dd/d6e/TwoPointCorrelationCross1D__monopole_8cpp.html" title="Methods of the class TwoPointCorrelationCross1D_monopole used to measure the monopole of the cross tw..." alt="" coords="1563,705,1775,761"/>
+<area shape="rect" id="node50" href="$d5/dca/TwoPointCorrelationCross1D_8cpp.html" title="Methods of the class TwoPointCorrelationCross1D used to measure the 1D cross of the two&#45;point correla..." alt="" coords="2389,609,2627,650"/>
+<area shape="rect" id="node53" href="$d7/ddd/TwoPointCorrelation2D__cartesian_8h.html" title="The class TwoPointCorrelation2D_cartesian." alt="" coords="3039,423,3257,464"/>
+<area shape="rect" id="node59" href="$d3/dc2/TwoPointCorrelation2D__polar_8h.html" title="The class TwoPointCorrelation2D_polar." alt="" coords="2728,512,2947,553"/>
+<area shape="rect" id="node65" href="$de/d3e/TwoPointCorrelation2D_8cpp.html" title="Methods of the class TwoPointCorrelation2D used to measure the monopole of the two&#45;point correlation ..." alt="" coords="2802,423,3014,464"/>
+<area shape="rect" id="node54" href="$d5/d63/TwoPointCorrelation__projected_8h.html" title="The class TwoPointCorrelation_projected." alt="" coords="3043,512,3253,553"/>
+<area shape="rect" id="node58" href="$da/d35/TwoPointCorrelation2D__cartesian_8cpp.html" title="Methods of the class TwoPointCorrelation2D_cartesian used to measure the monopole of the two&#45;point co..." alt="" coords="3278,512,3546,553"/>
+<area shape="rect" id="node55" href="$de/d57/TwoPointCorrelation__deprojected_8h.html" title="The class TwoPointCorrelation_deprojected." alt="" coords="3384,609,3595,650"/>
+<area shape="rect" id="node57" href="$d4/d45/TwoPointCorrelation__projected_8cpp.html" title="Methods of the class TwoPointCorrelation_projected used to measure the projected two&#45;point correlatio..." alt="" coords="3619,609,3869,650"/>
+<area shape="rect" id="node56" href="$d2/d08/TwoPointCorrelation__deprojected_8cpp.html" title="Methods of the class TwoPointCorrelation_deprojected used to measure the projected two&#45;point correlat..." alt="" coords="3361,713,3628,754"/>
+<area shape="rect" id="node60" href="$d5/dd2/TwoPointCorrelation__multipoles__integrated_8h.html" title="The class TwoPointCorrelation_multipoles_integrated." alt="" coords="3149,609,3360,650"/>
+<area shape="rect" id="node62" href="$d4/df5/TwoPointCorrelation__wedges_8h.html" title="The class TwoPointCorrelation_wedges." alt="" coords="2651,609,2861,650"/>
+<area shape="rect" id="node64" href="$d1/d7a/TwoPointCorrelation2D__polar_8cpp.html" title="Methods of the class TwoPointCorrelation2D_polar used to measure the monopole of the two&#45;point correl..." alt="" coords="2885,609,3125,650"/>
+<area shape="rect" id="node61" href="$d4/dfe/TwoPointCorrelation__multipoles__integrated_8cpp.html" title="Methods of the class TwoPointCorrelation_multipoles_integrated used to measure the first three multip..." alt="" coords="3105,705,3337,761"/>
+<area shape="rect" id="node63" href="$db/dcc/TwoPointCorrelation__wedges_8cpp.html" title="Methods of the class TwoPointCorrelation_multipoles used to measure the wedges of the two&#45;point corre..." alt="" coords="2636,713,2876,754"/>
+<area shape="rect" id="node67" href="$d0/d4c/TwoPointCorrelationCross_8cpp.html" title="Methods of the class TwoPointCorrelationCross." alt="" coords="3571,512,3789,553"/>
+<area shape="rect" id="node72" href="$d8/d36/Pair2D__extra_8h.html" title="The classes Pair2D_extra*." alt="" coords="2543,162,2718,189"/>
+<area shape="rect" id="node74" href="$d3/d8f/Pair2D_8cpp.html" title="Methods of the classes Pair2D*" alt="" coords="2307,155,2519,196"/>
+<area shape="rect" id="node73" href="$d7/db2/Pair2D__extra_8cpp.html" title="Methods of the classese Pair2D_extra*." alt="" coords="2647,244,2859,285"/>
+</map>
