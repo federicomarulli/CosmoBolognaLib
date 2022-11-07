@@ -71,4 +71,4 @@ V5.5 new functions for modelling different cosmological probes and their combina
 
 V6.0 general improvements on base functionalities; new cosmic void detector; new or improved functions for modeling halo and void number counts and clustering; new HOD implementation; several bugs fixed
 
-V6.1 minor bugs fixed to extend compatibility with latest operating syste
+V6.1 minor bugs fixed to extend compatibility with latest operating systems
