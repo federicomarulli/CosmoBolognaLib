@@ -141,7 +141,7 @@ check("clustering/codes", "2pt_angular", "C++")
 check("clustering/codes", "3pt", "C++")
 check("clustering/codes", "3pt_multipoles", "C++")
 
-check("powerSpectrum_angular/codes", "power_spectrum_angular", "C++") 
+#check("powerSpectrum_angular/codes", "power_spectrum_angular", "C++") 
 check("powerSpectrum_angular/codes", "model_power_spectrum_angular", "C++") 
 
 check("clustering/codes", "model_2pt_monopole_BAO", "C++")
