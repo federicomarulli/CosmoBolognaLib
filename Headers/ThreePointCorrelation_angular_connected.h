@@ -239,14 +239,57 @@ namespace cbl {
 	 * @warning This method has not been implemented yet
 	 */
 	void measure (const std::string dir_output_triplets, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1, const int seed=3213) override;
-    
+
+	/**
+	 * @brief method to measure the three-point correlation function
+	 *
+	 * @param dir_output_triplets name of the output directory used to
+	 * store the number of triplets
+	 * 
+	 * @param dir_output_2pt name of the output directory used to
+	 * store the two-point correlation functions
+	 *
+	 * @param dir_input_triplets name of the input directories
+	 * containing the number of triplets
+	 *
+	 * @param count_ddd 1 &rarr; count the data-data-data
+	 * triplets; 0 &rarr; read the data-data-data triplets
+	 * from a file
+	 *
+	 * @param count_rrr 1 &rarr; count the random-random-random
+	 * triplets; 0 &rarr; read the random-random-random triplets
+	 * from a file
+	 *
+	 * @param count_ddr 1 &rarr; count the data-data-random
+	 * triplets; 0 &rarr; read the data-data-random triplets
+	 * from a file
+	 *
+	 * @param count_drr 1 &rarr; count the data-random-random
+	 * triplets; 0 &rarr; read the data-random-random triplets
+	 * from a file
+	 *
+	 * @param tcount 1 &rarr; activate the CPU time counter; 0
+	 * &rarr; no time counter
+	 *
+	 * @param fact factor used to compute the cell size of the
+	 * chain mesh: it is multiplied by the maximum distance
+	 * considered for the couples and can be setted by the user
+	 * to optimize the count of the couples
+	 *
+	 * @param seed the seed for random number generation
+	 *
+	 * @warning This method has not been implemented yet 
+	 */
+	virtual void measure (const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1, const int seed=3213) override
+	{ (void)dir_output_triplets; (void)dir_output_2pt; (void)dir_input_triplets; (void)count_ddd; (void)count_rrr; (void)count_ddr; (void)count_drr; (void)tcount; (void)fact; (void)seed; cbl::ErrorCBL("", "measure", "ThreePointCorrelation.h!"); }
+
 	///@}
     
 	/**
 	 *  @name Input/Output methods
 	 */
 	///@{
-
+	
 	/**
 	 *  @brief write the monopole of the two-point correlation
 	 *  function
@@ -256,7 +299,19 @@ namespace cbl {
 	 *  @warning This method has not been implemented yet
 	 */
 	void write (const std::string dir, const std::string file) const override;
-
+	
+	/**
+	 *  @brief write the measured three-point correlation
+	 *  @param dir output directory
+	 *  @param file output file
+	 *  @param connected 0 &rarr; write the reducted 3pt correlation
+	 *  function; 1 &rarr; write both the reduced and connected 3pt
+	 *  correlation function
+	 */
+	void write (const std::string dir, const std::string file, const bool connected) const override {
+	  ThreePointCorrelation::write(dir, file, connected);
+	}
+	
 	/**
 	 *  @brief write the measured three-point correlation covariance
 	 *  @param dir output directory

@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>get_healpix_data_dir, get_healpix_main_dir, get_healpix_test_dir</TITLE>
+<META NAME="description" CONTENT="get_healpix_data_dir, get_healpix_main_dir, get_healpix_test_dir">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_get_healpix_pixel_weight_fi.htm">
+<LINK REL="previous" HREF="sub_get_card.htm">
+<LINK REL="next" HREF="sub_get_healpix_pixel_weight_fi.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_get_card.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_get_healpix_pixel_weight_fi.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html377"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_get_card.htm">get_card</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_get_healpix_pixel_weight_fi.htm">get_healpix_pixel_weight_file,&nbsp; get_healpix_weight_file</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION3500"></A>
+<A ID="sub:get_healpix_xxx_dir"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">get_healpix_main_dir,&nbsp;<SPAN CLASS="MATH"><IMG
+ STYLE="height: 0.23ex; vertical-align: -0.10ex; " SRC="sub_img1.png"
+ ALT="$\ldots $"></SPAN></SPAN></div><hr>
+<H3>A few functions are available to return the full path to <strong>HEALPix</strong> main directory
+and its <SPAN style="font-family:monospace">data</SPAN> and <SPAN style="font-family:monospace">test</SPAN> subdirectories. This allow those paths to be
+controlled by preprocessing macros or environment variables in case of
+non-standard installation of the <strong>HEALPix</strong> directory structure.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/paramfile_io.F90"><strong>src/f90/mod/paramfile_io.F90</strong></a>&nbsp;  
+
+<P>
+
+<SPAN CLASS="LARGE"><SPAN  CLASS="textbf">FUNCTIONS: </SPAN></SPAN>
+<BR>
+<SPAN style="font-family:monospace">hmd = get_healpix_main_dir()</SPAN> <A ID="sub:get_healpix_xxx_dir:ghmd"></A>
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">returns the full path to the main
+			<strong>HEALPix</strong> directory. It will be determined, in this
+			order, from the value of the
+			preprocessing macros <SPAN style="font-family:monospace">HEALPIX</SPAN> and <SPAN style="font-family:monospace">HEALPIXDIR</SPAN>
+			if they are defined or the
+			environment variable <SPAN style="font-family:monospace">$HEALPIX</SPAN> otherwise.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR>
+<P>
+<SPAN style="font-family:monospace">hdd = get_healpix_data_dir()</SPAN> <A ID="sub:get_healpix_xxx_dir:ghdd"></A>
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">returns the full path to
+			<strong>HEALPix</strong> <SPAN style="font-family:monospace">data</SPAN> subdirectory. It will be determined
+			from the preprocessing macro <SPAN style="font-family:monospace">HEALPIXDATA</SPAN> or the environment variable <SPAN style="font-family:monospace">$HEALPIXDATA</SPAN>. If both fail, it will return the list of directories {<SPAN style="font-family:monospace">. ../data ./data .. $HEALPIX $HEALPIX/data $HEALPIX/../data
+			$HEALPIX<!-- MATH
+ $\backslash$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img171.png"
+ ALT="$\backslash$"></SPAN>data</SPAN>} separated by LineFeed.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR>
+<P>
+<SPAN style="font-family:monospace">htd = get_healpix_test_dir()</SPAN> <A ID="sub:get_healpix_xxx_dir:ghtd"></A>
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">returns the full path to
+			<strong>HEALPix</strong> <SPAN style="font-family:monospace">test</SPAN> subdirectory. It will be determined,
+			in this order, from the preprocessing macro <SPAN style="font-family:monospace">HEALPIXTEST</SPAN>, the environment
+			variable <SPAN style="font-family:monospace">$HEALPIXTEST</SPAN> or <SPAN style="font-family:monospace">$HEALPIX/test</SPAN>.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR>
+<P>
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_get_card.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_get_healpix_pixel_weight_fi.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html377"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_get_card.htm">get_card</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_get_healpix_pixel_weight_fi.htm">get_healpix_pixel_weight_file,&nbsp; get_healpix_weight_file</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

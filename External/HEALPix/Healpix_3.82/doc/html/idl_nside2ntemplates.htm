@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>nside2ntemplates</TITLE>
+<META NAME="description" CONTENT="nside2ntemplates">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_orthcursor.htm">
+<LINK REL="previous" HREF="idl_nside2npweights.htm">
+<LINK REL="next" HREF="idl_orthcursor.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_nside2npweights.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_orthcursor.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html411"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_nside2npweights.htm">nside2npweights</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_orthcursor.htm">orthcursor</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION5100"></A>
+<A ID="idl:nside2ntemplates"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">nside2ntemplates</SPAN></div><hr>
+<H3>This IDL facility provides the number of template pixels Ntemplates corresponding
+to resolution parameter Nside. Each template pixel has a different shape that
+<EM>can not</EM> be matched (by rotation or reflexion) to that of any of the other templates.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/toolkit/nside2ntemplates.pro"><strong>src/idl/toolkit/nside2ntemplates.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+<A HREF="#idl:nside2ntemplates:Ntemplates">Ntemplates=</A>NSIDE2NTEMPLATES (<A HREF="#idl:nside2ntemplates:Nside">Nside</A>[,<A HREF="#idl:nside2ntemplates:ERROR">ERROR=</A>])
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>Nside<A ID="idl:nside2ntemplates:Nside"></A></B>
+<DD><strong>HEALPix</strong> resolution parameter (integer, scalar or not),
+         should be a valid Nside (power of 2 in <!-- MATH
+ $\{1,\ldots,2^{29}\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="idl_img93.png"
+ ALT="$\{1,\ldots,2^{29}\}$"></SPAN>)
+    <DT>
+<B>Ntemplates<A ID="idl:nside2ntemplates:Ntemplates"></A></B>
+<DD>number of templates
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>ERROR<A ID="idl:nside2ntemplates:ERROR"></A>=</B>
+<DD>error flag, set to 1 on output if Nside is NOT valid, or
+    stays to 0 otherwise.
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+nside2ntemplates outputs the number of template pixels
+  <BR><P></P>
+<DIV CLASS="mathdisplay">
+<!-- MATH
+ \begin{displaymath}
+N_{\mathrm{template}}=\frac{1+N_{\mathrm{side}}(N_{\mathrm{side}}+6)}{4}.
+\end{displaymath}
+ -->
+
+<IMG
+ STYLE="height: 4.90ex; " SRC="idl_img97.png"
+ ALT="\begin{displaymath}N_{\mathrm{template}}=\frac{1+N_{\mathrm{side}}(N_{\mathrm{side}}+6)}{4}.\end{displaymath}">
+</DIV>
+<BR CLEAR="ALL">
+<P></P>
+If the argument <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN> is not
+  valid, a  warning is issued and the error flag is raised.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">nside2ntemplates</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run nside2ntemplates .	
+  <DT>
+<B><A HREF="idl_template_pixel_nest_templat.htm#idl:template_pixel_xxx">template_pixel_ring</A></B>
+<DD><DT>
+<B><A HREF="idl_template_pixel_nest_templat.htm#idl:template_pixel_xxx">template_pixel_nest</A></B>
+<DD>return the
+  template pixel associated with any <strong>HEALPix</strong> pixel
+  <DT>
+<B><A HREF="idl_same_shape_pixels_nest_same.htm#idl:same_shape_pixels_xxx">same_shape_pixels_ring</A></B>
+<DD><DT>
+<B><A HREF="idl_same_shape_pixels_nest_same.htm#idl:same_shape_pixels_xxx">same_shape_pixels_nest</A></B>
+<DD>return
+  the ordered list of pixels having the same shape as a given pixel template
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">Ntemplates = nside2ntemplates(256, ERROR=error)</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+Ntemplates will be 16768 the number of template pixels for the <strong>HEALPix</strong> 
+resolution parameter 256 and error will be 0</blockquote>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_nside2npweights.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_orthcursor.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html411"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_nside2npweights.htm">nside2npweights</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_orthcursor.htm">orthcursor</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

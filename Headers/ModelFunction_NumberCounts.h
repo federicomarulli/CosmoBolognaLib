@@ -35,8 +35,9 @@
 #ifndef __MODFUNCNC__
 #define __MODFUNCNC__
 
-#include "Cosmology.h"
+#include "SizeFunction.h"
 #include "NumberCounts.h"
+#include "Modelling_MassObservableRelation.h"
 
 
 // ============================================================================
@@ -48,6 +49,8 @@ namespace cbl {
 
     namespace numbercounts {
       
+      using ProxyFunction = std::function<double(double, double, std::shared_ptr<void>)>;
+
       /**
        *  @struct STR_NC_data_model
        *  @brief the structure STR_NC_data_model
@@ -70,7 +73,7 @@ namespace cbl {
 	std::shared_ptr<cosmology::Cosmology> cosmology;
 
 	/// cosmological parameters
-	std::vector<cosmology::CosmologicalParameter> Cpar;
+	std::vector<std::string> Cpar;
 	
 	/// the redshift evolution function in the scaling relation
 	std::function<double(const double, const double, const std::shared_ptr<void>)> fz;
@@ -132,7 +135,7 @@ namespace cbl {
 	/// author(s) who proposed the bias function
 	std::string model_bias;
 
-        /// minimum redshift
+	/// minimum redshift
 	double z_min; 
 
 	/// maximum redshift
@@ -174,6 +177,48 @@ namespace cbl {
 	/// number counts weights derived from the selection function
 	std::vector<double> SF_weights;
 	
+	/// cluster purity in each mass proxy bin
+	std::vector<double> purity;
+        
+        /// interpolated cluster completeness
+        cbl::glob::FuncGrid2D completeness_interp;
+        
+        /// if true, the shape parameters of \f$P(\lambda_{\rm ob}|\lambda,z)\f$ are set
+        bool isSet_P_proxy = false;
+	
+	/// Function computing the mean of \f$P(\lambda_{\rm ob}|\lambda,z)\f$
+	std::function<double(const double, const double, const double, const double, const double)> Plambda_mean_fc;
+	
+	/// Function computing the standard deviation of \f$P(\lambda_{\rm ob}|\lambda,z)\f$
+	std::function<double(const double, const double, const double, const double, const double)> Plambda_std_fc;
+	
+	/// \f$A_\mu\f$, see cbl::modelling::densityprofile::Modelling_DensityProfile::set_P_proxy
+	double Plambda_A_mu;
+	
+	/// \f$B_\mu\f$, see cbl::modelling::densityprofile::Modelling_DensityProfile::set_P_proxy
+	double Plambda_B_mu;
+	
+	/// \f$C_\mu\f$, see cbl::modelling::densityprofile::Modelling_DensityProfile::set_P_proxy
+	double Plambda_C_mu;
+	
+	/// \f$A_\sigma\f$, see cbl::modelling::densityprofile::Modelling_DensityProfile::set_P_proxy
+	double Plambda_A_sigma;
+	
+	/// \f$B_\sigma\f$, see cbl::modelling::densityprofile::Modelling_DensityProfile::set_P_proxy
+	double Plambda_B_sigma;
+	
+	/// \f$C_\sigma\f$, see cbl::modelling::densityprofile::Modelling_DensityProfile::set_P_proxy
+	double Plambda_C_sigma;
+	
+	/// \f$\sigma_z\f$, where the redshift statistical error is given by \f$\sigma_z(1+z)\f$
+	double z_error_normalised;
+	
+	/// Modelling_MassObservableRelation object pointer
+	std::shared_ptr<modelling::massobsrel::Modelling_MassObservableRelation> scaling_relation;
+	
+	/// functional form of the redshift evolution function in the scaling relation
+	std::string z_evo;
+	
 	/// redshift pivot in the mass-observable scaling relation
 	double z_pivot;
 	
@@ -191,8 +236,6 @@ namespace cbl {
 	 */
 	STR_NC_data_model () = default;
       };
-
-
    
       /**
        *  @struct STR_NCSF_data_model
@@ -210,7 +253,7 @@ namespace cbl {
 	std::shared_ptr<cosmology::Cosmology> cosmology;
 
 	/// cosmological parameters
-	std::vector<cosmology::CosmologicalParameter> Cpar;
+	std::vector<std::string> Cpar;
 
 	/// redshift
 	double redshift;
@@ -354,7 +397,7 @@ namespace cbl {
        * @return vector containing the interpolation function for
        * \f$ \sigma(M), \mathrm{d} \ln(\sigma(M)) / \mathrm{d} M \f$
        */
-      std::vector<cbl::glob::FuncGrid> sigmaM_dlnsigmaM (const std::vector<double> mass, cosmology::Cosmology cosmology, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax);
+      std::vector<cbl::glob::FuncGrid> sigmaM_dlnsigmaM (const std::vector<double> mass, const std::shared_ptr<cosmology::Cosmology> cosmology, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax);
 
       /**
        * @brief compute the mass function
@@ -394,7 +437,7 @@ namespace cbl {
        *
        * @return value of the mass function
        */
-      double mass_function (const double mass, cosmology::Cosmology cosmology, const double redshift, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_critical, const cbl::glob::FuncGrid interp_Pk, const double kmax);
+      double mass_function (const double mass, const std::shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_critical, const cbl::glob::FuncGrid interp_Pk, const double kmax);
 
       /**
        * @brief compute the mass function
@@ -438,7 +481,7 @@ namespace cbl {
        *
        * @return values of the mass function
        */
-      std::vector<double> mass_function (const std::vector<double> mass, cosmology::Cosmology cosmology, const double redshift, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_critical, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax);
+      std::vector<double> mass_function (const std::vector<double> mass, const std::shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_critical, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax);
 
       /**
        * @brief compute the mass function as function
@@ -484,12 +527,12 @@ namespace cbl {
        * @return values of the mass function as a function of redshift
        * and mass
        */
-      std::vector<std::vector<double>> mass_function (const std::vector<double> redshift, const std::vector<double> mass, cosmology::Cosmology cosmology, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_critical, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax);
+      std::vector<std::vector<double>> mass_function (const std::vector<double> redshift, const std::vector<double> mass, const std::shared_ptr<cosmology::Cosmology> cosmology, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_critical, const std::vector<double> kk, const std::vector<double> Pk, const std::string interpType, const double kmax);
 
       /**
        *  @brief the void size function
        *
-       *  @param cosmology the cosmology 
+       *  @param cosmology the cosmology
        *
        *  @param radii the void radii
        *
@@ -552,7 +595,7 @@ namespace cbl {
        *  Volume Conserving Model, equation (17) from Jennings et
        *  al.(2013)
        */
-      std::vector<double> size_function (cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="Eisensteinhu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
+      std::vector<double> size_function (const std::shared_ptr<cosmology::Cosmology> cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="Eisensteinhu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true);
 
       /**
        * @brief compute the number counts as function
@@ -599,10 +642,13 @@ namespace cbl {
        * @param interp_DlnsigmaM interpolating function of \f$
        * \mathrm{d} \ln(\sigma(M)) / \mathrm{d} M \f$
        *
+       * @param interp_DN interpolating function of 
+       * the normalised amplitude of the growing mode
+       *
        * @return values of the mass function as a function of redshift
        * and mass
        */
-      double number_counts (const double redshift_min, const double redshift_max, const double Mass_min, const double Mass_max, cosmology::Cosmology cosmology, const double Area, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_critical, const glob::FuncGrid interp_sigmaM, const  glob::FuncGrid interp_DlnsigmaM);
+      double number_counts (const double redshift_min, const double redshift_max, const double Mass_min, const double Mass_max, const std::shared_ptr<cosmology::Cosmology> cosmology, const double Area, const std::string model_MF, const bool store_output, const double Delta, const bool isDelta_critical, const glob::FuncGrid interp_sigmaM, const glob::FuncGrid interp_DlnsigmaM, const glob::FuncGrid interp_DN);
       
       /**
        * @brief compute the number counts as function
@@ -657,7 +703,7 @@ namespace cbl {
        *
        * @param cosmology the cosmology 
        *
-       * @param Area the area in degrees
+       * @param Area the area
        *
        * @param model_MF author(s) who proposed the mass function;
        * valid authors are: PS (Press & Schechter), ST (Sheth &
@@ -676,9 +722,9 @@ namespace cbl {
        * @param model_bias the bias model, used for the computation 
        * of the super-sample covariance
        *
-       *  @param store_output if true the output files created by the
-       *  Boltzmann solver are stored; if false the output files are
-       *  removed
+       * @param store_output if true the output files created by the
+       * Boltzmann solver are stored; if false the output files are
+       * removed
        *
        * @param Delta \f$\Delta\f$, the overdensity
        *
@@ -706,7 +752,244 @@ namespace cbl {
        * @return values of the mass function as a function of redshift
        * and mass proxy
        */
-      double counts_proxy (const double alpha, const double beta, const double gamma, const double scatter0, const double scatterM, const double scatterM_exp, const double scatterz, const double scatterz_exp, const double z_bias, const double proxy_bias, const double z_err, const double proxy_err, const double Plambda_a, const double Plambda_b, const double Plambda_c, std::function<double(const double, const double, const std::shared_ptr<void>)> fz, std::function<double(const double, const double)> z_error, std::function<double(const double, const double)> proxy_error, double (*response_fact)(const double, const double, const double, const double, const std::string, const double, const std::string, std::shared_ptr<void>), const double redshift_min, const double redshift_max, const double proxy_min, const double proxy_max, cbl::cosmology::Cosmology cosmology, const double Area, const std::string model_MF, const std::string model_bias, const bool store_output, const double Delta, const bool isDelta_critical, const cbl::glob::FuncGrid interp_sigmaM, const cbl::glob::FuncGrid interp_DlnsigmaM, const cbl::glob::FuncGrid interp_DN, const double proxy_pivot, const double z_pivot, const double mass_pivot, const double log_base, const double weight);
+      double counts_proxy (const double alpha, const double beta, const double gamma, const double scatter0, const double scatterM, const double scatterM_exp, const double scatterz, const double scatterz_exp, const double z_bias, const double proxy_bias, const double z_err, const double proxy_err, const double Plambda_a, const double Plambda_b, const double Plambda_c, ProxyFunction fz, std::function<double(const double, const double)> z_error, std::function<double(const double, const double)> proxy_error, double (*response_fact)(const double, const double, const double, const double, const std::string, const double, const std::string, std::shared_ptr<void>), const double redshift_min, const double redshift_max, const double proxy_min, const double proxy_max, const std::shared_ptr<cosmology::Cosmology> cosmology, const double Area, const std::string model_MF, const std::string model_bias, const bool store_output, const double Delta, const bool isDelta_critical, const cbl::glob::FuncGrid interp_sigmaM, const cbl::glob::FuncGrid interp_DlnsigmaM, const cbl::glob::FuncGrid interp_DN, const double proxy_pivot, const double z_pivot, const double mass_pivot, const double log_base, const double weight);
+      
+      /**
+       *  @brief number counts as a function of mass proxy and redshift
+       *
+       *  @param cosmo the cosmology
+       *
+       *  @param area survey area
+       *
+       * @param z_min minimum observed redshift
+       *
+       * @param z_max maximum observed redshift
+       *
+       * @param proxy_min minimum observed mass proxy
+       *
+       * @param proxy_max maximum observed mass proxy
+       *
+       * @param z_error_normalised \f$\sigma_{z,0}\f$ in the equation 
+       * \f$\sigma_z=\sigma_{z,0}(1+z)\f$, where \f$z\f$ is the true redshift and 
+       * \f$\sigma_z\f$ represents the total statistical uncertainty on redshift.
+       * In particular, \f$\sigma_z\f$ is the rms of the Gaussian PDF 
+       * \f$P(z_{\rm ob}|z)\f$
+       *
+       * @param Plambda_mean_fc Function computing the mean of \f$P(\lambda_{\rm ob}|\lambda,z)\f$
+       *
+       * @param Plambda_A_mu \f$A_\mu\f$
+       *
+       * @param Plambda_B_mu \f$B_\mu\f$
+       *
+       * @param Plambda_C_mu \f$C_\mu\f$
+       *
+       * @param Plambda_std_fc Function computing the rms of \f$P(\lambda_{\rm ob}|\lambda,z)\f$
+       *
+       * @param Plambda_A_sigma \f$A_\sigma\f$
+       *
+       * @param Plambda_B_sigma \f$B_\sigma\f$
+       *
+       * @param Plambda_C_sigma \f$C_\sigma\f$
+       *
+       * @param interp_sigmaM interpolating function of \f$
+       * \sigma(M)\f$
+       *
+       * @param interp_DlnsigmaM interpolating function of \f$
+       * \mathrm{d} \ln(\sigma(M)) / \mathrm{d} M \f$
+       *
+       * @param interp_DN interpolated amplitude of the growing mode
+       *
+       * @param alpha alpha
+       *
+       * @param beta beta
+       *
+       * @param gamma gamma
+       *
+       * @param scatter0 scatter0
+       *
+       * @param scatterM scatterM
+       *
+       * @param scatterM_exp scatterM_exp
+       *
+       * @param scatterz scatterz
+       *
+       * @param scatterz_exp scatterz_exp
+       *
+       * @param purity cluster sample purity
+       *
+       * @param completeness_interp interpolated sample completeness
+       *
+       * @param scaling_relation scaling relation model
+       *
+       * @param z_pivot redshift pivot in the scaling relation
+       *
+       * @param proxy_pivot mass proxy pivot in the scaling relation
+       *
+       * @param mass_pivot mass pivot in the scaling relation
+       *
+       * @param log_base logarithmic base used in the scaling relation
+       *
+       * @param isDelta_critical if true, the overdensity is the critical one
+       *
+       * @param Delta overdensity
+       *
+       * @param model_MF mass function model
+       *
+       * @param response_fact the response function factor for the
+       * super-sample covariance
+       *
+       * @param model_bias model for the halo bias
+       *
+       * @param q_HMF_correction \f$q\f$ parameter entering the correction
+       * factor of the halo mass function, following Costanzi+19, that is
+       * \f$f_{\rm correction} = s \log(M/M^*) + q\f$, where \f$M^*=10^{13.8}\f$
+       * \f$h^{-1}M_\odot\f$
+       *
+       * @param s_HMF_correction \f$s\f$ parameter entering the correction
+       * factor of the halo mass function, following Costanzi+19, that is
+       * \f$f_{\rm correction} = s \log(M/M^*) + q\f$, where \f$M^*=10^{13.8}\f$
+       * \f$h^{-1}M_\odot\f$
+       *
+       * @param mass_conversion function that converts masses defined within a given
+       * overdensity into another one, used only for the computation of the HMF
+       * correction factor defined by \f$q\f$ and \f$s\f$
+       *
+       * @return the count
+       *
+       **/
+      double counts_proxy_classic (const std::shared_ptr<cosmology::Cosmology> cosmo, const double area, const double z_min, const double z_max, const double proxy_min, const double proxy_max, const double z_error_normalised, const std::function<double(const double, const double, const double, const double, const double)> Plambda_mean_fc, const double Plambda_A_mu, const double Plambda_B_mu, const double Plambda_C_mu, const std::function<double(const double, const double, const double, const double, const double)> Plambda_std_fc, const double Plambda_A_sigma, const double Plambda_B_sigma, const double Plambda_C_sigma, const cbl::glob::FuncGrid interp_sigmaM, const cbl::glob::FuncGrid interp_DlnsigmaM, const cbl::glob::FuncGrid interp_DN, const double alpha, const double beta, const double gamma, const double scatter0, const double scatterM, const double scatterM_exp, const double scatterz, const double scatterz_exp, const double purity, cbl::glob::FuncGrid2D completeness_interp, const std::shared_ptr<modelling::massobsrel::Modelling_MassObservableRelation> scaling_relation, const double z_pivot, const double proxy_pivot, const double mass_pivot, const double log_base, const bool isDelta_critical, const double Delta, const std::string model_MF, double (*response_fact)(const double, const double, const double, const double, const std::string, const double, const std::string, std::shared_ptr<void>), const std::string model_bias, const double q_HMF_correction=1., const double s_HMF_correction=0., double (*mass_conversion)(const double, const double, std::shared_ptr<cbl::cosmology::Cosmology>)=NULL);
+      
+      /**
+       * @brief function computing the integration limits in the
+       * classic case, i.e. with P(proxy|M,z) appearing in the integrand
+       *
+       * @param cosmology pointer to a Cosmology object
+       *
+       * @param z_min minimum observed redshift
+       *
+       * @param z_max maximum observed redshift
+       *
+       * @param mass_proxy_min minimum observed mass proxy
+       *
+       * @param mass_proxy_max maximum observed mass proxy
+       *
+       * @param z_error \f$\sigma_{z,0}\f$ in the equation 
+       * \f$\sigma_z=\sigma_{z,0}(1+z)\f$, where \f$z\f$ is the true redshift and 
+       * \f$\sigma_z\f$ represents the total statistical uncertainty on redshift.
+       * In particular, \f$\sigma_z\f$ is the rms of the Gaussian PDF 
+       * \f$P(z_{\rm ob}|z)\f$
+       *
+       * @param Plambda_mean_fc Function computing the mean of \f$P(\lambda_{\rm ob}|\lambda,z)\f$
+       *
+       * @param Plambda_A_mu \f$A_\mu\f$
+       *
+       * @param Plambda_B_mu \f$B_\mu\f$
+       *
+       * @param Plambda_C_mu \f$C_\mu\f$
+       *
+       * @param Plambda_std_fc Function computing the rms of \f$P(\lambda_{\rm ob}|\lambda,z)\f$
+       *
+       * @param Plambda_A_sigma \f$A_\sigma\f$
+       *
+       * @param Plambda_B_sigma \f$B_\sigma\f$
+       *
+       * @param Plambda_C_sigma \f$C_\sigma\f$
+       *
+       * @param scaling_relation mass-observable relation pointer
+       *
+       * @param alpha normalisation of the scaling relation
+       *
+       * @param beta slope of the scaling relation
+       *
+       * @param gamma scaling relation redshift evolution
+       * parameter
+       *
+       * @param scatter0 normalisation
+       *
+       * @param scatterM mass evolution
+       *
+       * @param scatterM_exp exponent of the mass evolution
+       *
+       * @param scatterz z evolution
+       *
+       * @param scatterz_exp exponent of the z evolution
+       *
+       * @param z_pivot redshift pivot in the scaling relation
+       *
+       * @param proxy_pivot proxy pivot in the scaling relation
+       *
+       * @param mass_pivot mass pivot in the scaling relation
+       *
+       * @param logM_base base of the mass logarithm
+       *
+       * @return integration limits for mass, true redshift, and 
+       * true mass proxy. In this order.
+       *
+       */
+      std::vector<std::vector<double>> get_integration_limits (const std::shared_ptr<cosmology::Cosmology> cosmology, const double z_min, const double z_max, const double mass_proxy_min, const double mass_proxy_max, const double z_error, const std::function<double(const double, const double, const double, const double, const double)> Plambda_mean_fc, const double Plambda_A_mu, const double Plambda_B_mu, const double Plambda_C_mu, const std::function<double(const double, const double, const double, const double, const double)> Plambda_std_fc, const double Plambda_A_sigma, const double Plambda_B_sigma, const double Plambda_C_sigma, const std::shared_ptr<modelling::massobsrel::Modelling_MassObservableRelation> scaling_relation, const double alpha, const double beta, const double gamma, const double scatter0, const double scatterM, const double scatterM_exp, const double scatterz, const double scatterz_exp, const double z_pivot, const double proxy_pivot, const double mass_pivot, const double logM_base);
+      
+      /**
+       * @brief function computing the intrinsic scatter
+       * of P(proxy|M,z)
+       *
+       * @param z_tr true redshift
+       *
+       * @param M true mass
+       *
+       * @param scatter0 normalisation
+       *
+       * @param scatterM mass evolution
+       *
+       * @param scatterM_exp exponent of the mass evolution
+       *
+       * @param scatterz z evolution
+       *
+       * @param scatterz_exp exponent of the z evolution
+       *
+       * @param cosmo Cosmology pointer
+       *
+       * @param scaling_relation mass-observable relation pointer
+       *
+       * @param z_pivot redshift pivot in the scaling relation
+       *
+       * @param M_pivot proxy pivot in the scaling relation
+       *
+       * @param logM_base base of the mass logarithm
+       *
+       * @return intrinsic scatter
+       *
+       */
+      double scatter_intr_proxy (const double z_tr, const double M, const double scatter0, const double scatterM, const double scatterM_exp, const double scatterz, const double scatterz_exp, const std::shared_ptr<cosmology::Cosmology> cosmo, const std::shared_ptr<modelling::massobsrel::Modelling_MassObservableRelation> scaling_relation, const double z_pivot, const double M_pivot, const double logM_base);
+      
+      /**
+       * @brief function computing the logarithm of the 
+       * normalised mass proxy derived from the scaling relation
+       *
+       * @param z_tr true redshift
+       *
+       * @param M true mass
+       *
+       * @param alpha normalisation of the scaling relation
+       *
+       * @param beta slope of the scaling relation
+       *
+       * @param gamma scaling relation redshift evolution
+       * parameter
+       *
+       * @param cosmo Cosmology pointer
+       *
+       * @param scaling_relation mass-observable relation pointer
+       *
+       * @param z_pivot redshift pivot in the scaling relation
+       *
+       * @param M_pivot mass pivot in the scaling relation
+       *
+       * @param logM_base base of the mass logarithm
+       *
+       * @return logarithm of the normalised mass proxy derived from the scaling relation
+       *
+       */
+      double logProxy (const double z_tr, const double M, const double alpha, const double beta, const double gamma, const std::shared_ptr<cosmology::Cosmology> cosmo, const std::shared_ptr<modelling::massobsrel::Modelling_MassObservableRelation> scaling_relation, const double z_pivot, const double M_pivot, const double logM_base);
       
     }
   }

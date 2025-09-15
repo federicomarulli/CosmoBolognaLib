@@ -11,11 +11,11 @@ using namespace std;
 vector<double> model_function_plus (const vector<double> x, const shared_ptr<void> modelInput, std::vector<double> &parameter)
 {
   // the object Cosmology, used in this example to compute Omega_matter
-  cbl::cosmology::Cosmology cosm = *static_pointer_cast<cbl::cosmology::Cosmology>(modelInput);
+  auto cosmology = static_pointer_cast<cbl::cosmology::Cosmology>(modelInput);
 
   vector<double> model(x.size(), 0.);
   for (size_t i=0; i<x.size(); ++i)
-    model[i] = parameter[2]*x[i]+parameter[3]+parameter[0]*cosm.Omega_matter(); // the model
+    model[i] = parameter[2]*x[i]+parameter[3]+parameter[0]*cosmology->Omega_matter(); // the model
 
   parameter[1] = parameter[2]+parameter[3]+parameter[0]; // parameter[1] is a derived parameter
 
@@ -26,11 +26,11 @@ vector<double> model_function_plus (const vector<double> x, const shared_ptr<voi
 vector<double> model_function_minus (const vector<double> x, const shared_ptr<void> modelInput, std::vector<double> &parameter)
 {
   // the object Cosmology, used in this example to compute Omega_matter
-  cbl::cosmology::Cosmology cosm = *static_pointer_cast<cbl::cosmology::Cosmology>(modelInput);
+  auto cosmology = static_pointer_cast<cbl::cosmology::Cosmology>(modelInput);
 
   vector<double> model(x.size(), 0.);
   for (size_t i=0; i<x.size(); ++i)
-    model[i] = -parameter[2]*x[i]+parameter[3]+parameter[0]*cosm.Omega_matter(); // the model
+    model[i] = -parameter[2]*x[i]+parameter[3]+parameter[0]*cosmology->Omega_matter(); // the model
 
   parameter[1] = parameter[2]+parameter[3]+parameter[0];  // parameter[1] is a derived parameter
 
@@ -39,7 +39,7 @@ vector<double> model_function_minus (const vector<double> x, const shared_ptr<vo
 
 
 // Use this function to pass all the model inputs, in this case an object of class cbl::cosmology::Cosmology
-shared_ptr<cbl::statistics::Model1D> getModel1D (const cbl::cosmology::Cosmology cosmology, const int model) 
+shared_ptr<cbl::statistics::Model1D> getModel1D (const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const int model) 
 {
   // number of model parameters
   const int nparameters = 4;
@@ -52,7 +52,7 @@ shared_ptr<cbl::statistics::Model1D> getModel1D (const cbl::cosmology::Cosmology
   parType[1] = cbl::statistics::ParameterType::_Derived_;   
 
   // set the stuff used to construct the model: here an object of class cosmology, just as an example 
-  auto ptr_modelInput = make_shared<cbl::cosmology::Cosmology>(cosmology);
+  auto ptr_modelInput = move(cosmology);
 
   // construct the model
   if (model == 0) {
@@ -70,7 +70,7 @@ shared_ptr<cbl::statistics::Model1D> getModel1D (const cbl::cosmology::Cosmology
 }
 
 // Use this function to pass all the model inputs, in this case an object of class cbl::cosmology::Cosmology
-shared_ptr<cbl::statistics::Model1D> getModel1D_correlated (const cbl::cosmology::Cosmology cosmology, const int model) 
+shared_ptr<cbl::statistics::Model1D> getModel1D_correlated (const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const int model) 
 {
   // number of model parameters
   const int nparameters = 4;
@@ -84,7 +84,7 @@ shared_ptr<cbl::statistics::Model1D> getModel1D_correlated (const cbl::cosmology
   parType[1] = cbl::statistics::ParameterType::_Derived_;
   
   // set the stuff used to construct the model: here an object of class cosmology, just as an example 
-  auto ptr_modelInput = make_shared<cbl::cosmology::Cosmology>(cosmology);
+  auto ptr_modelInput = move(cosmology);
 
   // construct the model
   if (model == 0) {

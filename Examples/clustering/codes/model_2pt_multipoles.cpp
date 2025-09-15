@@ -2,9 +2,13 @@
 // Example code: how to model the multipoles of the two-point correlation in redshift space
 // ========================================================================================
 
+#include "LCDM.h"
 #include "TwoPointCorrelation_multipoles_direct.h"
 #include "TwoPointCorrelation_multipoles_integrated.h"
 #include "Modelling_TwoPointCorrelation_multipoles.h"
+
+using namespace std;
+
 
 int main () {
 
@@ -14,14 +18,14 @@ int main () {
     // ---------------- set the cosmological model to Planck15 ------------
     // --------------------------------------------------------------------
 
-    const cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
 
   
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
   
-    const std::string file_catalogue = "../input/cat.dat";
+    const string file_catalogue = "../input/cat.dat";
 
     const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -40,7 +44,7 @@ int main () {
     // --------------------------------------------------------------------------------------------
 
     // output directory
-    const std::string dir = "../output/";
+    const string dir = "../output/";
 
     // binning parameters and output data
     const double rMin = 10.;  // minimum separation 
@@ -61,7 +65,7 @@ int main () {
     // ------------------------------------------------------------------------------------------
 
     // object used for modelling and set the data used to construct the model
-    auto ptr_TwoP = std::make_shared<cbl::measure::twopt::TwoPointCorrelation_multipoles_direct>(TwoP_direct);
+    auto ptr_TwoP = make_shared<cbl::measure::twopt::TwoPointCorrelation_multipoles_direct>(TwoP_direct);
     cbl::modelling::twopt::Modelling_TwoPointCorrelation_multipoles model_multipoles(ptr_TwoP);
 
     // set the priors
@@ -88,16 +92,16 @@ int main () {
     model_multipoles.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_);
 
     // maximise the posterior
-    const std::vector<double> start = {0.2, 0.2, 1.};
+    const vector<double> start = {0.2, 0.2, 1.};
     model_multipoles.maximize_posterior(start);
 
     // retrieve and show the best-fit parameter values
     for (unsigned int i=0; i<model_multipoles.posterior()->parameters()->nparameters(); ++i)
-      std::cout << "the best-fit value of " << model_multipoles.posterior()->parameters()->name(i) << " is " << model_multipoles.posterior()->parameters()->bestfit_value(i) << std::endl;
+      cout << "the best-fit value of " << model_multipoles.posterior()->parameters()->name(i) << " is " << model_multipoles.posterior()->parameters()->bestfit_value(i) << endl;
 
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

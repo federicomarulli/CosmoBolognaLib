@@ -108,6 +108,27 @@ namespace cbl {
 	Modelling_TwoPointCorrelation_multipoles (const std::shared_ptr<data::Data> twop_dataset, const int nmultipoles);
 
 	/**
+	 *  @brief constructor
+	 *
+	 *  @param twop_dataset the dataset containing the two-point
+	 *  correlation function to model
+	 *
+	 *  @param use_pole vector to specify which multipoles the user wants to use
+	 */
+	Modelling_TwoPointCorrelation_multipoles (const std::shared_ptr<data::Data> twop_dataset, const std::vector<bool> use_pole);
+
+	/**
+	 *  @brief constructor
+	 *
+	 *  @param twop_dataset the dataset containing the two-point
+	 *  correlation function to model
+	 *
+	 *  @param dataset_order vector containing the ordering of the data vector,
+	 *  which specifies which multipole correponds to each data vector element
+	 */
+	Modelling_TwoPointCorrelation_multipoles (const std::shared_ptr<data::Data> twop_dataset, const std::vector<int> dataset_order);
+	
+	/**
 	 *  @brief default destructor
 	 */
 	~Modelling_TwoPointCorrelation_multipoles () = default;
@@ -120,10 +141,11 @@ namespace cbl {
 	 */
 	///@{
 	
-	/**
-         *  @brief write the model at xx for given parameters
+        /**
          *
-	 *  @param output_dir the output directory
+         *  @brief write the model at xx for given parameters  
+         *
+         *  @param output_dir the output directory
 	 *
 	 *  @param output_file the output file
 	 *
@@ -137,9 +159,29 @@ namespace cbl {
         void write_model (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const std::vector<double> parameters);
 
         /**
-         *  @brief write the model at xx with best-fit parameters
-         *  obtained from likelihood maximization
          *
+         *  @brief write the model at xx for given parameters
+         *
+         *  @param output_dir the output directory
+         *
+	 *  @param output_file the output file
+	 *
+	 *  @param use_pole vector to specify which multipoles
+	 *  the user wants to use
+	 *
+	 *  @param xx vector of points at which the model is computed
+	 *
+	 *  @param parameters vector containing the input parameters
+         *  used to compute the model
+         */
+        void write_model (const std::string output_dir, const std::string output_file, const std::vector<bool> use_pole, const std::vector<double> xx, const std::vector<double> parameters);
+
+	using Modelling::write_model;
+
+	/**
+	 *  @brief write the model at xx with best-fit parameters
+	 *  obtained from likelihood maximization
+	 *
 	 *  @param output_dir the output directory
 	 *
 	 *  @param output_file the output file
@@ -151,8 +193,25 @@ namespace cbl {
         void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx);
 
         /**
-         *  @brief write the model at xx computing 16th, 50th and 84th
-         *  percentiles from the chains
+	 *  @brief write the model at xx with best-fit parameters
+	 *  obtained from likelihood maximization
+	 *
+	 *  @param output_dir the output directory
+	 *
+	 *  @param output_file the output file
+	 *
+	 *  @param use_pole vector to specify which multipoles
+	 *  the user wants to use
+         *
+	 *  @param xx vector of points at which the model is computed
+         */
+        void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<bool> use_pole, const std::vector<double> xx);
+
+	using Modelling::write_model_at_bestfit;
+
+	/**
+	 *  @brief write the model at xx computing 16th, 50th and 84th
+	 *  percentiles from the chains
 	 *
 	 *  @param output_dir the output directory
 	 *
@@ -168,6 +227,27 @@ namespace cbl {
          */
         void write_model_from_chains (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const int start=0, const int thin=1);
 
+	/**
+	 *  @brief write the model at xx computing 16th, 50th and 84th
+	 *  percentiles from the chains
+	 *
+	 *  @param output_dir the output directory
+	 *
+	 *  @param output_file the output file
+	 *
+	 *  @param use_pole vector to specify which multipoles
+	 *  the user wants to use
+         *
+	 *  @param xx vector of points at which the model is computed,
+         *
+	 *  @param start the starting position for each chain
+         *
+	 *  @param thin the position step
+         */
+        void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<bool> use_pole, const std::vector<double> xx, const int start=0, const int thin=1);
+
+	using Modelling::write_model_from_chains;
+	
 	///@}
 	
 	
@@ -194,6 +274,18 @@ namespace cbl {
 	void set_fit_range (std::vector<std::vector<double>> fit_range);
 
 	/**
+	 *  @brief set the scale range used for the fit
+	 *
+	 *  @param fit_range vector containing the fitting range for
+	 *  the multipoles
+	 *
+	 *  @param dataset_order vector containing the ordering of the
+	 *  data vector, which specifies which multipole correponds to
+	 *  each data vector element
+	 */
+	void set_fit_range (std::vector<std::vector<double>> fit_range, std::vector<int> dataset_order);
+	
+	/**
 	 *  @brief set the fiducial model for the dark matter power
 	 *  spectrum
 	 */
@@ -216,7 +308,7 @@ namespace cbl {
 	 *  P_l(k) j_l(ks) \f]
 	 *
 	 *  where \f$j_l(ks)\f$ are the Bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
+	 *  \f$P_l(k)\f$ is computed by cbl::modelling::powspec::Pk_l
 	 *
 	 *  the model has 2 parameters:
 	 *    - \f$\sigma_8(z)\f$
@@ -322,12 +414,12 @@ namespace cbl {
 	 *  P_l(k) j_l(ks) \f]
 	 *
 	 *  where \f$j_l(ks)\f$ are the Bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
+	 *  \f$P_l(k)\f$ is computed by cbl::modelling::powspec::Pk_l
 	 *
 	 *  specifically, the model BAO-damped power spectrum \f$P(k,
 	 *  \mu)\f$ (see e.g. Vargas-Magana et al. 2018
 	 *  https://arxiv.org/pdf/1610.03506.pdf) is computed by
-	 *  cbl::modelling::twopt::Pkmu_DeWiggled
+	 *  cbl::modelling::powspec::Pkmu_DeWiggled
 	 *
 	 *  the model has 7 parameters:
 	 *    - \f$\alpha_{\perp}\f$
@@ -378,12 +470,12 @@ namespace cbl {
 	 *  P_l(k) j_l(ks) \f]
 	 *
 	 *  where \f$j_l(ks)\f$ are the Bessel functions and
-	 *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
+	 *  \f$P_l(k)\f$ is computed by cbl::modelling::powspec::Pk_l
 	 *
 	 *  specifically, the redshift-space power spectrum \f$P(k,
 	 *  \mu)\f$ (see e.g. Sanchez et al. 2013
 	 *  https://arxiv.org/pdf/1312.4854.pdf) is computed by
-	 *  cbl::modelling::twopt::Pkmu_ModeCoupling
+	 *  cbl::modelling::powspec::Pkmu_ModeCoupling
 	 *
 	 *  the model has 3 parameters:
 	 *    - \f$\alpha_{\perp}\f$
@@ -427,7 +519,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::Xi_l, in which the
 	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
 	 *  modelled with the so-called dispersion model, computed by
-	 *  cbl:modelling::twopt::Pkmu_dispersion (see e.g. Pezzotta
+	 *  cbl::modelling::powspec::Pkmu_dispersion (see e.g. Pezzotta
 	 *  et al. 2017, https://arxiv.org/abs/1612.05645)
 	 *
 	 *  the model has 5 parameters:
@@ -474,7 +566,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::Xi_l, in which the
 	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
 	 *  modelled with the Scoccimarro model, computed by
-	 *  cbl:modelling::twopt::Pkmu_Scoccimarro (see Scoccimarro et
+	 *  cbl::modelling::powspec::Pkmu_Scoccimarro (see Scoccimarro et
 	 *  al. 2004, https://arxiv.org/abs/astro-ph/0407214)
 	 *
 	 *  the model has 5 parameters:
@@ -521,7 +613,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::Xi_l, in which the
 	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
 	 *  modelled with the Scoccimarro model, computed by
-	 *  cbl:modelling::twopt::Pkmu_Scoccimarro_fitPezzotta (see
+	 *  cbl::modelling::powspec::Pkmu_Scoccimarro_fitPezzotta (see
 	 *  Scoccimarro et al. 2004,
 	 *  https://arxiv.org/abs/astro-ph/0407214; Pezzotta et al.,
 	 *  2017, https://arxiv.org/abs/1612.05645)
@@ -576,7 +668,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::Xi_l, in which the
 	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
 	 *  modelled with the Scoccimarro model, computed by
-	 *  cbl:modelling::twopt::Pkmu_Scoccimarro_fitBel (see
+	 *  cbl::modelling::powspec::Pkmu_Scoccimarro_fitBel (see
 	 *  Scoccimarro et al. 2004,
 	 *  https://arxiv.org/abs/astro-ph/0407214; Bel et al. 2019,
 	 *  https://arxiv.org/abs/1809.09338)
@@ -641,7 +733,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::Xi_l, in which the
 	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
 	 *  modelled with the TNS model model, computed by
-	 *  cbl:modelling::twopt::Pkmu_TNS (see Taruya et al.  2010,
+	 *  cbl::modelling::powspec::Pkmu_TNS (see Taruya et al.  2010,
 	 *  https://arxiv.org/abs/1006.0699)
 	 *
 	 *  the model has 5 parameters:
@@ -689,7 +781,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::Xi_l, in which the
 	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
 	 *  modelled with the extended TNS model model, computed by
-	 *  cbl:modelling::twopt::Pkmu_eTNS (see Taruya et al. 2010,
+	 *  cbl::modelling::powspec::Pkmu_eTNS (see Taruya et al. 2010,
 	 *  https://arxiv.org/abs/1006.0699; Beutler et al. 2013,
 	 *  https://arxiv.org/abs/1312.4611)
 	 *
@@ -733,6 +825,148 @@ namespace cbl {
 	 */
 	void set_model_eTNS (const statistics::PriorDistribution fsigma8_prior={}, const statistics::PriorDistribution b1sigma8_prior={}, const statistics::PriorDistribution b2sigma8_prior={}, const statistics::PriorDistribution sigmav_prior={}, const statistics::PriorDistribution alpha_perpendicular_prior={cbl::glob::DistributionType::_Constant_, 1.}, const statistics::PriorDistribution alpha_parallel_prior={cbl::glob::DistributionType::_Constant_, 1.}, const bool DFoG=true, const bool compute_PkDM=true);
 
+	/**
+	 *  @brief set the model to fit the full shape of the
+	 *  two-point correlation function with cluster masses
+	 *  provided in input
+	 *
+	 *  the model is the following:
+	 *
+	 *  \f[ \xi_l(s) = i^l \int \frac{\mathrm{d} k}{2\pi^2} k^2
+	 *  P_l(k) j_l(ks), \f]
+	 *
+	 *  where \f$j_l(ks)\f$ are the Bessel functions
+	 *  and \f$P_l(k)\f$ is given by:
+	 *
+	 *  \f[ P_l(k)=\frac{2l+1}{2} \int^{+1}_{-1}
+	 *  \mathrm{d} \mu P\left(k, \mu\right) L_l\left(\mu\right) , \f]
+	 *
+	 *  where \f$ L_l\left(\mu\right) \f$ are the Legendre polynomials.
+	 *  Redshift space distorsion are modelled in the Kaiser limit, 
+	 *  if the user chooses redshift space in set_data_model_bias.
+	 *  Otherwise, they are neglected. Photometric errors are modelled
+	 *  with a Gaussian damping factor:
+	 *
+	 *   \f[ P(k, \mu)=P(k)\, b_\mathrm{eff}^2
+	 *   \left(1+\frac{f}{b_\mathrm{eff}} \mu^2\right)^2 \mathrm{exp}(-k^2\mu^2\sigma^2) , \f]
+	 *
+	 *  where \f$\sigma=\frac{c\sigma_z}{H(z)}\f$.
+	 *  We account for the nonlinear damping at the BAO peak:
+	 *
+	 *  \f[ P(k)=[P_\mathrm{lin}(k)-P_\mathrm{nw}(k)]e^{-k^2\Sigma^2_{\mathrm{NL}}/2}+P_\mathrm{nw}(k), \f]
+	 *
+	 *  where \f$P_\mathrm{lin}\f$ is the linear power spectrum
+	 *  and \f$P_\mathrm{nw}\f$ is the de-wiggled power spectrum,
+	 *  computed with the parametrisation of Eiseinstein_Hu. 
+	 *
+	 *  The linear effective bias is considered a derived parameter,
+	 *  from cosmology, and computed from the input cluster masses
+	 *  in two ways: 
+	 *  using the provided halo masses with cbl::cosmology::Bias::bias_eff_mass
+         *  or with cbl::cosmology::Bias::bias_eff_selection_function
+	 *
+	 *  The model has N cosmological parameters and
+	 *  \f$\Sigma_{NL}\f$, the damping at BAO scale
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param cosmo_param_prior vector containing the priors for
+	 *  the cosmological parameters
+	 *
+	 *  @param sigmaNL_prior prior for the parameter \f$\Sigma_{NL}\f$
+	 *  
+	 */
+	void set_model_linear_theoretical_bias_BAO (const std::vector<std::string> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={}, const statistics::PriorDistribution sigmaNL_prior={});
+
+		/**
+	 *  @brief Set the parameters to model the monopole of the
+	 *  two-point correlation function in redshift space, where
+	 *  the effective bias can be computed in two ways, depending
+	 *  on the cbl::modelling::twopt::Modelling_TwoPointCorrelation1D::set\_data\_model used.
+	 *  In one case, the masses are given by a mass-observable scaling relation
+	 *  with the following functional form:
+	 *
+	 *  \f[ \log \frac{M}{M_{\rm piv}} = \alpha+
+	 *  \beta  \log \frac{\lambda}{\lambda_{\rm piv}}+
+	 *  \gamma  \log f(z;z_{\rm piv}) + \sigma_{\rm intr}, \f]
+	 *
+	 *  where \f$\lambda\f$ is the mass proxy and
+	 *  the intrinsic scatter, \f$\sigma_{\rm intr}\f$, should
+	 *  be set as both negative and positive and it has the 
+	 *  following functional form:
+	 *
+	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{M} 
+	 *  \log (M/M_{\rm piv})^{e_{M}} + \sigma_z \log (f(z))^{e_z}. \f$
+	 *
+	 *  The bias is then computed for each object in correspondence of
+	 *  such masses, and then averaged to obtain the effective bias.
+	 *
+	 *  In the second case, the effective bias is derived as follows:
+	 *
+	 *  \f$ b_{\rm eff} = \frac{1}{N}\sum_{i=1}^N b(z_{{\rm ob},i},\lambda_{{\rm ob},i}) = 
+	 *  \frac{1}{N}\sum_{i=1}^N\int_0^\infty {\rm d}z\,\int_0^\infty{\rm d}\lambda\,\int_0^\infty{\rm d}M\,\, b(M,z) \, 
+	 *  P(M|\lambda,z) \, P(z|z_{{\rm ob},i}) \, P(\lambda|\lambda_{{\rm ob},i}), \f$
+	 *
+	 *  where \f$N\f$ is the number of objects, \f$z_{{\rm ob},i}\f$ and \f$\lambda_{{\rm ob},i}\f$
+	 *  are the observed redshift and mass proxy of the \f$i\f$th object, respectively,
+	 *  \f$P(M|\lambda,z)\f$ is a log-normal whose mean is the mass proxy - mass relation and whose
+	 *  rms is the intrinsic scatter of such relation (for details, see e.g. 
+	 *  cbl::modelling::massobsrel::Modelling_MassObservableRelation), while \f$P(z|z_{{\rm ob},i})\f$
+	 *  and \f$P(\lambda|\lambda_{{\rm ob},i})\f$ are Gaussian distributions whose standard deviations
+	 *  are given by the errors on redshift and proxy, respectively.
+	 * 
+	 *  Redshift-space distorsions are modelled in the Kaiser
+	 *  limit, that is neglecting non-linearities in dynamics
+	 *  and bias; specifically, the model considered is the
+	 *  following:
+	 * 
+	 *  \f$\xi(s) = b^2 \xi'(r) + b \xi''(r) + \xi'''(r) \, ;\f$
+	 *
+	 *  where b is the linear bias and the terms \f$\xi'(r)\f$,
+	 *  \f$\xi''(r)\f$, \f$\xi'''(r)\f$ are the Fourier
+	 *  anti-transform of the power spectrum terms obtained
+	 *  integrating the redshift space 2D power spectrum along
+	 *  \f$\mu\f$ (see cbl::modelling::powspec::damped_Pk_terms)
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param cosmo_prior vector containing the priors for
+	 *  the cosmological parameters
+	 *
+	 *  @param alpha_prior prior on the scaling relation normalization
+	 *
+	 *  @param beta_prior prior on the scaling relation slope
+	 *
+	 *  @param gamma_prior prior on the redshift evolution factor of the scaling relation
+	 *
+	 *  @param scatter0_prior prior on the 
+	 *  constant term of the intrinsic scatter, \f$ \sigma_0 \f$
+	 *
+	 *  @param scatterM_prior prior on the factor in the
+	 *  proxy-dependent term of the intrinsic scatter, \f$ \sigma_{\lambda} \f$
+	 *
+	 *  @param scatterM_exponent_prior prior on the exponent in the
+	 *  proxy-dependent term of the intrinsic scatter, \f$ e_{\lambda} \f$
+	 *
+	 *  @param scatterz_prior prior on the factor in the
+	 *  redshift-dependent term of the intrinsic scatter, \f$ \sigma_z \f$
+	 *
+	 *  @param scatterz_exponent_prior prior on the exponent in the
+	 *  redshift-dependent term of the intrinsic scatter, \f$ e_z \f$
+	 *
+	 *  @param sigmaz_prior prior for the parameter
+	 *  \f$\sigma_z(z)\f$. If the photometric error has a (1+z) dependence, 
+	 *  specify it in the input.  
+	 *
+	 *  @param z_evo functional form of the redshift evolution
+	 *  function in the scaling relation. See the documentation
+	 *  of cbl::modelling::massobsrel::Modelling_MassObservableRelation
+	 *  
+	 */
+	void set_model_scaling_relation_sigmaz_cosmology (const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution sigmaz_prior, const std::string z_evo);
+	
 	///@}
 	
       };

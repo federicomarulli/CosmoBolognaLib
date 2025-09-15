@@ -54,7 +54,7 @@ namespace cbl {
      */
     class Cluster : public Object { 
 
-    private :
+    private:
 
       /// cluster mass
       double m_mass = par::defaultDouble;
@@ -80,17 +80,6 @@ namespace cbl {
        */
       Cluster ()
 	: Object() {}
-	
-      /**
-       * @brief function that allows copying private variables of the class 
-       * when an object of class Catalogue is copied
-       * 
-       * @return a shared pointer to the Object
-       *
-       */
-      std::shared_ptr<Object> getShared() {
-        return std::make_shared<Cluster>(*this);
-      }
 
       /**
        *  @brief constructor that uses comoving coordinates
@@ -113,8 +102,8 @@ namespace cbl {
        *  @param z_displacement the displacement along the z-axis
        *  
        */
-      Cluster (const comovingCoordinates coord, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
-      : Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
+      Cluster (const glob::comovingCoordinates coord, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
+	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
 
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -123,8 +112,8 @@ namespace cbl {
        *  @param coord structure containing the comoving coordinates
        *  {x, y, z}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param z1_guess minimum prior on the redshift
        *
@@ -145,8 +134,8 @@ namespace cbl {
        *  @param z_displacement the displacement along the z-axis
        *  
        */
-      Cluster (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess, const double z2_guess, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
-      : Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
+      Cluster (const glob::comovingCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double z1_guess, const double z2_guess, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
+	: Object(coord, cosmology, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -170,8 +159,8 @@ namespace cbl {
        *
        *  
        */
-      Cluster (const observedCoordinates coord, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
-      : Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
+      Cluster (const glob::observedCoordinates coord, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
+	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -197,8 +186,8 @@ namespace cbl {
        *  @param z_displacement the displacement along the z-axis
        *  
        */
-      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
-      : Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
+      Cluster (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
+	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -208,8 +197,8 @@ namespace cbl {
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -226,8 +215,8 @@ namespace cbl {
        *  @param z_displacement the displacement along the z-axis
        *  
        */
-      Cluster (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
-      : Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
+      Cluster (const glob::observedCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
+	: Object(coord, cosmology, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -238,8 +227,8 @@ namespace cbl {
        *
        *  @param inputUnits the units of the input coordinates
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -256,8 +245,8 @@ namespace cbl {
        *  @param z_displacement the displacement along the z-axis
        *  
        */
-      Cluster (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
-      : Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
+      Cluster (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
+	: Object(coord, inputUnits, cosmology, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
 
       /**
        *  @brief constructor that uses both comoving and observed
@@ -291,7 +280,7 @@ namespace cbl {
        *  
        */
       Cluster (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight, const long region, const int ID, const std::string field, const double x_displacement, const double y_displacement, const double z_displacement) 
-      : Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
+	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
       
       /**
        *  @brief default destructor
@@ -304,7 +293,18 @@ namespace cbl {
       /**
        *  @name Member functions used to get the private members
        */
-      ///@{ 
+      ///@{
+
+      /**
+       * @brief function that allows copying private variables of the class 
+       * when an object of class Catalogue is copied
+       * 
+       * @return a shared pointer to the Object
+       */
+      std::shared_ptr<Object> ptrObject () override 
+      {
+        return std::make_shared<Cluster>(*this);
+      }
     
       /**
        *  @brief get the private member \e m_mass
@@ -390,7 +390,6 @@ namespace cbl {
       { return (cbl::isSet(m_mass_proxy_error)) ? true : false; }
 
       ///@}
-      
     
     };
   }

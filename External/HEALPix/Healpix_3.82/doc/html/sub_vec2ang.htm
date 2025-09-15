@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>vec2ang</TITLE>
+<META NAME="description" CONTENT="vec2ang">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_vect_prod.htm">
+<LINK REL="previous" HREF="sub_uniq2nest.htm">
+<LINK REL="next" HREF="sub_vect_prod.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_uniq2nest.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_vect_prod.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html523"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_uniq2nest.htm">uniq2nest</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_vect_prod.htm">vect_prod</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION10800"></A>
+<A ID="sub:vec2ang"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">vec2ang</SPAN></div><hr>
+<H3>Routine to convert the 3D position vector <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img127.png"
+ ALT="$(x,y,z)$"></SPAN> of point into its position
+  angles  <!-- MATH
+ $(\theta,\phi)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img126.png"
+ ALT="$(\theta,\phi) $"></SPAN> on the sphere with
+<!-- MATH
+ $x = \sin\theta\cos\phi$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="sub_img128.png"
+ ALT="$x = \sin\theta\cos\phi $"></SPAN>, <!-- MATH
+ $y=\sin\theta\sin\phi$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="sub_img129.png"
+ ALT="$y=\sin\theta\sin\phi $"></SPAN>, <!-- MATH
+ $z=\cos\theta$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img130.png"
+ ALT="$z=\cos\theta $"></SPAN>.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/pix_tools.F90"><strong>src/f90/mod/pix_tools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">vec2ang</SPAN>(
+<A HREF="#sub:vec2ang:vector">vector</A>, <A HREF="#sub:vec2ang:theta">theta</A>, <A HREF="#sub:vec2ang:phi">phi</A>
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&amp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:225px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+vector<A ID="sub:vec2ang:vector"></A>(3)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">three dimensional cartesian position vector
+                   <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img127.png"
+ ALT="$(x,y,z)$"></SPAN>. The north pole is <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img133.png"
+ ALT="$(0,0,1)$"></SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">theta<A ID="sub:vec2ang:theta"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">colatitude in radians measured southward from north pole (in
+    [0,<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img7.png"
+ ALT="$\pi$"></SPAN>]).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">phi<A ID="sub:vec2ang:phi"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">longitude in radians measured eastward (in [0, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img188.png"
+ ALT="$2\pi$"></SPAN>]).</TD>
+</TR>
+</TABLE>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">vec2ang</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_ang2vec.htm#sub:ang2vec">ang2vec</A></B>
+<DD>converts the position angles of a point on the sphere 
+into its 3D position vector.
+  <DT>
+<B><A HREF="sub_angdist.htm#sub:angdist">angdist</A></B>
+<DD>computes the angular distance between 2 vectors
+  <DT>
+<B><A HREF="sub_vect_prod.htm#sub:vect_prod">vect_prod</A></B>
+<DD>computes the vector product between two 3D vectors
+  </DL>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_uniq2nest.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_vect_prod.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html523"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_uniq2nest.htm">uniq2nest</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_vect_prod.htm">vect_prod</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

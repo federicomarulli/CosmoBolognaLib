@@ -49,17 +49,18 @@ std::vector<double> cbl::modelling::numbercounts::number_density_redshift (const
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
 
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
+  auto cosmo = pp->cosmology->clone();
 
   // input likelihood parameters
 
   // set the cosmological parameters used to compute the dark matter
   // two-point correlation function in real space
   for (size_t i=0; i<pp->Cpar.size(); ++i)
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
+    cosmo->set_parameter(pp->Cpar[i], parameter[i]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  cosmology::PkXi PX(cosmo);
+  std::vector<double> Pk = PX.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
   std::vector<std::vector<double>> mass_function = cbl::modelling::numbercounts::mass_function(redshift, pp->Mass_vector, cosmo, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, pp->kk, Pk, "Spline", pp->k_max);
 
@@ -83,18 +84,18 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_redshift (const 
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
 
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
-
+  auto cosmo = pp->cosmology->clone();
+  
   // input likelihood parameters
 
   // set the cosmological parameters used to compute the dark matter
   // two-point correlation function in real space
-  for (size_t i=0; i<pp->Cpar.size(); ++i) {
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
-  }
+  for (size_t i=0; i<pp->Cpar.size(); ++i)
+    cosmo->set_parameter(pp->Cpar[i], parameter[i]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  cosmology::PkXi PX(cosmo);
+  std::vector<double> Pk = PX.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
   std::vector<std::vector<double>> mass_function = cbl::modelling::numbercounts::mass_function (redshift, pp->Mass_vector, cosmo, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, pp->kk, Pk, "Spline", pp->k_max);
 
@@ -102,7 +103,7 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_redshift (const 
 
   for (size_t i=0; i<redshift.size(); i++) {
     glob::FuncGrid interpMF(pp->Mass_vector, mass_function[i], "Spline");
-    number_counts[i] = pp->area_rad*interpMF.integrate_qag(pp->Mass_min, pp->Mass_max)*cosmo.dV_dZdOmega(redshift[i], true)*(pp->edges_x[i+1]-pp->edges_x[i]);
+    number_counts[i] = pp->area_rad*interpMF.integrate_qag(pp->Mass_min, pp->Mass_max)*cosmo->dV_dZdOmega(redshift[i], true)*(pp->edges_x[i+1]-pp->edges_x[i]);
   }
 
   return number_counts;

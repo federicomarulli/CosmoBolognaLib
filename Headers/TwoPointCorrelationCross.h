@@ -219,7 +219,7 @@ namespace cbl {
 	virtual std::shared_ptr<data::Data> correlation_SzapudiSzalayEstimator (const std::shared_ptr<pairs::Pair> d1d2, const std::shared_ptr<pairs::Pair> rr, const std::shared_ptr<pairs::Pair> d1r, const std::shared_ptr<pairs::Pair> d2r, const int nData1, const double nData1_weighted, const int nData2, const double nData2_weighted, const int nRandom, const double nRandom_weighted) = 0;
 	
 	/**
-	 *  @brief measure the two-point correlation function with
+	 *  @brief measure the two-point cross-correlation function with
 	 *  Poisson errors
 	 *
 	 *  @param dir_output_pairs output directory used to store the
@@ -255,7 +255,7 @@ namespace cbl {
 	 *  considered for the couples and can be setted by the user
 	 *  to optimize the count of the couples
 	 */
-	virtual void measurePoisson (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, double fact=0.1)
+	virtual void measurePoisson_cross (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs={}, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, double fact=0.1)
 	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)count_d1d2; (void)count_rr; (void)count_d1r; (void)count_d2r; (void)tcount; (void)estimator; (void)fact; cbl::ErrorCBL("", "measurePoisson", "TwoPointCorrelation.h"); }
 	
 	///@}

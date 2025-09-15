@@ -676,7 +676,7 @@ void cbl::statistics::Posterior::initialize_chains (const int chain_size, const 
       vector<double> ll, params;
 
       while (ss>>NUM) ll.push_back(NUM);
-      for (size_t i=1; i<ll.size()-3; i++) 
+      for (size_t i=1; i<ll.size()-4; i++) 
 	params.push_back(ll[i]);
 
       chain_value.push_back(params);

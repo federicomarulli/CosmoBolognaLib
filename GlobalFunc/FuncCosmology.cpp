@@ -41,7 +41,7 @@ using namespace cbl;
 // ============================================================================
 
 
-void cbl::Vmax_DC_distribution (std::vector<double> &dc, std::vector<double> &nObj, const std::vector<double> D_C, const std::vector<double> zobj_min, const std::vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, cosmology::Cosmology &cosm, const double Area, const int nObjRan, const bool norm, const std::string file_Vmax, const double delta_dc_Vmax, const int seed)
+void cbl::Vmax_DC_distribution (std::vector<double> &dc, std::vector<double> &nObj, const std::vector<double> D_C, const std::vector<double> zobj_min, const std::vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const double Area, const int nObjRan, const bool norm, const std::string file_Vmax, const double delta_dc_Vmax, const int seed)
 {
   if (dc.size()>0 || nObj.size()>0) ErrorCBL("", "Vmax_DC_distribution", "GlobalFunc/FuncCosmology.cpp");
 
@@ -52,10 +52,10 @@ void cbl::Vmax_DC_distribution (std::vector<double> &dc, std::vector<double> &nO
 
   for (unsigned int i=0; i<D_C.size(); i++) { 
     for (int j=0; j<nObjRan; j++) {
-      Volume = ran()*cosm.Volume(zobj_min[i], zobj_max[i], Area);
-      zz = cosm.max_redshift(Volume, Area, zobj_min[i]);
+      Volume = ran()*cosmology->Volume(zobj_min[i], zobj_max[i], Area);
+      zz = cosmology->max_redshift(Volume, Area, zobj_min[i]);
       if (z_min<zz && zz<z_max) { 
-	dc_Vmax.push_back(cosm.D_C(zz));
+	dc_Vmax.push_back(cosmology->D_C(zz));
 	ww.push_back(1.);
       }
     }
@@ -63,7 +63,7 @@ void cbl::Vmax_DC_distribution (std::vector<double> &dc, std::vector<double> &nO
 
   double fact = (norm) ? double(dc_Vmax.size())/double(D_C.size()) : dc_Vmax.size();
   
-  double dc1 = cosm.D_C(zbin_min), dc2 = cosm.D_C(zbin_max);
+  double dc1 = cosmology->D_C(zbin_min), dc2 = cosmology->D_C(zbin_max);
 
   int nbin = nint((dc2-dc1))/delta_dc_Vmax;
 
@@ -76,26 +76,26 @@ void cbl::Vmax_DC_distribution (std::vector<double> &dc, std::vector<double> &nO
 // ============================================================================================
 
 
-double cbl::AP_shift_r (const double redshift, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2)
+double cbl::AP_shift_r (const double redshift, const std::shared_ptr<cbl::cosmology::Cosmology> cosm1, const std::shared_ptr<cbl::cosmology::Cosmology> cosm2)
 {
-  return cosm2.D_V(redshift)/cosm1.D_V(redshift);
+  return cosm2->D_V(redshift)/cosm1->D_V(redshift);
 }
 
-double cbl::AP_shift_rp (const double redshift, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2)
+double cbl::AP_shift_rp (const double redshift, const std::shared_ptr<cbl::cosmology::Cosmology> cosm1, const std::shared_ptr<cbl::cosmology::Cosmology> cosm2)
 {
-  return cosm1.D_A(redshift)/cosm2.D_A(redshift);
+  return cosm1->D_A(redshift)/cosm2->D_A(redshift);
 }
 
-double cbl::AP_shift_pi (const double redshift, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2)
+double cbl::AP_shift_pi (const double redshift, const std::shared_ptr<cbl::cosmology::Cosmology> cosm1, const std::shared_ptr<cbl::cosmology::Cosmology> cosm2)
 {
-  return cosm2.HH(redshift)/cosm1.HH(redshift);
+  return cosm2->Hubble(redshift)/cosm1->Hubble(redshift);
 }
 
 
 // ============================================================================================
 
 
-void cbl::max_separations_AP (const double Rp_max, const double Pi_max, const double redshift, const cosmology::Cosmology &cosm1, const std::vector<cosmology::Cosmology> &cosm2, double &rpM_AP, double &piM_AP, double &rM_AP) 
+void cbl::max_separations_AP (const double Rp_max, const double Pi_max, const double redshift, const std::shared_ptr<cbl::cosmology::Cosmology> cosm1, const std::vector<std::shared_ptr<cbl::cosmology::Cosmology>> cosm2, double &rpM_AP, double &piM_AP, double &rM_AP) 
 {
   vector<double> rp(cosm2.size()), pi(cosm2.size());
 
@@ -114,7 +114,7 @@ void cbl::max_separations_AP (const double Rp_max, const double Pi_max, const do
 // ============================================================================================
 
 
-double cbl::converted_xi (const double RR, const double redshift, const std::vector<double> rr, const std::vector<double> Xi, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2, const bool direction) 
+double cbl::converted_xi (const double RR, const double redshift, const std::vector<double> rr, const std::vector<double> Xi, const std::shared_ptr<cbl::cosmology::Cosmology> cosm1, const std::shared_ptr<cbl::cosmology::Cosmology> cosm2, const bool direction) 
 {
   if (RR==0) ErrorCBL("RR must be >0!", "converted_xi", "GlobalFunc/FuncCosmology.cpp");
 
@@ -137,7 +137,7 @@ double cbl::converted_xi (const double RR, const double redshift, const std::vec
 // ============================================================================
 
 
-double cbl::converted_xi (const double RP, const double PI, const double redshift, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double> > Xi, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2, const bool direction) 
+double cbl::converted_xi (const double RP, const double PI, const double redshift, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double> > Xi, const std::shared_ptr<cbl::cosmology::Cosmology> cosm1, const std::shared_ptr<cbl::cosmology::Cosmology> cosm2, const bool direction) 
 {
   double fDA = AP_shift_rp(redshift, cosm1, cosm2);
   double fH = AP_shift_pi(redshift, cosm1, cosm2);

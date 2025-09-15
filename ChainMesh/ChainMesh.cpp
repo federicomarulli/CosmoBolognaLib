@@ -147,11 +147,7 @@ void cbl::chainmesh::ChainMesh::create_chain_mesh (const vector<vector<double> >
 
   double fact = 1.;
 
-  check_memory(3.0, true, "cbl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp");
-
-  while (m_nCell_tot>pow(nMAX, 3) || m_nCell_tot<nMIN
-	 || !check_memory(3.0, false, "cbl::chainmesh::ChainMesh::create_chain_mesh of ChainMesh.cpp")) {
-
+  while (m_nCell_tot>pow(nMAX, 3) || m_nCell_tot<nMIN) {
     m_nCell_tot = 1;
     m_cell_size *= fact;
     for (int i=0; i<m_nDim; i++) {

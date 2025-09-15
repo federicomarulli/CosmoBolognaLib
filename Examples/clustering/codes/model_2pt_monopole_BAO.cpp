@@ -2,8 +2,12 @@
 // Example code: how to how to model the baryon acoustic oscillations in the monopole of the two-point correlation function
 // ========================================================================================================================
 
+#include "LCDM.h"
 #include "Data1D.h"
 #include "Modelling_TwoPointCorrelation1D_monopole.h"
+
+using namespace std;
+
 
 int main () {
 
@@ -15,29 +19,30 @@ int main () {
   
     const double hh = 0.7;
     const double Omega_b = 0.0224/(hh*hh);
-    const double Omega_M = 0.274; 
+    const double Omega_CDM = 0.274; 
     const double n_s = 0.96;
     const double sigma8 = 0.8;
 
-    cbl::cosmology::Cosmology cosmology;
-    cosmology.set_parameters({cbl::cosmology::CosmologicalParameter::_Omega_matter_LCDM_, cbl::cosmology::CosmologicalParameter::_Omega_baryon_, cbl::cosmology::CosmologicalParameter::_hh_, cbl::cosmology::CosmologicalParameter::_n_spec_, cbl::cosmology::CosmologicalParameter::_sigma8_}, {Omega_M, Omega_b, hh, n_s, sigma8});
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
+    
+    cosmology->set_parameters({"Omega_CDM", "Omega_baryon", "n_spec", "sigma8"}, {Omega_CDM, Omega_b, n_s, sigma8});
 
   
     // ----------------------------------------------
     // ------------- reading the dataset ------------
     // ----------------------------------------------
 
-    const std::string dir_input = "../input/";
-    const std::string dir_output = "../output/";
-    const std::string dir_chains = dir_output+"chains/";
-    const std::string MK = "mkdir -p "+dir_output+" "+dir_chains; if (system(MK.c_str())) {}
+    const string dir_input = "../input/";
+    const string dir_output = "../output/";
+    const string dir_chains = dir_output+"chains/";
+    const string MK = "mkdir -p "+dir_output+" "+dir_chains; if (system(MK.c_str())) {}
     
-    const std::string file_xi = dir_input+"Anderson_2013_CMASSDR11_monopole_prerecon.dat";
-    const std::string file_cov = dir_input+"Anderson_2013_CMASSDR11_monopole_prerecon_cov.dat";
+    const string file_xi = dir_input+"Anderson_2013_CMASSDR11_monopole_prerecon.dat";
+    const string file_cov = dir_input+"Anderson_2013_CMASSDR11_monopole_prerecon_cov.dat";
 
     const int skipped_lines = 1;
     
-    const auto twop_dataset = std::make_shared<cbl::data::Data1D>(cbl::data::Data1D(file_xi, skipped_lines)); 
+    const auto twop_dataset = make_shared<cbl::data::Data1D>(cbl::data::Data1D(file_xi, skipped_lines)); 
     twop_dataset->set_covariance(file_cov);
     
   
@@ -78,7 +83,7 @@ int main () {
     const int chain_size = 1000;
     const int nwalkers = 100;
 
-    const std::string chain_file = "Anderson_2013_CMASSDR11_monopole_prerecon_chains.dat";
+    const string chain_file = "Anderson_2013_CMASSDR11_monopole_prerecon_chains.dat";
   
     const double xmin = 40., xmax = 160.;
     model_twop.set_fit_range(xmin, xmax);
@@ -92,7 +97,7 @@ int main () {
     model_twop.show_results(burn_in, thin);
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

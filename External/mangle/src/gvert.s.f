@@ -1,33 +1,33 @@
 c-----------------------------------------------------------------------
-c © A J S Hamilton 2001
+c ï¿½ A J S Hamilton 2001
 c-----------------------------------------------------------------------
       subroutine gvert(ve,angle,ipv,gp,ev,nvmax,nv,per,nve,nev,nev0,
      *  rp,cm,np,vcirc,tol,phi,iord,wk,iwk,ldegen)
       integer nvmax,ipv(nvmax),np,gp(np),ev(nvmax),nv,per,nve,nev,nev0,
      *  vcirc
       logical ldegen
-      real*10 ve(3,nve,nvmax),angle(nvmax),rp(3,np),cm(np),tol
+      real*16 ve(3,nve,nvmax),angle(nvmax),rp(3,np),cm(np),tol
 c        work arrays (could be automatic if compiler supports it)
       integer iord(2*np),iwk(nvmax,4)
-      real*10 phi(2,np),wk(nvmax)
+      real*16 phi(2,np),wk(nvmax)
 c
 c        parameters
       include 'pi.par'
-      real*10 TWOPI
-      parameter (TWOPI=2._10*PI)
+      real*16 TWOPI
+      parameter (TWOPI=2._16*PI)
 c        intrinsics
       intrinsic abs
 c        externals
       integer gsegij,gzeroar
 c        data variables
-      real*10 big
-c     real*10 dphmin
+      real*16 big
+c     real*16 dphmin
 c        local (automatic) variables
       integer i,ii,ik,iseg,iv,ive,j,jm,jml,jmu,jp,jpl,jpu,km,kp,
      *  mve,ni,scmi
 C     logical warn
-      real*10 amve,cmi,dph,ikchk,ph,phm,php
-      real*10 si,tolin,xi(3),xv,yi(3),yv,zv
+      real*16 amve,cmi,dph,ikchk,ph,phm,php
+      real*16 si,tolin,xi(3),xv,yi(3),yv,zv
 c *
 c * Vertices, plus points on edges, of the polygon defined by
 c *    1 - r.rp(i) < cm(i)  (if cm(i).ge.0)
@@ -118,8 +118,8 @@ c Work arrays: phi and iord should be dimensioned at least 2*np.
 c              iwk should be dimensioned at least 4*nvmax.
 c              wk should be dimensioned at least nvmax.
 c
-c     data dphmin /1.e-8_10/
-      data big /1.e6_10/
+c     data dphmin /1.e-8_16/
+      data big /1.e6_16/
 c
 c        input tolerance to multiple intersections
       tolin=tol
@@ -144,7 +144,7 @@ c        initially each circle is its own group
 c        check for zero area because one circle is null
       if (gzeroar(cm,np).eq.0) goto 410
 c        error check on evaluation of vertex terms
-      ikchk=0._10
+      ikchk=0._16
 c        initialise iwk to inadmissible values
       do iv=1,nvmax
         iwk(iv,2)=-1
@@ -155,16 +155,16 @@ c        initialise iwk to inadmissible values
 c--------identify boundary segments around each circle i in turn
       do 280 i=1,np
 c        cm(i).ge.2 means include whole sphere, which is no constraint
-        if (cm(i).ge.2._10) goto 280
+        if (cm(i).ge.2._16) goto 280
 c        scmi * cmi = 1-cos th(i)
-        if (cm(i).ge.0._10) then
+        if (cm(i).ge.0._16) then
           scmi=1
         else
           scmi=-1
         endif
         cmi=abs(cm(i))
 c        si = sin th(i)
-        si=sqrt(cmi*(2._10-cmi))
+        si=sqrt(cmi*(2._16-cmi))
 c........construct cartesian axes with z-axis along rp(i)
         call gaxisi(rp(1,i),xi,yi)
 c........angles phi about z-axis rp(i) of intersection of i & j circles
@@ -188,7 +188,7 @@ c        introduce pretend circle 0
                 ii=0
                 km=i
                 kp=i
-                phm=0._10
+                phm=0._16
                 php=PI
               elseif (j.eq.2) then
                 ii=i
@@ -205,7 +205,7 @@ c        edge index of this vertex
 c        azimuthal length of edge
                 angle(nv)=dph
 c        edge points
-                zv=1._10-cmi
+                zv=1._16-cmi
                 if (per.eq.0) then
                   mve=nve
                 else
@@ -214,7 +214,7 @@ c        edge points
                   if (dble(mve).lt.amve) mve=mve+1
                 endif
                 do ive=1,mve
-                  if (cm(i).ge.0._10) then
+                  if (cm(i).ge.0._16) then
                     ph=(phm*(mve-ive+1)+php*(ive-1))/dble(mve)
                   else
                     ph=(php*(mve-ive+1)+phm*(ive-1))/dble(mve)
@@ -226,9 +226,9 @@ c        edge points
                   ve(3,ive,nv)=zv*rp(3,i)+xv*xi(3)+yv*yi(3)
                 enddo
                 do ive=mve+1,nve
-                  ve(1,ive,nv)=0._10
-                  ve(2,ive,nv)=0._10
-                  ve(3,ive,nv)=0._10
+                  ve(1,ive,nv)=0._16
+                  ve(2,ive,nv)=0._16
+                  ve(3,ive,nv)=0._16
                 enddo
               endif
 c        record endpoints of edge
@@ -274,7 +274,7 @@ c        edge index of this vertex
 c        azimuthal length of edge
               angle(nv)=dph
 c        edge points
-              zv=1._10-cmi
+              zv=1._16-cmi
               if (per.eq.0) then
                 mve=nve
               else
@@ -283,7 +283,7 @@ c        edge points
                 if (dble(mve).lt.amve) mve=mve+1
               endif
               do ive=1,mve
-                if (cm(i).ge.0._10) then
+                if (cm(i).ge.0._16) then
                   ph=(phm*(mve-ive+1)+php*(ive-1))/dble(mve)
                 else
                   ph=(php*(mve-ive+1)+phm*(ive-1))/dble(mve)
@@ -295,9 +295,9 @@ c        edge points
                 ve(3,ive,nv)=zv*rp(3,i)+xv*xi(3)+yv*yi(3)
               enddo
               do ive=mve+1,nve
-                ve(1,ive,nv)=0._10
-                ve(2,ive,nv)=0._10
-                ve(3,ive,nv)=0._10
+                ve(1,ive,nv)=0._16
+                ve(2,ive,nv)=0._16
+                ve(3,ive,nv)=0._16
               enddo
             endif
 c        record endpoints of edge
@@ -307,14 +307,14 @@ c        do another segment
         endif
   280 continue
 c--------check on whether ik endpoints matched ki endpoints
-      if (ikchk.ne.0._10) then
+      if (ikchk.ne.0._16) then
 C       warn=.true.
 C       print *,'*** from gvert: at tol =',tol,
 C    *    ', ikchk=',ikchk,' should be 0'
 c        retry with modified tolerance
         call gtol(tol,tolin)
         goto 100
-      elseif (tol.gt.0._10) then
+      elseif (tol.gt.0._16) then
 C       print *,'... from gvert: success at tol =',tol
       endif
 c--------order vertices right-handedly about polygon

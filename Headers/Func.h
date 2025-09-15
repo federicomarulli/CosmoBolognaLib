@@ -166,6 +166,21 @@ namespace cbl {
 
   /**
    *  @brief the average of the Legendre polynomial
+   *  of the l-th order over the \f$\Delta \theta \f$ range
+   *  \f[ \hat{L_\ell} = \frac{L_{\ell+1}(\mu_+) - L_{\ell+1}(\mu_-) - L_{\ell-1}(\mu_+) + L_{\ell-1}(\mu_-)} {(2\ell+1) (\mu_- - \mu_+)}, \f]
+   *
+   *   \f$ \theta_\pm = \theta \pm \Delta\theta/2 \f$ represent the upper and the lower limits
+   *   of the angular bins, while \f$ \mu_\pm \f$ are the corresponding cosines.
+   *  @param theta_lower the lower limit of angular bin
+   *  @param theta_upper the upper limit of angular bin
+   *  @param l the order of the Legendre polynomial
+   *  @return the average of the Legendre polynomial
+   *  of the l-th order over the \f$\Delta \theta \f$ range
+   */
+  double Legendre_bin_averaged (const double theta_lower, const double theta_upper, const int l);
+
+  /**
+   *  @brief the average of the Legendre polynomial
    *  of the l-th order over the \f$\mu=\cos(\theta)\f$ range
    *  @param mu_min the lower limit of integration of the Legendre polynomial
    *  @param mu_max the upper limit of integration of the Legendre polynomial
@@ -223,6 +238,13 @@ namespace cbl {
    */
   std::vector<std::vector<double>> Legendre_polynomial_triangles_average (const double r12, const double r13, const double deltaR, const int lMax, const double rel_err=1.e-5, const double abs_err=1.e-8, const int nevals=100);
 
+  /**
+   *  @brief the lower and upper limits of bins
+   *  @param bin_centers the vector of bin centers
+   *  @return 2D vector with lower and upper limits of bins
+   */
+  std::vector<std::vector<double>> bin_limits (const std::vector<double> bin_centers);
+  
   /**
    *  @brief the order l, degree m spherical harmonics
    *
@@ -674,8 +696,16 @@ namespace cbl {
    * @return the sign value
    */
   template <typename T>
-  double sgn(T val);
+  double sgn(T val)
+  {
+    const int sgn = (T(0)<val)-(val<T(0));
+    if (sgn==0)
+      return 1.0;
+    else
+      return (double)sgn;
+  }
 
+  
   /**
    * @brief Wigner \f$3-j\f$ auxiliar function A
    *
@@ -683,12 +713,10 @@ namespace cbl {
    * @param l2 index
    * @param l3 index
    * @param m1 index
-   * @param m2 index
-   * @param m3 index
    *
    * @return value used in wigner_3j
    */
-  double wigner3j_auxA(double l1, double l2, double l3, double m1, double m2, double m3);
+  double wigner3j_auxA (const double l1, const double l2, const double l3, const double m1);
 
   /**
    * @brief Wigner \f$3-j\f$ auxiliar function B
@@ -702,7 +730,7 @@ namespace cbl {
    *
    * @return value used in wigner_3j
    */
-  double wigner3j_auxB(double l1, double l2, double l3, double m1, double m2, double m3);
+  double wigner3j_auxB (const double l1, const double l2, const double l3, const double m1, const double m2, const double m3);
   
   /**
    * @brief Wigner \f$3-j\f$ symbol
@@ -715,7 +743,7 @@ namespace cbl {
    *
    * @return the Clebsh-Gordan coefficient
    */
-  std::vector<double> wigner3j(double l2, double l3, double m1, double m2, double m3);
+  std::vector<double> wigner3j (const double l2, const double l3, const double m1, const double m2, const double m3);
 
    /**
    * @brief Wigner \f$3-j\f$ symbol
@@ -729,7 +757,7 @@ namespace cbl {
    *
    * @return the Clebsh-Gordan coefficient
    */
-  double wigner3j(double l1, double l2, double l3, double m1, double m2, double m3); 
+  double wigner3j (const double l1, const double l2, const double l3, const double m1, const double m2, const double m3); 
   
   /**
    * @brief Wigner \f$3-j\f$ symbol, use it for l<100
@@ -743,7 +771,7 @@ namespace cbl {
    *
    * @return the Clebsh-Gordan coefficient
    */
-  double wigner_3j(int j1, int j2, int j3, int m1, int m2, int m3);
+  double wigner_3j (const int j1, const int j2, const int j3, const int m1, const int m2, const int m3);
   
   /**
    * @brief Wigner \f$6-j\f$ symbol
@@ -757,8 +785,7 @@ namespace cbl {
    *
    * @return the Clebsh-Gordan coefficient
    */
-  
-  double wigner_6j(const int j1, const int j2, const int j3, const int j4, const int j5, const int j6);
+  double wigner_6j (const int j1, const int j2, const int j3, const int j4, const int j5, const int j6);
 
   /**
    * @brief compute the integral of three spherical bessel function,
@@ -970,6 +997,21 @@ namespace cbl {
 
 
   /**
+   *  @brief the linear function
+   *  @param xx the variable x
+   *  @param pp a void pointer
+   *  @param par a std::vector containing the coefficients
+   *  @return the linear function: par[0]*x+par[1]
+   *  @warning pp is not used, it is necessary only for GSL operations
+   */
+  template <typename T>
+    T Pol1 (T xx, void *pp, std::vector<double> par)
+    {
+      (void)pp;
+      return par[0]*xx+par[1];
+    }
+  
+  /**
    *  @brief the quadratic function
    *  @param xx the variable x
    *  @param pp a void pointer
@@ -978,7 +1020,7 @@ namespace cbl {
    *  @warning pp is not used, it is necessary only for GSL operations
    */
   template <typename T>
-    T Pol2 (T xx, std::shared_ptr<void> pp, std::vector<double> par)
+    T Pol2 (T xx, void *pp, std::vector<double> par)
     {
       (void)pp;
       return par[0]*pow(xx,2)+par[1]*xx+par[2];
@@ -996,7 +1038,24 @@ namespace cbl {
   template <typename T>
     T Pol3 (T xx, void *pp, std::vector<double> par)
     {
+      (void)pp;
       return par[0]*pow(xx,3)+par[1]*pow(xx,2)+par[2]*xx+par[3];
+    }
+
+  /**
+   *  @brief the 4th degree polynomial function
+   *  @param xx the variable x
+   *  @param pp a void pointer
+   *  @param par a std::vector containing the coefficients
+   *  @return the 4th degree polynomial function:
+   *  par[0]*x<SUP>4</SUP>+par[1]*x<SUP>3</SUP>+par[2]*x<SUP>2</SUP>+par[3]*x+par[4]
+   *  @warning pp is not used, it is necessary only for GSL operations
+   */
+  template <typename T>
+    T Pol4 (T xx, void *pp, std::vector<double> par)
+    {
+      (void)pp;
+      return par[0]*pow(xx,4)+par[1]*pow(xx,3)+par[2]*pow(xx,2)+par[3]*xx+par[4];
     }
 
   /**
@@ -2988,7 +3047,7 @@ namespace cbl {
     struct STR_SSM
     {
       int unit;
-      double hh, mass, rho, n_spec;
+      double little_h, mass, rho, n_spec;
       std::vector<double> lgkk, lgPk;
     };
 
@@ -3113,6 +3172,61 @@ namespace cbl {
    * @return the 2pcf wedges
    */
   std::vector<std::vector<double>> XiWedges_AP (const std::vector<double> mu_min, const std::vector<double> delta_mu, const double alpha_perpendicular, const double alpha_parallel, const std::vector<double> rr, const std::shared_ptr<glob::FuncGrid> xi0_interp, const std::shared_ptr<glob::FuncGrid> xi2_interp, const std::shared_ptr<glob::FuncGrid> xi4_interp);
+
+  
+  /**
+   *  @brief selects some indexes from a vector
+   *
+   *  @param vec input vector to select
+   *
+   *  @param indexes the list of indexes
+   *
+   *  @return std::vector with the values corresponding to the selected indexes
+   * 
+   *  @author Matteo Santini
+   *  @author matteo.santini7@studio.unibo.it
+   */
+  template<typename T>
+   std::vector<T> select(const std::vector<T> vec, const std::vector<int>& indexes)
+  {
+    std::vector<T> sel;
+    for(size_t i = 0; i < indexes.size(); ++i) {
+      if(indexes[i] >= static_cast<int>(vec.size()))
+        ErrorCBL("list of selection indexes must belong to the input vector" ,"select", "Func.cpp");
+      sel.push_back(vec[indexes[i]]);
+    }
+    if(sel.size() == 0)
+      WarningMsgCBL("nothing has been selected" ,"select", "Func.cpp");
+    return sel;
+  }
+
+  /**
+   *  @brief evenly spaced values in a given interval
+   *
+   *  @param begin initial value 
+   *
+   *  @param end ending value
+   *
+   *  @param increment value added at each iteration
+   *
+   *  @return std::vector with all the values between [begin, end[
+   * 
+   *  @author Matteo Santini
+   *  @author matteo.santini7@studio.unibo.it
+   */
+  std::vector<double> arange(const double begin, const double end, const double increment);
+  
+  /**
+   *  @brief evenly spaced values in a given interval
+   *
+   *  @param size size of the resulting vector
+   *
+   *  @return std::vector with values between [0, size[ spaced by 1
+   * 
+   *  @author Matteo Santini
+   *  @author matteo.santini7@studio.unibo.it
+   */
+  std::vector<int> arange(const int unsigned size);
 
   ///@}
 

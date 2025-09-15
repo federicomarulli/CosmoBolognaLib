@@ -47,16 +47,16 @@ using namespace modelling::numbercounts;
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts2D_RedshiftMass::set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior)
+void cbl::modelling::numbercounts::Modelling_NumberCounts2D_RedshiftMass::set_model_NumberCounts_cosmology (const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior)
 {
-  std::vector<cbl::cosmology::CosmologicalParameter> param = cosmo_param;
+  std::vector<std::string> param = cosmo_param;
   
   // check if sigma8 is a free parameter
-  if (find(param.begin(), param.end(), cosmology::CosmologicalParameter::_sigma8_)!=param.end())
+  if (find(param.begin(), param.end(), "sigma8")!=param.end())
     m_data_model.is_sigma8_free = true;
   
   if (!m_data_model.is_sigma8_free)
-    param.push_back(cosmology::CosmologicalParameter::_sigma8_);
+    param.push_back("sigma8");
   
   m_data_model.Cpar = param;
 
@@ -70,7 +70,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts2D_RedshiftMass::set_mo
   vector<string> cosmoPar_string(nParams);
 
   for (size_t i=0; i<nParams; i++)
-    cosmoPar_string[i] = CosmologicalParameter_name(param[i]);
+    cosmoPar_string[i] = param[i];
     
   // input data used to construct the model
   auto inputs = make_shared<STR_NC_data_model>(m_data_model);

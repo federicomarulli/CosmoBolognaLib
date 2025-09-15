@@ -63,7 +63,7 @@ double cbl::glob::func_SSM_GSL (double kk, void *params)
 {
   struct cbl::glob::STR_SSM *pp = (struct cbl::glob::STR_SSM *) params;
 
-  double fact = (pp->unit) ? 1. : pp->hh;
+  double fact = (pp->unit) ? 1. : pp->little_h;
   double lgk = log10(kk/fact);
   
   double lgPkK = interpolated(lgk, pp->lgkk, pp->lgPk, "Linear");

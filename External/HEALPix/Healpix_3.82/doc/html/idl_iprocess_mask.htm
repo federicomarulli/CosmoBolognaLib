@@ -1,0 +1,280 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>iprocess_mask</TITLE>
+<META NAME="description" CONTENT="iprocess_mask">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_ismoothing.htm">
+<LINK REL="previous" HREF="idl_init_healpix_healpix_system.htm">
+<LINK REL="next" HREF="idl_ismoothing.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_init_healpix_healpix_system.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_ismoothing.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html385"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_init_healpix_healpix_system.htm">init_healpix and !healpix system variable</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_ismoothing.htm">ismoothing</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION3800"></A>
+<A ID="idl:iprocess_mask"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">iprocess_mask</SPAN></div><hr>
+<H3>This IDL facility provides an interface to F90 '<A HREF="./fac_process_mask.htm#fac:process_mask">process_mask</A>' facility. For a
+given input binary mask, it can determine the angular distance in Radians of each valid (1 valued)
+pixel to the closest invalid (0 valued) pixel, with the option of ignoring small
+clusters of invalid pixels. The distance map can then be used to generate an
+apodized mask.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/interfaces/iprocess_mask.pro"><strong>src/idl/interfaces/iprocess_mask.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+IPROCESS_MASK, 
+<A HREF="#idl:iprocess_mask:mask_in">mask_in</A>,  
+<A HREF="#idl:iprocess_mask:distance_map">distance_map</A>,[
+<A HREF="#idl:iprocess_mask:binpath">binpath=</A>,
+<A HREF="#idl:iprocess_mask:filled_mask">filled_mask=</A>,
+<A HREF="#idl:iprocess_mask:help">/help</A>,
+<A HREF="#idl:iprocess_mask:hole_arcmin2">hole_arcmin2=</A>,
+<A HREF="#idl:iprocess_mask:hole_pixels">hole_pixels=</A>,
+<A HREF="#idl:iprocess_mask:keep_tmp_files">keep_tmp_files=</A>, 
+<A HREF="#idl:iprocess_mask:nested">/nested</A>,
+<A HREF="#idl:iprocess_mask:ordering">ordering=</A>, 
+<A HREF="#idl:iprocess_mask:ring">/ring</A>,
+<A HREF="#idl:iprocess_mask:silent">/silent</A>,
+<A HREF="#idl:iprocess_mask:tmpdir">tmpdir=</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>mask_in</B>
+<DD><A ID="idl:iprocess_mask:mask_in"></A> required input: input binary
+mask. It can be a FITS file, or a memory array containing the mask to process.
+    <DT>
+<B>distance_map</B>
+<DD><A ID="idl:iprocess_mask:distance_map"></A> optional
+output: double precision angular distance map in Radians. It can be a FITS file, or a
+   memory array. It will have the same ordering as the input mask.
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>binpath=</B>
+<DD><A ID="idl:iprocess_mask:binpath"></A> full path to back-end routine <b>default:</b>$HEXE/process_mask, then $HEALPIX/bin/process_mask
+<BR>              &ndash; a binpath starting with / (or <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img74.png"
+ ALT="$\backslash$"></SPAN>), <SPAN CLASS="MATH">&nbsp;</SPAN> or $ is interpreted as absolute
+<BR>              &ndash; a binpath starting with ./ is interpreted as relative to current directory
+<BR>              &ndash; all other binpaths are relative to $HEALPIX
+
+<P>
+<DT>
+<B>filled_mask=</B>
+<DD><A ID="idl:iprocess_mask:filled_mask"></A> optional output
+mask with holes smaller than 
+<A HREF="#idl:iprocess_mask:hole_arcmin2"><SPAN style="font-family:monospace">hole_arcmin2</SPAN></A> or 
+<A HREF="#idl:iprocess_mask:hole_pixels"><SPAN style="font-family:monospace">hole_pixels</SPAN></A> filled in.
+     Will have the same ordering as the input mask
+
+<P>
+<DT>
+<B>/help</B>
+<DD><A ID="idl:iprocess_mask:help"></A> if set, prints extended help
+
+<P>
+<DT>
+<B>hole_arcmin2</B>
+<DD><A ID="idl:iprocess_mask:hole_arcmin2"></A> Minimal size
+(in arcmin<SPAN CLASS="MATH"><SUP><i>2</i></SUP></SPAN>) of invalid regions to be kept 
+    (can be used together with <A HREF="#idl:iprocess_mask:hole_pixels"><SPAN style="font-family:monospace">hole_pixels</SPAN></A>, 
+     the result will be the largest of the two). <b>default:</b>0.0
+
+<P>
+<DT>
+<B>hole_pixels</B>
+<DD><A ID="idl:iprocess_mask:hole_pixels"></A> Minimal size (in pixels) of invalid regions to be kept 
+    (can be used together with <A HREF="#idl:iprocess_mask:hole_arcmin2"><SPAN style="font-family:monospace">hole_arcmin2</SPAN></A>, 
+     the result will be the largest of the two). <b>default:</b>0
+
+<P>
+<DT>
+<B>/keep_tmp_files</B>
+<DD><A ID="idl:iprocess_mask:keep_tmp_files"></A> if set,
+temporary files are not discarded at the end of the run
+
+<P>
+<DT>
+<B>/nested</B>
+<DD><A ID="idl:iprocess_mask:nested"></A> if set, signals that the mask read online is in
+   NESTED scheme (does not apply to FITS file), see also
+<A HREF="#idl:iprocess_mask:ring"><SPAN style="font-family:monospace">/ring</SPAN></A> and 
+<A HREF="#idl:iprocess_mask:ordering"><SPAN style="font-family:monospace">Ordering</SPAN></A>
+
+<P>
+<DT>
+<B>ordering=</B>
+<DD><A ID="idl:iprocess_mask:ordering"></A> either 'RING' or 'NESTED', ordering of online mask,
+ see 
+<A HREF="#idl:iprocess_mask:ring"><SPAN style="font-family:monospace">/ring</SPAN></A> and 
+<A HREF="#idl:iprocess_mask:nested"><SPAN style="font-family:monospace">/nested</SPAN></A>
+
+<P>
+<DT>
+<B>/ring</B>
+<DD><A ID="idl:iprocess_mask:ring"></A> see 
+<A HREF="#idl:iprocess_mask:nested"><SPAN style="font-family:monospace">/nested</SPAN></A> and 
+<A HREF="#idl:iprocess_mask:ordering"><SPAN style="font-family:monospace">Ordering</SPAN></A> above
+
+<P>
+<DT>
+<B>/silent</B>
+<DD><A ID="idl:iprocess_mask:silent"></A> if set, works silently
+
+<P>
+<DT>
+<B>tmpdir=</B>
+<DD><A ID="idl:iprocess_mask:tmpdir"></A> directory in which are written temporary files 
+<b>default:</b>IDL_TMPDIR (see IDL documentation)
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">iprocess_mask</SPAN> is an interface to '<A HREF="./fac_process_mask.htm#fac:process_mask">process_mask</A>' F90 facility. It
+requires some disk space on which to write the parameter file and the other
+temporary files. Most data can be provided/generated as an external FITS
+file, or as a memory array.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">iprocess_mask</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">iprocess_mask</SPAN>.
+    <DT>
+<B>process_mask</B>
+<DD>F90 facility called by <SPAN CLASS="colordoc">iprocess_mask</SPAN>.
+    <DT>
+<B><A HREF="idl_ialteralm.htm#idl:ialteralm">ialteralm</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_alteralm.htm#fac:alteralm">alteralm</A>
+    <DT>
+<B><A HREF="idl_ianafast.htm#idl:ianafast">ianafast</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_anafast.htm#fac:anafast">anafast</A> and C++ anafast_cxx
+<DT>
+<B><A HREF="idl_ismoothing.htm#idl:ismoothing">ismoothing</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_smoothing.htm#fac:smoothing">smoothing</A>
+    <DT>
+<B><A HREF="idl_isynfast.htm#idl:isynfast">isynfast</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_synfast.htm#fac:synfast">synfast</A>
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">npix = nside2npix(256)</TD>
+</TR>
+<TR><TD CLASS="LEFT">mask = replicate(1, npix) &amp; mask[randomu(seed,100)*npix] = 0</TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">iprocess_mask</SPAN>, mask, distance, /ring, /silent</TD>
+</TR>
+<TR><TD CLASS="LEFT">mollview, distance</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+A binary mask in which 100 randomly located pixels are 0-valued
+(=invalid) is generated. Then the distance (in Radians) of the valid pixels to
+the closest invalid pixels is computed and plotted.
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_init_healpix_healpix_system.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_ismoothing.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html385"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_init_healpix_healpix_system.htm">init_healpix and !healpix system variable</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_ismoothing.htm">ismoothing</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

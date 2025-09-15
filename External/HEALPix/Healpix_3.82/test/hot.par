@@ -1,0 +1,7 @@
+# HEALPix 3.82
+#parameter file for the hotspot test run.
+
+infile = test_LOres.fits
+extrema_outfile = !test_ext.fits
+maxima_outfile = test_max.asc
+minima_outfile = test_min.asc

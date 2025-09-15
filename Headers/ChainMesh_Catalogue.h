@@ -59,10 +59,12 @@ namespace cbl {
       /// pointer to catalogue used for the chain-mesh
       std::shared_ptr<catalogue::Catalogue> m_catalogue;
 
+      
     public:
+
+      
       /**
        *  @brief default constructor
-       *  _Catalogue
        */
       ChainMesh_Catalogue () = default;
 

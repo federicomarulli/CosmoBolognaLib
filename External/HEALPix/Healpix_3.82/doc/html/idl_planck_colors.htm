@@ -1,0 +1,219 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>planck_colors</TITLE>
+<META NAME="description" CONTENT="planck_colors">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_query_disc.htm">
+<LINK REL="previous" HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+<LINK REL="next" HREF="idl_query_disc.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_query_disc.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html421"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm">pix2xxx, ang2xxx, vec2xxx, nest2ring, ring2nest</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_query_disc.htm">query_disc</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION5600"></A>
+<A ID="idl:planck_colors"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">planck_colors</SPAN></div><hr>
+<H3>This IDL facility provides RGB color tables suitable for visualization of
+sky maps dominated by CMB or featuring foreground, and modify current color
+table. 
+Those color tables can then be implemented in 
+<A HREF="idl_cartview.htm#idl:cartview">cartview</A>,
+<A HREF="idl_gnomview.htm#idl:gnomview">gnomview</A>,
+<A HREF="idl_mollview.htm#idl:mollview">mollview</A> or
+<A HREF="idl_orthview.htm#idl:orthview">orthview</A> and were used in Planck 2013 publications</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/visu/planck_colors.pro"><strong>src/idl/visu/planck_colors.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+PLANCK_COLORS, 
+<A HREF="#idl:planck_colors:option">option</A>, [<A HREF="#idl:planck_colors:get">GET=rgb</A>,
+<A HREF="#idl:planck_colors:help">/HELP</A>,
+<A HREF="#idl:planck_colors:show">/SHOW</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>option</B>
+<DD><A ID="idl:planck_colors:option"></A> required input for color
+table generation, must be either 1 or 2: 
+<BR>
+1: creates the 'parchment' Blue-red color table suitable for  maps
+         dominated by Gaussian signal (eg, CMB)
+<BR>
+2: creates a Blue-red-white color table suitable for maps with 
+         high dynamic signal (eg, Galactic foreground)
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>GET=rgb</B>
+<DD><A ID="idl:planck_colors:get"></A> optional ouput, contains the newly created RGB color table
+     in a [256, 3] array
+
+<P>
+<DT>
+<B>/HELP</B>
+<DD><A ID="idl:planck_colors:help"></A> if set, prints extended help
+
+<P>
+<DT>
+<B>/SHOW</B>
+<DD><A ID="idl:planck_colors:show"></A> if set, the chosen color
+table is shown in a new window
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">planck_colors</SPAN> creates a set of RGB color tables suitable for specific purpose, and
+modify the current IDL color table accordingly (using TVLCT). See below the example
+applications. The created color table can also be output as a 256*3 array, or
+shown in a new window
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">planck_colors</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">planck_colors</SPAN>.
+    <DT>
+<B><A HREF="idl_cartview.htm#idl:cartview">cartview</A>, <A HREF="idl_gnomview.htm#idl:gnomview">gnomview</A></B>
+<DD><DT>
+<B><A HREF="idl_mollview.htm#idl:mollview">mollview</A>, <A HREF="idl_orthview.htm#idl:orthview">orthview</A></B>
+<DD>visualization routines that can make use of the color tables created in
+<SPAN CLASS="colordoc">planck_colors</SPAN>  (via keyword <A HREF="idl_mollview.htm#idl:mollview:colt"><SPAN style="font-family:monospace">colt</SPAN></A>)
+    <DT>
+<B>loadct</B>
+<DD>IDL routine to set current color table to one of the
+predefined IDL color tables (thus reverting the effect of <SPAN CLASS="colordoc">planck_colors</SPAN>).
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">planck_colors</SPAN>, 1, /show</TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">planck_colors</SPAN>, 2, /show</TD>
+</TR>
+</TABLE></div>
+<blockquote>Create and show the two color tables (see Fig.&nbsp;<A HREF="#fig:planck_colors1">7</A>)</blockquote>
+
+<DIV class="CENTER"><A ID="page:planck_colors1"></A><A ID="fig:planck_colors1"></A><A ID="18100"></A>
+<TABLE>
+<CAPTION class="BOTTOM"><STRONG>Figure 7:</STRONG>
+Illustration of the color tables created by planck_colors.</CAPTION>
+<TR><TD>
+<DIV CLASS="centerline" ID="par43378" ALIGN="CENTER">
+<IMG
+  WIDTH="720" HEIGHT="141" STYLE=""
+ SRC="./planck_colors1.png"
+ ALT="Image planck_colors1"></DIV>
+<DIV CLASS="centerline" ID="par43379" ALIGN="CENTER">
+<IMG
+  WIDTH="720" HEIGHT="141" STYLE=""
+ SRC="./planck_colors2.png"
+ ALT="Image planck_colors2"></DIV>
+
+<P></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_query_disc.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html421"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm">pix2xxx, ang2xxx, vec2xxx, nest2ring, ring2nest</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_query_disc.htm">query_disc</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

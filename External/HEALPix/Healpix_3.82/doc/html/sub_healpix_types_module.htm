@@ -1,0 +1,440 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>healpix_types module</TITLE>
+<META NAME="description" CONTENT="healpix_types module">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_in_ring.htm">
+<LINK REL="previous" HREF="sub_healpix_modules_module.htm">
+<LINK REL="next" HREF="sub_in_ring.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_healpix_modules_module.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_in_ring.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html393"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_healpix_modules_module.htm">healpix_modules module</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_in_ring.htm">in_ring</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4300"></A>
+<A ID="sub:healpix_types"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">healpix_types</SPAN></div><hr>
+<H3>This module defines a set of parameters used by most other
+<strong>HEALPix</strong> modules.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/healpix_types.F90"><strong>src/f90/mod/healpix_types.F90</strong></a>&nbsp;  
+
+<P>
+ 
+<P>
+The parameters defined in <SPAN CLASS="colordoc">healpix_types</SPAN> include
+
+<P>
+
+<UL>
+<LI>'kind' parameters, used when defining the type of a variable, 
+
+<P>
+<TABLE   STYLE="width:100%;">
+<TR><TD><TABLE class="PAD  BORDER" style="width:100%">
+<TR><TD CLASS="LEFT">name</TD>
+<TD CLASS="CENTER">type</TD>
+<TD CLASS="CENTER">value<A ID="tex2html21"
+  HREF="#footmp7336"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A></TD>
+<TD CLASS="LEFT">definition</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A ID="sub:healpix_types:i1b"></A>I1B</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER">1</TD>
+<TD CLASS="LEFT">number of bytes in the hardware-supported signed integers covering the range -99 to
+99 with the least margin</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A ID="sub:healpix_types:i2b"></A>I2B</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER">2</TD>
+<TD CLASS="LEFT">same as above for the range -9999 to 9999 (ie, 4 digits)</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A ID="sub:healpix_types:i4b"></A>I4B</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER">4</TD>
+<TD CLASS="LEFT">same as above for 9 digits</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A ID="sub:healpix_types:i8b"></A>I8B</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER">8</TD>
+<TD CLASS="LEFT">same as above for 16 digits<A ID="tex2html22"
+  HREF="#footmp7337"><SUP><SPAN CLASS="arabic">2</SPAN></SUP></A></TD>
+</TR>
+<TR><TD CLASS="LEFT"><A ID="sub:healpix_types:sp"></A>SP</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER">4</TD>
+<TD CLASS="LEFT">number of bytes in the hardware-supported floating-point
+numbers covering the range <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.10ex; " SRC="sub_img176.png"
+ ALT="$10^{-30}$"></SPAN> to <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.10ex; " SRC="sub_img177.png"
+ ALT="$10^{30}$"></SPAN> with the least margin
+(hereafter single precision)</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A ID="sub:healpix_types:dp"></A>DP</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER">8</TD>
+<TD CLASS="LEFT">same as above for the range <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.10ex; " SRC="sub_img178.png"
+ ALT="$10^{-200}$"></SPAN> to <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.10ex; " SRC="sub_img179.png"
+ ALT="$10^{200}$"></SPAN>
+(double precision)</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A ID="sub:healpix_types:spc"></A>SPC</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER">4</TD>
+<TD CLASS="LEFT">number of bytes in real (<EM>or</EM> imaginary) part of single precision complex numbers</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A ID="sub:healpix_types:dpc"></A>DPC</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER">8</TD>
+<TD CLASS="LEFT">same as above for double precision complex numbers</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A ID="sub:healpix_types:lgt"></A>LGT</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER">4</TD>
+<TD CLASS="LEFT">number of bytes in logical variables</TD>
+</TR>
+</TABLE></TD></TR>
+<TR CLASS="LEFT">
+<TD><DL>
+<DD><A ID="footmp7336"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A> <A ID="fn:healpix_types:kind"></A>actual value may depend on hardware or compiler
+</DD>
+
+<DD><A ID="footmp7337"><SUP><SPAN CLASS="arabic">2</SPAN></SUP></A> <A ID="fn:healpix_types:long"></A>may not be supported by some hardware or compiler; on those systems, the user should set the
+preprocessing variable <SPAN style="font-family:monospace">NO64BITS</SPAN> to 1 during compilation to demote
+automatically <SPAN style="font-family:monospace">I8B</SPAN> to <SPAN style="font-family:monospace">I4B</SPAN>
+</DD>
+</DL></TD></TR>
+</TABLE>
+
+<P>
+</LI>
+<LI>largest accessible numbers, 
+
+<P>
+<TABLE   STYLE="width:100%;">
+<TR><TD><TABLE class="PAD  BORDER" style="width:100%">
+<TR><TD CLASS="LEFT">name</TD>
+<TD CLASS="CENTER">type or kind</TD>
+<TD CLASS="CENTER">value<A ID="tex2html23"
+  HREF="#footmp7338"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A></TD>
+<TD CLASS="LEFT">definition</TD>
+</TR>
+<TR><TD CLASS="LEFT">MAX_I1B</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER">127</TD>
+<TD CLASS="LEFT">largest number accessible to integers of kind <SPAN style="font-family:monospace">I1B</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT">MAX_I2B</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img180.png"
+ ALT="$32767$"></SPAN></TD>
+<TD CLASS="LEFT">same as above for <SPAN style="font-family:monospace">I2B</SPAN> integers</TD>
+</TR>
+<TR><TD CLASS="LEFT">MAX_I4B</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $2^{31}-1 \simeq 2.1\ 10^9$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.29ex; " SRC="sub_img181.png"
+ ALT="$2^{31}-1 \simeq 2.1\ 10^9$"></SPAN></TD>
+<TD CLASS="LEFT">same as above for <SPAN style="font-family:monospace">I4B</SPAN> integers</TD>
+</TR>
+<TR><TD CLASS="LEFT">MAX_I8B</TD>
+<TD CLASS="CENTER">I8B</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $2^{63}-1 \simeq 9.2\ 10^{18}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.29ex; " SRC="sub_img182.png"
+ ALT="$2^{63}-1 \simeq 9.2\ 10^{18}$"></SPAN></TD>
+<TD CLASS="LEFT">same as above for <SPAN style="font-family:monospace">I8B</SPAN> integers</TD>
+</TR>
+<TR><TD CLASS="LEFT">MAX_SP</TD>
+<TD CLASS="CENTER">SP</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $\simeq 3.40\ 10^{38}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.10ex; " SRC="sub_img183.png"
+ ALT="$\simeq 3.40\ 10^{38}$"></SPAN></TD>
+<TD CLASS="LEFT">same as above for <SPAN style="font-family:monospace">SP</SPAN> floating-point</TD>
+</TR>
+<TR><TD CLASS="LEFT">MAX_DP</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $\simeq 1.80\ 10^{308}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.10ex; " SRC="sub_img184.png"
+ ALT="$\simeq 1.80\ 10^{308}$"></SPAN></TD>
+<TD CLASS="LEFT">same as above for <SPAN style="font-family:monospace">DP</SPAN> floating-point</TD>
+</TR>
+</TABLE></TD></TR>
+<TR CLASS="LEFT">
+<TD><DL>
+<DD><A ID="footmp7338"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A> <A ID="fn:healpix_types:max"></A>actual value may depend on hardware or compiler
+</DD>
+</DL></TD></TR>
+</TABLE>
+
+<P>
+</LI>
+<LI>mathematical definitions,<A ID="sub:healpix_types:deg2rad"></A><A ID="sub:healpix_types:rad2deg"></A>
+<P>
+<TABLE   STYLE="width:100%;">
+<TR><TD><TABLE class="PAD  BORDER" style="width:100%">
+<TR><TD CLASS="LEFT">name</TD>
+<TD CLASS="CENTER">kind</TD>
+<TD CLASS="CENTER">value</TD>
+<TD CLASS="LEFT">definition</TD>
+</TR>
+<TR><TD CLASS="LEFT">QUARTPI</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img185.png"
+ ALT="$\pi/4$"></SPAN></TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT">HALFPI</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img186.png"
+ ALT="$\pi/2$"></SPAN></TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT">PI</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $\pi \simeq 3.14159\ldots$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img187.png"
+ ALT="$\pi \simeq 3.14159\ldots$"></SPAN></TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT">TWOPI</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img188.png"
+ ALT="$2\pi$"></SPAN></TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT">FOURPI</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img189.png"
+ ALT="$4\pi$"></SPAN></TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT">SQRT2</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.43ex; " SRC="sub_img190.png"
+ ALT="$\sqrt{2}$"></SPAN></TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT">EULER</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $\gamma \simeq 0.577\ldots$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="sub_img191.png"
+ ALT="$\gamma \simeq 0.577\ldots$"></SPAN></TD>
+<TD CLASS="LEFT">Euler constant</TD>
+</TR>
+<TR><TD CLASS="LEFT">SQ4PI_INV</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $1/\sqrt{4\pi}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.68ex; " SRC="sub_img192.png"
+ ALT="$1/\sqrt{4\pi}$"></SPAN></TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT">TWOTHIRD</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img193.png"
+ ALT="$2/3$"></SPAN></TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT">DEG2RAD</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img194.png"
+ ALT="$\pi/180$"></SPAN></TD>
+<TD CLASS="LEFT">Degrees to Radians conversion factor</TD>
+</TR>
+<TR><TD CLASS="LEFT">RAD2DEG</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img195.png"
+ ALT="$180/\pi$"></SPAN></TD>
+<TD CLASS="LEFT">Radians to Degrees conversion factor</TD>
+</TR>
+</TABLE>
+</TD></TR>
+</TABLE>
+
+<P>
+</LI>
+<LI>and <strong>HEALPix</strong> specific definitions, 
+
+<P>
+<TABLE   STYLE="width:100%;">
+<TR><TD><TABLE class="PAD  BORDER" style="width:100%">
+<TR><TD CLASS="LEFT">name</TD>
+<TD CLASS="CENTER">type or kind</TD>
+<TD CLASS="CENTER">value</TD>
+<TD CLASS="LEFT">definition</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A ID="sub:healpix_types:hpx_sbadval"></A>HPX_SBADVAL</TD>
+<TD CLASS="CENTER">SP</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $-1.6375\ 10^{30}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.29ex; " SRC="sub_img196.png"
+ ALT="$-1.6375\ 10^{30}$"></SPAN></TD>
+<TD CLASS="LEFT">default sentinel value given to missing
+pixels in single precision data sets</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A ID="sub:healpix_types:hpx_dbadval"></A>HPX_DBADVAL</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $-1.6375\ 10^{30}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.29ex; " SRC="sub_img196.png"
+ ALT="$-1.6375\ 10^{30}$"></SPAN></TD>
+<TD CLASS="LEFT">same as above for double precision data
+sets</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A ID="sub:healpix_types:filenamelen"></A>FILENAMELEN</TD>
+<TD CLASS="CENTER">integer</TD>
+<TD CLASS="CENTER">1024</TD>
+<TD CLASS="LEFT">default length in character of file names.</TD>
+</TR>
+<TR><TD CLASS="LEFT">HEALPIX_VERSION</TD>
+<TD CLASS="CENTER">character</TD>
+<TD CLASS="CENTER">&ldquo;3.82&rdquo;</TD>
+<TD CLASS="LEFT">current <strong>HEALPix</strong> package version.</TD>
+</TR>
+</TABLE>
+</TD></TR>
+</TABLE>
+
+<P>
+</LI>
+</UL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use healpix_types 
+<BR>
+real(kind=DP) :: dx 
+<BR>
+print*,' pi = ',PI</div>
+<blockquote>
+The value of <SPAN style="font-family:monospace">PI</SPAN>, as well as all other <SPAN CLASS="colordoc">healpix_types</SPAN> parameters are made known
+to the code
+</blockquote>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_healpix_modules_module.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_in_ring.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html393"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_healpix_modules_module.htm">healpix_modules module</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_in_ring.htm">in_ring</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

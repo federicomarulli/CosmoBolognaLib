@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>write_fits_partial</TITLE>
+<META NAME="description" CONTENT="write_fits_partial">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_write_fits_sb.htm">
+<LINK REL="previous" HREF="idl_write_fits_map.htm">
+<LINK REL="next" HREF="idl_write_fits_sb.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_write_fits_map.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_write_fits_sb.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html463"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_write_fits_map.htm">write_fits_map</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_write_fits_sb.htm">write_fits_sb</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION7700"></A>
+<A ID="idl:write_fits_partial"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">write_fits_partial</SPAN></div><hr>
+<H3>This IDL facility writes out a unpolarized or polarized <strong>HEALPix</strong> map into a FITS file 
+for a fraction of the sky.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/fits/write_fits_partial.pro"><strong>src/idl/fits/write_fits_partial.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+WRITE_FITS_PARTIAL, <A HREF="#idl:write_fits_partial:File">File</A>, <A HREF="#idl:write_fits_partial:Pixel">Pixel</A>, <A HREF="#idl:write_fits_partial:IQU">IQU</A>
+ [, <A HREF="#idl:write_fits_partial:COLNAMES">COLNAMES=</A>, <A HREF="#idl:write_fits_partial:COORDSYS">COORDSYS=</A>, <A HREF="#idl:write_fits_partial:EXTENSION">EXTENSION=</A>, <A HREF="#idl:write_fits_partial:HDR">HDR=</A>, <A HREF="#idl:write_fits_partial:HELP">HELP=</A>, <A HREF="#idl:write_fits_partial:NESTED">/NESTED</A>, <A HREF="#idl:write_fits_partial:NSIDE">NSIDE=</A>, <A HREF="#idl:write_fits_partial:ORDERING">ORDERING=</A>, <A HREF="#idl:write_fits_partial:RING">/RING</A>, <A HREF="#idl:write_fits_partial:UNITS">UNITS=</A>, <A HREF="#idl:write_fits_partial:VERBOSE">VERBOSE=</A>, <A HREF="#idl:write_fits_partial:XHDR">XHDR=</A>]
+
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>File</B>
+<DD><A ID="idl:write_fits_partial:File"></A>          name of a FITS file in which the map is to be written
+
+<P>
+<DT>
+<B>Pixel</B>
+<DD><A ID="idl:write_fits_partial:Pixel"></A>	 (INT, LONG or LONG64 vector of length <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.75ex; vertical-align: -0.75ex; " SRC="idl_img111.png"
+ ALT="$n_{\rm p}$"></SPAN>), 
+<BR>
+index of observed (or valid) pixels. Will be the first column of the FITS binary table
+
+<P>
+<DT>
+<B>IQU</B>
+<DD><A ID="idl:write_fits_partial:IQU"></A>	 (FLOAT or DOUBLE array of size (<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.75ex; vertical-align: -0.75ex; " SRC="idl_img111.png"
+ ALT="$n_{\rm p}$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img112.png"
+ ALT="$n_{\rm c}$"></SPAN>)), 
+<BR>		<SPAN CLASS="MATH"><I>I</I></SPAN>, <SPAN CLASS="MATH"><I>Q</I></SPAN> and <SPAN CLASS="MATH"><I>U</I></SPAN> Stokes parameters of each pixel (if <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.45ex; " SRC="idl_img125.png"
+ ALT="$n_{\rm c}=3$"></SPAN>),
+		or <SPAN CLASS="MATH"><I>I</I></SPAN> of each pixel (if <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.45ex; " SRC="idl_img126.png"
+ ALT="$n_{\rm c}=1$"></SPAN>)
+
+<P>
+</DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>COLNAMES=</B>
+<DD><A ID="idl:write_fits_partial:COLNAMES"></A>STRING vector with FITS table column names (beside PIXEL) (not case sensitive: [A-Z,0-9,_])
+<BR>         <b>default:</b><SPAN  CLASS="texttt">TEMPERATURE</SPAN>, for 1 column, 
+<BR>                   <SPAN  CLASS="texttt">TEMPERATURE</SPAN>, <SPAN  CLASS="texttt">Q_POLARISATION</SPAN>, <SPAN  CLASS="texttt">U_POLARISATION</SPAN>, for 3 columns,
+<BR>
+or <SPAN  CLASS="texttt">C01</SPAN>, <SPAN  CLASS="texttt">C02</SPAN>, <SPAN  CLASS="texttt">C03</SPAN>, <SPAN  CLASS="texttt">C04</SPAN>, ... otherwise
+<BR>
+If provided the number of COLNAMES must be <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.41ex; " SRC="idl_img98.png"
+ ALT="$\ge$"></SPAN> the number of columns
+
+<P>
+<DT>
+<B>COORDSYS=</B>
+<DD><A ID="idl:write_fits_partial:COORDSYS"></A>if set to either 'C', 'E' or 'G',  specifies that the
+		Healpix coordinate system is respectively Celestial=equatorial,
+		  Ecliptic or Galactic.
+		(The relevant keyword is then added/updated in the extension
+		  header, but the map is NOT rotated)
+
+<P>
+<DT>
+<B>EXTENSION=</B>
+<DD><A ID="idl:write_fits_partial:EXTENSION"></A>(0 based) extension number in which to write data. <b>default:</b>0.
+	  If set to 0 (or not set) <EM>a new file is written from scratch</EM>.
+	  If set to a value
+		  larger than 1, the corresponding extension is added or
+		  updated, as long as all previous extensions already exist.
+		  All extensions of the same file should use the same ORDERING,
+		  NSIDE and COORDSYS.
+
+<P>
+<DT>
+<B>HDR=</B>
+<DD><A ID="idl:write_fits_partial:HDR"></A>String array containing the information to be put in
+		the primary header. 
+
+<P>
+<DT>
+<B>HELP=</B>
+<DD><A ID="idl:write_fits_partial:HELP"></A>if set, an extensive help is displayed, and no file is written
+
+<P>
+<DT>
+<B>/NESTED</B>
+<DD><A ID="idl:write_fits_partial:NESTED"></A>if set, specifies that the map is in the NESTED ordering
+	scheme
+<BR>	<i>see also:</i><A HREF="#idl:write_fits_partial:ORDERING">Ordering</A> 
+	and <A HREF="#idl:write_fits_partial:RING">Ring</A>
+
+<P>
+<DT>
+<B>NSIDE=</B>
+<DD><A ID="idl:write_fits_partial:NSIDE"></A>scalar integer, <strong>HEALPix</strong> resolution parameter of the
+		data set. The resolution parameter should be made
+		available to the FITS file, either thru this
+		qualifier, or via the header (see XHDR).
+
+<P>
+<DT>
+<B>ORDERING=</B>
+<DD><A ID="idl:write_fits_partial:ORDERING"></A>if set to either 'ring' or 'nested' (case un-sensitive),
+		  specifies that the map is respectively in RING or NESTED
+		  ordering scheme
+<BR>		<i>see also:</i><A HREF="#idl:write_fits_partial:NESTED">Nested</A> 
+		and <A HREF="#idl:write_fits_partial:RING">Ring</A> 
+<BR>
+The ordering information should be made
+		available to the FITS file, either thru a combination
+		  of Ordering/Ring/Nested, or via the header (see XHDR).
+
+<P>
+<DT>
+<B>/RING</B>
+<DD><A ID="idl:write_fits_partial:RING"></A> 
+if set, specifies that the map is in the RING ordering
+	scheme
+<BR>	<i>see also:</i><A HREF="#idl:write_fits_partial:ORDERING">Ordering</A> 
+	and <A HREF="#idl:write_fits_partial:NESTED">Nested</A>
+
+<P>
+<DT>
+<B>UNITS=</B>
+<DD><A ID="idl:write_fits_partial:UNITS"></A>STRING scalar or vector describing the physical units of the table columns 
+	(except for the PIXEL one)
+		if scalar, same units for all columns;
+	if vector, each column can have its own units; if needed, 
+	the last UNITS provided will be replicated for the remaining columns
+
+<P>
+<DT>
+<B>VERBOSE=</B>
+<DD><A ID="idl:write_fits_partial:VERBOSE"></A>if set, the routine is verbose while writing the FITS file
+
+<P>
+<DT>
+<B>XHDR=</B>
+<DD><A ID="idl:write_fits_partial:XHDR"></A>String array containing the information to be put in
+		the extension header. 
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+For more information on the FITS file format supported in <strong>HEALPix</strong>, 
+including the one implemented in write_fits_partial,
+see <kbd><A ID="tex2html99"
+  HREF="https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf">https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf</A></kbd>
+<br><br></blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">write_fits_partial</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run write_fits_partial<DT>
+<B><A HREF="idl_read_fits_partial.htm#idl:read_fits_partial">read_fits_partial</A></B>
+<DD>This <strong>HEALPix</strong> IDL facility can be used to read in maps
+  written by write_fits_partial.
+<DT>
+<B><A HREF="idl_write_fits_cut4.htm#idl:write_fits_cut4">write_fits_cut4</A>,
+<A HREF="#idl:write_fits_partial">write_fits_partial</A>,
+<A HREF="idl_write_fits_map.htm#idl:write_fits_map">write_fits_map</A></B>
+<DD><DT>
+<B><A HREF="idl_write_tqu.htm#idl:write_tqu">write_tqu</A>,
+<A HREF="idl_write_fits_sb.htm#idl:write_fits_sb">write_fits_sb</A></B>
+<DD><strong>HEALPix</strong> IDL routines to write cut-sky and partial maps, full-sky maps, polarized full-sky maps and
+arbitrary data sets into FITS files
+  <DT>
+<B>sxaddpar</B>
+<DD>This IDL routine (included in <strong>HEALPix</strong> package) can be used to update
+  or add FITS keywords to the header in <SPAN style="font-family:monospace">HDR</SPAN> and <SPAN style="font-family:monospace">XHDR</SPAN>
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">nside = 512</TD>
+</TR>
+<TR><TD CLASS="LEFT">pixel = lindgen(nside2npix(nside)/10)</TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">write_fits_partial</SPAN>, 'map_part_T.fits', pixel, pixel*100., $</TD>
+</TR>
+<TR><TD CLASS="LEFT">nside=nside, units='K', /ring</TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">write_fits_partial</SPAN>, 'map_part_TQU.fits', pixel, pixel#[100.,1.,1.],  $</TD>
+</TR>
+<TR><TD CLASS="LEFT">nside=nside, units='K', /ring</TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">write_fits_partial</SPAN>, 'map_part_xxxx.fits', pixel, pixel#[1.,-2.,3.,-4.], $</TD>
+</TR>
+<TR><TD CLASS="LEFT">nside=nside,colnames=['c1',B2','xx','POWER'],units=['K','m','s','W'],$</TD>
+</TR>
+<TR><TD CLASS="LEFT">/ring</TD>
+</TR>
+</TABLE></div>
+<blockquote>will write in 'map_part_T.fits' a FITS binary table with the columns PIXEL and TEMPERATURE;
+in 'map_part_TQU.fits' a table with the columns PIXEL, TEMPERATURE, Q_POLARISATION and U_POLARISATION;
+and in 'map_part_xxxx.fits' a table with the columns PIXEL, C1, B2, XX and POWER.</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_write_fits_map.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_write_fits_sb.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html463"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_write_fits_map.htm">write_fits_map</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_write_fits_sb.htm">write_fits_sb</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

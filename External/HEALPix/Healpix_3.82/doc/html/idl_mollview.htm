@@ -1,0 +1,1693 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>mollview</TITLE>
+<META NAME="description" CONTENT="mollview">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_neighbours_nest.htm">
+<LINK REL="previous" HREF="idl_mollcursor.htm">
+<LINK REL="next" HREF="idl_neighbours_nest.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_mollcursor.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_neighbours_nest.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html397"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_mollcursor.htm">mollcursor</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_neighbours_nest.htm">neighbours_nest</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4400"></A>
+<A ID="idl:mollview"></A>
+<BR>
+ 
+</H1>
+
+<P>
+
+<P>
+
+<P>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">mollview</SPAN></div><hr>
+<H3>This IDL facility provides a means to visualise a full sky Mollweide projection of
+<strong>HEALPix</strong> and COBE Quad-Cube maps in an IDL environment. 
+It also offers the possibility to
+generate GIF, JPEG, PDF, PNG and Postscript color-coded images of the projected map. 
+The projected (but not color-coded) data can also be output in FITS files and
+IDL arrays.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/visu/mollview.pro"><strong>src/idl/visu/mollview.pro</strong></a>&nbsp;  
+
+<P>
+ 
+<A ID="idl:mollview:TOP"></A><P>
+<hr><h2>FORMAT </h2><h3>IDL>
+MOLLVIEW, 
+<A HREF="#idl:mollview:file">File</A> 
+[, <A HREF="#idl:mollview:select">Select</A>]
+[, <A HREF="#idl:mollview:asinh">ASINH=</A>, 
+<A HREF="#idl:mollview:bad_color">BAD_COLOR=</A>, 
+<A HREF="#idl:mollview:bg_color">BG_COLOR=</A>, 
+<A HREF="#idl:mollview:charsize">CHARSIZE=</A>, 
+<A HREF="#idl:mollview:charsize">CHARTHICK=</A>, 
+<A HREF="#idl:mollview:colt">COLT=</A>, 
+<A HREF="#idl:mollview:coord">COORD=</A>, 
+<A HREF="#idl:mollview:crop">/CROP</A>, 
+<A HREF="#idl:mollview:customize">CUSTOMIZE=</A>,
+<A HREF="#idl:mollview:default_settings">DEFAULT_SETTINGS=</A>,
+<A HREF="#idl:mollview:execute">EXECUTE=</A>, 
+<A HREF="#idl:mollview:factor">FACTOR=</A>, 
+<A HREF="#idl:mollview:fg_color">FG_COLOR=</A>, 
+<A HREF="#idl:mollview:fits">FITS=</A>, 
+<A HREF="#idl:mollview:flip">/FLIP</A>, 
+<A HREF="#idl:mollview:gal_cut">GAL_CUT=</A>, 
+<A HREF="#idl:mollview:gif">GIF=</A>, 
+<A HREF="#idl:mollview:glsize">GLSIZE=</A>, 
+<A HREF="#idl:mollview:graticule">GRATICULE=</A>, 
+<A HREF="#idl:mollview:half_sky">/HALF_SKY</A>, 
+<A HREF="#idl:mollview:hbound">HBOUND=</A>, 
+<A HREF="#idl:mollview:help">/HELP</A>, 
+<A HREF="#idl:mollview:hist_equal">/HIST_EQUAL</A>, 
+<A HREF="#idl:mollview:hxsize">HXSIZE=</A>, 
+<A HREF="#idl:mollview:iglsize">IGLSIZE=</A>, 
+<A HREF="#idl:mollview:igraticule">IGRATICULE=</A>, 
+<A HREF="#idl:mollview:jpeg">JPEG=</A>, 
+<A HREF="#idl:mollview:latex">LATEX=</A>, 
+<A HREF="#idl:mollview:log">/LOG</A>, 
+<A HREF="#idl:mollview:map_out">MAP_OUT=</A>, 
+<A HREF="#idl:mollview:max">MAX=</A>, 
+<A HREF="#idl:mollview:min">MIN=</A>, 
+<A HREF="#idl:mollview:nested">/NESTED</A>, 
+<A HREF="#idl:mollview:no_dipole">/NO_DIPOLE</A>, 
+<A HREF="#idl:mollview:no_monopole">/NO_MONOPOLE</A>, 
+<A HREF="#idl:mollview:nobar">/NOBAR</A>, 
+<A HREF="#idl:mollview:nolabels">/NOLABELS</A>, 
+<A HREF="#idl:mollview:noposition">/NOPOSITION</A>, 
+<A HREF="#idl:mollview:offset">OFFSET=</A>, 
+<A HREF="#idl:mollview:outline">OUTLINE=</A>, 
+<A HREF="#idl:mollview:pdf">PDF=</A>, 
+<A HREF="#idl:mollview:pfonts">PFONTS=</A>, 
+<A HREF="#idl:mollview:png">PNG=</A>, 
+<A HREF="#idl:mollview:polarization">POLARIZATION=</A>, 
+<A HREF="#idl:mollview:preview">/PREVIEW</A>, 
+<A HREF="#idl:mollview:ps">PS=</A>, 
+<A HREF="#idl:mollview:pxsize">PXSIZE=</A>, 
+<A HREF="#idl:mollview:pysize">PYSIZE=</A>, 
+<A HREF="#idl:mollview:reso_arcmin">RESO_ARCMIN=</A>, 
+<A HREF="#idl:mollview:retain">RETAIN=</A>, 
+<A HREF="#idl:mollview:rot">ROT=</A>, 
+<A HREF="#idl:mollview:save">/SAVE</A>, 
+<A HREF="#idl:mollview:shaded">/SHADED</A>, 
+<A HREF="#idl:mollview:silent">/SILENT</A>, 
+<A HREF="#idl:mollview:silhouette">SILHOUETTE=</A>,
+<A HREF="#idl:mollview:stagger">STAGGER=</A>, 
+<A HREF="#idl:mollview:subtitle">SUBTITLE=</A>, 
+<A HREF="#idl:mollview:titleplot">TITLEPLOT=</A>, 
+<A HREF="#idl:mollview:transparent">TRANSPARENT=</A>, 
+<A HREF="#idl:mollview:truecolors">TRUECOLORS=</A>, 
+<A HREF="#idl:mollview:units">UNITS=</A>, 
+<A HREF="#idl:mollview:window">WINDOW=</A>, 
+<A HREF="#idl:mollview:xpos">XPOS=</A>, 
+<A HREF="#idl:mollview:ypos">YPOS=</A>]
+
+</h3>
+
+<P>
+<A ID="idl:mollview:routines"></A>Several visualization routines have a similar interface. Their <SPAN  CLASS="textbf">qualifiers</SPAN> and
+<SPAN  CLASS="textbf">keywords</SPAN> are all listed here, and the routines to which they apply are coded
+in the 'routine' column as: 
+<BR>
+A: <A HREF="idl_azeqview.htm#idl:azeqview">azeqview</A>,
+C: <A HREF="idl_cartview.htm#idl:cartview">cartview</A>,
+G: <A HREF="idl_gnomview.htm#idl:gnomview">gnomview</A>, 
+M: <A HREF="#idl:mollview">mollview</A>,
+O: <A HREF="idl_orthview.htm#idl:orthview">orthview</A> and all: all of them
+<P>
+<SPAN  CLASS="textbf">Qualifiers</SPAN> should appear in the order indicated. They can take a range of values, and some of them are optional.
+<BR><SPAN  CLASS="textbf">Keywords</SPAN> are optional, and can appear in any order. They take the form <SPAN  CLASS="texttt">keyword=value</SPAN> and can be abbreviated to a non ambiguous form
+(ie, <SPAN  CLASS="texttt">factor=10.0</SPAN> can be replaced by <SPAN  CLASS="texttt">fac = 10.0</SPAN>). They generally can take a range of values, but
+some of them (noted as <SPAN  CLASS="texttt">/keyword</SPAN> below) are boolean switches: they are either present (or set to 1) or absent (or set
+to 0).
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+<BR>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">File <A ID="idl:mollview:file"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">Required
+<BR>
+name of a (possibly gzip compressed) FITS file containing 
+               the <strong>HEALPix</strong>  map in an extension or in the image field, <BR><EM>or</EM>    name of an <EM>online</EM> variable (either array or
+structure) containing the (RING or <A HREF="#idl:mollview:nested">NESTED</A> ordered) <strong>HEALPix</strong>  map (See note below);
+<BR>
+if Save is set   :    name of an IDL saveset file containing
+               the <strong>HEALPix</strong>  map stored under the variable  <SPAN  CLASS="texttt">data</SPAN> <BR><b> (default : none)</b>
+<BR><u>Note on online data</u>: in order to preserve the integrity of the input data, 
+		the content of the array or structure <SPAN  CLASS="texttt">File</SPAN> is replicated
+before being possibly altered by the map making process. 
+Therefore plotting online data will require more memory than reading the data from disc directly, and is not recommended
+		to visualize data sets of size comparable to that of the
+computer memory.
+<BR><u>Note on high resolution cut sky data</u>: cut sky data (in which less
+than 50% of the sky is observed), can be processed with a minimal memory
+foot-print, by not allocating fake full map. In the current release, two
+restrictions apply: the input data set must be read from a FITS file in 'cut4'
+format, and the <A HREF="#idl:mollview:polarization"><SPAN  CLASS="texttt">POLARIZATION</SPAN></A> IDL keyword
+(described below) must be 0 (default value). See 
+<A HREF="#idl:mollview:example4">Example #4</A> below. <BR><i>see also:</i><A HREF="#idl:mollview:truecolors"><SPAN  CLASS="texttt">TrueColors</SPAN></A>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">Select <A ID="idl:mollview:select"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">Optional
+<BR>
+column of the BIN FITS table to be plotted, can be either  <BR>&ndash; a name : value given in TTYPEi of the FITS file <BR>
+NOT case sensitive and can be truncated, <BR>(only letters, digits and underscore are valid) <BR>&ndash; an integer        : number i of the column
+                            containing the data, starting with 1 (also valid if
+		  <A HREF="#idl:mollview:file"><SPAN  CLASS="texttt">File</SPAN></A> is an online array) <BR><b>default:</b>1 for full sky maps, 'SIGNAL' column for FITS files
+		  containing cut sky maps
+               (see the Examples below)</TD>
+</TR>
+</TABLE>
+
+<P>
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+
+<hr>
+<H2>KEYWORDS</H2>
+<BR>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">ASINH=<A ID="idl:mollview:asinh"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, the
+            color table is altered to emulate an non-linear mapping of the input
+            data enhancing the low contrast regions. <BR>
+If <SPAN  CLASS="texttt">asinh=1</SPAN> the mapping is <!-- MATH
+ $y=\sinh^{-1} (x)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.68ex; " SRC="idl_img77.png"
+ ALT="$y=\sinh^{-1} (x)$"></SPAN>, such that <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.63ex; vertical-align: -0.55ex; " SRC="idl_img78.png"
+ ALT="$y \approx x$"></SPAN> when <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.75ex; vertical-align: -0.19ex; " SRC="idl_img79.png"
+ ALT="$x\ll 1$"></SPAN> and <!-- MATH
+ $y\approx \ln(2x)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img80.png"
+ ALT="$y\approx \ln(2x)$"></SPAN> when <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.75ex; vertical-align: -0.19ex; " SRC="idl_img81.png"
+ ALT="$x\gg 1$"></SPAN>.
+<BR>
+If <SPAN  CLASS="texttt">asinh=2</SPAN> the mapping is <!-- MATH
+ $y=\sinh^{-1} (x/2)/\ln(10)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.68ex; " SRC="idl_img82.png"
+ ALT="$y=\sinh^{-1} (x/2)/\ln(10)$"></SPAN>, such that
+<!-- MATH
+ $y \approx 0.21 x$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.55ex; " SRC="idl_img83.png"
+ ALT="$y \approx 0.21 x$"></SPAN> when <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.75ex; vertical-align: -0.19ex; " SRC="idl_img79.png"
+ ALT="$x\ll 1$"></SPAN> and <!-- MATH
+ $y\approx \log(x)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img84.png"
+ ALT="$y\approx \log(x)$"></SPAN> when <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.75ex; vertical-align: -0.19ex; " SRC="idl_img81.png"
+ ALT="$x\gg 1$"></SPAN>. <BR>
+Here <SPAN CLASS="MATH"><I>x</I></SPAN> is the input data, optionally altered by 
+	<A HREF="#idl:mollview:factor"><SPAN  CLASS="texttt">Factor</SPAN></A> and <A HREF="#idl:mollview:offset"><SPAN  CLASS="texttt">Offset</SPAN></A>. <BR>
+This option can <EM>not</EM> be used in conjonction with
+<A HREF="#idl:mollview:log"><SPAN  CLASS="texttt">/LOG</SPAN></A> nor <A HREF="#idl:mollview:hist_equal"><SPAN  CLASS="texttt">/HIST_EQUAL</SPAN></A>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">BAD_COLOR=<A ID="idl:mollview:bad_color"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">color given to missing pixels (having
+<A HREF="idl_init_healpix_healpix_system.htm#idl:init_healpix"><SPAN  CLASS="texttt">!healpix.bad_value</SPAN></A> (<!-- MATH
+ $=-1.6375\,10^{30}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.29ex; " SRC="idl_img85.png"
+ ALT="$=-1.6375\,10^{30}$"></SPAN>) 
+      or <SPAN  CLASS="texttt">NaN</SPAN> value on input).
+   The color can be provided as either:
+<BR>&ndash; a single integer in [0,255], specifying the index to be used in
+      the color table chosen via <A HREF="#idl:mollview:colt">COLT</A> (in which the indexes 0, 1 and 2
+      are reserved for black, white and grey respectively),
+<BR>&ndash; a 3 element vector, with each element in [0,255], specifying the
+      amount of RED, GREEN and BLUE
+<BR>&ndash; a 7-character string, starting with '#', specifying the color in
+      HTML Hexadecimal fashion (eg, '#ff0000' for red).
+<BR><b>default:</b>neutral grey (=2, =[175, 175, 175], ='#afafaf')
+<BR><i>see also:</i><A HREF="#idl:mollview:bg_color">BG_COLOR</A>,
+<A HREF="#idl:mollview:fg_color">FG_COLOR</A>, 
+<A HREF="#idl:mollview:transparent">TRANSPARENT</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">BG_COLOR=<A ID="idl:mollview:bg_color"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">color given to background pixels (outside the sphere).
+<BR>
+See <A HREF="#idl:mollview:bad_color">BAD_COLOR</A> for expected format.
+<BR><b>default:</b>white (=1, =[255, 255, 255], ='#ffffff')
+<BR><i>see also:</i><A HREF="#idl:mollview:fg_color">FG_COLOR</A>,
+<A HREF="#idl:mollview:transparent">TRANSPARENT</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">CHARSIZE=<A ID="idl:mollview:charsize"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">overall multiplicative factor applied to the size of
+        all characters appearing on the plot
+        	<b>default:</b>1.0; <i>see also:</i><A HREF="#idl:mollview:customize">CUSTOMIZE</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">CHARTHICK=<A ID="idl:mollview:charthick"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">character thickness (in
+<A HREF="#idl:mollview:titleplot">TITLEPLOT</A>, <A HREF="#idl:mollview:subtitle">SUBTITLE</A> and
+color bar labeling). Other characters thickness (such as
+<A HREF="#idl:mollview:glsize">graticule labels</A>), can be controlled with <SPAN  CLASS="texttt">!P.CHARTHICK</SPAN>.
+                <b>default:</b>1</TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">COLT=<A ID="idl:mollview:colt"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">color table
+index: <BR>&ndash; Indexes in [0,40] are reserved for standard IDL color tables, while
+  [41,255] are used for user defined color tables read from disc (created and
+  written to disc with <SPAN  CLASS="texttt">MODIFYCT</SPAN>), if any. <BR>&ndash; Indexes 1001 (or <SPAN  CLASS="texttt">'planck1'</SPAN>, case insensitive) and 1002 (or <SPAN  CLASS="texttt">'planck2'</SPAN>) are
+reserved for Planck color tables 1 and 2 generated by <A HREF="idl_planck_colors.htm#idl:planck_colors"><SPAN  CLASS="texttt">planck_colors</SPAN></A>. 
+See <A HREF="#idl:mollview:example6">Example #6</A> below.
+<BR>&ndash; If the index does not match any existing table, or if it is above 255, 
+  the current online table (modifiable with <SPAN  CLASS="texttt">TVLCT</SPAN>, <SPAN  CLASS="texttt">XLOADCT</SPAN>, <SPAN  CLASS="texttt">XPALETTE</SPAN>, ... 
+  or eg, J. Davenport's 
+<A ID="tex2html58"
+  HREF="http://www.astro.washington.edu/users/jrad/cubehelix.pro"><SPAN  CLASS="texttt">cubehelix.pro</SPAN></A>
+implementation of D. Green 's
+<A ID="tex2html59"
+  HREF="https://www.mrao.cam.ac.uk/~dag/CUBEHELIX/">cubehelix color scheme</A>) is used instead. <BR>&ndash;If <SPAN  CLASS="texttt">colt</SPAN><SPAN CLASS="MATH">&lt;0</SPAN>, the IDL color table ABS(colt) is used, but the scale is
+
+reversed (ie a red to blue scale becomes a blue to red scale).
+ Note: -0.1 can be used as negative 0.
+<BR><b>default:</b>33 (Blue-Red) <BR><i>see also:</i><A HREF="#idl:mollview:truecolors"><SPAN  CLASS="texttt">TrueColors</SPAN></A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">COORD=<A ID="idl:mollview:coord"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">vector with 1 or 2 elements describing the coordinate system of the map;
+                either
+<BR>&ndash; 'C' or 'Q' : Celestial2000 = eQuatorial, <BR>&ndash; 'E'        : Ecliptic, <BR>&ndash; 'G'        : Galactic  <BR>
+if coord = ['x','y'] the map is rotated from system 'x' to system 'y' <BR>
+if coord = ['y'] the map is rotated to coordinate system 'y' (with the
+               original system assumed to be Galactic unless indicated otherwise in the
+                input file) <BR><i>see also:</i><A HREF="#idl:mollview:rot">Rot</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/CROP<A ID="idl:mollview:crop"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, the image produced (in GIF/JPEG/PDF/PNG/PS and on screen) only contains the projected map and
+               no title, color bar, ... <BR><i>see also:</i><A HREF="#idl:mollview:gif">Gif</A>,
+			<A HREF="#idl:mollview:jpeg">Jpeg</A>, 
+			<A HREF="#idl:mollview:pdf">Pdf</A>,
+			<A HREF="#idl:mollview:png">Png</A>,
+			<A HREF="#idl:mollview:ps">Ps</A></TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">CUSTOMIZE=<A ID="idl:mollview:customize"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">User provided structure containing customization parameters of the produced output, whose default values are listed in <A HREF="#idl:mollview:default_settings">DEFAULT_SETTINGS</A>.
+The accepted inputs are <BR><SPAN  CLASS="texttt">ASPOS.X, ASPOS.Y</SPAN>: X,Y location of astronomical coordinates label  (which can be removed altogether with <A HREF="#idl:mollview:noposition">/NOPOSITION</A>, only applicable to <A HREF="idl_gnomview.htm#idl:gnomview">gnomview</A>),
+<BR><SPAN  CLASS="texttt">CBAR.DX, CBAR.DY</SPAN>: length and width of color bar (which can be removed with <A HREF="#idl:mollview:nobar">/NOBAR</A>), the bar is centered, at an automatically determined height
+<BR><SPAN  CLASS="texttt">CBAR.SPACES</SPAN>: 3-element vector listing the strings to be inserted between the map minimum value label, the color bar, the map maximum value, and the map units (read from the FITS file or provided by <A HREF="#idl:mollview:units">UNITS</A>) <b>default:</b>3 single spaces, <BR><SPAN  CLASS="texttt">CBAR.TY</SPAN>: vertical offset of the text (min, max and units labels) with respect to the color bar <b>default:</b>0;
+<BR><SPAN  CLASS="textbf">Note:</SPAN> the character size of the text accompanying the color bar is fully determined by the keyword <A HREF="#idl:mollview:charsize">Charsize</A>,
+<BR><SPAN  CLASS="texttt">CBAR.BOX</SPAN>: thickness of the black box drawn around the color bar <b>default:</b>0: no box; 
+the final thickness is <SPAN  CLASS="texttt">F*cbar.box*!p.thick</SPAN> with <SPAN  CLASS="texttt">F</SPAN>=2 in
+<A HREF="#idl:mollview:pdf">PDF</A> and 
+<A HREF="#idl:mollview:ps">PS</A>, or <SPAN  CLASS="texttt">F</SPAN>=1 otherwise, 
+while <SPAN  CLASS="texttt">!p.thick</SPAN> is assumed to have a value of 1.0 unless specified otherwise.
+<BR><SPAN  CLASS="texttt">CRING.DX, CRING.XLL, CRING.YLL</SPAN>: radius and X,Y location of lower left corner of the color disc showing the polarization direction when <A HREF="#idl:mollview:polarization">POLARIZATION=3</A>
+<BR><SPAN  CLASS="texttt">PDF.DEBUG</SPAN>: if set to 1, and <A HREF="#idl:mollview:silent">SILENT</A> is not set, then debugging information on the <A HREF="#idl:mollview:pdf">PDF</A> generation will be printed (when applicable), 
+and the intermediate Postscript file will be kept
+<BR><SPAN  CLASS="texttt">SUBTITLE.X, SUBTITLE.Y, SUBTITLE.CHARSIZE</SPAN>: control the X,Y location of the plot 
+<A HREF="#idl:mollview:subtitle">subtitle</A> 
+(X=0 is left justified, X=0.5 is centered and X=1 is right justified), 
+and its final character size, which is the product of the number 
+<SPAN  CLASS="texttt">SUBTITLE.CHARSIZE</SPAN>
+with the one provided in the keyword
+<A HREF="#idl:mollview:charsize">Charsize</A>
+<BR><SPAN  CLASS="texttt">TITLE.X, TITLE.Y, TITLE.CHARSIZE</SPAN>: same as above, applied to the plot title (<A HREF="#idl:mollview:titleplot">titleplot</A>),
+<BR><SPAN  CLASS="texttt">VSCALE.X, VSCALE.Y</SPAN>: X,Y location of scale calibrating the polarization rods (whose length and spacing in the main plotting area can be tuned with <A HREF="#idl:mollview:polarization">POLARIZATION=[3, length, spacing]</A>)
+<BR><SPAN  CLASS="texttt">VSCALE.TY</SPAN>: vertical offset of the text next to the calibrating rod.
+<BR>
+See <A HREF="#idl:mollview:example7">Example #7</A> below.</TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">DEFAULT_SETTINGS=<A ID="idl:mollview:default_settings"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">Structure containing on output the default values (slightly projection dependent) of the plotting parameters that can be customized with 
+<A HREF="#idl:mollview:customize">CUSTOMIZE</A>.
+<BR>
+As shown in <A HREF="#idl:mollview:example7">Example #7</A> below, the returned structure can be inspected with the routine <A HREF="idl_help_st.htm#idl:help_st"><SPAN  CLASS="texttt">help_st</SPAN></A>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">EXECUTE=<A ID="idl:mollview:execute"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">character string containing IDL command(s) to be executed in the
+plotting window. See 
+<A HREF="#idl:mollview:example3">Example #3</A> below.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">FACTOR=<A ID="idl:mollview:factor"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">scalar multiplicative factor to be applied to the
+	valid data <BR>
+the data plotted is of the form Factor*(data + Offset) <BR>
+This does not affect the flagged pixels <BR>
+Can be used together with ASINH or LOG <BR>
+When used with TRUECOLORS, FACTOR can be a 3-element vector. <BR><i>see also:</i><A HREF="#idl:mollview:asinh">ASINH</A>, <A HREF="#idl:mollview:offset">Offset</A>, <A HREF="#idl:mollview:log">LOG</A>, <A HREF="#idl:mollview:truecolors">Truecolors</A> <BR><b>default:</b>1.0</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">FG_COLOR=<A ID="idl:mollview:fg_color"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">color of title and subtile characters, 
+    graticule lines and labels, units, outlines <SPAN CLASS="MATH"><IMG
+ STYLE="height: 0.23ex; vertical-align: -0.10ex; " SRC="idl_img6.png"
+ ALT="$\ldots$"></SPAN>
+<BR>
+See <A HREF="#idl:mollview:bad_color">BAD_COLOR</A> for expected format.
+<BR><b>default:</b>black (=0, =[0, 0, 0], ='#000000')
+<BR><i>see also:</i>
+<A HREF="#idl:mollview:bad_color">BAD_COLOR</A>,
+<A HREF="#idl:mollview:bg_color">BG_COLOR</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">FITS=<A ID="idl:mollview:fits"></A> </TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">string containing the name of an output FITS file with
+        the projected map in the primary image <BR>&ndash; if set to 1            : output the plot in
+        plot_<EM>proj</EM>.fits, where <EM>proj</EM> is either <EM>cartesian, gnomic,
+mollweide</EM>, or  <EM>orthographic</EM> depending on the projection in use;
+<BR>&ndash; if set to a file name  : output the plot in that file.  <BR><b>default:</b>0: no .FITS done
+<BR>
+In the case of Orthographic projection,
+<A HREF="#idl:mollview:half_sky">HALF_SKY</A> must be set.
+<BR>
+Except for the color mapping, all the keywords and options apply to the
+projected map, ie: its size is determined by
+<A HREF="#idl:mollview:pxsize">PXSIZE</A> (and <A HREF="#idl:mollview:pysize">PYSIZE</A>
+when applicable), its angular resolution by <A HREF="#idl:mollview:reso_arcmin">RESO_ARCMIN</A>
+when applicable, its orientation and coordinates by 
+<A HREF="#idl:mollview:rot">ROT</A> and 
+<A HREF="#idl:mollview:coord">COORD</A> respectively, ... <BR>
+For compatibility with standard FITS viewers (including 
+<A ID="tex2html60"
+  HREF="https://www.astromatic.net/category/softwareposts/stiff">STIFF</A>), unobserved pixels, and
+pixels outside the sphere, take the value <SPAN  CLASS="texttt">NaN</SPAN> (ie <SPAN  CLASS="texttt">!values.f_nan</SPAN> in IDL).
+The resulting FITS file can be read in IDL with eg. map=<SPAN  CLASS="texttt">readfits</SPAN>(<EM>filename</EM>). 
+<BR><i>see also:</i><A HREF="#idl:mollview:map_out">Map_out</A></TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/FLIP<A ID="idl:mollview:flip"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set the longitude increases to the right, whereas by
+                default (astronomical convention) it increases towards the left</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">GAL_CUT=<A ID="idl:mollview:gal_cut"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">&mdash;MO</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">(positive float) specifies the symmetric galactic cut in degrees
+              outside of which the monopole and/or dipole fitting is done
+	<b>default:</b>0: monopole and dipole fit done on the whole sky
+              (<i>see also:</i><A HREF="#idl:mollview:no_dipole">No_dipole</A>, <A HREF="#idl:mollview:no_monopole">No_monopole</A>)</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">GIF=<A ID="idl:mollview:gif"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">string containing the name of a .GIF output <BR>
+if set to 1            : outputs the plot in 
+<SPAN  CLASS="texttt">plot_</SPAN><EM>projection</EM><SPAN  CLASS="texttt">.gif</SPAN>, where <EM>projection</EM> is either
+<SPAN  CLASS="texttt">azimequid</SPAN>, <SPAN  CLASS="texttt">cartesian</SPAN>, <SPAN  CLASS="texttt">gnomic</SPAN>, <SPAN  CLASS="texttt">mollweide</SPAN> 
+or <SPAN  CLASS="texttt">orthographic</SPAN>, <BR>
+if set to a file name  : outputs the plot in that file <BR>
+Please note that the resulting GIF image might not always look
+	      as expected. The reason for this is a problem with
+	      'backing store' in the IDL-routine TVRD. Please read the IDL
+	      documentation for more information. <BR><b>default:</b>no .GIF done <BR><i>see also:</i><A HREF="#idl:mollview:crop">Crop</A>, 			
+		<A HREF="#idl:mollview:jpeg">Jpeg</A>, 
+		<A HREF="#idl:mollview:pdf">Pdf</A>, 
+		<A HREF="#idl:mollview:png">Png</A>, 
+		<A HREF="#idl:mollview:preview">Preview</A>,
+		<A HREF="#idl:mollview:ps">Ps</A>
+		and <A HREF="#idl:mollview:retain">Retain</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">GLSIZE=<A ID="idl:mollview:glsize"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">CGMO</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">character size of the graticule labels in units of <SPAN  CLASS="texttt">Charsize</SPAN>. <BR>
+Can be a scalar (which applies to both parallel and meridian labels),
+        or a 2 element vector (interpreted as [meridian_label_size, parallel_label_size])
+<BR><b>default:</b>0: no labeling of graticules. <BR><i>see also:</i><A HREF="#idl:mollview:charsize">Charsize</A>, <A HREF="#idl:mollview:graticule">Graticule</A>,
+	<A HREF="#idl:mollview:iglsize">Iglsize</A>,
+	<A HREF="#idl:mollview:igraticule">Igraticule</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">GRATICULE=<A ID="idl:mollview:graticule"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">CGMO</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, puts a graticule (ie, longitude and latitude grid) 
+	in the <EM>output</EM> astrophysical coordinates
+	with delta_long = delta_lat = gdef
+         degrees <BR>
+if set to a scalar <SPAN CLASS="MATH"><I>x</I>&gt;</SPAN> gmin then delta_long = delta_lat = <SPAN CLASS="MATH"><I>x</I></SPAN> <BR>
+if set to [x,y] with <SPAN CLASS="MATH"><I>x</I>,<I>y</I> &gt;</SPAN> gmin then delta_long = <SPAN CLASS="MATH"><I>x</I></SPAN> and delta_lat = <SPAN CLASS="MATH"><I>y</I></SPAN> <BR>
+cartview : gdef = 45, gmin =  0 <BR>
+gnomview : gdef =  5, gmin =  0 <BR>
+mollview : gdef = 45, gmin = 10 <BR>
+orthview : gdef = 45, gmin = 10 <BR>
+Note that the graticule will rotate with the sphere if Rot is set.
+	To outline only the equator set graticule=[360,90].
+	The automatic labeling of the graticule is controlled by <SPAN  CLASS="texttt">Glsize</SPAN>
+<BR>
+The graticule line thickness is controlled via !P.THICK.
+<BR><b>default:</b>0 [no graticule] <BR><i>see also:</i><A HREF="#idl:mollview:igraticule">Igraticule</A>, <A HREF="#idl:mollview:rot">Rot</A>, <A HREF="#idl:mollview:coord">Coord</A>, <A HREF="#idl:mollview:glsize">Glsize</A></TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/HALF_SKY<A ID="idl:mollview:half_sky"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">&mdash;O</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, only shows only one half of the sky 
+   (centered on (0,0) or on the location parametrized by <A HREF="#idl:mollview:rot">Rot</A>) instead of the full sky</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">HBOUND=<A ID="idl:mollview:hbound"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">scalar or vector of up to 3
+elements.
+If Hbound[i] is set to a valid <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN>, the routine will overplot the <strong>HEALPix</strong>  pixel
+boundaries corresponding to that <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN>
+on top of the map. 
+The first <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN> will be plotted with solid lines, 
+the second one (if any) with dashes and
+the third one (if any) with dots. Obviously, better results are
+obtained for Hbounds elements in growing order.
+Since 0-valued boundaries are not plotted, but used for linestyle
+assignment, providing Hbound=[0,4] (or [0,0,4]) will
+plot <!-- MATH
+ $N_{\mathrm{side}}=4$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB>=4</SPAN> boundaries with dashes (resp. dots), while Hbound=4 would plot the same
+boundaries with solid lines.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/HELP<A ID="idl:mollview:help"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, the routine header is printed (by doc_library)
+      and nothing else is done</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/HIST_EQUAL<A ID="idl:mollview:hist_equal"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set,     uses a histogram equalized color mapping
+			(useful for non gaussian data field)
+		<b>default:</b>uses linear color mapping and 
+                     		puts the level 0 in the middle
+                     		of the color scale (ie, green for Blue-Red)
+				unless <A HREF="#idl:mollview:min">Min</A> and 
+	                               <A HREF="#idl:mollview:max">Max</A> are not symmetric
+<BR><i>see also:</i><A HREF="#idl:mollview:asinh">Asinh</A>, <A HREF="#idl:mollview:log">Log</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">HXSIZE=<A ID="idl:mollview:hxsize"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">horizontal dimension (in cm) of the <A HREF="#idl:mollview:ps">Postscript</A> printout <BR><b>default:</b>26 cm <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.05ex; vertical-align: -0.10ex; " SRC="idl_img86.png"
+ ALT="$\simeq$"></SPAN> 10 in <BR><i>see also:</i><A HREF="#idl:mollview:pxsize">Pxsize</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">IGLSIZE=<A ID="idl:mollview:iglsize"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">CGMO</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">character size of the input coordinates graticule labels in units of <SPAN  CLASS="texttt">Charsize</SPAN>. <BR>
+Either scalar or 2-element vector (see <A HREF="#idl:mollview:glsize">Glsize</A>).
+<BR><b>default:</b>0: no labeling of graticules. <BR><i>see also:</i><A HREF="#idl:mollview:charsize">Charsize</A>, <A HREF="#idl:mollview:igraticule">Igraticule</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">IGRATICULE=<A ID="idl:mollview:igraticule"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">CGMO</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, puts a graticule (ie, longitude and latitude grid) 
+	in the <EM>input</EM> astrophysical coordinates.
+	See Graticule for conventions and details.
+	If both Graticule and Igraticule are set, the latter will
+	be represented with dashes.
+<BR>
+The automatic labeling of the graticule is controlled by <SPAN  CLASS="texttt">Iglsize</SPAN>
+<BR><b>default:</b>0 [no graticule] <BR><i>see also:</i><A HREF="#idl:mollview:graticule">Graticule</A>, 
+<A HREF="#idl:mollview:rot">Rot</A>, <A HREF="#idl:mollview:coord">Coord</A>, 
+<A HREF="#idl:mollview:iglsize">Iglsize</A></TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">JPEG=<A ID="idl:mollview:jpeg"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">string containing the name of a <EM>lossless</EM> .JPEG output file
+<BR>
+if set to 1            : outputs the plot in 
+<SPAN  CLASS="texttt">plot_</SPAN><EM>projection</EM><SPAN  CLASS="texttt">.jpeg</SPAN>, where <EM>projection</EM> is either
+<SPAN  CLASS="texttt">azimequid</SPAN>, <SPAN  CLASS="texttt">cartesian</SPAN>, <SPAN  CLASS="texttt">gnomic</SPAN>, <SPAN  CLASS="texttt">mollweide</SPAN> 
+or <SPAN  CLASS="texttt">orthographic</SPAN>, <BR>
+if set to a file name  : output the plot in that file <BR><b>default:</b>no .JPEG done <BR><i>see also:</i>
+<A HREF="#idl:mollview:crop">Crop</A>, 
+<A HREF="#idl:mollview:fits">Fits</A>, 
+<A HREF="#idl:mollview:gif">Gif</A>, 
+<A HREF="#idl:mollview:map_out">Map_out</A>, 
+<A HREF="#idl:mollview:png">Png</A>, 
+<A HREF="#idl:mollview:preview">Preview</A>,
+<A HREF="#idl:mollview:pdf">Pdf</A>, 
+<A HREF="#idl:mollview:ps">Ps</A>, 
+and <A HREF="#idl:mollview:retain">Retain</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">LATEX=<A ID="idl:mollview:latex"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set to 1 or 2, enables <SPAN CLASS="logo,LaTeX">L<SUP><SMALL>A</SMALL></SUP>T<SMALL>E</SMALL>X</SPAN> handling of character strings such as 
+<A HREF="#idl:mollview:titleplot">Titleplot</A>,
+<A HREF="#idl:mollview:subtitle">Subtitle</A> and 
+<A HREF="#idl:mollview:units">Units</A>
+<BR>&ndash; if set to 2 <EM>with</EM> <A HREF="#idl:mollview:ps">PS</A> or 
+          <A HREF="#idl:mollview:pdf">PDF</A> outputs, those strings (and the <A HREF="#idl:mollview:glsize">graticule labels</A>) will be processed 
+           by genuine <SPAN CLASS="logo,LaTeX">L<SUP><SMALL>A</SMALL></SUP>T<SMALL>E</SMALL>X</SPAN> and inserted in the final PS or PDF file using <I>psfrag</I> package
+          (requires the ubiquitous <A ID="tex2html61"
+  HREF="https://www.ctan.org/starter"><SPAN style="font-family:monospace">latex</SPAN></A>
+and its 
+<A ID="tex2html62"
+  HREF="https://www.ctan.org/pkg/color"><I>color</I></A>,
+<A ID="tex2html63"
+  HREF="https://www.ctan.org/pkg/geometry"><I>geometry</I></A>, 
+<A ID="tex2html64"
+  HREF="https://www.ctan.org/pkg/graphicx"><I>graphicx</I></A>
+and
+<A ID="tex2html65"
+  HREF="https://www.ctan.org/pkg/psfrag"><I>psfrag</I></A>
+packages as well as <A ID="tex2html66"
+  HREF="https://www.ctan.org/pkg/dvips"><SPAN style="font-family:monospace">dvips</SPAN></A>).
+In this case, the 
+<A HREF="#idl:mollview:pfonts">Pfonts</A> settings will be ignored.
+<BR>
+Note that <A ID="tex2html67"
+  HREF="http://www.idlcoyote.com/programs/cgps2raster.pro"><SPAN style="font-family:monospace">cgPStoRASTER</SPAN></A>,
+<A ID="tex2html68"
+  HREF="https://www.imagemagick.org/script/index.php">ImageMagick <SPAN  CLASS="texttt">convert</SPAN></A>
+and/or <A ID="tex2html69"
+  HREF="http://www.graphicsmagick.org/convert.html">GraphicsMagick <SPAN  CLASS="texttt">gm convert</SPAN></A>
+can be used to turn a PS or PDF file into high resolution GIF, JPEG or PNG file.
+<BR>
+Beware that the option <SPAN  CLASS="texttt">latex=2</SPAN> may not work properly under versions 0.9.5 and older of 
+<A HREF="./install.htm#install:using_gdl"><SPAN style="font-family:monospace">gdl</SPAN></A>.
+<BR>&ndash; if set to 1, with whatever output
+(<A HREF="#idl:mollview:gif">GIF</A>, 
+<A HREF="#idl:mollview:jpeg">JPEG</A>,
+<A HREF="#idl:mollview:pdf">PDF</A>, 
+<A HREF="#idl:mollview:png">PNG</A>, 
+<A HREF="#idl:mollview:ps">PS</A>, or X)
+LaTeX is partially emulated with <A ID="tex2html70"
+  HREF="http://physics.mnstate.edu/craig/textoidl/"><SPAN style="font-family:monospace">TeXtoIDL</SPAN></A>
+routines, which are now shipped with <strong>HEALPix</strong> 
+
+(no extra requirements).	
+In this case, <A HREF="#idl:mollview:pfonts">Pfonts</A> settings can be used.
+<BR><b>default:</b>0, no LaTeX handling</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/LOG<A ID="idl:mollview:log"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">display the log of map. This is intended for
+ 	application to positive definite maps only, eg. Galactic foreground
+	emission templates; for arbitrary maps, use /ASINH instead.	 <BR><i>see also:</i><A HREF="#idl:mollview:asinh">Asinh</A>, <A HREF="#idl:mollview:factor">Factor</A>, <A HREF="#idl:mollview:hist_equal">Hist_Equal</A>, <A HREF="#idl:mollview:offset">Offset</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">MAP_OUT=<A ID="idl:mollview:map_out"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">variable that will contain the projected map on output.
+<BR>
+Except for the color mapping, all the keywords and options apply to the
+projected map, ie: its size is determined by
+<A HREF="#idl:mollview:pxsize">PXSIZE</A> (and <A HREF="#idl:mollview:pysize">PYSIZE</A>
+when applicable), its angular resolution by <A HREF="#idl:mollview:reso_arcmin">RESO_ARCMIN</A>
+when applicable, its orientation and coordinates by 
+<A HREF="#idl:mollview:rot">ROT</A> and 
+<A HREF="#idl:mollview:coord">COORD</A> respectively, ... <BR>
+Unobserved pixels, and pixels outside the sphere, take value <A HREF="idl_init_healpix_healpix_system.htm#idl:init_healpix"><SPAN  CLASS="texttt">!healpix.bad_value</SPAN></A> (<!-- MATH
+ $=-1.6375\,10^{30}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.29ex; " SRC="idl_img85.png"
+ ALT="$=-1.6375\,10^{30}$"></SPAN>).
+<BR><i>see also:</i><A HREF="#idl:mollview:fits">Fits</A></TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">MAX=<A ID="idl:mollview:max"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">Set the maximum value for the plotted signal <BR><b>default:</b>is to use the actual signal
+	maximum.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">MIN=<A ID="idl:mollview:min"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">Set the minimum value for the plotted signal <BR><b>default:</b>is to use the actual signal minimum.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/NESTED<A ID="idl:mollview:nested"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">specify that the online data is ordered in the nested scheme</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/NO_DIPOLE<A ID="idl:mollview:no_dipole"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">&mdash;MO</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set  (and Gal_cut is not set) 
+                the best fit monopole *and* dipole over all valid pixels are
+                removed; <BR>
+if Gal_cut is set to <SPAN CLASS="MATH"><I>b</I>&gt;0</SPAN>, the best monopole and dipole fit is performed on all valid
+                pixels with <SPAN CLASS="MATH">|</SPAN>galactic latitude<SPAN CLASS="MATH">|&gt;<I>b</I></SPAN> (in deg) and is removed from
+                all valid pixels <BR><b>default:</b>0 (no monopole or dipole removal)
+<BR>
+can NOT be used together with No_monopole <BR><i>see also:</i><A HREF="#idl:mollview:gal_cut">Gal_cut</A>, <A HREF="#idl:mollview:no_monopole">No_monopole</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/NO_MONOPOLE<A ID="idl:mollview:no_monopole"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">&mdash;MO</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set (and Gal_cut is not set) 
+                the best fit monopole over all valid pixels is
+                removed; <BR>
+if Gal_cut is set to <SPAN CLASS="MATH"><I>b</I>&gt;0</SPAN>, the best monopole fit is performed on all valid
+                pixels with <SPAN CLASS="MATH">|</SPAN>galactic latitude<SPAN CLASS="MATH">|&gt;<I>b</I></SPAN> (in deg) and is removed from
+                all valid pixels <BR><b>default:</b>0 (no monopole removal)
+<BR>
+can NOT be used together with No_dipole <BR><i>see also:</i><A HREF="#idl:mollview:gal_cut">Gal_cut</A>, <A HREF="#idl:mollview:no_dipole">No_dipole</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/NOBAR<A ID="idl:mollview:nobar"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, the color bar 
+(or the color wheel used when <A HREF="#idl:mollview:polarization">Polarization</A>=2) 
+is hidden; <i>see also:</i><A HREF="#idl:mollview:customize">CUSTOMIZE</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/NOLABELS<A ID="idl:mollview:nolabels"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, color bar labels (min and max) are not present, <b>default:</b>
+	labels are present; <i>see also:</i><A HREF="#idl:mollview:customize">CUSTOMIZE</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/NOPOSITION<A ID="idl:mollview:noposition"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">&ndash;G&ndash;</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, the astronomical location of the map
+        central point is not indicated; <i>see also:</i><A HREF="#idl:mollview:customize">CUSTOMIZE</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">OFFSET=<A ID="idl:mollview:offset"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">scalar additive factor to be applied to the valid data <BR>
+the data plotted is of the form Factor*(data + Offset) <BR>
+This does not affect the flagged pixels <BR>
+can be used together with ASINH or LOG <BR>
+When used with TRUECOLORS, OFFSET can be a 3-element vector. <BR><i>see also:</i><A HREF="#idl:mollview:asinh">ASINH</A>, <A HREF="#idl:mollview:factor">Factor</A>, <A HREF="#idl:mollview:log">LOG</A>, <A HREF="#idl:mollview:truecolors">TRUECOLORS</A> <BR><b>default:</b>0.0</TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">OUTLINE=<A ID="idl:mollview:outline"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">CGMO</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">IDL structure, array of (same size) structures, or structure of (mixed size) structures 
+     (see <A HREF="#idl:mollview:outline:note">Note below</A>),  
+       containing the description of one (or several) outline(s) to
+      be overplotted on the final map.
+<BR>
+For each contour or point list, the corresponding (sub)structure should
+	contain the following fields:  <BR>&ndash; 'COORD': coordinate system (either 'C'/'Q', 'G' or 'E') of the contour 
+           (same meaning as in <A HREF="#idl:mollview:coord">Coord</A>)
+<BR>&ndash; 'RA': RA/longitude coordinates of the contour vertices (array or scalar) <BR>&ndash; 'DEC': Dec/latitude coordinates of the contour vertices (array or
+scalar)
+<BR>
+and can optionally contain the fields: <BR>&ndash; 'COL[OR]': (optional, scalar or 2-element vector) index in [0,255] of the colors used to draw the lines and symbols. <b>default:</b>[!p.color, !p.background], ie black and white
+<BR>&ndash; 'LINE[STYLE]': (optional, scalar) <B>+2</B>: black dashes, <B>+1</B>: black dots, <B>0</B>: black solid (default), <B>-1</B>: black dots on white background, <B>-2</B>: black dashes on
+	white background
+<BR>&ndash; 'PSY[M]': (optional, scalar) symbol used to represent vertices (same meaning as
+	    standard PSYM in IDL. If <!-- MATH
+ $9\leq|\mathrm{psym}|\leq 46$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img87.png"
+ ALT="$9\leq\vert\mathrm{psym}\vert\leq 46$"></SPAN>, D. Fanning's 
+<A ID="tex2html71"
+  HREF="http://www.idlcoyote.com/programs/cgsymcat.pro"><SPAN style="font-family:monospace">cgSYMCAT.PRO</SPAN></A>
+symbols 
+                     definition will be used; for example, psym=9 is an open circle). If <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.41ex; " SRC="idl_img88.png"
+ ALT="$\leq 0$"></SPAN>, the vertices are represented with the chosen symbols, and
+                        connected by arcs of geodesics;
+                    if <SPAN CLASS="MATH">&gt;0</SPAN>, only the vertices are shown
+                    <b>default:</b>0 <BR>&ndash; 'SYM[SIZE]': (optional, scalar) vertice symbol size (same meaning
+as SYMSIZE in IDL), <b>default:</b>1
+<BR>&ndash; 'THI[CK]': (optional, scalar) thickness factor of the lines and symbols. The final thickness is
+	<SPAN  CLASS="texttt">3*F*outline.thick*!P.thick</SPAN> with <SPAN  CLASS="texttt">F</SPAN>=2 in
+<A HREF="#idl:mollview:pdf">PDF</A> and 
+<A HREF="#idl:mollview:ps">PS</A>, or <SPAN  CLASS="texttt">F</SPAN>=1 otherwise.
+<BR>
+See for instance the function <A HREF="idl_outline_earth.htm#idl:outline_earth">Outline_earth</A> and 
+Fig.&nbsp;<A HREF="idl_outline_earth.htm#fig:outline_earth">6</A>
+to create a structure outlining the Earth continents, rivers and/or countries.
+<BR> <TABLE   STYLE="width:100%;">
+<TR><TD>
+<B>Note 1:</B> when applicable, the vertices are connected by segments of geodesics. To
+	obtain a better looking outline, increase the number of vertices
+	provided. The outline does not have to be closed. The procedure will NOT
+	attempt to close the outline. See 
+<A HREF="#idl:mollview:example2">Example #2</A> below.
+<BR><B>Note 2:</B><A ID="idl:mollview:outline:note"></A> several outlines 
+(let's say <SPAN  CLASS="texttt">circle</SPAN> and <A HREF="#idl:mollview:example2"><SPAN  CLASS="texttt">triangle</SPAN></A>)
+ can be overplotted at once by gathering the respective structures into an array 
+(<SPAN  CLASS="texttt">outline=[circle,triangle]</SPAN>) if they have the same features and in particular the same number of vertices, or in
+one meta-structure (<SPAN  CLASS="texttt">outline={s1:circle,s2:triangle}</SPAN>) in all cases.
+</TD></TR>
+</TABLE>
+<BR><i>see also:</i><A HREF="#idl:mollview:coord">Coord</A>, <A HREF="#idl:mollview:graticule">Graticule</A>
+
+<P></TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">PDF=<A ID="idl:mollview:pdf"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">string containing the name of a .PDF output <BR>
+if set to 0            : no PDF output <BR>
+if set to 1            : outputs the plot in 
+<SPAN  CLASS="texttt">plot_</SPAN><EM>projection</EM><SPAN  CLASS="texttt">.pdf</SPAN>, where <EM>projection</EM> is either
+<SPAN  CLASS="texttt">azimequid</SPAN>, <SPAN  CLASS="texttt">cartesian</SPAN>, <SPAN  CLASS="texttt">gnomic</SPAN>, <SPAN  CLASS="texttt">mollweide</SPAN> 
+or <SPAN  CLASS="texttt">orthographic</SPAN>, <BR>
+if set to a file name  : outputs the plot in that file <BR><b>default:</b>0 <BR>
+The PDF file is produced from a PostScript file using the script <A ID="tex2html72"
+  HREF="https://tug.org/epstopdf/"><SPAN  CLASS="texttt">epstopdf</SPAN></A>
+now shipped with <strong>HEALPix</strong>. Note that <SPAN  CLASS="texttt">epstopdf</SPAN> usually requires a fully functional implementation of the fairly widespread <SPAN  CLASS="texttt">gs</SPAN>, aka
+<A ID="tex2html73"
+  HREF="https://en.wikipedia.org/wiki/Ghostscript"><SPAN  CLASS="texttt">Ghostscript</SPAN></A>, which may however not be available on the computation dedicated nodes of some computer clusters.
+<BR>
+If the resulting PDF file is not properly rotated (ie landscape orientation instead of portrait), 
+and/or has excessive white margins, the scripts
+<A ID="tex2html74"
+  HREF="https://linux.die.net/man/1/pdf90"><SPAN  CLASS="texttt">pdf90</SPAN></A>, part of the package 
+<A ID="tex2html75"
+  HREF="https://www2.warwick.ac.uk/fac/sci/statistics/staff/academic-research/firth/software/pdfjam/"><SPAN  CLASS="texttt">pdfjam</SPAN></A>, and/or 
+<A ID="tex2html76"
+  HREF="http://pdfcrop.sourceforge.net"><SPAN  CLASS="texttt">pdfcrop</SPAN></A>, 
+often included in PDFTeX installations, 
+can respectively prove very useful.
+<BR><i>see also:</i>
+<A HREF="#idl:mollview:preview">Preview</A>, 
+<A HREF="#idl:mollview:gif">Gif</A>, 
+<A HREF="#idl:mollview:jpeg">Jpeg</A>, 
+<A HREF="#idl:mollview:png">Png</A>,
+<A HREF="#idl:mollview:ps">Ps</A></TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">PFONTS=<A ID="idl:mollview:pfonts"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">2-element vector of integers [<SPAN CLASS="MATH"><I>p</I><SUB><i>0</i></SUB></SPAN>, <SPAN CLASS="MATH"><I>p</I><SUB><i>1</i></SUB></SPAN>] selecting the default IDL font of character strings such as the
+<A HREF="#idl:mollview:subtitle">Subtitle</A>,
+<A HREF="#idl:mollview:titleplot">Titleplot</A> and
+<A HREF="#idl:mollview:units">Units</A>.
+<BR><SPAN CLASS="MATH"><I>p</I><SUB><i>0</i></SUB></SPAN> must be in <SPAN CLASS="MATH">{-1,0,1}</SPAN> and selects the origin of the fonts among
+-1: <A ID="tex2html77"
+  HREF="http://www.exelisvis.com/docs/Using_Hershey_Vector_Fon.html">Hershey Vector</A>,
+0:  <A ID="tex2html78"
+  HREF="http://www.exelisvis.com/docs/using_device_fonts.html">Device Specific</A>
+and
+1:  <A ID="tex2html79"
+  HREF="http://www.exelisvis.com/docs/using_truetype_fonts.html">True Type</A>
+Fonts.
+<BR><SPAN CLASS="MATH"><I>p</I><SUB><i>1</i></SUB></SPAN> must be in <!-- MATH
+ $\{2,\ldots,20\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img89.png"
+ ALT="$\{2,\ldots,20\}$"></SPAN> and selects the starting font of the character strings as described
+<A ID="tex2html80"
+  HREF="http://www.exelisvis.com/docs/Embedded_Formatting_Comm.html">here</A>. 
+The font can be changed within each string with embedded formatting commands, as discussed on
+<A ID="tex2html81"
+  HREF="http://www.exelisvis.com/docs/Fonts_and_Colors.html"><SPAN CLASS="SPAN"><SPAN style="font-family:monospace">
+http://www.exelisvis.com/docs/Fonts_and_Colors.html</SPAN></SPAN></A>.
+<BR><b>default:</b>[-1,6], corresponding to the Hershey vector font of type 'Complex Roman', and is equivalent to typing
+<SPAN  CLASS="texttt">!p.font=-1</SPAN> and prepending the
+<A HREF="#idl:mollview:subtitle">Subtitle</A>,
+<A HREF="#idl:mollview:titleplot">Titleplot</A> and
+<A HREF="#idl:mollview:units">Units</A> 
+strings with <SPAN  CLASS="texttt">'!6'</SPAN>.
+<BR>
+Note that PFONTS will be ignored if <A HREF="#idl:mollview:latex">Latex</A>=2 <EM>and</EM> 
+<A HREF="#idl:mollview:pdf">PDF</A> or <A HREF="#idl:mollview:ps">PS</A> are set.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">PNG=<A ID="idl:mollview:png"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">string containing the name of a .PNG output <BR>
+if set to 1            : outputs the plot in 
+<SPAN  CLASS="texttt">plot_</SPAN><EM>projection</EM><SPAN  CLASS="texttt">.png</SPAN>, where <EM>projection</EM> is either
+<SPAN  CLASS="texttt">azimequid</SPAN>, <SPAN  CLASS="texttt">cartesian</SPAN>, <SPAN  CLASS="texttt">gnomic</SPAN>, <SPAN  CLASS="texttt">mollweide</SPAN> 
+or <SPAN  CLASS="texttt">orthographic</SPAN>, <BR>
+if set to a file name  : outputs the plot in that file <BR>
+Please note that the resulting PNG image might not always look
+	      as expected. The reason for this is problems with
+	      'backing store' in the IDL-routine TVRD. Please read the IDL
+	      documentation for more information. <BR><b>default:</b>no .PNG done <BR><i>see also:</i>
+<A HREF="#idl:mollview:crop">Crop</A>, 
+<A HREF="#idl:mollview:fits">Fits</A>, 
+<A HREF="#idl:mollview:gif">Gif</A>, 
+<A HREF="#idl:mollview:jpeg">Jpeg</A>, 
+<A HREF="#idl:mollview:map_out">Map_out</A>, 
+<A HREF="#idl:mollview:preview">Preview</A>,
+<A HREF="#idl:mollview:pdf">Pdf</A>, 
+<A HREF="#idl:mollview:ps">Ps</A>, 
+and <A HREF="#idl:mollview:retain">Retain</A></TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">POLARIZATION=<A ID="idl:mollview:polarization"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set to
+<BR>
+0: no polarization information is plotted;
+<BR>
+1:
+             the AMPLITUDE <!-- MATH
+ $P = \sqrt{U^2 + Q^2}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.55ex; " SRC="idl_img90.png"
+ ALT="$P = \sqrt{U^2 + Q^2}$"></SPAN> of the polarization is plotted 
+	(as long as the input data contains polarization information
+             (ie, Stokes parameter <SPAN CLASS="MATH"><I>Q</I></SPAN> and <SPAN CLASS="MATH"><I>U</I></SPAN> for each pixel));
+<BR>
+2:
+             the ANGLE <!-- MATH
+ $\phi = \tan^{-1}(U/Q) /2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="idl_img91.png"
+ ALT="$\phi = \tan^{-1}(U/Q) /2$"></SPAN> of the polarization is plotted <BR>
+Note: the angles are color coded with a fixed color table (independent of <A HREF="#idl:mollview:colt">Colt</A>);
+<BR>
+3:
+             &ndash;the temperature is color coded (with a color table defined by <A HREF="#idl:mollview:colt">Colt</A>),
+<BR>&ndash;and the polarization is overplotted as small RODS (or headless VECTORS).
+<BR><SPAN  CLASS="texttt">Polarization</SPAN> can then be a 4-element vector (the first element being 3).
+             The second element controls the average length of the rods <b>default:</b>1, 
+             the third one controls their spacing <b>default:</b>1, 
+             while the fourth one controls their thickness 
+             (which also depends in a device dependent manner on <SPAN  CLASS="texttt">!P.THICK</SPAN>) <b>default:</b>1. 
+             Non-positive values are replaced by 1.
+<BR><i>see also:</i><A HREF="#idl:mollview:customize">Customize</A>
+	<BR>
+<P>
+
+<b>default:</b>0 <BR><SPAN  CLASS="textbf">Note 1:</SPAN> The representation of the polarization direction (options 2 and 3 above),
+        include the effects of the rotations and/or changes or astronomical coordinates
+      (controlled by <A HREF="#idl:mollview:rot">ROT</A> and 
+	<A HREF="#idl:mollview:coord">COORD</A> respectively) but do not include the effects
+      of the distortions induced by the projection from the sphere to the plan.
+      Because the polarization usually has more power at small scales, it must
+      generally be represented on maps of small patches of the sky to remain
+      legible, in which case the projection-induced distortions are small.
+<BR><SPAN  CLASS="textbf">Note 2:</SPAN> when <SPAN  CLASS="texttt">polarization=2</SPAN> or <SPAN  CLASS="texttt">polarization=3</SPAN>, the visualisation routines behavior
+     will depend on the value of the <SPAN  CLASS="texttt">POLCCONV</SPAN> FITS keyword
+     (see <A HREF="./intro_HEALPix_conventions.htm#intro:polcconv">note on POLCCONV</A> in <A ID="tex2html82"
+  HREF="intro.htm">The <strong>HEALPix</strong> Primer</A>)</TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/PREVIEW<A ID="idl:mollview:preview"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, the external file generated with <A HREF="#idl:mollview:gif">Gif</A>, 
+		<A HREF="#idl:mollview:jpeg">Jpeg</A>, 
+		<A HREF="#idl:mollview:pdf">Pdf</A>,
+		<A HREF="#idl:mollview:png">Png</A>,
+		or <A HREF="#idl:mollview:ps">Ps</A> will be previewed with the 
+		visualisation applications (eg, <SPAN  CLASS="texttt">gv</SPAN>, <SPAN  CLASS="texttt">display</SPAN> or <SPAN  CLASS="texttt">open</SPAN>) 
+		chosen during the <A HREF="./install.htm#install:idlgdlconfig"><strong>HEALPix</strong> IDL/GDL configuration step</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">PS=<A ID="idl:mollview:ps"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set to 0            : no PostScript output <BR>
+if set to 1            : outputs the plot 
+<SPAN  CLASS="texttt">plot_</SPAN><EM>projection</EM><SPAN  CLASS="texttt">.ps</SPAN>, where <EM>projection</EM> is either
+<SPAN  CLASS="texttt">azimequid</SPAN>, <SPAN  CLASS="texttt">cartesian</SPAN>, <SPAN  CLASS="texttt">gnomic</SPAN>, <SPAN  CLASS="texttt">mollweide</SPAN> 
+or <SPAN  CLASS="texttt">orthographic</SPAN>, <BR>
+if set to a file name  : outputs the plot in that file <BR><b>default:</b>0 <BR><i>see also:</i>
+<A HREF="#idl:mollview:preview">Preview</A>, 
+<A HREF="#idl:mollview:gif">Gif</A>, 
+<A HREF="#idl:mollview:jpeg">Jpeg</A>, 
+<A HREF="#idl:mollview:pdf">Pdf</A>,
+<A HREF="#idl:mollview:png">Png</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">PXSIZE=<A ID="idl:mollview:pxsize"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">set the number of horizontal screen_pixels or postscript_color_dots of the plot
+    		(useful for high definition color printer) or elements of the
+output map
+<BR><b>default:</b>800 (Mollview and full sky Orthview), 600 (half sky
+		Orthview), 500 (Cartview and Gnomonic) <BR><i>see also:</i>
+<A HREF="#idl:mollview:fits">FITS</A>, 
+<A HREF="#idl:mollview:gif">GIF</A>, 
+<A HREF="#idl:mollview:jpeg">JPEG</A>, 
+<A HREF="#idl:mollview:map_out">MAP_OUT</A>, 
+<A HREF="#idl:mollview:pdf">PDF</A>,
+<A HREF="#idl:mollview:png">PNG</A>, 
+<A HREF="#idl:mollview:ps">PS</A>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">PYSIZE=<A ID="idl:mollview:pysize"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">ACG&ndash;</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">set the number of vertical screen_pixels or postscript_color_dots of the plot <BR><b>default:</b><A HREF="#idl:mollview:pxsize">Pxsize</A>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">RESO_ARCMIN=<A ID="idl:mollview:reso_arcmin"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">ACG&ndash;</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">size of screen_pixels or postscript_color_dots in arcmin <BR><b>default:</b>1.5
+<BR><i>see also:</i>
+<A HREF="#idl:mollview:fits">FITS</A>, 
+<A HREF="#idl:mollview:gif">GIF</A>, 
+<A HREF="#idl:mollview:jpeg">JPEG</A>, 
+<A HREF="#idl:mollview:map_out">MAP_OUT</A>, 
+<A HREF="#idl:mollview:pdf">PDF</A>,
+<A HREF="#idl:mollview:png">PNG</A>, 
+<A HREF="#idl:mollview:ps">PS</A>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">RETAIN=<A ID="idl:mollview:retain"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">specifies the type of
+backing store to use for direct graphics windows in {0,1,2}.
+<b>default:</b>2. See IDL documentation for details.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">ROT=<A ID="idl:mollview:rot"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">vector with 1, 2 or 3 elements specifing the rotation angles in DEGREES
+               to apply to the map in the 'output' coordinate system (see <A HREF="#idl:mollview:coord">Coord</A>)
+             = ( lon0, [lat0, rat0])  <BR>
+lon0 : longitude of the point to be put at the center of the plot
+		       the longitude increases Eastward, ie to the left of the plot
+ 		      <b>default:</b>0 <BR>
+lat0 : latitude of the point to be put at the center of the plot
+ 		      <b>default:</b>0 <BR>
+rot0 : anti clockwise rotation to apply to the sky around the
+                     center (lon0, lat0) before projecting
+                     <b>default:</b>0 </TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/SAVE<A ID="idl:mollview:save"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, assumes that <A HREF="#idl:mollview:file">File</A> is in IDL saveset format, 
+    		the variable saved should be DATA</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">
+<P>
+/SHADED<A ID="idl:mollview:shaded"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">&mdash;O</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, the orthographic sphere is shaded, using a Phong model, to emulate 3D viewing.
+              The sphere is illuminated by isotropic ambiant light plus a single light source.
+                 Can NOT be used with <A HREF="#idl:mollview:gif">GIF</A>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">/SILENT<A ID="idl:mollview:silent"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set, the program runs silently, and extra debugging switches such as 
+		<A HREF="#idl:mollview:customize">customize={pdf:{debug:1}}</A>
+		will be ignored.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">SILHOUETTE=<A ID="idl:mollview:silhouette"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">&mdash;MO</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if set to a scalar or 2-element vector with silhouette[0] <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.21ex; vertical-align: -0.55ex; " SRC="idl_img92.png"
+ ALT="$\ne 0$"></SPAN>,
+          a silhouette is drawn around the map.
+<BR>
+Its thickness is <SPAN  CLASS="texttt">F*abs(silhouette[0])*!P.THICK</SPAN> with <SPAN  CLASS="texttt">F</SPAN>=2 in
+<A HREF="#idl:mollview:pdf">PDF</A> and 
+<A HREF="#idl:mollview:ps">PS</A>, or <SPAN  CLASS="texttt">F</SPAN>=1 otherwise.
+<BR>
+Its color is determined by abs(silhouette[1]) in [0,255] <b>default:</b>0:<A HREF="#idl:mollview:fg_color">FG_COLOR</A>.
+<BR>
+See <A HREF="#idl:mollview:example7">Example #7</A> below.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">STAGGER=<A ID="idl:mollview:stagger"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">&mdash;O</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">Scalar or 2 element vector:
+<BR>&ndash; if <SPAN  CLASS="texttt">stagger[0]</SPAN> is in <SPAN CLASS="MATH">]0,2]</SPAN>, 
+             three copies of the same sphere centered respectively at <SPAN  CLASS="texttt">[-stagger[0], 0, stagger[0]]</SPAN>
+             (expressed in radius units) along the plot horizontal axis are
+             shown in ORTHOGRAPHIC projection
+<BR>&ndash; if set, <SPAN  CLASS="texttt">stagger[1]</SPAN> defines the angle of rotation (in degrees) applied
+               to the left and right partial spheres:
+             the <I>lhs</I> sphere is rotated downward by the angle provided,
+while the <I>rhs</I> one
+             is rotated upward. Rotations are swapped if <A HREF="#idl:mollview:flip">FLIP</A> is set.
+<BR>
+Currently <B>can not</B> be used with
+<A HREF="#idl:mollview:graticule">Graticule</A> nor
+<A HREF="#idl:mollview:igraticule">igraticule</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">SUBTITLE=<A ID="idl:mollview:subtitle"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">String containing the subtitle to the plot
+<BR><i>see also:</i><A HREF="#idl:mollview:titleplot">Titleplot</A>,
+<A HREF="#idl:mollview:latex">Latex</A>, <A HREF="#idl:mollview:customize">Customize</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">TITLEPLOT=<A ID="idl:mollview:titleplot"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">String containing the title of the plot, 
+     		if not set the title will be File
+<BR><i>see also:</i><A HREF="#idl:mollview:subtitle">Subtitle</A>,
+<A HREF="#idl:mollview:latex">Latex</A>, <A HREF="#idl:mollview:customize">Customize</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">TRANSPARENT=<A ID="idl:mollview:transparent"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">If set to 1, the input data pixels with value <A HREF="idl_init_healpix_healpix_system.htm#idl:init_healpix"><SPAN  CLASS="texttt">!healpix.bad_value</SPAN></A> (<!-- MATH
+ $=-1.6375\,10^{30}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.29ex; " SRC="idl_img85.png"
+ ALT="$=-1.6375\,10^{30}$"></SPAN>) 
+will appear totally transparent on the output PNG file (instead of the usual
+grey or <A HREF="#idl:mollview:bad_color">BAD_COLOR</A>).
+<BR>
+If set to 2, the background pixels will be transparent (instead of the usual
+white or <A HREF="#idl:mollview:bg_color">BG_COLOR</A>)
+<BR>
+If set to 3, both the grey and white pixels will look transparent.
+<BR>
+Active only in conjunction with <A HREF="#idl:mollview:png">PNG</A></TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:95px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">routines</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:350px"><SPAN  CLASS="textbf"> description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">TRUECOLORS=<A ID="idl:mollview:truecolors"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">if the input data is of the form [Npix,3], then the 3 fields
+            are respectively understood as Red, Green, Blue True-Color
+channels, and the <A HREF="#idl:mollview:colt">color table</A> is ignored.
+<BR>&ndash; If set to 1, the mapping field-intensity to color is done for the 3 channels at once. (<i>see also:</i><A HREF="#idl:mollview:factor">Factor</A>, <A HREF="#idl:mollview:offset">Offset</A>)
+<BR>&ndash; If set to 2, that mapping is done for each channel separately (in that case, <A HREF="#idl:mollview:min">MIN</A>
+and <A HREF="#idl:mollview:max">MAX</A> keywords are ignored).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">UNITS=<A ID="idl:mollview:units"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">String containing the units, to be put on the right
+		hand side of the color bar, overrides the value read from the input file,
+		if any
+<BR><i>see also:</i><A HREF="#idl:mollview:nobar">Nobar</A>, <A HREF="#idl:mollview:nolabels">Nolabels</A>,
+<A HREF="#idl:mollview:latex">Latex</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">WINDOW=<A ID="idl:mollview:window"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">IDL window index (integer)
+<BR>&ndash; if WINDOW <SPAN CLASS="MATH">&lt; 0</SPAN>: virtual window: no visible window opened. Can
+                 be used with <A HREF="#idl:mollview:png">PNG</A>, <A HREF="#idl:mollview:jpeg">JPEG</A>, 
+ or <A HREF="#idl:mollview:gif">GIF</A>, in particular if those files are
+larger than the screen. <B>Note:</B> The Z buffer will be used instead of the X server,
+allowing much faster production of the image over a slow network
+<BR>&ndash; if WINDOW in <SPAN CLASS="MATH">[0,31]</SPAN>: the specified IDL window with index WINDOW is used
+               (or reused). Can be used to have a sequence of images appear
+in the same window <BR>&ndash; if WINDOW <SPAN CLASS="MATH">&gt; 31</SPAN>: a free (<SPAN CLASS="MATH">=</SPAN>unused) window with a random index <SPAN CLASS="MATH">&gt; 31</SPAN> will be
+               created and used. <BR><b>default:</b>32, if X server properly set; -1, otherwise</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">XPOS=<A ID="idl:mollview:xpos"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">The X position on the screen of the lower left corner
+	        of the window, in device coordinate</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:95px">YPOS=<A ID="idl:mollview:ypos"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:40px"><A HREF="#idl:mollview:routines">all</A></TD>
+<TD CLASS="LEFT TOP"  style="width:350px">The Y position on the screen of the lower left corner 
+               of the window, in device coordinate
+
+<P></TD>
+</TR>
+</TABLE>
+
+<A HREF="#idl:mollview:TOP">Back to Format</A>
+
+<P>
+
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<br><br><SPAN CLASS="colordoc">mollview</SPAN> reads in a <strong>HEALPix</strong> sky map in FITS format and generates
+a Mollweide projection of it, that can be visualized on the screen or
+exported in a GIF, JPEG, PNG, PDF or Postscript file. <SPAN CLASS="colordoc">mollview</SPAN>  allows the selection of
+the coordinate system, map size, color table, color bar inclusion,
+linear, log, hybrid or histogram equalised color scaling, 
+maximum and 
+minimum range for the plot, plot-title <I>etc</I>. It also allows the representation of the
+polarization field.
+</blockquote>
+
+<P>
+
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">mollview</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">mollview</SPAN>
+  <DT>
+<B>gv, ghostview</B>
+<DD>gv, ghostview or a similar facility is required to view
+	  the Postscript or PDF images generated by <SPAN CLASS="colordoc">mollview</SPAN>.
+  <DT>
+<B>display, xv</B>
+<DD>display, xv or a similar facility is required to view the
+            GIF/JPEG/PNG image generated by <SPAN CLASS="colordoc">mollview</SPAN> (a browser can also 
+            be used).
+  <DT>
+<B><A HREF="./fac_synfast.htm#fac:synfast">synfast</A>, <A HREF="./fac_smoothing.htm#fac:smoothing">smoothing</A></B>
+<DD>These F90 <strong>HEALPix</strong> facilities will generate the FITS format 
+            sky maps to be input to <SPAN CLASS="colordoc">mollview</SPAN>.
+  <DT>
+<B><A HREF="idl_isynfast.htm#idl:isynfast">isynfast</A>, <A HREF="idl_ismoothing.htm#idl:ismoothing">ismoothing</A></B>
+<DD>These IDL routines will generate the FITS format 
+            sky maps to be input to <SPAN CLASS="colordoc">mollview</SPAN>.
+  <DT>
+<B><A HREF="idl_cartview.htm#idl:cartview">cartview</A></B>
+<DD>IDL facility to generate a Cartesian projection of
+  	a <strong>HEALPix</strong> map.
+  <DT>
+<B><A HREF="idl_cartcursor.htm#idl:cartcursor">cartcursor</A></B>
+<DD>interactive cursor to be used with cartview
+  <DT>
+<B><A HREF="idl_gnomview.htm#idl:gnomview">gnomview</A></B>
+<DD>IDL facility to generate a gnomonic projection of
+  	a <strong>HEALPix</strong> map.
+  <DT>
+<B><A HREF="idl_gnomcursor.htm#idl:gnomcursor">gnomcursor</A></B>
+<DD>interactive cursor to be used with gnomview
+  <DT>
+<B><A HREF="#idl:mollview">mollview</A></B>
+<DD>IDL facility to generate a Mollweide projection of
+  	a <strong>HEALPix</strong> map.
+  <DT>
+<B><A HREF="idl_mollcursor.htm#idl:mollcursor">mollcursor</A></B>
+<DD>interactive cursor to be used with mollview
+  <DT>
+<B><A HREF="idl_orthview.htm#idl:orthview">orthview</A></B>
+<DD>IDL facility to generate an orthographic projection of
+  	a <strong>HEALPix</strong> map.
+  <DT>
+<B><A HREF="idl_orthcursor.htm#idl:orthcursor">orthcursor</A></B>
+<DD>interactive cursor to be used with orthview
+  <DT>
+<B><A HREF="idl_planck_colors.htm#idl:planck_colors">planck_colors</A></B>
+<DD>creates color tables used in Planck 2013 publications
+  </DL>
+
+<P>
+<hr><H2>EXAMPLE # 1:</H2> 
+<div class="texttt"><A ID="idl:mollview:example1"></A><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview"><SPAN CLASS="colordoc">mollview</SPAN></A>,  <A HREF="#idl:mollview:file">'planck100GHZ-LFI.fits'</A>, <A HREF="#idl:mollview:min">min</A>=-100, <A HREF="#idl:mollview:max">max</A>=100, <A HREF="#idl:mollview:graticule">/graticule</A>, $</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview:titleplot">title</A>='Simulated Planck LFI Sky Map at 100GHz'</TD>
+</TR>
+</TABLE></div>
+<blockquote><SPAN CLASS="colordoc">mollview</SPAN> reads in the map 'planck100GHZ-LFI.fits' and generates
+an output image in which
+the temperature scale has been set to lie between <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.29ex; " SRC="idl_img65.png"
+ ALT="$\pm$"></SPAN> 100 (<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.55ex; " SRC="idl_img66.png"
+ ALT="$\mu$"></SPAN>K),
+a <A HREF="#idl:mollview:graticule">graticule</A> with a 45 degree step in longitude and latitude is drawn,
+and the <A HREF="#idl:mollview:titleplot">title</A> 'Simulated Planck LFI Sky Map at 100GHz' appended to the image.
+</blockquote>
+<hr><H2>EXAMPLE # 2:</H2> 
+<div class="texttt"><A ID="idl:mollview:example2"></A><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">
+<P>
+map  = findgen(48)</TD>
+</TR>
+<TR><TD CLASS="LEFT">triangle= create_struct('coord','G','ra',[0,80,0],'dec',[40,45,65])</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview"><SPAN CLASS="colordoc">mollview</SPAN></A>,<A HREF="#idl:mollview:file">map</A>, <A HREF="#idl:mollview:graticule">graticule</A>=[45,30],<A HREF="#idl:mollview:rot">rot</A>=[10,20,30],$</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview:titleplot">title</A>='Mollweide projection',<A HREF="#idl:mollview:subtitle">subtitle</A>='mollview', $</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview:outline">outline</A>=triangle</TD>
+</TR>
+</TABLE></div>
+<blockquote>makes a Mollweide projection of a pixel index map 
+(see Figure&nbsp;<A HREF="#fig:plot_visu">1</A>c) after an arbitrary <A HREF="#idl:mollview:graticule">rotation</A>, with a <A HREF="#idl:mollview:graticule">graticule</A> grid
+(with a 45<SPAN CLASS="MATH"><SUP><i>o</i></SUP></SPAN> step in longitude and 30<SPAN CLASS="MATH"><SUP><i>o</i></SUP></SPAN> in latitude) and an arbitrary
+(triangular) <A HREF="#idl:mollview:outline">outline</A></blockquote>
+
+<DIV class="CENTER"><A ID="page:plot_visu"></A><A ID="fig:plot_visu"></A><A ID="13119"></A>
+<TABLE>
+<CAPTION class="BOTTOM"><STRONG>Figure 1:</STRONG>
+Figures produced by <A HREF="idl_cartview.htm#idl:cartview">cartview</A>,
+<A HREF="idl_gnomview.htm#idl:gnomview">gnomview</A>, <A HREF="#idl:mollview">mollview</A> and <A HREF="idl_orthview.htm#idl:orthview">orthview</A>, see respective
+routine documentation for details.</CAPTION>
+<TR><TD>
+<DIV CLASS="centerline" ID="par43022" ALIGN="CENTER">
+<IMG
+  WIDTH="720" HEIGHT="509" STYLE=""
+ SRC="./merge_visu_large.png"
+ ALT="Image merge_visu_large"></DIV>
+
+<P></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+<hr><H2>EXAMPLE # 3:</H2> 
+<div class="texttt"><A ID="idl:mollview:example3"></A><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">
+<P>
+map  = findgen(48)</TD>
+</TR>
+<TR><TD CLASS="LEFT">mycommand = 'x=findgen(64)/10. &amp; ' + $</TD>
+</TR>
+<TR><TD CLASS="LEFT">'plot,x,sin(x),pos=[0.8,0.8,0.99,0.99],/noerase &amp;' +$</TD>
+</TR>
+<TR><TD CLASS="LEFT">'xyouts,0.5,0.5,&rdquo;Hello World !&rdquo;,/normal,charsize=2,align=0.5'</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview"><SPAN CLASS="colordoc">mollview</SPAN></A>,map, <A HREF="#idl:mollview:execute">execute</A>=mycommand, <A HREF="#idl:mollview:png">png</A>='plot_example_execute.png',$</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview:preview">/preview</A>,<A HREF="#idl:mollview:graticule">/graticule</A>,<A HREF="#idl:mollview:glsize">/glsize</A></TD>
+</TR>
+</TABLE></div>
+<blockquote>produces a PNG file containing a Mollweide projection of a pixel index map
+with labeled graticules, a simple sine wave in the
+upper right corner, and some greetings, as shown on
+Figure&nbsp;<A HREF="#fig:plot_example_execute">2</A></blockquote>
+
+<DIV class="CENTER"><A ID="page:plot_example_execute"></A><A ID="fig:plot_example_execute"></A><A ID="13124"></A>
+<TABLE>
+<CAPTION class="BOTTOM"><STRONG>Figure 2:</STRONG>
+Figure produced by Example #3 .</CAPTION>
+<TR><TD>
+<DIV CLASS="centerline" ID="par43032" ALIGN="CENTER">
+<IMG
+  WIDTH="720" HEIGHT="450" STYLE=""
+ SRC="./plot_example_execute.png"
+ ALT="Image plot_example_execute"></DIV>
+
+<P></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+<A ID="page:example_hires_cutsky"></A><hr><H2>EXAMPLE # 4:</H2> 
+<div class="texttt"><A ID="idl:mollview:example4"></A><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">
+<P>
+pixel  = l64indgen(400000)</TD>
+</TR>
+<TR><TD CLASS="LEFT">signal = pixel * 10.0</TD>
+</TR>
+<TR><TD CLASS="LEFT">file = 'cutsky.fits'</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="idl_write_fits_cut4.htm#idl:write_fits_cut4">write_fits_cut4</A>, file, pixel+100000, signal, nside=32768, /ring</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="idl_gnomview.htm#idl:gnomview">gnomview</A>, <A HREF="#idl:mollview:file">file</A>, <A HREF="#idl:mollview:graticule">rot</A>=[0,90], <A HREF="#idl:mollview:graticule">grat</A>=30, <A HREF="#idl:mollview:titleplot">title</A>='high res. cut-sky map'</TD>
+</TR>
+</TABLE></div>
+<blockquote>produces and plots a high resolution map (6.4 arcsec/pixel), in which only a very small subset of
+pixels is observed</blockquote>
+<hr><H2>EXAMPLE # 5:</H2> 
+<div class="texttt"><A ID="idl:mollview:example5"></A><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">
+<P>
+file = 'wmap_band_iqumap_r9_5yr_K_v3.fits'</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview"><SPAN CLASS="colordoc">mollview</SPAN></A>, <A HREF="#idl:mollview:file">file</A>, <A HREF="#idl:mollview:titleplot">title</A>='Linear Color Scale', <A HREF="#idl:mollview:silent">/silent</A></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">mollview</SPAN>, file,<A HREF="#idl:mollview:asinh">/asinh</A>,title='Sinh!u-1!n Color Scale' , /silent</TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">mollview</SPAN>, file,<A HREF="#idl:mollview:hist_equal">/hist</A>, title='Histogram Equalized Color Scale', /silent</TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">mollview</SPAN>, file,<A HREF="#idl:mollview:log">/log</A>,  title='Log Scale', /silent</TD>
+</TR>
+</TABLE></div>
+<blockquote>produces Mollweide projections of the same map (here the WMAP-5yr K band) with
+various color scales: linear, Inverse
+Hyperbolic Sine, Histogram Equalized, and Log. See Figure&nbsp;<A HREF="#fig:merge_wmapKband">3</A></blockquote>
+
+<DIV class="CENTER"><A ID="page:merge_wmapKband"></A><A ID="fig:merge_wmapKband"></A><A ID="13130"></A>
+<TABLE>
+<CAPTION class="BOTTOM"><STRONG>Figure 3:</STRONG>
+Illustration (generated by 
+Example&nbsp;#5)
+of the various color scales available.</CAPTION>
+<TR><TD>
+<DIV CLASS="centerline" ID="par43046" ALIGN="CENTER">
+<IMG
+  WIDTH="720" HEIGHT="509" STYLE=""
+ SRC="./merge_wmapKband.png"
+ ALT="Image merge_wmapKband"></DIV>
+
+<P></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<hr><H2>EXAMPLE # 6:</H2> 
+<div class="texttt"><A ID="idl:mollview:example6"></A><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview">mollview</A>,'<A ID="tex2html86"
+  HREF="https://pla.esac.esa.int/pla/#maps">HFI_SkyMap_217_2048_R1.10_nominal.fits</A>', $</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview:colt">colt</A>='planck2',<A HREF="#idl:mollview:asinh">asinh</A>=2, <A HREF="#idl:mollview:factor">factor</A>=1.e6,<A HREF="#idl:mollview:offset">offset</A>=-1.33e-4,  $</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview:min">min</A>=-1.e3,<A HREF="#idl:mollview:max">max</A>=1.e7,<A HREF="#idl:mollview:titleplot">title</A>='Planck @ 217GHz',<A HREF="#idl:mollview:charsize">charsize</A>=2</TD>
+</TR>
+</TABLE></div>
+<blockquote>Illustrates the application of the second color table created by <A HREF="idl_planck_colors.htm#idl:planck_colors">planck_colors</A>  to the
+visualization of Planck data at 217GHz 
+(see Fig.&nbsp;<A HREF="#fig:planck_colors_217">4</A>)</blockquote>
+
+<DIV class="CENTER"><A ID="page:planck_colors_217"></A><A ID="fig:planck_colors_217"></A><A ID="13135"></A>
+<TABLE>
+<CAPTION class="BOTTOM"><STRONG>Figure 4:</STRONG>
+Illustration (generated by 
+Example&nbsp;#6) of the application of Planck color table
+#2  to a Planck sky map.</CAPTION>
+<TR><TD>
+<DIV CLASS="centerline" ID="par43053" ALIGN="CENTER">
+<IMG
+  WIDTH="720" HEIGHT="450" STYLE=""
+ SRC="./planck_colors_217.png"
+ ALT="Image planck_colors_217"></DIV>
+
+<P></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<hr><H2>EXAMPLE # 7:</H2> 
+<div class="texttt"><A ID="idl:mollview:example7"></A><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview">mollview</A>, findgen(12), <A HREF="#idl:mollview:silhouette">silhouette</A>=2,  <A HREF="#idl:mollview:default_settings">default_settings=</A>dsmoll,$</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview:titleplot">title</A>='Wider, thicker color bar; left justified title',$</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="#idl:mollview:customize">customize=</A>{cbar:{dx:2/3.,dy:1/32.,ty:0.005,box:2},$</TD>
+</TR>
+<TR><TD CLASS="LEFT">title:{x:0,charsize:2}}</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="idl_help_st.htm#idl:help_st">help_st</A>, dsmoll</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+<TABLE   STYLE="width:100%;">
+<TR><TD>
+will generate a silhouetted Mollweide projection plot with 
+customized thickness and length of a boxed color bar, 
+and modified location of the title (see Fig.&nbsp;<A HREF="#fig:moll_customize">5</A>). 
+The default value (in the Mollweide projection) 
+ of the available customization parameters is also listed as 
+<BR><SPAN CLASS="SCRIPTSIZE"><SPAN  CLASS="texttt"> ** Structure &lt;.....&gt;, 7 tags, length=128, data length=122, refs=1:
+</SPAN><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">
+.ASPOS.X                </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">       -1.00000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.ASPOS.Y                </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">       -1.00000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.CBAR.DX                </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">       0.333333</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.CBAR.DY                </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">      0.0142857</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.CBAR.SPACES            </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     STRING    </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">  Array[3]</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.CBAR.TY                </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">        0.00000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.CBAR.BOX               </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">        0.00000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.CRING.DX               </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">       0.100000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.CRING.XLL              </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">      0.0250000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.CRING.YLL              </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">      0.0250000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.PDF.DEBUG              </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     INT       </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">      0 </SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.SUBTITLE.X             </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">       0.500000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.SUBTITLE.Y             </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">       0.905000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.SUBTITLE.CHARSIZE      </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">        1.20000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.TITLE.X                </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">       0.500000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.TITLE.Y                </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">       0.950000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.TITLE.CHARSIZE         </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">        1.60000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.VSCALE.X               </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">      0.0500000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.VSCALE.Y               </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">      0.0200000</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE"> 
+.VSCALE.TY              </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">     FLOAT     </SPAN></TD>
+<TD CLASS="LEFT"><SPAN CLASS="SCRIPTSIZE">        0.00000
+</SPAN></TD>
+</TR>
+</TABLE><SPAN CLASS="SCRIPTSIZE"></SPAN>
+</SPAN></TD></TR>
+</TABLE></blockquote>
+
+<DIV class="CENTER"><A ID="page:moll_customize"></A><A ID="fig:moll_customize"></A><A ID="13141"></A>
+<TABLE>
+<CAPTION class="BOTTOM"><STRONG>Figure 5:</STRONG>
+Illustration (generated by 
+Example&nbsp;#7
+) of customization of the title (size and location) and of the color bar (size and box), and overplotting of a silhouette around the project map.</CAPTION>
+<TR><TD>
+<DIV CLASS="centerline" ID="par43122" ALIGN="CENTER">
+<IMG
+  WIDTH="720" HEIGHT="450" STYLE=""
+ SRC="./moll_customize2.png"
+ ALT="Image moll_customize2"></DIV>
+
+<P></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_mollcursor.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_neighbours_nest.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html397"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_mollcursor.htm">mollcursor</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_neighbours_nest.htm">neighbours_nest</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

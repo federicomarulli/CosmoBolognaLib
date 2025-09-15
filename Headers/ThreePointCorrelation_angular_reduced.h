@@ -188,7 +188,7 @@ namespace cbl {
 	 * @warning This method has not been implemented yet 
 	 */
 	void measure (const std::string dir_output_triplets, const std::string dir_output_2pt, const std::vector<std::string> dir_input_triplets={}, const bool count_ddd=true, const bool count_rrr=true, const bool count_ddr=true, const bool count_drr=true, const bool tcount=false, const double fact=0.1, const int seed=3213) override;
-
+	
 	///@}
 
 

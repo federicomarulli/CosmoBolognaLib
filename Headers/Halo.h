@@ -52,7 +52,7 @@ namespace cbl {
      */
     class Halo : public Object {
 
-    protected :
+    protected:
 
       /// halo peculiar velocity along the x direction
       double m_vx;
@@ -76,21 +76,9 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *  
        */
       Halo ()
 	: Object(), m_vx(par::defaultDouble), m_vy(par::defaultDouble), m_vz(par::defaultDouble), m_mass(par::defaultDouble) {}
-  
-      /**
-       * @brief function that allows copying private variables of the class 
-       * when an object of class Catalogue is copied
-       * 
-       * @return a shared pointer to the Object
-       *
-       */
-      std::shared_ptr<Object> getShared() {
-        return std::make_shared<Halo>(*this);
-      }
        
       /**
        *  @brief constructor that uses comoving coordinates
@@ -119,10 +107,8 @@ namespace cbl {
        *  @param vz halo peculiar velocity along the z direction
        *
        *  @param mass the halo mass
-       *
-       *  
        */
-      Halo (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+      Halo (const glob::comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
       
       /**
@@ -132,7 +118,7 @@ namespace cbl {
        *  @param coord structure containing the comoving coordinates
        *  {x, y, z}
        *
-       *  @param cosm object of class Cosmology, used to estimate
+       *  @param cosmology object of class Cosmology, used to estimate
        *  comoving distances
        *
        *  @param z1_guess minimum prior on the redshift
@@ -163,8 +149,8 @@ namespace cbl {
        *
        *  
        */
-      Halo (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
+      Halo (const glob::comovingCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+      : Object(coord, cosmology, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -196,7 +182,7 @@ namespace cbl {
        *
        *  
        */
-      Halo (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+      Halo (const glob::observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
       
       /**
@@ -232,7 +218,7 @@ namespace cbl {
        *
        *  
        */
-      Halo (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+      Halo (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
 	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
       
       /**
@@ -243,7 +229,7 @@ namespace cbl {
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
        *
-       *  @param cosm object of class Cosmology, used to estimate
+       *  @param cosmology object of class Cosmology, used to estimate
        *  comoving distances
        *
        *  @param weight weight
@@ -270,8 +256,8 @@ namespace cbl {
        *
        *  
        */
-      Halo (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
-	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
+      Halo (const glob::observedCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+      : Object(coord, cosmology, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -282,8 +268,8 @@ namespace cbl {
        *
        *  @param inputUnits the units of the input coordinates
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -306,11 +292,9 @@ namespace cbl {
        *  @param vz halo peculiar velocity along the z direction
        *
        *  @param mass the halo mass
-       *
-       *  
        */
-      Halo (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
-	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
+      Halo (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
+      : Object(coord, inputUnits, cosmology, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
 
       /**
        *  @brief constructor that uses both comoving and observed
@@ -349,11 +333,9 @@ namespace cbl {
        *  @param vz halo peculiar velocity along the z direction
        *
        *  @param mass the halo mass
-       *
-       *  
        */
       Halo (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble) 
-	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
+      : Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_vx(vx), m_vy(vy), m_vz(vz), m_mass(mass) {}
       
       /**
        *  @brief default destructor
@@ -367,6 +349,17 @@ namespace cbl {
        *  @name Member functions used to get the private members 
        */
       ///@{
+  
+      /**
+       * @brief function that allows copying private variables of the
+       * class when an object of class Catalogue is copied
+       * 
+       * @return a shared pointer to the Object
+       */
+      std::shared_ptr<Object> ptrObject () override
+      {
+        return std::make_shared<Halo>(*this);
+      }
     
       /**
        *  @brief get the protected member \e m_vx

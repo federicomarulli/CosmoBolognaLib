@@ -110,9 +110,10 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateVegas (vector<vector<double>> i
   userdata->integration_limits = integration_limits;
 
   if (!parallelize) {
-    cubacores(0, 0);
+    const int zero = 0;
+    cubacores(&zero, &zero);
   }
-
+  
   Vegas(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
     m_inputs.EPSREL, m_inputs.EPSABS, m_inputs.VERBOSE, m_inputs.SEED,
     m_inputs.MINEVAL, m_inputs.MAXEVAL, m_inputs.NSTART, m_inputs.NINCREASE, m_inputs.NBATCH,
@@ -124,7 +125,7 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateVegas (vector<vector<double>> i
     for( comp = 0; comp < m_inputs.NCOMP; ++comp )
       printf("VEGAS RESULT:\t%.8f +- %.8f\tp = %.3f\n", (double)integral[comp], (double)error[comp], (double)prob[comp]);
   }
-
+  
   return integral[0];
 }
 
@@ -142,7 +143,8 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateSuave (vector<vector<double>> i
   userdata->integration_limits = integration_limits;
 
   if (!parallelize) {
-    cubacores(0, 0);
+    const int zero = 0;
+    cubacores(&zero, &zero);
   }
   
   Suave(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
@@ -174,7 +176,8 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateDivonne (vector<vector<double>>
   userdata->integration_limits = integration_limits;
 
   if (!parallelize) {
-    cubacores(0, 0);
+    const int zero = 0;
+    cubacores(&zero, &zero);
   }
 
   Divonne(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,
@@ -208,7 +211,8 @@ double cbl::wrapper::cuba::CUBAwrapper::IntegrateCuhre (vector<vector<double>> i
   userdata->integration_limits = integration_limits;
 
   if (!parallelize) {
-    cubacores(0, 0);
+    const int zero = 0;
+    cubacores(&zero, &zero);
   }
 
   Cuhre(m_ndim, m_inputs.NCOMP, cbl::wrapper::cuba::CUBAIntegrand, userdata, m_inputs.NVEC,

@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>coordsys2euler_zyz</TITLE>
+<META NAME="description" CONTENT="coordsys2euler_zyz">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_create_alm.htm">
+<LINK REL="previous" HREF="sub_convert_ring2nest.htm">
+<LINK REL="next" HREF="sub_create_alm.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_convert_ring2nest.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_create_alm.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html355"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_convert_ring2nest.htm">convert_ring2nest*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_create_alm.htm">create_alm*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION2400"></A>
+<A ID="sub:coordsys2euler_zyz"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">coordsys2euler_zyz</SPAN></div><hr>
+<H3>This routine returns the three Euler angles <!-- MATH
+ $\psi, \theta, \varphi$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.16ex; vertical-align: -0.55ex; " SRC="sub_img153.png"
+ ALT="$\psi, \theta, \varphi
+$"></SPAN>, corresponding to a rotation between standard astronomical
+coordinate systems. This angles can then be used in rotate_alm</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/coord_v_convert.f90"><strong>src/f90/mod/coord_v_convert.f90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">coordsys2euler_zyz</SPAN>(
+<A HREF="#sub:coordsys2euler_zyz:iepoch">iepoch</A>, <A HREF="#sub:coordsys2euler_zyz:oepoch">oepoch</A>, <A HREF="#sub:coordsys2euler_zyz:isys">isys</A>, <A HREF="#sub:coordsys2euler_zyz:osys">osys</A>, <A HREF="#sub:coordsys2euler_zyz:psi">psi</A>, <A HREF="#sub:coordsys2euler_zyz:theta">theta</A>, <A HREF="#sub:coordsys2euler_zyz:phi">phi</A>
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:130px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:45px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:250px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:130px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:130px">
+iepoch<A ID="sub:coordsys2euler_zyz:iepoch"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">epoch of the input astronomical coordinate system.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:130px">oepoch<A ID="sub:coordsys2euler_zyz:oepoch"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">epoch of the output astronomical coordinate system.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:130px">isys<A ID="sub:coordsys2euler_zyz:isys"></A>(len=*)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">input coordinate system, should be one of 'E'=Ecliptic, 'G'=Galactic, 'C'/'Q'=Celestial/eQuatorial.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:130px">osys<A ID="sub:coordsys2euler_zyz:osys"></A>(len=*)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">output coordinate system, same choice as above.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:130px">psi<A ID="sub:coordsys2euler_zyz:psi"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">first Euler angle: rotation <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="sub_img154.png"
+ ALT="$\psi$"></SPAN> about the z-axis.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:130px">theta<A ID="sub:coordsys2euler_zyz:theta"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">second Euler angle: rotation <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img155.png"
+ ALT="$\theta$"></SPAN> about the original
+(unrotated) y-axis;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:130px">phi<A ID="sub:coordsys2euler_zyz:phi"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">third Euler angle: rotation <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.55ex; " SRC="sub_img156.png"
+ ALT="$\varphi$"></SPAN> about the original (unrotated) z-axis;</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use coord_v_convert, only: coordsys2euler_zyz 
+<BR>
+use alm_tools, only: rotate_alm 
+<BR>...
+<BR>
+call coordsys2euler_zyz(2000.0_dp, 2000.0_dp, 'E', 'G', psi, theta, phi) 
+<BR>
+call rotate_alm(64, alm_TGC, psi, theta, phi)  
+<BR></div>
+<blockquote>
+Rotate the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> from Ecliptic to Galactic coordinates.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">coordsys2euler_zyz</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_rotate_alm.htm#sub:rotate_alm">rotate_alm</A></B>
+<DD>apply arbitrary sky rotation to a
+  set of <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients.
+  <DT>
+<B><A HREF="sub_xcc_v_convert.htm#sub:xcc_v_convert">xcc_v_convert</A></B>
+<DD>rotates a 3D coordinate
+vector from one astronomical coordinate system to another.
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_convert_ring2nest.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_create_alm.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html355"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_convert_ring2nest.htm">convert_ring2nest*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_create_alm.htm">create_alm*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

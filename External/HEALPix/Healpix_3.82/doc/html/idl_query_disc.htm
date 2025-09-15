@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>query_disc </TITLE>
+<META NAME="description" CONTENT="query_disc ">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_query_polygon.htm">
+<LINK REL="previous" HREF="idl_planck_colors.htm">
+<LINK REL="next" HREF="idl_query_polygon.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_planck_colors.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_query_polygon.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html423"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_planck_colors.htm">planck_colors</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_query_polygon.htm">query_polygon</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION5700"></A>
+<A ID="idl:query_disc"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">query_disc </SPAN></div><hr>
+<H3>This IDL facility provides a means to find the index of all pixels within an
+angular distance <SPAN style="font-family:monospace">Radius</SPAN> from a defined center.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/toolkit/query_disc.pro"><strong>src/idl/toolkit/query_disc.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+query_disc , 
+<A HREF="#idl:query_disc:nside">Nside</A>, 
+<A HREF="#idl:query_disc:vector0">Vector0</A>, 
+<A HREF="#idl:query_disc:radius">Radius</A>, 
+<A HREF="#idl:query_disc:listpix">Listpix</A>, 
+[<A HREF="#idl:query_disc:nlist">Nlist</A>, 
+<A HREF="#idl:query_disc:deg">/DEG</A>, 
+<A HREF="#idl:query_disc:nested">/NESTED</A>, 
+<A HREF="#idl:query_disc:inclusive">/INCLUSIVE</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>Nside <A ID="idl:query_disc:nside"></A></B>
+<DD><strong>HEALPix</strong> resolution parameter used to index the pixel list (scalar integer)
+    <DT>
+<B>Vector0 <A ID="idl:query_disc:vector0"></A></B>
+<DD>position vector of the disc center (3 elements vector)
+          NB : the norm of Vector0 does not have to be one, what is
+          consider is the intersection of the sphere with the line of
+          direction Vector0.
+    <DT>
+<B>Radius <A ID="idl:query_disc:radius"></A></B>
+<DD>radius of the disc (in radians, unless <A HREF="#idl:query_disc:deg">DEG</A> is set), (scalar
+    real)
+    <DT>
+<B>Listpix <A ID="idl:query_disc:listpix"></A></B>
+<DD>on output: list of ordered index for the pixels found 
+    within a radius Radius of the position defined by vector0. The RING numbering
+    scheme is used unless the keyword <A HREF="#idl:query_disc:nested"><SPAN style="font-family:monospace">NESTED</SPAN></A> is set.
+     (=-1 if the radius is too small and no pixel is found)
+    <DT>
+<B>Nlist <A ID="idl:query_disc:nlist"></A></B>
+<DD>on output: number of pixels in Listpix (=0 if no pixel is found).
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>/DEG <A ID="idl:query_disc:deg"></A></B>
+<DD>if set <A HREF="#idl:query_disc:radius"><SPAN style="font-family:monospace">Radius</SPAN></A> is in degrees instead of radians
+    <DT>
+<B>/NESTED <A ID="idl:query_disc:nested"></A></B>
+<DD>if set, the output list uses the NESTED numbering scheme
+    instead of the default RING
+    <DT>
+<B>/INCLUSIVE <A ID="idl:query_disc:inclusive"></A></B>
+<DD>if set, all the pixels overlapping (even partially)
+                   with the disc are listed, otherwise only those whose
+                   center lies within the disc are listed
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+query_disc finds the pixels within the given disc in a selective way WITHOUT
+scanning all the sky pixels. The numbering scheme of the output list and the
+inclusiveness of the disc can be changed
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">query_disc </SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run query_disc .
+    <DT>
+<B>ang2pix, pix2ang</B>
+<DD>conversion between angles and pixel index
+    <DT>
+<B>vec2pix, pix2vec</B>
+<DD>conversion between vector and pixel index
+    <DT>
+<B><A HREF="#idl:query_disc">query_disc</A>, <A HREF="idl_query_polygon.htm#idl:query_polygon">query_polygon</A>,</B>
+<DD><DT>
+<B><A HREF="idl_query_strip.htm#idl:query_strip">query_strip</A>, <A HREF="idl_query_triangle.htm#idl:query_triangle">query_triangle</A></B>
+<DD>render the list of pixels enclosed
+  respectively in a given disc, polygon, latitude strip and triangle
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">query_disc , 256L, [.5,.5,0.], 10., listpix, nlist, /Deg, /Nest</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+On return listpix contains the index of the (5982) pixels within 10 degrees from
+the point on the sphere having the direction [.5,.5,0.].
+The pixel indices correspond to the Nested scheme with resolution 256.
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_planck_colors.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_query_polygon.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html423"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_planck_colors.htm">planck_colors</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_query_polygon.htm">query_polygon</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

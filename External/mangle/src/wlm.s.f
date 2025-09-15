@@ -1,18 +1,18 @@
 c-----------------------------------------------------------------------
-c © A J S Hamilton 2001
+c ï¿½ A J S Hamilton 2001
 c-----------------------------------------------------------------------
       subroutine wlm(w,lmax1,im,nw,ri,phi,qphi,zi,ci,si,ph,dph,v)
       integer lmax1,im,nw,qphi
-      real*10 w(im,nw),ri,phi,zi,ci,si,ph,dph,v(lmax1)
+      real*16 w(im,nw),ri,phi,zi,ci,si,ph,dph,v(lmax1)
 c
 c        parameters
-      real*10 HALF
-      parameter (HALF=1._10/2._10)
+      real*16 HALF
+      parameter (HALF=1._16/2._16)
       include 'pi.par'
-      real*10 TWOPI
-      parameter (TWOPI=2._10*PI)
+      real*16 TWOPI
+      parameter (TWOPI=2._16*PI)
 
-c largest non-overflowing 2^(DBL_MAX_EXP-1) for real*10 (from values.h)
+c largest non-overflowing 2^(DBL_MAX_EXP-1) for real*16 (from values.h)
       integer DBL_MAX_EXP
       parameter (DBL_MAX_EXP=1024)
 
@@ -21,10 +21,10 @@ c        intrinsics
 c        local variables
       integer l,lm,l1,m,mmax1,mmin1,mn,mn1,mq,m1,n,nmax1,n1
       integer ed,edm,edn,ee,eem,een,ez,ezn,iez
-      real*10 al,al1,am,an,cm,cmp,cmphi,cnph,cp,
+      real*16 al,al1,am,an,cm,cmp,cmphi,cnph,cp,
      *  d,dim,dm,dme,dn,dpe,dre,d0,d1,d2,e,ed0,em,en,e1,e2,fn,q,qq,q1,
      *  smphi,snph,t,z,zm,zn,zp
-      real*10 OVFLOW,UNFLOW
+      real*16 OVFLOW,UNFLOW
 c *
 c * Calculates contribution to spherical transform w(lm)
 c * by boundary segment of window function w=sum w(lm)*Y(l,m).
@@ -80,12 +80,12 @@ c              Y(l,-m)=(-)^m*[Complex conjugate of Y(l,m)].
 c Work array: v should be dimensioned at least lmax1
 c
       if (lmax1.le.0) goto 300
-      if (dph.eq.0._10) goto 300
-c        largest non-overflowing power of 2 for real*10
-      OVFLOW=2._10**(DBL_MAX_EXP-1)
-      UNFLOW=1._10/OVFLOW
-      z=OVFLOW*0._10
-      if (z.ne.0._10.or.UNFLOW.eq.0._10) then
+      if (dph.eq.0._16) goto 300
+c        largest non-overflowing power of 2 for real*16
+      OVFLOW=2._16**(DBL_MAX_EXP-1)
+      UNFLOW=1._16/OVFLOW
+      z=OVFLOW*0._16
+      if (z.ne.0._16.or.UNFLOW.eq.0._16) then
         print *,'*** from wlm: DBL_MAX_EXP on your machine appears to be
      * <',DBL_MAX_EXP
         print *,' please modify DBL_MAX_EXP in wlm.s.f in the mangle dir
@@ -96,11 +96,11 @@ c        largest non-overflowing power of 2 for real*10
       endif
 c        cm=(zi-1)/2; cp=(zi+1)/2
 c        done this way to ensure accuracy at small ri
-      cm=-((1._10-zi)**2+ri**2)/4._10
-      cp=((1._10+zi)**2+ri**2)/4._10
+      cm=-((1._16-zi)**2+ri**2)/4._16
+      cp=((1._16+zi)**2+ri**2)/4._16
       nmax1=lmax1
       if (dph.eq.TWOPI.or.dph.eq.-TWOPI) nmax1=1
-      if (si.eq.0._10) nmax1=1
+      if (si.eq.0._16) nmax1=1
       mmin1=1
       mmax1=lmax1
       do 280 n1=1,nmax1
@@ -115,7 +115,7 @@ c........l = n = 0
           if (n.eq.0) then
             if (l.eq.0) then
 c        zn=z(0,0)
-              zn=1._10/sqrt(2._10*TWOPI)
+              zn=1._16/sqrt(2._16*TWOPI)
               ezn=0
               ez=ezn
               fn=dph
@@ -147,7 +147,7 @@ c        zn may underflow
             endif
             ez=ezn
             zn=z
-            fn=2._10*sin(an*dph/2._10)/an
+            fn=2._16*sin(an*dph/2._16)/an
 c        z=z(l,l); zp=z(l+1,l)
             q=sqrt(al1+al)
             zp=q*ci*z
@@ -164,9 +164,9 @@ c        zm=z(l-1,n); z=z(l,n); zp=z(l+1,n)
             zp=(qq*ci*z-q1*zm)/q
             if (ez.gt.0) then
 c        recover from underflow
-              if (abs(zp).ge.1._10
-     *          .and.(abs(z).ge.1._10.or.z.eq.0._10)
-     *          .and.(abs(zm).ge.1._10.or.zm.eq.0._10)) then
+              if (abs(zp).ge.1._16
+     *          .and.(abs(z).ge.1._16.or.z.eq.0._16)
+     *          .and.(abs(zm).ge.1._16.or.zm.eq.0._16)) then
                 ez=ez-1
                 zm=zm*UNFLOW
                 z=z*UNFLOW
@@ -185,7 +185,7 @@ c........restore correct scaling
         enddo
 c........skip rotation if harmonics in cone frame are all zero
         do l1=lmax1,n1,-1
-          if (v(l1).ne.0._10) goto 220
+          if (v(l1).ne.0._16) goto 220
         enddo
         goto 280
   220   continue
@@ -193,7 +193,7 @@ c--------matrix d(l,m,n) to rotate v(l,n) about cone y-axis
         cnph=cos(an*ph)
         snph=sin(an*ph)
 c        cone axis is parallel to desired axis
-        if (ri.eq.0._10) then
+        if (ri.eq.0._16) then
           mmin1=n1
           mmax1=n1
         endif
@@ -222,7 +222,7 @@ c........m = n = 0
           if (m.eq.0) then
             if (n.eq.0) then
 c        d0=d(0,0,0)
-              d0=1._10
+              d0=1._16
               ed0=0
 c        initialize dn, en
               dn=d0
@@ -250,17 +250,17 @@ c        initialize dm, em
 c........0 < m < n
           elseif (m.lt.n) then
 c        dm=d(n,m,n); em=(-)^n*d(n,m,-n)
-            t=sqrt((an-am+1._10)/(an+am))*2._10/ri
+            t=sqrt((an-am+1._16)/(an+am))*2._16/ri
 c        dm
             d=dm*cp*t
 c        dm may underflow ...
-            if (abs(d).le.UNFLOW.and.dm.ne.0._10) then
+            if (abs(d).le.UNFLOW.and.dm.ne.0._16) then
               dm=dm*OVFLOW
               d=dm*cp*t
               edm=edm+1
 c        ... or may recover from underflow
             elseif (edm.gt.0) then
-              if (abs(d).ge.1._10) then
+              if (abs(d).ge.1._16) then
                 d=d*UNFLOW
                 edm=edm-1
               endif
@@ -269,13 +269,13 @@ c        ... or may recover from underflow
 c        em
             e=em*cm*t
 c        em may underflow ...
-            if (abs(e).le.UNFLOW.and.em.ne.0._10) then
+            if (abs(e).le.UNFLOW.and.em.ne.0._16) then
               em=em*OVFLOW
               e=em*cm*t
               eem=eem+1
 c        ... or may recover from underflow
             elseif (eem.gt.0) then
-              if (abs(e).ge.1._10) then
+              if (abs(e).ge.1._16) then
                 e=e*UNFLOW
                 eem=eem-1
               endif
@@ -287,7 +287,7 @@ c        dn=d(n,n,n); en=(-)^n*d(n,n,-n)
 c        dn
             d=cp*dn
 c        dn may underflow
-            if (abs(d).le.UNFLOW.and.dn.ne.0._10) then
+            if (abs(d).le.UNFLOW.and.dn.ne.0._16) then
               dn=dn*OVFLOW
               d=cp*dn
               edn=edn+1
@@ -296,7 +296,7 @@ c        dn may underflow
 c        en
             e=cm*en
 c        en may underflow
-            if (abs(e).le.UNFLOW.and.en.ne.0._10) then
+            if (abs(e).le.UNFLOW.and.en.ne.0._16) then
               en=en*OVFLOW
               e=cm*en
               een=een+1
@@ -314,13 +314,13 @@ c        dm=d(m,m,n); em=(-)^n*d(m,m,-n)
 c        dm
             d=t*dm
 c        dm may underflow ...
-            if (abs(d).le.UNFLOW.and.dm.ne.0._10) then
+            if (abs(d).le.UNFLOW.and.dm.ne.0._16) then
               dm=dm*OVFLOW
               d=t*dm
               edm=edm+1
 c        ... or may recover from underflow
             elseif (edm.gt.0) then
-              if (abs(d).ge.1._10) then
+              if (abs(d).ge.1._16) then
                 d=d*UNFLOW
                 edm=edm-1
               endif
@@ -330,13 +330,13 @@ c        em
             if (n.gt.0) then
               e=t*em
 c        em may underflow ...
-              if (abs(e).le.UNFLOW.and.em.ne.0._10) then
+              if (abs(e).le.UNFLOW.and.em.ne.0._16) then
                 em=em*OVFLOW
                 e=t*em
                 eem=eem+1
 c        ... or may recover from underflow
               elseif (eem.gt.0) then
-                if (abs(e).ge.1._10) then
+                if (abs(e).ge.1._16) then
                   e=e*UNFLOW
                   eem=eem-1
                 endif
@@ -353,33 +353,33 @@ c........l >= m, n
 c        d=d(l,m,n); e=(-)^n*d(l,m,-n)
             if (l.eq.mn) then
               lm=(l*l1)/2+m1
-              q=0._10
-              d1=0._10
+              q=0._16
+              d1=0._16
               d=dm
               ed=edm
               if (n.eq.0) then
-                e=0._10
+                e=0._16
                 ee=0
               elseif (n.gt.0) then
-                e1=0._10
+                e1=0._16
                 e=em
                 ee=eem
               endif
             elseif (l.gt.mn) then
               lm=lm+l
-              qq=2._10*al-1._10
+              qq=2._16*al-1._16
               q1=q
               q=sqrt((al+am)*(al-am)*(al+an)*(al-an))/al
-              t=0._10
-              if (m*n.gt.0) t=am*an/((al-1._10)*al)
+              t=0._16
+              if (m*n.gt.0) t=am*an/((al-1._16)*al)
               d2=d1
               d1=d
               d=(qq*(zi-t)*d1-q1*d2)/q
 c        recover d from underflow
               if (ed.gt.0) then
-                if (abs(d).ge.1._10
-     *            .and.(abs(d1).ge.1._10.or.e1_10.eq.0._10)
-     *            .and.(abs(d2).ge.1._10.or.e2_10.eq.0._10)) then
+                if (abs(d).ge.1._16
+     *            .and.(abs(d1).ge.1._16.or.e1_16.eq.0._16)
+     *            .and.(abs(d2).ge.1._16.or.e2_16.eq.0._16)) then
                   d2=d2*UNFLOW
                   d1=d1*UNFLOW
                   d=d*UNFLOW
@@ -392,9 +392,9 @@ c        recover d from underflow
                 e=(qq*(zi+t)*e1-q1*e2)/q
 c        recover e from underflow
                 if (ee.gt.0) then
-                  if (abs(e).ge.1._10
-     *              .and.(abs(e1).ge.1._10.or.e1.eq.0._10)
-     *              .and.(abs(e2).ge.1._10.or.e2.eq.0._10)) then
+                  if (abs(e).ge.1._16
+     *              .and.(abs(e1).ge.1._16.or.e1.eq.0._16)
+     *              .and.(abs(e2).ge.1._16.or.e2.eq.0._16)) then
                     e2=e2*UNFLOW
                     e1=e1*UNFLOW
                     e=e*UNFLOW

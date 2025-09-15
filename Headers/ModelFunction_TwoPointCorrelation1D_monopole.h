@@ -27,9 +27,9 @@
  *  This file contains all the prototypes of the functions used
  *  to model the monopole of the two-point correlation function
  *  
- *  @author Federico Marulli, Alfonso Veropalumbo
+ *  @author Federico Marulli, Alfonso Veropalumbo, Massimiliano Romanello
  *
- *  @author federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
+ *  @author federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it, massimilia.romanell2@unibo.it
  */
 
 #ifndef __MODFUNCTWOP1DMON__
@@ -243,12 +243,12 @@ namespace cbl {
        *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are
        *  the Fourier anti-transform of the power spectrum terms
        *  obtained integrating the redshift space 2D power spectrum
-       *  along \f$\mu\f$ (see cbl::modelling::twopt.:damped_Pk_terms,
-       *  see cbl::modelling::twopt.:damped_Xi).
+       *  along \f$\mu\f$ (see cbl::modelling::powspec::damped_Pk_terms,
+       *  see cbl::modelling::twopt::damped_Xi).
        *       
        *  the model has 2 parameters:
        *      - bias the linear bias
-       *      - \f$\sigma_z$\f$ the redshift error
+       *      - \f$\sigma_z\f$ the redshift error
        *
        *  @param rad the scale at which the model is computed
        *
@@ -275,8 +275,8 @@ namespace cbl {
        *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are
        *  the Fourier anti-transform of the power spectrum terms
        *  obtained integrating the redshift space 2D power spectrum
-       *  along \f$\mu\f$ (see cbl::modelling::twopt.:damped_Pk_terms,
-       *  see cbl::modelling::twopt.:damped_Xi).
+       *  along \f$\mu\f$ (see cbl::modelling::powspec::damped_Pk_terms,
+       *  see cbl::modelling::twopt::damped_Xi).
        *       
        *  the model has 4 parameters:
        *      - M0 the intercept of the scaling relation
@@ -312,8 +312,8 @@ namespace cbl {
        *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are
        *  the Fourier anti-transform of the power spectrum terms
        *  obtained integrating the redshift space 2D power spectrum
-       *  along \f$\mu\f$ (see cbl::modelling::twopt.:damped_Pk_terms,
-       *  see cbl::modelling::twopt.:damped_Xi).
+       *  along \f$\mu\f$ (see cbl::modelling::powspec::damped_Pk_terms,
+       *  see cbl::modelling::twopt::damped_Xi).
        *
        *  @param rad the scale at which the model is computed
        *
@@ -359,7 +359,7 @@ namespace cbl {
       /**
        *  @brief model for the monopole of the two-point correlation
        *  function, the bias is computed by the input cluster masses,
-       *  with only \f$sigma_8\f$ as a free parameter
+       *  with only \f$\sigma_8\f$ as a free parameter
        *
        *  the function computes:
        *
@@ -389,7 +389,7 @@ namespace cbl {
       /**
        *  @brief model for the monopole of the two-point correlation
        *  function, the bias is computed by the input cluster masses,
-       *  with only \f$sigma_8\f$ as a free parameter
+       *  with only \f$\sigma_8\f$ as a free parameter
        *
        *  the function computes:
        *
@@ -443,6 +443,178 @@ namespace cbl {
        *  @return the monopole of the two-point correlation function
        */
       std::vector<double> xi0_linear_cosmology_clusters (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+      
+      /**
+       *  @brief model for the monopole of the two-point correlation
+       *  function, the bias is computed by the input cluster masses
+       *
+       *  the function computes:
+       *
+       *  \f[\xi_0(s) = b^2 \left[ 1 + \frac{2 \beta}{3}
+       *  \cdot + \frac{\beta^2}{5} \right] \cdot
+       *  \xi_{\rm DM}(s)\f]
+       *
+       *  with \f[\beta=f/b\f]
+       *
+       *  The model has N cosmological parameters. 
+       *  The bias is considered a derived parameter, from cosmology.
+       *
+       *  the dark matter two-point correlation function is computed
+       *  using the input cosmological parameters; the linear
+       *  effective bias is computed theoretically for each cosmology in two ways: 
+       *  using the provided halo masses with cbl::cosmology::Bias::bias_eff_mass, 
+       *  or with cbl::cosmology::Bias::bias_eff_selection_function
+       *
+       *  If the user specify a photometric error, the power spectrum 
+       *  will be damped:
+       * 
+       *  \f$\xi(s) = b^2 \xi'(r) + b \xi''(r) + \xi'''(r) \, ;\f$
+       *
+       *  where the terms \f$\xi'(r)\f$,
+       *  \f$\xi''(r)\f$, \f$\xi'''(r)\f$ are the Fourier
+       *  anti-transform of the power spectrum terms obtained
+       *  integrating the redshift space 2D power spectrum along
+       *  \f$\mu\f$ (see cbl::modelling::powspec::damped_Pk_terms)
+       *  If the photometric error has a (1+z) dependence, 
+       *  specify it in the input.
+       *
+       *  @param rad the scale at which the model is computed
+       *
+       *  @param inputs pointer to the structure that contains the
+       *  cosmological paramters used to compute the dark matter
+       *  two-point correlation function
+       *
+       *  @param parameter 1D vector containing the linear bias
+       *
+       *  @return the monopole of the two-point correlation function
+       */
+      std::vector<double> xi0_linear_theoretical_bias (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+
+       /**
+       *  @brief Model for the two-point correlation function, with damping at the BAO peak.
+       *
+       *  The function computes:
+       *
+       *  \f[\xi_0(s) = b^2 \left[ 1 + \frac{2 \beta}{3}
+       *  \cdot + \frac{\beta^2}{5} \right] \cdot
+       *  \xi_{\rm DM}(s, \Sigma_{NL}) \f]
+       *
+       *  with \f$\beta=f/b\f$. 
+       *  Redshift space distorsion are modelled in the Kaiser limit, 
+       *  if the user chooses redshift space in set_data_model_bias.
+       *  Otherwise, they are neglected. Photometric errors are modelled
+       *  with a Gaussian damping factor:
+       *
+       *   \f[ P(k, \mu)=P(k)\, b_\mathrm{eff}^2
+       *   \left(1+\frac{f}{b_\mathrm{eff}} \mu^2\right)^2 \mathrm{exp}(-k^2\mu^2\sigma^2) , \f]
+       *
+       *  where \f$\sigma=\frac{c\sigma_z}{H(z)}\f$.
+       *  We account for the nonlinear damping at the BAO peak:
+       *
+       *  \f[ P(k)=[P_\mathrm{lin}(k)-P_\mathrm{nw}(k)]e^{-k^2\Sigma^2_{\mathrm{NL}}/2}+P_\mathrm{nw}(k), \f]
+       *
+       *  where \f$P_\mathrm{lin}\f$ is the linear power spectrum
+       *  and \f$P_\mathrm{nw}\f$ is the de-wiggled power spectrum,
+       *  computed with the parametrisation of Eiseinstein_Hu.
+       *
+       *  The model has N cosmological parameters, plus: 
+       *    - \f$\Sigma_{NL}\f$ damping at BAO
+       *
+       *  The linear effective bias is considered a derived parameter,
+       *  from cosmology, and computed from the input cluster masses
+       *  in two ways: 
+       *  using the provided halo masses with cbl::cosmology::Bias::bias_eff_mass 
+       *  or with cbl::cosmology::Bias::bias_eff_selection_function
+       *
+       *  @param rad the scale at which the model is computed
+       *
+       *  @param inputs pointer to the structure that contains the
+       *  cosmological paramters used to compute the dark matter
+       *  two-point correlation function
+       *
+       *  @param parameter 1D vector containing the linear bias
+       *
+       *  @return the monopole of the two-point correlation function
+       */
+      std::vector<double> xi0_linear_theoretical_bias_BAO (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+
+       /**
+       *  @brief model for the monopole of the two-point correlation
+       *  function, including BAO. The bias is computed by the input cluster masses
+       *
+       *  the function computes:
+       *
+       *  \f[\xi_0(s) = b^2 \left[ 1 + \frac{2 \beta}{3}
+       *  \cdot + \frac{\beta^2}{5} \right] \cdot
+       *  \xi_{\rm DM}(s, \Sigma_{NL})\ + A_0 + A_1/s
+       *  +A_2/s^2\f]
+       *
+       *  with \f$\beta=f/b\f$. 
+       *  Redshift space distorsion are modelled in the Kaiser limit, 
+       *  if the user chooses redshift space in set_data_model_bias.
+       *  Otherwise, they are neglected. Photometric errors are modelled
+       *  with a Gaussian damping factor:
+       *
+       *   \f[ P(k, \mu)=P(k)\, b_\mathrm{eff}^2
+       *   \left(1+\frac{f}{b_\mathrm{eff}} \mu^2\right)^2 \mathrm{exp}(-k^2\mu^2\sigma^2) , \f]
+       *
+       *  where \f$\sigma=\frac{c\sigma_z}{H(z)}\f$.
+       *  We account for the nonlinear damping at the BAO peak:
+       *
+       *  \f[ P(k)=[P_\mathrm{lin}(k)-P_\mathrm{nw}(k)]e^{-k^2\Sigma^2_{\mathrm{NL}}/2}+P_\mathrm{nw}(k), \f]
+       *
+       *  where \f$P_\mathrm{lin}\f$ is the linear power spectrum
+       *  and \f$P_\mathrm{nw}\f$ is the de-wiggled power spectrum,
+       *  computed with the parametrisation of Eiseinstein_Hu.
+       *
+       *  The model has N cosmological parameters, plus: 
+       *    - \f$A_0, A_1, A2\f$ parameters of the polynomial
+       *    - \f$\Sigma_{NL}\f$ damping at BAO
+       *
+       *  The linear effective bias is considered a derived parameter,
+       *  from cosmology, and computed from the input cluster masses
+       *  in two ways: 
+       *  using the provided halo masses with cbl::cosmology::Bias::bias_eff_mass 
+       *  or with cbl::cosmology::Bias::bias_eff_selection_function
+       *
+       *  @param rad the scale at which the model is computed
+       *
+       *  @param inputs pointer to the structure that contains the
+       *  cosmological paramters used to compute the dark matter
+       *  two-point correlation function
+       *
+       *  @param parameter 1D vector containing the linear bias
+       *
+       *  @return the monopole of the two-point correlation function
+       */
+      std::vector<double> xi0_linear_theoretical_bias_BAO_poly (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+      
+      /**
+       *  @brief model for the monopole of the two-point correlation
+       *  function in real space and assuming the correct cosmology
+       *
+       *  the function computes:
+       *
+       *  \f[\xi_0(r) = b^2 \cdot \xi_{\rm DM}(r)\f]
+       *
+       *  the model has 1+n parameters: 
+       *    - \f$b\f$
+       *    - cosmological paramters
+       *
+       *  the dark matter two-point correlation function is computed
+       *  using the input cosmological parameters
+       *
+       *  @param rad the scale at which the model is computed
+       *
+       *  @param inputs pointer to the structure that contains the
+       *  cosmological paramters used to compute the dark matter
+       *  two-point correlation function
+       *
+       *  @param parameter 1D vector containing the linear bias
+       *
+       *  @return the monopole of the two-point correlation function
+       */
+      std::vector<double> xi0_realSpace (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
       
       /**
        *  @brief model for the monopole of the two-point correlation
@@ -615,7 +787,7 @@ namespace cbl {
        *  (M_h)M_hln(10)\,{\rm d}log(M_h)\f]
        *  
        *  where \f$n_{h, interp}(M_h, z)\f$ is an interpolation of the halo mass function 
-       *  cosmology::Cosmology::mass_function, 
+       *  cbl::cosmology::MassFunction::mass_function, 
        *  and the average number of galaxies hosted in a dark matter halo of a
        *  given mass, \f$N_{gal}(M_h)\f$, is computed by
        *  cbl::modelling::twopt::Navg
@@ -665,7 +837,7 @@ namespace cbl {
        *  hosted in haloes of mass M, \f$b_{halo}\f$ is the linear
        *  halo bias and the halo mass function, \f$n_h(M_h,
        *  z)=dn/dM_h\f$, is computed by
-       *  cosmology::Cosmology::mass_function
+       *  cbl::cosmology::MassFunction::mass_function
        *
        *  @param Mmin \f$M_{min}\f$: the mass scale at which 50% of
        *  haloes host a satellite galaxy
@@ -770,11 +942,11 @@ namespace cbl {
        * 
        *  where the galaxy number density \f$n_{gal}(z)\f$ is
        *  computed by cbl::modelling::twopt::ng, \f$n_{h, interp}(M_h, z)\f$ is an 
-       *  interpolation of the halo mass function cosmology::Cosmology::mass_function,
+       *  interpolation of the halo mass function cbl::cosmology::MassFunction::mass_function,
        *  \f$<N_{cen}N_{sat}>(M_h)\f$ is computed by
        *  cbl::modelling::twopt::NcNs, and the Fourier transform of
        *  the halo density profile \f$\tilde{u}_h(k, M_h, z)\f$ is
-       *  computed by cbl::cosmology::Cosmology::density_profile_FourierSpace
+       *  computed by cbl::cosmology::HaloProfile::density_profile_FourierSpace
        * 
        *  The equation above was obtained from the original expression for \f$P_{cs}(k, z)\f$
        *  using a change of variable from \f$dM_h\f$ to 
@@ -811,11 +983,11 @@ namespace cbl {
        *  
        *  where the galaxy number density \f$n_{gal}(z)\f$ is
        *  computed by cbl::modelling::twopt::ng, \f$n_{h, interp}(M_h, z)\f$ is an interpolation 
-       *  of the halo mass function cosmology::Cosmology::mass_function,
+       *  of the halo mass function cbl::cosmology::MassFunction::mass_function,
        *  \f$<N_{sat}(N_{sat}-1)>(M_h)\f$ is computed by
        *  cbl::modelling::twopt::NsNs1, and the Fourier transform of
        *  the halo density profile \f$\tilde{u}_h(k, M_h, z)\f$ is
-       *  computed by cbl::cosmology::Cosmology::density_profile_FourierSpace
+       *  computed by cbl::cosmology::HaloProfile::density_profile_FourierSpace
        * 
        *  The equation above was obtained from the original expression for \f$P_{ss}(k, z)\f$
        *  using a change of variable from \f$dM_h\f$ to 
@@ -882,12 +1054,12 @@ namespace cbl {
        *  number of galaxies hosted in a dark matter halo of a given
        *  mass, \f$N_{gal}(M_h)\f$, is computed by
        *  cbl::modelling::twopt::Navg, \f$n_{h, interp}(M_h, z)\f$ is an interpolation
-       *  of the halo mass function cosmology::Cosmology::mass_function, 
+       *  of the halo mass function cbl::cosmology::MassFunction::mass_function, 
        *  \f$b_{h, interp}(M_h, z)\f$ is an interpolation of the halo bias 
-       *  cosmology::Cosmology::bias_halo, and 
+       *  cosmology::Bias::bias_halo, and 
        *  the Fourier transform of the density profile, 
        *  \f$\tilde{u}_h(k, M_h, z)\f$, is computed by
-       *  cbl::cosmology::Cosmology::density_profile_FourierSpace
+       *  cbl::cosmology::HaloProfile::density_profile_FourierSpace
        *
        *  The equation above was obtained from the original expression for \f$P_{2halo}(k, z)\f$
        *  using a change of variable from \f$dM_h\f$ to 
@@ -966,9 +1138,9 @@ namespace cbl {
        *  the Fourier transform of
        *  the halo density profile \f$\tilde{u}_h(k, M_h, z)\f$ is
        *  computed by
-       *  cbl::cosmology::Cosmology::density_profile_FourierSpace,
+       *  cbl::cosmology::HaloProfile::density_profile_FourierSpace,
        *  \f$n_{h, interp}(M_h, z)\f$ is an interpolation
-       *  of the halo mass function cosmology::Cosmology::mass_function,
+       *  of the halo mass function cbl::cosmology::MassFunction::mass_function,
        *  \f$<N_{cen}N_{sat}>(M_h)\f$ is computed by
        *  cbl::modelling::twopt::NcNs and
        *  \f$<N_{sat}(N_{sat}-1)>(M_h)\f$ is computed by
@@ -1013,11 +1185,11 @@ namespace cbl {
        *  the average number of galaxies hosted in a dark matter halo of a given mass, 
        *  \f$N_{gal}(M_h)\f$, is computed by cbl::modelling::twopt::Navg, 
        *  \f$n_{h, interp}(M_h, z)\f$ is an interpolation
-       *  of the halo mass function cosmology::Cosmology::mass_function, 
+       *  of the halo mass function cbl::cosmology::MassFunction::mass_function, 
        *  \f$b_{h, interp}(M_h, z)\f$ is an interpolation of the halo bias 
-       *  cosmology::Cosmology::bias_halo and the Fourier transform of
+       *  cosmology::Bias::bias_halo and the Fourier transform of
        *  the halo density profile \f$\tilde{u}_h(k, M_h, z)\f$ is computed by
-       *  cbl::cosmology::Cosmology::density_profile_FourierSpace
+       *  cbl::cosmology::HaloProfile::density_profile_FourierSpace
        * 
        *  @param rad the scale at which the model is computed
        *

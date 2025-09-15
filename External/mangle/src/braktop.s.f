@@ -1,9 +1,9 @@
 c-----------------------------------------------------------------------
-c © A J S Hamilton 2001
+c ï¿½ A J S Hamilton 2001
 c-----------------------------------------------------------------------
       subroutine braktop(aa,ia,a,n,l)
       integer ia,n,l
-      real*10 aa,a(n)
+      real*16 aa,a(n)
       integer idir,istep
 c *
 c * Bracket aa in table a ordered in decreasing order,
@@ -76,7 +76,7 @@ c
 c-----------------------------------------------------------------------
       subroutine brakbot(aa,ia,a,n,l)
       integer ia,n,l
-      real*10 aa,a(n)
+      real*16 aa,a(n)
       integer idir,istep
 c *
 c * Bracket aa in table a ordered in increasing order,
@@ -149,7 +149,7 @@ c
 c-----------------------------------------------------------------------
       subroutine braktpa(aa,ia,a,n,l)
       integer ia,n,l
-      real*10 aa,a(n)
+      real*16 aa,a(n)
 c        intrinsics
       intrinsic abs
 c        local (automatic) variables
@@ -225,7 +225,7 @@ c
 c-----------------------------------------------------------------------
       subroutine brakbta(aa,ia,a,n,l)
       integer ia,n,l
-      real*10 aa,a(n)
+      real*16 aa,a(n)
 c        intrinsics
       intrinsic abs
 c        local (automatic) variables

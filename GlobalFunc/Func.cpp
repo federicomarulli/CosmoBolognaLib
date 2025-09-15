@@ -42,23 +42,23 @@ using namespace cbl;
 // ============================================================================
 
 
-void cbl::redshift_range (const double mean_redshift, const double boxSide, cosmology::Cosmology &real_cosm, double &redshift_min, double &redshift_max) 
+void cbl::redshift_range (const double mean_redshift, const double boxSide, const std::shared_ptr<cbl::cosmology::Cosmology> real_cosm, double &redshift_min, double &redshift_max) 
 {
   coutCBL <<"I'm computing the redshift range..."<<endl; 
 
   double z_min = 0.;
-  double lll = real_cosm.D_C(mean_redshift)+boxSide;
+  double lll = real_cosm->D_C(mean_redshift)+boxSide;
   double zf1 = mean_redshift, zf2 = zf1+12.;
-  double z_max = real_cosm.Redshift(lll, zf1, zf2);
+  double z_max = real_cosm->Redshift(lll, zf1, zf2);
   int step = 50000;
   double delta_z = (z_max-z_min)/step;
   double zz1 = z_min, zz2, L1, L2, LL, dist, dist_min = 1.e20;
   
   for (int i=0; i<step; i++) {
-    L1 = real_cosm.D_C(zz1);
+    L1 = real_cosm->D_C(zz1);
     zz2 = 2.*mean_redshift-zz1;
     if (zz2<zz1) break;
-    L2 = real_cosm.D_C(zz2);
+    L2 = real_cosm->D_C(zz2);
     LL = L2-L1;
     dist = fabs(LL-boxSide);
     if (dist<dist_min) {
@@ -68,22 +68,22 @@ void cbl::redshift_range (const double mean_redshift, const double boxSide, cosm
     }			
     zz1 += delta_z;
   }	
-  coutCBL <<"z1 = "<<redshift_min<<"; z2 = "<<redshift_max<<" (L_subBox = "<<real_cosm.D_C(redshift_max)-real_cosm.D_C(redshift_min)<<" ~ "<<boxSide<<")"<<endl;  
+  coutCBL <<"z1 = "<<redshift_min<<"; z2 = "<<redshift_max<<" (L_subBox = "<<real_cosm->D_C(redshift_max)-real_cosm->D_C(redshift_min)<<" ~ "<<boxSide<<")"<<endl;  
 }
 
 
 // ============================================================================
 
 
-double cbl::volume (const double boxSize, const int frac, const double Bord, const double mean_redshift, cosmology::Cosmology &real_cosm)
+double cbl::volume (const double boxSize, const int frac, const double Bord, const double mean_redshift, const std::shared_ptr<cbl::cosmology::Cosmology> real_cosm)
 {
   double redshift_min, redshift_max;
   double boxSide = boxSize/double(frac);
   redshift_range(mean_redshift, boxSide, real_cosm, redshift_min, redshift_max);
   redshift_min += Bord;
   redshift_max -= Bord;
-  double Lmin = real_cosm.D_C(redshift_min);
-  double Lmax = real_cosm.D_C(redshift_max);
+  double Lmin = real_cosm->D_C(redshift_min);
+  double Lmax = real_cosm->D_C(redshift_max);
   return pow(Lmax-Lmin, 3.);
 }
 
@@ -91,7 +91,7 @@ double cbl::volume (const double boxSize, const int frac, const double Bord, con
 // ============================================================================
 
 
-void cbl::coord_zSpace (std::vector<double> &ra, std::vector<double> &dec, std::vector<double> &redshift, std::vector<double> &xx, std::vector<double> &yy, std::vector<double> &zz, const std::vector<double> vx, const std::vector<double> vy, const std::vector<double> vz, const double sigmaV, cosmology::Cosmology &real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int seed) 
+void cbl::coord_zSpace (std::vector<double> &ra, std::vector<double> &dec, std::vector<double> &redshift, std::vector<double> &xx, std::vector<double> &yy, std::vector<double> &zz, const std::vector<double> vx, const std::vector<double> vy, const std::vector<double> vz, const double sigmaV, const std::shared_ptr<cbl::cosmology::Cosmology> real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int seed) 
 {
   if (ra.size()==0 && xx.size()==0)
     ErrorCBL("both ra.size() and xx.size() are equal 0!", "coord_zSpace", "GlobalFunc/Func.cpp"); 
@@ -100,7 +100,7 @@ void cbl::coord_zSpace (std::vector<double> &ra, std::vector<double> &dec, std::
   vector<double> DC_bin(10000);
 
   for (int i=0; i<10000; i++)
-    DC_bin[i] = real_cosm.D_C(redshift_bin[i]);
+    DC_bin[i] = real_cosm->D_C(redshift_bin[i]);
 
   glob::FuncGrid interp_DC(redshift_bin, DC_bin, "Spline");
   glob::FuncGrid interp_Z(DC_bin, redshift_bin, "Spline");
@@ -146,7 +146,7 @@ void cbl::coord_zSpace (std::vector<double> &ra, std::vector<double> &dec, std::
       /*
       // test
       redshift[i] = ran2.doub()*(redshift_max-redshift_min)+redshift_min;
-      dc.push_back(real_cosm.D_C(redshift[i]));    
+      dc.push_back(real_cosm->D_C(redshift[i]));    
       */
       
       // default
@@ -158,7 +158,7 @@ void cbl::coord_zSpace (std::vector<double> &ra, std::vector<double> &dec, std::
       ra[i] = atan(XX/YY);
       dec[i] = asin(ZZ/Dc);
       double Zguess_min = 0.8*0.5, Zguess_max = 1.2*2.; 
-      redshift[i] = real_cosm.Redshift(Dc, Zguess_min, Zguess_max);
+      redshift[i] = real_cosm->Redshift(Dc, Zguess_min, Zguess_max);
       
     }
 
@@ -169,7 +169,7 @@ void cbl::coord_zSpace (std::vector<double> &ra, std::vector<double> &dec, std::
       double gerr = (SigmaV>0) ? ran()/par::cc : 0.;
       redshift[i] += vrad/par::cc*(1.+mean_redshift)+gerr; // peculiar velocities + gaussian error
 
-      // dc.push_back(real_cosm.D_C(redshift[i]));          
+      // dc.push_back(real_cosm->D_C(redshift[i]));          
       dc.push_back(interp_DC(redshift[i]));          
     
     }
@@ -184,7 +184,7 @@ void cbl::coord_zSpace (std::vector<double> &ra, std::vector<double> &dec, std::
 // ============================================================================
 
 
-void cbl::create_mocks (const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz,  const std::vector<double> vx, const std::vector<double> vy, const std::vector<double> vz, const std::vector<double> var1, const std::vector<double> var2, const std::vector<double> var3, const std::string output_dir, const double boxSize, const int frac, const double Bord, const double mean_redshift, cosmology::Cosmology &real_cosm, const int REAL, const double sigmaV, const int idum, double &Volume) 
+void cbl::create_mocks (const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz,  const std::vector<double> vx, const std::vector<double> vy, const std::vector<double> vz, const std::vector<double> var1, const std::vector<double> var2, const std::vector<double> var3, const std::string output_dir, const double boxSize, const int frac, const double Bord, const double mean_redshift, const std::shared_ptr<cbl::cosmology::Cosmology> real_cosm, const int REAL, const double sigmaV, const int idum, double &Volume) 
 {   
   coutCBL <<endl<<"I'm creating the mock files..."<<endl;
 
@@ -195,8 +195,8 @@ void cbl::create_mocks (const std::vector<double> xx, const std::vector<double> 
   double boxSide = boxSize/double(frac);
   redshift_range(mean_redshift, boxSide, real_cosm, redshift_min, redshift_max);
   
-  double Lmin = real_cosm.D_C(redshift_min);
-  double Lmax = real_cosm.D_C(redshift_max);
+  double Lmin = real_cosm->D_C(redshift_min);
+  double Lmax = real_cosm->D_C(redshift_max);
 
   vector<double> shift;
   double SH = 0.;
@@ -248,7 +248,7 @@ void cbl::create_mocks (const std::vector<double> xx, const std::vector<double> 
  
   double Zguess_min = redshift_min*0.5, Zguess_max = redshift_max*2.;
   
-  for (size_t i=0; i<dd_temp.size(); i++) red_temp[i] = real_cosm.Redshift(dd_temp[i], Zguess_min, Zguess_max);
+  for (size_t i=0; i<dd_temp.size(); i++) red_temp[i] = real_cosm->Redshift(dd_temp[i], Zguess_min, Zguess_max);
   
   vector<double> avx, avy, avz;
   for (size_t i=0; i<vx.size(); i++) {avx.push_back(fabs(vx[i])); avy.push_back(fabs(vy[i])); avz.push_back(fabs(vz[i]));}
@@ -264,8 +264,8 @@ void cbl::create_mocks (const std::vector<double> xx, const std::vector<double> 
 
   redshift_min += Bord;
   redshift_max -= Bord;
-  Lmin = real_cosm.D_C(redshift_min);
-  Lmax = real_cosm.D_C(redshift_max);
+  Lmin = real_cosm->D_C(redshift_min);
+  Lmax = real_cosm->D_C(redshift_max);
   double Lnew = (Lmax-Lmin)*0.5;
   Volume = pow(Lmax-Lmin, 3.);
   

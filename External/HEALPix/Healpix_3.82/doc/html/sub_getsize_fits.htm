@@ -1,0 +1,285 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>getsize_fits</TITLE>
+<META NAME="description" CONTENT="getsize_fits">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_healpix_modules_module.htm">
+<LINK REL="previous" HREF="sub_getnumext_fits.htm">
+<LINK REL="next" HREF="sub_healpix_modules_module.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_getnumext_fits.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_healpix_modules_module.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html389"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_getnumext_fits.htm">getnumext_fits</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_healpix_modules_module.htm">healpix_modules module</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4100"></A>
+<A ID="sub:getsize_fits"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">getsize_fits</SPAN></div><hr>
+<H3>This routine reads the number of maps and/or the pixel ordering of a FITS file containing a <strong>HEALPix</strong> map.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/fitstools.F90"><strong>src/f90/mod/fitstools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>var=<SPAN CLASS="colordoc">getsize_fits</SPAN>(
+<A HREF="#sub:getsize_fits:filename">filename</A><i><font color="#224422">[, <A HREF="#sub:getsize_fits:nmaps">nmaps</A>, <A HREF="#sub:getsize_fits:ordering">ordering</A>, <A HREF="#sub:getsize_fits:obs_npix">obs_npix</A>, <A HREF="#sub:getsize_fits:nside">nside</A>, <A HREF="#sub:getsize_fits:mlpol">mlpol</A>, <A HREF="#sub:getsize_fits:type">type</A>, <A HREF="#sub:getsize_fits:polarisation">polarisation</A>,
+    <A HREF="#sub:getsize_fits:fwhm_arcmin">fwhm_arcmin</A>, <A HREF="#sub:getsize_fits:beam_leg">beam_leg</A>, <A HREF="#sub:getsize_fits:coordsys">coordsys</A>, <A HREF="#sub:getsize_fits:polcconv">polcconv</A>, <A HREF="#sub:getsize_fits:extno">extno</A>]</font></i>
+)</h3>
+Arguments appearing in <i><font color="#224422">italic</font></i> are
+optional.
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:140px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dim.</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:35px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:250px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">
+var</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">number of pixels or time samples in the chosen extension of
+                   the FITS file</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">filename<A ID="sub:getsize_fits:filename"></A>(LEN=*)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">filename of the FITS-file containing <strong>HEALPix</strong> map(s).</TD>
+</TR>
+</TABLE>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:140px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dim.</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:35px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:250px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">
+<i><font color="#224422">nmaps<A ID="sub:getsize_fits:nmaps"></A></font></i> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">number of maps in the extension.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px"><i><font color="#224422">ordering<A ID="sub:getsize_fits:ordering"></A></font></i> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">pixel ordering, 0=unknown, 1=RING, 2=NESTED</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px"><i><font color="#224422">obs_npix<A ID="sub:getsize_fits:obs_npix"></A></font></i> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">number of non blanck pixels. It is set to -1 if it can not be determined from header
+information alone</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px"><i><font color="#224422">nside<A ID="sub:getsize_fits:nside"></A></font></i> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">Healpix resolution parameter Nside. Returns a negative value if not found.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px"><i><font color="#224422">mlpol<A ID="sub:getsize_fits:mlpol"></A></font></i> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">maximum multipole used to generate the map
+                   (for simulated map). Returns a negative value if not found.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px"><i><font color="#224422">type<A ID="sub:getsize_fits:type"></A></font></i> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">Healpix/FITS file type
+<BR><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.28ex; vertical-align: -0.16ex; " SRC="sub_img61.png"
+ ALT="$&lt;$"></SPAN>0 : file not found, or not valid
+<BR>
+0  : image only fits file, deprecated Healpix format
+                   (var = 12 * nside * nside) <BR>
+1  : ascii table, generally used for C(l) storage <BR>
+2  : binary table : with implicit pixel indexing (full sky)
+                   (var = 12 * nside * nside) <BR>
+3  : binary table : with explicit pixel indexing (generally cut sky)
+                   (var <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.41ex; " SRC="sub_img175.png"
+ ALT="$\le$"></SPAN> 12 * nside * nside) <BR>
+999  : unable to determine the type</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px"><i><font color="#224422">polarisation<A ID="sub:getsize_fits:polarisation"></A></font></i> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">presence of polarisation data in the file
+<BR><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.28ex; vertical-align: -0.16ex; " SRC="sub_img61.png"
+ ALT="$&lt;$"></SPAN>0 : can not find out
+<BR>
+0 : no polarisation
+<BR>
+1 : contains polarisation (Q,U or G,C)</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px"><i><font color="#224422">fwhm_arcmin<A ID="sub:getsize_fits:fwhm_arcmin"></A></font></i> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">returns the beam FWHM read from FITS header, 
+                            translated from Deg (hopefully) to arcmin.
+                         Returns a negative value if not found.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px"><i><font color="#224422">beam_leg<A ID="sub:getsize_fits:beam_leg"></A></font></i>(LEN=*) (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">filename of beam or
+             filtering window function applied to data
+	     (FITS keyword BEAM_LEG). Returns a empty string if not found.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px"><i><font color="#224422">coordsys<A ID="sub:getsize_fits:coordsys"></A></font></i>(LEN=20) (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">string describing the pixelation
+                   astrophysical coordinates. 
+		'G' = Galactic, 'E' = ecliptic, 'C' = celestial = equatorial. 
+		Returns a empty string if not found.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px"><i><font color="#224422">polcconv<A ID="sub:getsize_fits:polcconv"></A></font></i> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">polarisation coordinate convention
+(see Healpix primer for details) 0=unknown, 1=COSMO, 2=IAU, 3=neither COSMO nor IAU</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px"><i><font color="#224422">extno<A ID="sub:getsize_fits:extno"></A></font></i> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">extension number (0 based) for which information
+             is provided. Default = 0 (first extension).</TD>
+</TR>
+</TABLE>
+
+<P>
+
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">npix= getsize_fits('map.fits', nmaps=nmaps, ordering=ordering, obs_npix=obs_npix, nside=nside, mlpol=mlpol, type=type, polarisation=polarisation)  
+<BR></div>
+<blockquote>
+Returns 1 or 3 in nmaps, dependent on wether 'map.fits' contain only
+temperature or both temperature and polarisation maps. The pixel ordering number is found by reading the keyword ORDERING in the FITS file. If this keyword does not exist, 0 is returned.
+</blockquote>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">getsize_fits</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">fitstools</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B>printerror</B>
+<DD>routine for printing FITS error messages.
+  <DT>
+<B><SPAN  CLASS="textbf">cfitsio</SPAN></B>
+<DD>library for FITS file handling.		
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">getsize_fits</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_getnumext_fits.htm#sub:getnumext_fits">getnumext_fits</A></B>
+<DD>routine returning the number of extension in a FITS
+  file
+  <DT>
+<B><A HREF="sub_input_map.htm#sub:input_map">input_map</A></B>
+<DD>routine to read a <strong>HEALPix</strong> FITS file
+</DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_getnumext_fits.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_healpix_modules_module.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html389"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_getnumext_fits.htm">getnumext_fits</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_healpix_modules_module.htm">healpix_modules module</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

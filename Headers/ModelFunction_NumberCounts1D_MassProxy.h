@@ -59,6 +59,20 @@ namespace cbl {
        * @return the number counts as a function of mass proxy
        */
       std::vector<double> number_counts_proxy (const std::vector<double> proxy, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+    
+      /**
+       * @brief compute the number counts as a function
+       * of the mass proxy, in the classic way
+       *
+       * @param proxy mass proxy bin centers
+       *
+       * @param inputs inputs to compute the predicted counts
+       *
+       * @param parameter vector containing cosmological parameters
+       *
+       * @return the number counts as a function of mass proxy
+       */
+      std::vector<double> number_counts_proxy_classic (const std::vector<double> proxy, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
       
     }
   }

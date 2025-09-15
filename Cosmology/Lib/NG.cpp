@@ -21,19 +21,20 @@
 /**
  *  @file Cosmology/Lib/NG.cpp
  *
- *  @brief Methods of the class Cosmology for cosmologies with
+ *  @brief Methods of the class NF used to model cosmologies with
  *  primordial non-Gaussianity
  *
  *  This file contains the implementation of the methods of the class
- *  Cosmology used to model the large-scale structures of the Universe
- *  in cosmologies with primordial non-Gaussianity
+ *  NG used to model the large-scale structures of the Universe in
+ *  cosmologies with primordial non-Gaussianity
  *
  *  @authors Federico Marulli, Cosimo Fedeli 
  *
  *  @authors federico.marulli3@unibo.it, cosimo.fedeli@oabo.inaf.it
  */
 
-#include "Cosmology.h"
+#include "NG.h"
+#include "LCDM.h"
 
 using namespace std;
 
@@ -44,61 +45,64 @@ using namespace cosmology;
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::Am (const string method_Pk, const bool store_output, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
+double cbl::cosmology::NG::Am (const string method_Pk, const bool store_output, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
 {
   double kk = 1.e-4;
   bool NL = false;
   double redshift = 0.;
-  return Pk_matter({kk}, method_Pk, NL, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par)[0] / pow(kk, m_n_spec);
+
+  PkXi PX(m_cosmology);
+  
+  return PX.Pk_matter({kk}, method_Pk, NL, redshift, store_output, output_root, norm, k_min, k_max, prec, file_par)[0] / pow(kk, m_cosmology->n_spec());
 }
 
 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::potential_spectral_amplitude (const string method_Pk, const bool store_output, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+double cbl::cosmology::NG::potential_spectral_amplitude (const string method_Pk, const bool store_output, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
 {
-  return 2.78548e-14 * gsl_pow_2(m_Omega_matter) * Am(method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par);
+  return 2.78548e-14 * gsl_pow_2(m_cosmology->Omega_matter()) * Am(method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par);
 }
 
 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::bispectrum (const vector<double> kk, const string method_Pk, const bool store_output, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
+double cbl::cosmology::NG::bispectrum (const vector<double> kk, const string method_Pk, const bool store_output, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par)
 {
   double bs = 0.0;
 
   double bm = potential_spectral_amplitude(method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par);
 
-  switch (m_type_NG)
+  switch (m_cosmology->type_NG())
     {
     case 1: // Local shape
-      bs = (pow(kk[0]*kk[1],m_n_spec-4.0)+pow(kk[0]*kk[2],m_n_spec-4.0)+pow(kk[1]*kk[2],m_n_spec-4.0));
+      bs = (pow(kk[0]*kk[1],m_cosmology->n_spec()-4.0)+pow(kk[0]*kk[2],m_cosmology->n_spec()-4.0)+pow(kk[1]*kk[2],m_cosmology->n_spec()-4.0));
       bs *= 2.0*gsl_pow_2(bm);
       break;
 
     case 2: // Equilateral shape
-      bs = pow(kk[0],(m_n_spec-4.0)/3.0)*pow(kk[1],2.0*(m_n_spec-4.0)/3.0)*pow(kk[2],m_n_spec-4.0)+pow(kk[2],(m_n_spec-4.0)/3.0)*pow(kk[0],2.0*(m_n_spec-4.0)/3.0)*pow(kk[1],m_n_spec-4.0)+
-	pow(kk[1],(m_n_spec-4.0)/3.0)*pow(kk[2],2.0*(m_n_spec-4.0)/3.0)*pow(kk[0],m_n_spec-4.0)+pow(kk[1],(m_n_spec-4.0)/3.0)*pow(kk[0],2.0*(m_n_spec-4.0)/3.0)*pow(kk[2],m_n_spec-4.0)+
-	pow(kk[2],(m_n_spec-4.0)/3.0)*pow(kk[1],2.0*(m_n_spec-4.0)/3.0)*pow(kk[0],m_n_spec-4.0)+pow(kk[0],(m_n_spec-4.0)/3.0)*pow(kk[2],2.0*(m_n_spec-4.0)/3.0)*pow(kk[1],m_n_spec-4.0)-
-	pow(kk[0]*kk[1],m_n_spec-4.0)-pow(kk[0]*kk[2],m_n_spec-4.0)-pow(kk[1]*kk[2],m_n_spec-4.0)-2.0*pow(kk[0]*kk[1]*kk[2],2.0*(m_n_spec-4.0)/3.0); 
+      bs = pow(kk[0],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[1],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[2],m_cosmology->n_spec()-4.0)+pow(kk[2],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[0],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[1],m_cosmology->n_spec()-4.0)+
+	pow(kk[1],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[2],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[0],m_cosmology->n_spec()-4.0)+pow(kk[1],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[0],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[2],m_cosmology->n_spec()-4.0)+
+	pow(kk[2],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[1],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[0],m_cosmology->n_spec()-4.0)+pow(kk[0],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[2],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[1],m_cosmology->n_spec()-4.0)-
+	pow(kk[0]*kk[1],m_cosmology->n_spec()-4.0)-pow(kk[0]*kk[2],m_cosmology->n_spec()-4.0)-pow(kk[1]*kk[2],m_cosmology->n_spec()-4.0)-2.0*pow(kk[0]*kk[1]*kk[2],2.0*(m_cosmology->n_spec()-4.0)/3.0); 
       bs *= 6.0*gsl_pow_2(bm);
       break;
 
     case 3: // Enfolded shape
-      bs = pow(kk[0]*kk[1],m_n_spec-4.0)+pow(kk[0]*kk[2],m_n_spec-4.0)+pow(kk[1]*kk[2],m_n_spec-4.0)+3.0*pow(kk[0]*kk[1]*kk[2],2.0*(m_n_spec-4.0)/3.0)-
-	pow(kk[0],(m_n_spec-4.0)/3.0)*pow(kk[1],2.0*(m_n_spec-4.0)/3.0)*pow(kk[2],m_n_spec-4.0)-pow(kk[2],(m_n_spec-4.0)/3.0)*pow(kk[0],2.0*(m_n_spec-4.0)/3.0)*pow(kk[1],m_n_spec-4.0)-
-	pow(kk[1],(m_n_spec-4.0)/3.0)*pow(kk[2],2.0*(m_n_spec-4.0)/3.0)*pow(kk[0],m_n_spec-4.0)-pow(kk[1],(m_n_spec-4.0)/3.0)*pow(kk[0],2.0*(m_n_spec-4.0)/3.0)*pow(kk[2],m_n_spec-4.0)-
-	pow(kk[2],(m_n_spec-4.0)/3.0)*pow(kk[1],2.0*(m_n_spec-4.0)/3.0)*pow(kk[0],m_n_spec-4.0)-pow(kk[0],(m_n_spec-4.0)/3.0)*pow(kk[2],2.0*(m_n_spec-4.0)/3.0)*pow(kk[1],m_n_spec-4.0);
+      bs = pow(kk[0]*kk[1],m_cosmology->n_spec()-4.0)+pow(kk[0]*kk[2],m_cosmology->n_spec()-4.0)+pow(kk[1]*kk[2],m_cosmology->n_spec()-4.0)+3.0*pow(kk[0]*kk[1]*kk[2],2.0*(m_cosmology->n_spec()-4.0)/3.0)-
+	pow(kk[0],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[1],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[2],m_cosmology->n_spec()-4.0)-pow(kk[2],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[0],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[1],m_cosmology->n_spec()-4.0)-
+	pow(kk[1],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[2],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[0],m_cosmology->n_spec()-4.0)-pow(kk[1],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[0],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[2],m_cosmology->n_spec()-4.0)-
+	pow(kk[2],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[1],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[0],m_cosmology->n_spec()-4.0)-pow(kk[0],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[2],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[1],m_cosmology->n_spec()-4.0);
       bs *= 6.0*gsl_pow_2(bm);
       break;
 
     case 4: // Orthogonal shape
-      bs = 3.0*pow(kk[0],(m_n_spec-4.0)/3.0)*pow(kk[1],2.0*(m_n_spec-4.0)/3.0)*pow(kk[2],m_n_spec-4.0)+3.0*pow(kk[2],(m_n_spec-4.0)/3.0)*pow(kk[0],2.0*(m_n_spec-4.0)/3.0)*pow(kk[1],m_n_spec-4.0)+
-	3.0*pow(kk[1],(m_n_spec-4.0)/3.0)*pow(kk[2],2.0*(m_n_spec-4.0)/3.0)*pow(kk[0],m_n_spec-4.0)+3.0*pow(kk[1],(m_n_spec-4.0)/3.0)*pow(kk[0],2.0*(m_n_spec-4.0)/3.0)*pow(kk[2],m_n_spec-4.0)+
-	3.0*pow(kk[2],(m_n_spec-4.0)/3.0)*pow(kk[1],2.0*(m_n_spec-4.0)/3.0)*pow(kk[0],m_n_spec-4.0)+3.0*pow(kk[0],(m_n_spec-4.0)/3.0)*pow(kk[2],2.0*(m_n_spec-4.0)/3.0)*pow(kk[1],m_n_spec-4.0)-
-	3.0*pow(kk[0]*kk[1],m_n_spec-4.0)-3.0*pow(kk[1]*kk[2],m_n_spec-4.0)-3.0*pow(kk[0]*kk[2],m_n_spec-4.0)-8.0*pow(kk[0]*kk[1]*kk[2],2.0*(m_n_spec-4)/3.0);
+      bs = 3.0*pow(kk[0],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[1],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[2],m_cosmology->n_spec()-4.0)+3.0*pow(kk[2],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[0],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[1],m_cosmology->n_spec()-4.0)+
+	3.0*pow(kk[1],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[2],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[0],m_cosmology->n_spec()-4.0)+3.0*pow(kk[1],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[0],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[2],m_cosmology->n_spec()-4.0)+
+	3.0*pow(kk[2],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[1],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[0],m_cosmology->n_spec()-4.0)+3.0*pow(kk[0],(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[2],2.0*(m_cosmology->n_spec()-4.0)/3.0)*pow(kk[1],m_cosmology->n_spec()-4.0)-
+	3.0*pow(kk[0]*kk[1],m_cosmology->n_spec()-4.0)-3.0*pow(kk[1]*kk[2],m_cosmology->n_spec()-4.0)-3.0*pow(kk[0]*kk[2],m_cosmology->n_spec()-4.0)-8.0*pow(kk[0]*kk[1]*kk[2],2.0*(m_cosmology->n_spec()-4)/3.0);
       bs *= 6.0*gsl_pow_2(bm);
       break;
 
@@ -113,114 +117,32 @@ double cbl::cosmology::Cosmology::bispectrum (const vector<double> kk, const str
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::mrk (const double kk, const double mass, const string method_Pk, const bool store_output, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
+double cbl::cosmology::NG::mrk (const double kk, const double mass, const string method_Pk, const bool store_output, const string output_root, const int norm, const double k_min, const double k_max, const double prec, const string file_par) 
 {
-  double xx = kk * Radius(mass, m_RhoZero);
+  double xx = kk * Radius(mass, m_cosmology->rho_m(0.));
 
   double AA = Am(method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par);
-  
-  double TT = sqrt(Pk_matter({kk}, method_Pk, false, 0., store_output, output_root, norm, k_min, k_max, prec, file_par)[0] / AA / pow(kk,m_n_spec));
 
-  return 5.99170e6 * gsl_pow_2(kk) * TopHat_WF(xx) * TT / m_Omega_matter;
+  PkXi PX(m_cosmology);
+  
+  double TT = sqrt(PX.Pk_matter({kk}, method_Pk, false, 0., store_output, output_root, norm, k_min, k_max, prec, file_par)[0] / AA / pow(kk,m_cosmology->n_spec()));
+
+  return 5.99170e6 * gsl_pow_2(kk) * TopHat_WF(xx) * TT / m_cosmology->Omega_matter();
 }
 
 
 // =====================================================================================
 
-/// @cond TEST_NG
-
-double cbl::cosmology::Cosmology::bias_kernel (double xx, void *params)
-{
-  cbl::glob::GSL_f_pars *pp = (cbl::glob::GSL_f_pars *)params;
-
-  int ni = 16;
-  double *XX = new double[ni];
-  double *Weight = new double[ni];
-  gauleg (0., 1., XX, Weight, ni);
-
-  vector<double> km(3);
-  km[0] = xx;
-  km[2] = pp->kt;
-  
-  double mass = pp->mass;
-  string method_Pk = pp->method_Pk;
-  bool store_output = pp->store_output;
-  string output_root = pp->output_root;
-  int norm = pp->norm;
-  double k_min = pp->k_min;
-  double k_max = pp->k_max;
-  double prec = pp->prec;
-  string file_par = pp->file_par;
-
-
-  const double xi1 = -1.0, xi2 = 1.0;  
-  double yi = 0.0;
-
-  for (int i=0; i<ni; i++) {
-    double xi = xi1+(xi2-xi1)*XX[i];
-    km[1] = sqrt(gsl_pow_2(xx)+gsl_pow_2(pp->kt)+2.0*xx*pp->kt*xi); 
-    yi += bispectrum(km, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*mrk(km[1], mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*Weight[i];
-  }
-
-  yi *= (xi2-xi1)*gsl_pow_2(xx)*mrk(xx, mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par);
-
-  return yi;
-}
-
-
-// =====================================================================================
-
-
-double cbl::cosmology::Cosmology::frk_test (const double kk, const double mass, const string method_Pk, const bool store_output, const string output_root, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
-{
-  cbl::glob::GSL_f_pars pp;
-  struct cbl::glob::GSL_f_pars *ppp = &pp;
-
-  ppp->kt = kk;
-  ppp->mass = mass;
-  ppp->method_Pk = method_Pk;
-  ppp->output_root = output_root;
-  ppp->norm = norm;
-  ppp->k_min = k_min;
-  ppp->k_max = k_max;
-  ppp->prec = prec;
-  ppp->file_par = input_file; // check!
-  ppp->pt_Cosmology = this;
-
-  gsl_function Func;
-
-  Func.params = ppp;
- 
-  Func.function = &glob::GSL_bias_kernel_wrapper;
-
-  double ibs = -1., err = -1.;
-
-  gsl_integration_workspace *ww = gsl_integration_workspace_alloc(1000);
-  gsl_integration_qagiu (&Func, 0., 1.e-8, 1e-3, 1000, ww, &ibs, &err);
-
-  gsl_integration_workspace_free(ww);
-  
-  double bm = potential_spectral_amplitude(method_Pk, store_output, output_root, norm, k_min, k_max, prec, input_file);
-
-  double var = sigma2M(mass, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file); 
-
-  ibs /= 8.0*gsl_pow_2(par::pi)*var;
-  ibs /= bm*pow(kk, m_n_spec-4.0);
- 
-  return ibs;
-}
-
-/// @endcond
-
-// =====================================================================================
 
 /// @cond glob
 
-double cbl::glob::bias_kernel2 (const double xx, void *params)
+double cbl::cosmology::bias_kernel (const double xx, void *params)
 {
-  struct cbl::glob::STR_NG *pp = (struct cbl::glob::STR_NG *) params;
-  
-  Cosmology cosm (pp->Omega_matter, pp->Omega_baryon, pp->Omega_neutrinos, pp->massless_neutrinos, pp->massive_neutrinos, pp->Omega_DE, pp->Omega_radiation, pp->hh, pp->scalar_amp, pp->scalar_pivot, pp->n_spec, pp->w0, pp->wa, pp->fNL, pp->type_NG, pp->tau, pp->model, pp->unit);
+  struct STR_NG *pp = (struct STR_NG *) params;
+
+  // check!!!
+  auto cosm = make_shared<LCDM>(pp->Omega_matter, pp->Omega_baryon, pp->Omega_radiation, pp->hh, pp->scalar_amp, pp->scalar_pivot, pp->n_spec, pp->tau, pp->unit);
+  NG ng(cosm);
 
   int ni = 16;
   double *XX = new double[ni]; 
@@ -249,10 +171,10 @@ double cbl::glob::bias_kernel2 (const double xx, void *params)
     {
       double xi = xi1+(xi2-xi1)*XX[i];
       km[1] = sqrt(gsl_pow_2(xx)+gsl_pow_2(pp->kt)+2.0*xx*pp->kt*xi); 
-      yi += cosm.bispectrum(km, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*cosm.mrk(km[1], mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*Weight[i];
+      yi += ng.bispectrum(km, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*ng.mrk(km[1], mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*Weight[i];
     }
 
-  yi *= (xi2-xi1)*gsl_pow_2(xx)*cosm.mrk(xx, mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par);
+  yi *= (xi2-xi1)*gsl_pow_2(xx)*ng.mrk(xx, mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par);
 
   return yi;
 }
@@ -263,39 +185,39 @@ double cbl::glob::bias_kernel2 (const double xx, void *params)
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::frk (const double kk, const double mass, const string method_Pk, const bool store_output, const string output_root, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
+double cbl::cosmology::NG::frk (const double kk, const double mass, const string method_Pk, const bool store_output, const string output_root, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file)
 {
   cbl::Path path;
-  string dir_grid = path.DirCosmo()+"/Cosmology/Tables/grid_NG/bias_kernel/unit"+conv(m_unit,par::fINT)+"/";
+  string dir_grid = path.DirCosmo()+"/Cosmology/Tables/grid_NG/bias_kernel/unit"+conv(m_cosmology->unit(),par::fINT)+"/";
   string MK = "mkdir -p "+dir_grid; if (system (MK.c_str())) {};
 
-  string Norm = (m_sigma8>0) ? "_sigma8"+conv(m_sigma8,par::fDP3) : "_scalar_amp"+conv(m_scalar_amp,par::ee3);
-  string file_grid = dir_grid+"grid"+Norm+"_h"+conv(m_hh,par::fDP3)+"_OmB"+conv(m_Omega_baryon,par::fDP3)+"_OmCDM"+conv(m_Omega_CDM,par::fDP3)+"_OmL"+conv(m_Omega_DE,par::fDP3)+"_OmN"+conv(m_Omega_neutrinos,par::fDP3)+"_typeNG"+conv(m_type_NG,par::fINT)+"_k"+conv(kk,par::fDP5)+".dat";
+  string Norm = (m_cosmology->sigma8()>0) ? "_sigma8"+conv(m_cosmology->sigma8(),par::fDP3) : "_scalar_amp"+conv(m_cosmology->scalar_amp(),par::ee3);
+  string file_grid = dir_grid+"grid"+Norm+"_h"+conv(m_cosmology->little_h(),par::fDP3)+"_OmB"+conv(m_cosmology->Omega_baryon(),par::fDP3)+"_OmCDM"+conv(m_cosmology->Omega_CDM(),par::fDP3)+"_OmL"+conv(m_cosmology->Omega_DE(),par::fDP3)+"_OmN"+conv(m_cosmology->Omega_neutrinos(),par::fDP3)+"_typeNG"+conv(m_cosmology->type_NG(),par::fINT)+"_k"+conv(kk,par::fDP5)+".dat";
 
   int bin = 100;
   double x_min = 1.e-3;
   double x_max = 1.e3;
   vector<double> xx, yy;
 
-  cbl::glob::STR_NG str;
-  str.Omega_matter = m_Omega_matter; 
-  str.Omega_baryon = m_Omega_baryon; 
-  str.Omega_neutrinos = m_Omega_neutrinos; 
-  str.massless_neutrinos = m_massless_neutrinos; 
-  str.massive_neutrinos = m_massive_neutrinos; 
-  str.Omega_DE = m_Omega_DE; 
-  str.Omega_radiation = m_Omega_radiation; 
-  str.hh = m_hh; 
-  str.scalar_amp = m_scalar_amp;
-  str.scalar_pivot = m_scalar_pivot;
-  str.n_spec = m_n_spec;
-  str.w0 = m_w0; 
-  str.wa = m_wa; 
-  str.fNL = m_fNL;
-  str.type_NG = m_type_NG;
-  str.tau = m_tau;
-  str.model = m_model;
-  str.unit = m_unit;
+  STR_NG str;
+  str.Omega_matter = m_cosmology->Omega_matter(); 
+  str.Omega_baryon = m_cosmology->Omega_baryon(); 
+  str.Omega_neutrinos = m_cosmology->Omega_neutrinos(); 
+  str.massless_neutrinos = m_cosmology->massless_neutrinos(); 
+  str.massive_neutrinos = m_cosmology->massive_neutrinos(); 
+  str.Omega_DE = m_cosmology->Omega_DE(); 
+  str.Omega_radiation = m_cosmology->Omega_radiation(); 
+  str.hh = m_cosmology->little_h(); 
+  str.scalar_amp = m_cosmology->scalar_amp();
+  str.scalar_pivot = m_cosmology->scalar_pivot();
+  str.n_spec = m_cosmology->n_spec();
+  str.w0 = m_cosmology->w0(); 
+  str.wa = m_cosmology->wa(); 
+  str.fNL = m_cosmology->fNL();
+  str.type_NG = m_cosmology->type_NG();
+  str.tau = m_cosmology->tau();
+  str.model = m_cosmology->model();
+  str.unit = m_cosmology->unit();
   str.kt = kk;
   str.mass = mass;
   str.method_Pk = method_Pk;
@@ -307,8 +229,7 @@ double cbl::cosmology::Cosmology::frk (const double kk, const double mass, const
   str.prec = prec;
   str.file_par = input_file; // check!
 
-  bin_function(file_grid, glob::bias_kernel2, &str, bin, x_min, x_max, "loglin", xx, yy);
-
+  bin_function(file_grid, bias_kernel, &str, bin, x_min, x_max, "loglin", xx, yy);
 
   cbl::glob::STR_grid str_grid;
   str_grid._xx = xx;
@@ -329,10 +250,12 @@ double cbl::cosmology::Cosmology::frk (const double kk, const double mass, const
 
   double bm = potential_spectral_amplitude(method_Pk, store_output, output_root, norm, k_min, k_max, prec, input_file);
 
-  double var = sigma2M(mass, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file); 
+  Sigma SG(m_cosmology);
+  
+  double var = SG.sigma2M({mass}, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file)[0]; 
 
   ibs /= 8.0*gsl_pow_2(par::pi)*var;
-  ibs /= bm*pow(kk,m_n_spec-4.0);
+  ibs /= bm*pow(kk,m_cosmology->n_spec()-4.0);
  
   return ibs;
 }
@@ -340,22 +263,10 @@ double cbl::cosmology::Cosmology::frk (const double kk, const double mass, const
 
 // =====================================================================================
 
-/// @cond glob
 
-double cbl::glob::GSL_bias_kernel_wrapper (const double xx, void *params) 
+double cbl::cosmology::NG::bias_correction (const double kk, const double mass, const string method_Pk, const bool store_output, const string output_root, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
-  cbl::glob::GSL_f_pars *pp = (cbl::glob::GSL_f_pars *)params;
-  return pp->pt_Cosmology->bias_kernel(xx,params);
-}
-
-/// @endcond 
-
-// =====================================================================================
-
-
-double cbl::cosmology::Cosmology::bias_correction (const double kk, const double mass, const string method_Pk, const bool store_output, const string output_root, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
-{
-  return m_fNL * 0.8 * frk(kk, mass, method_Pk, store_output, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file) / mrk(kk, mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, input_file);
+  return m_cosmology->fNL() * 0.8 * frk(kk, mass, method_Pk, store_output, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file) / mrk(kk, mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, input_file);
 }
 
 
@@ -363,13 +274,15 @@ double cbl::cosmology::Cosmology::bias_correction (const double kk, const double
 
 /// @cond glob
 
-double cbl::glob::skewness_kernel (double *kk, size_t dim, void *params)
+double cbl::cosmology::skewness_kernel (double *kk, size_t dim, void *params)
 {
   (void)dim;
   
-  struct cbl::glob::STR_NG *pp = (struct cbl::glob::STR_NG *) params;
-  
-  Cosmology cosm (pp->Omega_matter, pp->Omega_baryon, pp->Omega_neutrinos, pp->massless_neutrinos, pp->massive_neutrinos, pp->Omega_DE, pp->Omega_radiation, pp->hh, pp->scalar_amp, pp->scalar_pivot, pp->n_spec, pp->w0, pp->wa, pp->fNL, pp->type_NG, pp->tau, pp->output_root, pp->unit);
+  struct STR_NG *pp = (struct STR_NG *) params;
+
+  // check!!!
+  auto cosm = make_shared<LCDM>(pp->Omega_matter, pp->Omega_baryon, pp->Omega_radiation, pp->hh, pp->scalar_amp, pp->scalar_pivot, pp->n_spec, pp->tau, pp->unit);
+  NG ng(cosm);
 
   int ni = 16;
   double *XX = new double[ni];
@@ -397,12 +310,12 @@ double cbl::glob::skewness_kernel (double *kk, size_t dim, void *params)
   for (int i=0; i<ni; i++) {
     xi = xi1+(xi2-xi1)*XX[i];
     km[1] = sqrt(gsl_pow_2(kk[0])+gsl_pow_2(kk[1])+2.0*kk[0]*kk[1]*xi); 
-    yi += cosm.bispectrum(km, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*cosm.mrk(km[1], mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*Weight[i];
+    yi += ng.bispectrum(km, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*ng.mrk(km[1], mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*Weight[i];
   }
 
   yi *= (xi2-xi1);
 
-  return cosm.mrk(kk[0], mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*cosm.mrk(kk[1], mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*yi*gsl_pow_2(kk[0]*kk[1]);
+  return ng.mrk(kk[0], mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*ng.mrk(kk[1], mass, method_Pk, store_output, output_root, norm, k_min, k_max, prec, file_par)*yi*gsl_pow_2(kk[0]*kk[1]);
 }
 
 /// @endcond
@@ -410,15 +323,14 @@ double cbl::glob::skewness_kernel (double *kk, size_t dim, void *params)
 // =====================================================================================
 
 
-
-double cbl::cosmology::Cosmology::skewness (const double mass, const string method_Pk, const bool store_output, const string output_root, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::NG::skewness (const double mass, const string method_Pk, const bool store_output, const string output_root, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
   cbl::Path path;
-  string dir_grid = path.DirCosmo()+"/Cosmology/Tables/grid_NG/skewness_kernel/unit"+conv(m_unit,par::fINT)+"/";
+  string dir_grid = path.DirCosmo()+"/Cosmology/Tables/grid_NG/skewness_kernel/unit"+conv(m_cosmology->unit(),par::fINT)+"/";
   string MK = "mkdir -p "+dir_grid; if (system (MK.c_str())) {};
 
-  string Norm = (m_sigma8>0) ? "_sigma8"+conv(m_sigma8,par::fDP3) : "_scalar_amp"+conv(m_scalar_amp,par::ee3);
-  string file_grid = dir_grid+"grid"+Norm+"_h"+conv(m_hh,par::fDP3)+"_OmB"+conv(m_Omega_baryon,par::fDP3)+"_OmCDM"+conv(m_Omega_CDM,par::fDP3)+"_OmL"+conv(m_Omega_DE,par::fDP3)+"_OmN"+conv(m_Omega_neutrinos,par::fDP3)+"_typeNG"+conv(m_type_NG,par::fINT)+"_lgMass"+conv(log10(mass),par::fDP2)+".dat";
+  string Norm = (m_cosmology->sigma8()>0) ? "_sigma8"+conv(m_cosmology->sigma8(),par::fDP3) : "_scalar_amp"+conv(m_cosmology->scalar_amp(),par::ee3);
+  string file_grid = dir_grid+"grid"+Norm+"_h"+conv(m_cosmology->little_h(),par::fDP3)+"_OmB"+conv(m_cosmology->Omega_baryon(),par::fDP3)+"_OmCDM"+conv(m_cosmology->Omega_CDM(),par::fDP3)+"_OmL"+conv(m_cosmology->Omega_DE(),par::fDP3)+"_OmN"+conv(m_cosmology->Omega_neutrinos(),par::fDP3)+"_typeNG"+conv(m_cosmology->type_NG(),par::fINT)+"_lgMass"+conv(log10(mass),par::fDP2)+".dat";
   
   // check !!!
   int bin = 20; 
@@ -429,24 +341,24 @@ double cbl::cosmology::Cosmology::skewness (const double mass, const string meth
   vector<double> xx1, xx2;
   vector< vector<double> > yy;
  
-  cbl::glob::STR_NG str;
-  str.Omega_matter = m_Omega_matter; 
-  str.Omega_baryon = m_Omega_baryon; 
-  str.Omega_neutrinos = m_Omega_neutrinos; 
-  str.massless_neutrinos = m_massless_neutrinos; 
-  str.massive_neutrinos = m_massive_neutrinos; 
-  str.Omega_DE = m_Omega_DE; 
-  str.Omega_radiation = m_Omega_radiation; 
-  str.hh = m_hh; 
-  str.scalar_amp = m_scalar_amp;
-  str.scalar_pivot = m_scalar_pivot; 
-  str.n_spec = m_n_spec;
-  str.w0 = m_w0; 
-  str.wa = m_wa; 
-  str.fNL = m_fNL;
-  str.type_NG = m_type_NG;
-  str.model = m_model;
-  str.unit = m_unit;
+  STR_NG str;
+  str.Omega_matter = m_cosmology->Omega_matter(); 
+  str.Omega_baryon = m_cosmology->Omega_baryon(); 
+  str.Omega_neutrinos = m_cosmology->Omega_neutrinos(); 
+  str.massless_neutrinos = m_cosmology->massless_neutrinos(); 
+  str.massive_neutrinos = m_cosmology->massive_neutrinos(); 
+  str.Omega_DE = m_cosmology->Omega_DE(); 
+  str.Omega_radiation = m_cosmology->Omega_radiation(); 
+  str.hh = m_cosmology->little_h(); 
+  str.scalar_amp = m_cosmology->scalar_amp();
+  str.scalar_pivot = m_cosmology->scalar_pivot(); 
+  str.n_spec = m_cosmology->n_spec();
+  str.w0 = m_cosmology->w0(); 
+  str.wa = m_cosmology->wa(); 
+  str.fNL = m_cosmology->fNL();
+  str.type_NG = m_cosmology->type_NG();
+  str.model = m_cosmology->model();
+  str.unit = m_cosmology->unit();
   str.kt = -1.; // check!!!
   str.mass = mass;
   str.method_Pk = method_Pk;
@@ -458,7 +370,7 @@ double cbl::cosmology::Cosmology::skewness (const double mass, const string meth
   str.prec = prec;
   str.file_par = input_file; // check!!!
 
-  bin_function_2D(file_grid, glob::skewness_kernel, &str, bin, x1_min, x1_max, x2_min, x2_max, "loglin", xx1, xx2, yy);
+  bin_function_2D(file_grid, skewness_kernel, &str, bin, x1_min, x1_max, x2_min, x2_max, "loglin", xx1, xx2, yy);
   
   cbl::glob::STR_grid_2D str_grid_2D;
   str_grid_2D._xx1 = xx1;
@@ -472,7 +384,7 @@ double cbl::cosmology::Cosmology::skewness (const double mass, const string meth
   
   for (int i=0; i<dim; i++) {
     kl[i] = 0.0;
-    kh[i] = 30.0/pow(Radius(mass,m_RhoZero),0.7);
+    kh[i] = 30.0/pow(Radius(mass,m_cosmology->rho_m(0.)), 0.7);
   }
 
   
@@ -497,16 +409,17 @@ double cbl::cosmology::Cosmology::skewness (const double mass, const string meth
   
   gsl_monte_vegas_free(st);
 
-  double var = sigma2M(mass, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file); 
+  Sigma SG(m_cosmology);
+  double var = SG.sigma2M({mass}, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file)[0]; 
 
-  return ibs/(8.0*gsl_pow_4(par::pi))/gsl_pow_2(var)*m_fNL;
+  return ibs/(8.0*gsl_pow_4(par::pi))/gsl_pow_2(var)*m_cosmology->fNL();
 }
 
 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::dskewnessdM (const double mass, const string method_Pk, const bool store_output, const string output_root, const string interpType, const int norm, const double k_min, const double k_max,  const double prec, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::NG::dskewnessdM (const double mass, const string method_Pk, const bool store_output, const string output_root, const string interpType, const int norm, const double k_min, const double k_max,  const double prec, const string input_file, const bool is_parameter_file) 
 {
   double dlogm = 0.1;
   double mInf = 6.0, mSup = 16.0;
@@ -529,15 +442,15 @@ double cbl::cosmology::Cosmology::dskewnessdM (const double mass, const string m
   double M1 = pow(10.0,logm1);
   double M2 = pow(10.0,logm2);
 
-  if (m_fNL != 0.0) {
-    switch (m_type_NG) {
+  if (m_cosmology->fNL() != 0.0) {
+    switch (m_cosmology->type_NG()) {
     default:
-      logsk1 = log10(skewness(M1, method_Pk, store_output, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)/m_fNL);
-      logsk2 = log10(skewness(M2, method_Pk, store_output, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)/m_fNL);
+      logsk1 = log10(skewness(M1, method_Pk, store_output, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)/m_cosmology->fNL());
+      logsk2 = log10(skewness(M2, method_Pk, store_output, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)/m_cosmology->fNL());
       break;
     case 4:
-      logsk1 = log10(-skewness(M1, method_Pk, store_output, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)/m_fNL);
-      logsk2 = log10(-skewness(M2, method_Pk, store_output, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)/m_fNL);
+      logsk1 = log10(-skewness(M1, method_Pk, store_output, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)/m_cosmology->fNL());
+      logsk2 = log10(-skewness(M2, method_Pk, store_output, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file)/m_cosmology->fNL());
       break;
     }
   }
@@ -549,15 +462,17 @@ double cbl::cosmology::Cosmology::dskewnessdM (const double mass, const string m
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::MF_correction (const double mass, const double redshift, const string method_Pk, const bool store_output, const string output_root, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
+double cbl::cosmology::NG::MF_correction (const double mass, const double redshift, const string method_Pk, const bool store_output, const string output_root, const string interpType, const int norm, const double k_min, const double k_max, const double prec, const string input_file, const bool is_parameter_file) 
 {
-  double dc = deltac(redshift)*sqrt(0.8);
-  double gf = DN(redshift); // check the normalization of D(z)!!!
+  double dc = m_cosmology->deltac(redshift)*sqrt(0.8);
+  double gf = m_cosmology->DN(redshift); // check the normalization of D(z)!!!
+
+  Sigma SG(m_cosmology);
   
-  double SSS = sigma2M(mass, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file);
+  double SSS = SG.sigma2M({mass}, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file)[0];
   double sm = sqrt(SSS);
 
-  double DlnSigmaDlnM = dnsigma2M(1, mass, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file)*(mass/(2.*SSS));
+  double DlnSigmaDlnM = SG.dnsigma2M(1, {mass}, method_Pk, 0., store_output, output_root, interpType, k_max, input_file, is_parameter_file)[0]*(mass/(2.*SSS));
   
   double sk = skewness(mass, method_Pk, store_output, output_root, interpType, norm, k_min, k_max, prec, input_file, is_parameter_file);
 

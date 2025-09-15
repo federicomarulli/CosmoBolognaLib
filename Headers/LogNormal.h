@@ -34,12 +34,12 @@
 #define __LOGNORMAL__
 
 #include "Catalogue.h"
-#include <fftw3.h>
+#include "PkXi.h"
 
 namespace cbl {
   
   /**
-   *  @brief The namespace of the functions and classes used to
+   *  @brief The namespace of thcde functions and classes used to
    *  construct <B> log-normal mocks </B> 
    *  
    *  The \e lognormal namespace contains all the functions and
@@ -66,7 +66,7 @@ namespace cbl {
       catalogue::Catalogue m_random;
 
       /// the assumed cosmological model
-      cosmology::Cosmology m_cosmology;
+      std::shared_ptr<cosmology::Cosmology> m_cosmology = NULL;
 
       /// the mean total number of objects in the log-normal catalogues
       int m_nObjects; 
@@ -135,8 +135,8 @@ namespace cbl {
        *  @param NL true &rarr; compute the non-linear power spectrum;
        *  false &rarr; compute the linear power spectrum
        */
-      LogNormal (const catalogue::Catalogue random, const cosmology::Cosmology cosmology, const int nObjects, const double redshift, const double bias, const double cell_size, const bool real=true, const std::string method_Pk="CAMB", const bool NL=false)
-	: m_random(random), m_cosmology(cosmology), m_nObjects(nObjects), m_redshift(redshift), m_bias(bias), m_cell_size(cell_size), m_real(real), m_method_Pk(method_Pk), m_NL(NL) {}
+      LogNormal (const catalogue::Catalogue random, const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const int nObjects, const double redshift, const double bias, const double cell_size, const bool real=true, const std::string method_Pk="CAMB", const bool NL=false)
+	: m_random(random), m_cosmology(std::move(cosmology)), m_nObjects(nObjects), m_redshift(redshift), m_bias(bias), m_cell_size(cell_size), m_real(real), m_method_Pk(method_Pk), m_NL(NL) {}
 
       ///@}
       

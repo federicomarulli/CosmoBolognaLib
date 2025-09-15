@@ -1,0 +1,33 @@
+4
+/opt/homebrew/bin/gcc-15
+-O3 -ffast-math -march=native
+1
+/opt/homebrew/bin/gcc-15
+-O3 -ffast-math -march=native
+/opt/homebrew/bin/g++-15
+-O3
+1
+/opt/homebrew/include
+/opt/homebrew/lib
+4
+/opt/homebrew/bin/gcc-15
+-O3 -ffast-math -march=native
+1
+/opt/homebrew/bin/gcc-15
+-O3 -ffast-math -march=native
+/opt/homebrew/bin/g++-15
+-O3
+1
+/opt/homebrew/include
+/opt/homebrew/lib
+4
+/opt/homebrew/bin/gcc-15
+-O3 -ffast-math -march=native
+1
+/opt/homebrew/bin/gcc-15
+-O3 -ffast-math -march=native
+/opt/homebrew/bin/g++-15
+-O3
+1
+/opt/homebrew/include
+/opt/homebrew/lib

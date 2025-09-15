@@ -1,0 +1,291 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>What is available?</TITLE>
+<META NAME="description" CONTENT="What is available?">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_Changes_in_release_3_82.htm">
+<LINK REL="previous" HREF="idl_Using_HEALPix_IDL_facilitie.htm">
+<LINK REL="next" HREF="idl_Changes_in_release_3_82.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_Using_HEALPix_IDL_facilitie.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_Changes_in_release_3_82.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html300"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_Using_HEALPix_IDL_facilitie.htm">Using the HEALPix-IDL facilities</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_Changes_in_release_3_82.htm">Changes in release 3.82</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A ID="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A ID="tex2html302"
+  HREF="idl_What_is_available.htm#SECTION310">Maps related tools</A>
+<LI><A ID="tex2html303"
+  HREF="idl_What_is_available.htm#SECTION320">Pixels related tools</A>
+<LI><A ID="tex2html304"
+  HREF="idl_What_is_available.htm#SECTION330">Power spectrum, alm, beam and pixel window functions</A>
+<LI><A ID="tex2html305"
+  HREF="idl_What_is_available.htm#SECTION340">Other tools</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A ID="SECTION300">
+What is available?</A>
+</H1>
+
+<P>
+The <strong>HEALPix</strong>-IDL tools are mostly designed to 
+generate, visualize, filter and analyze sky maps;
+identify, query and process <strong>HEALPix</strong> pixels; 
+and deal with angular spectral objects (such as power spectra or Spherical
+Harmonics coefficients), 
+as detailed below.
+The full documentation is available online in IDL via <A HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm#idl:healpix_doc"><SPAN  CLASS="texttt">healpix_doc</SPAN></A>
+
+<H2><A ID="SECTION310">
+<strong>HEALPix</strong> maps related tools</A>
+</H2>
+
+<UL>
+<LI>Visualization: gnomic, Mollweide, Cartesian,
+orthographic and azimuthal equatorial projections
+<A HREF="idl_mollview.htm#idl:mollview"><SPAN  CLASS="texttt">mollview</SPAN></A>, 
+<A HREF="idl_gnomview.htm#idl:gnomview"><SPAN  CLASS="texttt">gnomview</SPAN></A>, 
+<A HREF="idl_cartview.htm#idl:cartview"><SPAN  CLASS="texttt">cartview</SPAN></A>, 
+<A HREF="idl_orthview.htm#idl:orthview"><SPAN  CLASS="texttt">orthview</SPAN></A>, 
+<A HREF="idl_azeqview.htm#idl:azeqview"><SPAN  CLASS="texttt">azeqview</SPAN></A>
+(with interactive cursor:
+<A HREF="idl_cartcursor.htm#idl:cartcursor"><SPAN  CLASS="texttt">cartcursor</SPAN></A>,
+<A HREF="idl_mollcursor.htm#idl:mollcursor"><SPAN  CLASS="texttt">mollcursor</SPAN></A>,
+<A HREF="idl_gnomcursor.htm#idl:gnomcursor"><SPAN  CLASS="texttt">gnomcursor</SPAN></A>,
+<A HREF="idl_orthcursor.htm#idl:orthcursor"><SPAN  CLASS="texttt">orthcursor</SPAN></A>)
+</LI>
+<LI>Production of outlines for Earth continents, coastlines, countries and rivers 
+<A HREF="idl_outline_earth.htm#idl:outline_earth"><SPAN  CLASS="texttt">outline_earth</SPAN></A>
+</LI>
+<LI>Color table creation: <A HREF="idl_planck_colors.htm#idl:planck_colors"><SPAN  CLASS="texttt">planck_colors</SPAN></A>
+</LI>
+<LI>Production of <strong>HEALPix</strong> maps in Google Sky and Dome Master format:
+<A HREF="idl_hpx2gs.htm#idl:hpx2gs"><SPAN style="font-family:monospace">hpx2gs</SPAN></A>,
+<A HREF="idl_hpx2dm.htm#idl:hpx2dm"><SPAN style="font-family:monospace">hpx2dm</SPAN></A>.
+</LI>
+<LI>Spherical Harmonics analysis and synthesis:
+<A HREF="idl_ianafast.htm#idl:ianafast"><SPAN  CLASS="texttt">ianafast</SPAN></A>,
+<A HREF="idl_isynfast.htm#idl:isynfast"><SPAN  CLASS="texttt">isynfast</SPAN></A>.
+</LI>
+<LI>Smoothing and filtering:
+<A HREF="idl_ismoothing.htm#idl:ismoothing"><SPAN  CLASS="texttt">ismoothing</SPAN></A>,
+<A HREF="idl_median_filter.htm#idl:median_filter"><SPAN  CLASS="texttt">median_filter</SPAN></A>,
+<A HREF="idl_remove_dipole.htm#idl:remove_dipole"><SPAN  CLASS="texttt">remove_dipole</SPAN></A>.
+</LI>
+<LI>Handling of quadrature weights:
+<A HREF="idl_nside2npweights.htm#idl:nside2npweights"><SPAN  CLASS="texttt">nside2npweights</SPAN></A>,
+<A HREF="idl_unfold_weights.htm#idl:unfold_weights"><SPAN  CLASS="texttt">unfold_weights</SPAN></A>.
+
+<P>
+</LI>
+<LI>Pixel pro/down-grading and NESTED/RING pixel reordering:
+<A HREF="idl_ud_grade.htm#idl:ud_grade"><SPAN  CLASS="texttt">ud_grade</SPAN></A>,
+<A HREF="idl_reorder.htm#idl:reorder"><SPAN  CLASS="texttt">reorder</SPAN></A>.
+</LI>
+<LI>Mask processing:
+<A HREF="idl_iprocess_mask.htm#idl:iprocess_mask"><SPAN  CLASS="texttt">iprocess_mask</SPAN></A>
+</LI>
+<LI>Maps I/O:
+<A HREF="idl_read_fits_cut4.htm#idl:read_fits_cut4"><SPAN  CLASS="texttt">read_fits_cut4</SPAN></A>,
+<A HREF="idl_read_fits_map.htm#idl:read_fits_map"><SPAN  CLASS="texttt">read_fits_map</SPAN></A>,
+<A HREF="idl_read_fits_partial.htm#idl:read_fits_partial"><SPAN  CLASS="texttt">read_fits_partial</SPAN></A>,
+<A HREF="idl_read_fits_s.htm#idl:read_fits_s"><SPAN  CLASS="texttt">read_fits_s</SPAN></A>,
+<A HREF="idl_read_tqu.htm#idl:read_tqu"><SPAN  CLASS="texttt">read_tqu</SPAN></A>.
+<BR><A HREF="idl_write_fits_cut4.htm#idl:write_fits_cut4"><SPAN  CLASS="texttt">write_fits_cut4</SPAN></A>,
+<A HREF="idl_write_fits_map.htm#idl:write_fits_map"><SPAN  CLASS="texttt">write_fits_map</SPAN></A>, 
+<A HREF="idl_write_fits_partial.htm#idl:write_fits_partial"><SPAN  CLASS="texttt">write_fits_partial</SPAN></A>, 
+<A HREF="idl_write_fits_sb.htm#idl:write_fits_sb"><SPAN  CLASS="texttt">write_fits_sb</SPAN></A>,
+<A HREF="idl_write_tqu.htm#idl:write_tqu"><SPAN  CLASS="texttt">write_tqu</SPAN></A>. 
+<BR><A HREF="idl_getsize_fits.htm#idl:getsize_fits"><SPAN  CLASS="texttt">getsize_fits</SPAN></A>,
+<A HREF="idl_change_polcconv.htm#idl:change_polcconv"><SPAN  CLASS="texttt">change_polcconv</SPAN></A>
+</LI>
+</UL>
+<H2><A ID="SECTION320">
+<strong>HEALPix</strong> pixels related tools</A>
+</H2>
+
+<UL>
+<LI>Coordinate tools:
+<A HREF="idl_ang2vec.htm#idl:ang2vec"><SPAN  CLASS="texttt">ang2vec</SPAN></A>,
+<A HREF="idl_angulardistance.htm#idl:angulardistance"><SPAN  CLASS="texttt">angulardistance</SPAN></A>,
+<A HREF="idl_euler_matrix_new.htm#idl:euler_matrix_new"><SPAN  CLASS="texttt">euler_matrix_new</SPAN></A>,
+<A HREF="idl_rotate_coord.htm#idl:rotate_coord"><SPAN  CLASS="texttt">rotate_coord</SPAN></A>,
+<A HREF="idl_vec2ang.htm#idl:vec2ang"><SPAN  CLASS="texttt">vec2ang</SPAN></A>
+</LI>
+<LI>Coordinates to pixel transforms, and back:
+<A HREF="idl_nside2npix.htm#idl:nside2npix"><SPAN  CLASS="texttt">nside2npix</SPAN></A>, <A HREF="idl_npix2nside.htm#idl:npix2nside"><SPAN style="font-family:monospace">npix2nside</SPAN></A>,
+<A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools"><SPAN  CLASS="texttt">ang2pix_*, pix2ang_*</SPAN></A>,
+<A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools"><SPAN  CLASS="texttt">pix2vec_*, vec2pix_*</SPAN></A>
+</LI>
+<LI>RING/NESTED transforms:
+<A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools"><SPAN  CLASS="texttt">nest2ring, ring2nest</SPAN></A>
+</LI>
+<LI>Unique Identifier to NESTED index, and back:
+<A HREF="idl_uniq2nest.htm#idl:uniq2nest"><SPAN  CLASS="texttt">uniq2nest</SPAN></A>,
+<A HREF="idl_nest2uniq.htm#idl:nest2uniq"><SPAN  CLASS="texttt">nest2uniq</SPAN></A>
+</LI>
+<LI>Neighbouring pixels:
+<A HREF="idl_neighbours_nest.htm#idl:neighbours_nest"><SPAN  CLASS="texttt">neighbours_nest</SPAN></A>, <A HREF="idl_neighbours_ring.htm#idl:neighbours_ring"><SPAN  CLASS="texttt">neighbours_ring</SPAN></A>
+</LI>
+<LI>Pixel query within a disc, polygon, strip or triangle:
+<A HREF="idl_query_disc.htm#idl:query_disc"><SPAN  CLASS="texttt">query_disc</SPAN></A>, 
+<A HREF="idl_query_polygon.htm#idl:query_polygon"><SPAN  CLASS="texttt">query_polygon</SPAN></A>, 
+<A HREF="idl_query_strip.htm#idl:query_strip"><SPAN  CLASS="texttt">query_strip</SPAN></A>,
+<A HREF="idl_query_triangle.htm#idl:query_triangle"><SPAN  CLASS="texttt">query_triangle</SPAN></A>.
+</LI>
+<LI>Template pixels:
+<A HREF="idl_nside2ntemplates.htm#idl:nside2ntemplates"><SPAN  CLASS="texttt">nside2ntemplates</SPAN></A>,
+<A HREF="idl_same_shape_pixels_nest_same.htm#idl:same_shape_pixels_xxx"><SPAN  CLASS="texttt">same_shape_pixels_ring</SPAN></A>, 
+<A HREF="idl_same_shape_pixels_nest_same.htm#idl:same_shape_pixels_xxx"><SPAN  CLASS="texttt">same_shape_pixels_nest</SPAN></A>,
+<A HREF="idl_template_pixel_nest_templat.htm#idl:template_pixel_xxx"><SPAN  CLASS="texttt">template_pixel_ring</SPAN></A>, 
+<A HREF="idl_template_pixel_nest_templat.htm#idl:template_pixel_xxx"><SPAN  CLASS="texttt">template_pixel_nest</SPAN></A>
+</LI>
+</UL>
+
+<P>
+
+<H2><A ID="SECTION330">
+Power spectrum, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN>, beam and pixel window functions</A>
+</H2>
+
+<UL>
+<LI><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img2.png"
+ ALT="$B(\ell)$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img3.png"
+ ALT="$B(\theta)$"></SPAN> and pixel WF generation:
+<A HREF="idl_gaussbeam.htm#idl:gaussbeam"><SPAN  CLASS="texttt">gaussbeam</SPAN></A>,
+<A HREF="idl_beam2bl.htm#idl:beam2bl"><SPAN  CLASS="texttt">beam2bl</SPAN></A>,
+<A HREF="idl_bl2beam.htm#idl:bl2beam"><SPAN  CLASS="texttt">bl2beam</SPAN></A>,
+<A HREF="idl_healpixwindow.htm#idl:healpixwindow"><SPAN  CLASS="texttt">healpixwindow</SPAN></A>
+</LI>
+<LI><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img4.png"
+ ALT="$C(\ell)$"></SPAN> binning:
+<A HREF="idl_bin_llcl.htm#idl:bin_llcl"><SPAN  CLASS="texttt">bin_llcl</SPAN></A>
+</LI>
+<LI><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> handling tools:
+<A HREF="idl_alm_i2t.htm#idl:alm_i2t"><SPAN  CLASS="texttt">alm_i2t</SPAN></A>,
+<A HREF="idl_alm_t2i.htm#idl:alm_t2i"><SPAN  CLASS="texttt">alm_t2i</SPAN></A>,
+<A HREF="idl_index2lm.htm#idl:index2lm"><SPAN  CLASS="texttt">index2lm</SPAN></A>,
+<A HREF="idl_lm2index.htm#idl:lm2index"><SPAN  CLASS="texttt">lm2index</SPAN></A>,
+<A HREF="idl_ialteralm.htm#idl:ialteralm"><SPAN  CLASS="texttt">ialteralm</SPAN></A>
+</LI>
+<LI><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img4.png"
+ ALT="$C(\ell)$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img2.png"
+ ALT="$B(\ell)$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> I/O:
+<A HREF="idl_fits2cl.htm#idl:fits2cl"><SPAN  CLASS="texttt">fits2cl</SPAN></A>/<A HREF="idl_cl2fits.htm#idl:cl2fits"><SPAN  CLASS="texttt">cl2fits</SPAN></A>,
+<A HREF="idl_bl2fits.htm#idl:bl2fits"><SPAN  CLASS="texttt">bl2fits</SPAN></A>,
+<A HREF="idl_fits2alm.htm#idl:fits2alm"><SPAN  CLASS="texttt">fits2alm</SPAN></A>/<A HREF="idl_alm2fits.htm#idl:alm2fits"><SPAN  CLASS="texttt">alm2fits</SPAN></A>,
+</LI>
+</UL>
+
+<P>
+
+<H2><A ID="SECTION340">
+Other tools</A>
+</H2>
+
+<UL>
+<LI><strong>HEALPix</strong> variables and paths initialization: 
+<A HREF="idl_init_healpix_healpix_system.htm#idl:init_healpix"><SPAN  CLASS="texttt">init_healpix</SPAN></A>
+</LI>
+<LI>online documentation: <A HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm#idl:healpix_doc"><SPAN  CLASS="texttt">healpix_doc</SPAN></A>
+</LI>
+<LI>recursive <SPAN  CLASS="texttt">help</SPAN> on IDL sub-structures: <A HREF="idl_help_st.htm#idl:help_st"><SPAN  CLASS="texttt">help_st</SPAN></A>
+</LI>
+</UL>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_Using_HEALPix_IDL_facilitie.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_Changes_in_release_3_82.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html300"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_Using_HEALPix_IDL_facilitie.htm">Using the HEALPix-IDL facilities</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_Changes_in_release_3_82.htm">Changes in release 3.82</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

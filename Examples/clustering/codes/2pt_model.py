@@ -12,17 +12,18 @@ import matplotlib.pyplot as plt
 import CosmoBolognaLib as cbl
 
 # create an object of class Cosmology
-cosmo = cbl.Cosmology(cbl.CosmologicalModel__Planck15_)
+cosmology = cbl.LCDM("Planck18")
+PX = cbl.PkXi(cosmology)
 
 # define k and r for the computation of dark matter power spectrum and  two point correlation correlation function
 kk = np.logspace(-3, 0, 100)
 rr = np.linspace(1., 100, 50)
 
 # compute the power spectrum using CAMB
-PkCAMB = cosmo.Pk_matter(kk, "CAMB", False, 0.2)
+PkCAMB = PX.Pk_matter(kk, "CAMB", False, 0.2)
 
 # compute the two point correlation function using CAMB
-xiCAMB = np.asarray([cosmo.xi_matter(rr[i], "CAMB", False, 0.2) for i in range(len(rr))])
+xiCAMB = np.asarray([PX.xi_matter(rr[i], "CAMB", False, 0.2) for i in range(len(rr))])
 
 
 # plot the results

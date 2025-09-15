@@ -1,0 +1,300 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>pixel_window</TITLE>
+<META NAME="description" CONTENT="pixel_window">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+<LINK REL="previous" HREF="sub_parse_init_parse_int_parse_.htm">
+<LINK REL="next" HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_parse_init_parse_int_parse_.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html455"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_parse_init_parse_int_parse_.htm">parse_init, parse_int, , parse_finish</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm">pix2xxx,ang2xxx,vec2xxx, nest2ring,ring2nest</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION7400"></A>
+<A ID="sub:pixel_window"></A>
+<BR>
+ 
+</H1>
+
+<P>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">pixel_window</SPAN></div><hr>
+<H3>This routine returns the <EM>averaged</EM> <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img33.png"
+ ALT="$\ell$"></SPAN>-space window function <!-- MATH
+ $w_{\mathrm{pix}}(\ell)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.75ex; " SRC="sub_img245.png"
+ ALT="$w_{\mathrm{pix}}(\ell)$"></SPAN> (for temperature and
+  polarisation) associated to <strong>HEALPix</strong>    pixels of resolution parameter <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN>. Because of the integration of the
+signal over the
+pixel area, the <!-- MATH
+ $a_{\ell m}^\mathrm{(pix)}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.97ex; vertical-align: -0.68ex; " SRC="sub_img246.png"
+ ALT="$a_{\ell m}^\mathrm{(pix)}$"></SPAN> coefficients of a pixelated map
+are related to the unpixelated underlying <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> by <!-- MATH
+ $a_{\ell m}^\mathrm{(pix)}= a_{\ell m}w_{\mathrm{pix}}(\ell)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 3.03ex; vertical-align: -0.75ex; " SRC="sub_img247.png"
+ ALT="$a_{\ell m}^\mathrm{(pix)}= a_{\ell m}w_{\mathrm{pix}}(\ell)$"></SPAN>.
+<BR>
+Unless specified otherwise, the <!-- MATH
+ $w_{\mathrm{pix}}(\ell)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.75ex; " SRC="sub_img245.png"
+ ALT="$w_{\mathrm{pix}}(\ell)$"></SPAN> are read from the files
+  $HEALPIX/data/pixel_window_n????.fits.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/alm_tools.F90"><strong>src/f90/mod/alm_tools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">pixel_window</SPAN>(
+<A HREF="#sub:pixel_window:pixlw">pixlw</A>, <A HREF="#sub:pixel_window:nside">nside</A>[, <A HREF="#sub:pixel_window:windowfile">windowfile</A>]
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:250px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+pixlw<A ID="sub:pixel_window:pixlw"></A>(0:lmax,1:p)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">pixel window function(s) <!-- MATH
+ $w_{\mathrm{pix}}(\ell)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.75ex; " SRC="sub_img245.png"
+ ALT="$w_{\mathrm{pix}}(\ell)$"></SPAN> generated. The first index
+                   must be <!-- MATH
+ $\ell_{\mathrm{max}}\leq 4N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img248.png"
+ ALT="$\ell_{\mathrm{max}}\leq 4N_{\mathrm{side}}$"></SPAN>. The second index runs from 1:1 for
+                   temperature only, and 1:3 for polarisation. In the latter
+                   case, 1=T, 2=E, 3=B.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">nside<A ID="sub:pixel_window:nside"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px"><strong>HEALPix</strong>  <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> resolution parameter. Unless <SPAN style="font-family:monospace">windowfile</SPAN> is set, the file associated
+                   with <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> and shipped with the package is read by
+                   default. If <SPAN style="font-family:monospace">nside</SPAN> = 0, the pixel is assumed infinitely
+                   small and <SPAN style="font-family:monospace">pixlw</SPAN> is returned with value 1.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">windowfile<A ID="sub:pixel_window:windowfile"></A> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">FITS file containing the pixel window to be read instead
+                   of the default.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">call pixel_window(pixlw, 64)  
+<BR></div>
+<blockquote>
+returns in pixlw the pixel window function for <!-- MATH
+ $N_{\mathrm{side}}= 64$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img124.png"
+ ALT="$N_{\mathrm{side}}=64$"></SPAN>.
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">pixel_window</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">misc_utils</SPAN></B>
+<DD>module, containing:
+      <DT>
+<B><A HREF="sub_assert_assert_alloc_assert_.htm#sub:assert">assert, fatal_error</A></B>
+<DD>interrupt code in case of error
+  <DT>
+<B><SPAN  CLASS="textbf">extension</SPAN></B>
+<DD>module, containing:
+     <DT>
+<B><A HREF="sub_getEnvironment.htm#sub:getenvironment">getEnvironment</A></B>
+<DD>read environment variable
+  <DT>
+<B><SPAN  CLASS="textbf">fitstools</SPAN></B>
+<DD>module, containing:
+     <DT>
+<B><A HREF="sub_read_dbintab.htm#sub:read_dbintab">read_dbintab</A></B>
+<DD>reads double precision binary table
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">pixel_window</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_gaussbeam.htm#sub:gaussbeam">gaussbeam</A></B>
+<DD>routine to generate a gaussian
+beam window function
+  <DT>
+<B><A HREF="sub_generate_beam.htm#sub:generate_beam">generate_beam</A></B>
+<DD>returns a beam window function
+  <DT>
+<B><A HREF="sub_alter_alm.htm#sub:alter_alm">alter_alm</A>, <A HREF="sub_rotate_alm.htm#sub:rotate_alm">rotate_alm</A></B>
+<DD>modifies <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> to emulate effect
+of real space filtering and coordinate rotation respectively
+  <DT>
+<B><A HREF="sub_alm2map.htm#sub:alm2map">alm2map</A></B>
+<DD>synthetize a <strong>HEALPix</strong> map from its <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>
+(or <!-- MATH
+ $a_{\ell m}^\mathrm{(pix)}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.97ex; vertical-align: -0.68ex; " SRC="sub_img246.png"
+ ALT="$a_{\ell m}^\mathrm{(pix)}$"></SPAN>).
+  <DT>
+<B><A HREF="sub_alm2map_der.htm#sub:alm2map_der">alm2map_der</A></B>
+<DD>synthetize a map and its
+derivatives from its <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> (or <!-- MATH
+ $a_{\ell m}^\mathrm{(pix)}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.97ex; vertical-align: -0.68ex; " SRC="sub_img246.png"
+ ALT="$a_{\ell m}^\mathrm{(pix)}$"></SPAN>).
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_parse_init_parse_int_parse_.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html455"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_parse_init_parse_int_parse_.htm">parse_init, parse_int, , parse_finish</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm">pix2xxx,ang2xxx,vec2xxx, nest2ring,ring2nest</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

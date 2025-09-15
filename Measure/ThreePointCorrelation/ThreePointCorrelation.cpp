@@ -139,9 +139,9 @@ void cbl::measure::threept::ThreePointCorrelation::count_triplets (const std::sh
     // if (tid == 0) coutCBL << "Number of threads = " << omp_get_num_threads() << endl;
 
     // internal object used by each thread to handle triplets
-    shared_ptr<Triplet> tt_thread = move(Triplet::Create(tt->tripletType(), tt->r12(), tt->r12_binSize(), tt->r13(), tt->r13_binSize(), tt->nbins()));
+    shared_ptr<Triplet> tt_thread = Triplet::Create(tt->tripletType(), tt->r12(), tt->r12_binSize(), tt->r13(), tt->r13_binSize(), tt->nbins());
     
-#pragma omp for schedule(static, 2)  
+#pragma omp for schedule(dynamic)  
     for (int i=0; i<nObj; i++) { // loop on the objects of the catalogue
     
       // get the indexes of the objects at r12
@@ -267,9 +267,9 @@ void cbl::measure::threept::ThreePointCorrelation::count_allTriplets (const std:
   
   if (count_ddr) {
 
-    shared_ptr<Triplet> ddr1 = move(Triplet::Create(m_ddr->tripletType(), m_ddr->r12(), m_ddr->r12_binSize(), m_ddr->r13(), m_ddr->r13_binSize(), m_ddr->nbins()));
-    shared_ptr<Triplet> ddr2 = move(Triplet::Create(m_ddr->tripletType(), m_ddr->r12(), m_ddr->r12_binSize(), m_ddr->r13(), m_ddr->r13_binSize(), m_ddr->nbins()));
-    shared_ptr<Triplet> ddr3 = move(Triplet::Create(m_ddr->tripletType(), m_ddr->r12(), m_ddr->r12_binSize(), m_ddr->r13(), m_ddr->r13_binSize(), m_ddr->nbins()));
+    shared_ptr<Triplet> ddr1 = Triplet::Create(m_ddr->tripletType(), m_ddr->r12(), m_ddr->r12_binSize(), m_ddr->r13(), m_ddr->r13_binSize(), m_ddr->nbins());
+    shared_ptr<Triplet> ddr2 = Triplet::Create(m_ddr->tripletType(), m_ddr->r12(), m_ddr->r12_binSize(), m_ddr->r13(), m_ddr->r13_binSize(), m_ddr->nbins());
+    shared_ptr<Triplet> ddr3 = Triplet::Create(m_ddr->tripletType(), m_ddr->r12(), m_ddr->r12_binSize(), m_ddr->r13(), m_ddr->r13_binSize(), m_ddr->nbins());
 
     count_triplets(m_data, ChainMesh_data_rMAX1, ChainMesh_random_rMAX2, ddr1, tcount);
     count_triplets(m_data, ChainMesh_random_rMAX1, ChainMesh_data_rMAX2, ddr2, tcount);
@@ -289,9 +289,9 @@ void cbl::measure::threept::ThreePointCorrelation::count_allTriplets (const std:
   
   if (count_drr) {
 
-    shared_ptr<Triplet> drr1 = move(Triplet::Create(m_drr->tripletType(), m_drr->r12(), m_drr->r12_binSize(), m_drr->r13(), m_drr->r13_binSize(), m_drr->nbins()));
-    shared_ptr<Triplet> drr2 = move(Triplet::Create(m_drr->tripletType(), m_drr->r12(), m_drr->r12_binSize(), m_drr->r13(), m_drr->r13_binSize(), m_drr->nbins()));
-    shared_ptr<Triplet> drr3 = move(Triplet::Create(m_drr->tripletType(), m_drr->r12(), m_drr->r12_binSize(), m_drr->r13(), m_drr->r13_binSize(), m_drr->nbins()));
+    shared_ptr<Triplet> drr1 = Triplet::Create(m_drr->tripletType(), m_drr->r12(), m_drr->r12_binSize(), m_drr->r13(), m_drr->r13_binSize(), m_drr->nbins());
+    shared_ptr<Triplet> drr2 = Triplet::Create(m_drr->tripletType(), m_drr->r12(), m_drr->r12_binSize(), m_drr->r13(), m_drr->r13_binSize(), m_drr->nbins());
+    shared_ptr<Triplet> drr3 = Triplet::Create(m_drr->tripletType(), m_drr->r12(), m_drr->r12_binSize(), m_drr->r13(), m_drr->r13_binSize(), m_drr->nbins());
     
     count_triplets(m_random, ChainMesh_random_rMAX1, ChainMesh_data_rMAX2, drr1, tcount);
     count_triplets(m_random, ChainMesh_data_rMAX1, ChainMesh_random_rMAX2, drr2, tcount);
@@ -336,13 +336,13 @@ void cbl::measure::threept::ThreePointCorrelation::count_triplets_region (const 
     // if (tid == 0) coutCBL << "Number of threads = " << omp_get_num_threads() << endl;
 
     // internal object used by each thread to handle triplets
-    shared_ptr<Triplet> tt_thread = move(Triplet::Create(tt->tripletType(), tt->r12(), tt->r12_binSize(), tt->r13(), tt->r13_binSize(), tt->nbins()));
+    shared_ptr<Triplet> tt_thread = Triplet::Create(tt->tripletType(), tt->r12(), tt->r12_binSize(), tt->r13(), tt->r13_binSize(), tt->nbins());
     vector<shared_ptr<Triplet> > tt_region_thread(tt_region.size());
 
     for (size_t i=0; i<tt_region.size(); ++i) 
-      tt_region_thread[i] = move(Triplet::Create(tt->tripletType(), tt->r12(), tt->r12_binSize(), tt->r13(), tt->r13_binSize() , tt->nbins()));
+      tt_region_thread[i] = Triplet::Create(tt->tripletType(), tt->r12(), tt->r12_binSize(), tt->r13(), tt->r13_binSize() , tt->nbins());
 
-#pragma omp for schedule(static, 2)  
+#pragma omp for schedule(dynamic)  
     for (int i=0; i<nObj; i++) { // loop on the objects of the catalogue
 
       int reg1 = cat1->region(i);
@@ -499,9 +499,9 @@ void cbl::measure::threept::ThreePointCorrelation::count_allTriplets_region (con
   
   if (count_ddr) {
 
-    shared_ptr<Triplet> ddr1 = move(Triplet::Create(m_ddr->tripletType(), m_ddr->r12(), m_ddr->r12_binSize(),  m_ddr->r13(), m_ddr->r13_binSize(), m_ddr->nbins()));
-    shared_ptr<Triplet> ddr2 = move(Triplet::Create(m_ddr->tripletType(), m_ddr->r12(), m_ddr->r12_binSize(),  m_ddr->r13(), m_ddr->r13_binSize(), m_ddr->nbins()));
-    shared_ptr<Triplet> ddr3 = move(Triplet::Create(m_ddr->tripletType(), m_ddr->r12(), m_ddr->r12_binSize(),  m_ddr->r13(), m_ddr->r13_binSize(), m_ddr->nbins()));
+    shared_ptr<Triplet> ddr1 = Triplet::Create(m_ddr->tripletType(), m_ddr->r12(), m_ddr->r12_binSize(),  m_ddr->r13(), m_ddr->r13_binSize(), m_ddr->nbins());
+    shared_ptr<Triplet> ddr2 = Triplet::Create(m_ddr->tripletType(), m_ddr->r12(), m_ddr->r12_binSize(),  m_ddr->r13(), m_ddr->r13_binSize(), m_ddr->nbins());
+    shared_ptr<Triplet> ddr3 = Triplet::Create(m_ddr->tripletType(), m_ddr->r12(), m_ddr->r12_binSize(),  m_ddr->r13(), m_ddr->r13_binSize(), m_ddr->nbins());
 
     vector<shared_ptr<Triplet>> ddr1_regions;
     vector<shared_ptr<Triplet>> ddr2_regions;
@@ -537,9 +537,9 @@ void cbl::measure::threept::ThreePointCorrelation::count_allTriplets_region (con
   
   if (count_drr) {
 
-    shared_ptr<Triplet> drr1 = move(Triplet::Create(m_drr->tripletType(), m_drr->r12(), m_drr->r12_binSize(),  m_drr->r13(), m_drr->r13_binSize(), m_drr->nbins()));
-    shared_ptr<Triplet> drr2 = move(Triplet::Create(m_drr->tripletType(), m_drr->r12(), m_drr->r12_binSize(),  m_drr->r13(), m_drr->r13_binSize(), m_drr->nbins()));
-    shared_ptr<Triplet> drr3 = move(Triplet::Create(m_drr->tripletType(), m_drr->r12(), m_drr->r12_binSize(),  m_drr->r13(), m_drr->r13_binSize(), m_drr->nbins()));
+    shared_ptr<Triplet> drr1 = Triplet::Create(m_drr->tripletType(), m_drr->r12(), m_drr->r12_binSize(),  m_drr->r13(), m_drr->r13_binSize(), m_drr->nbins());
+    shared_ptr<Triplet> drr2 = Triplet::Create(m_drr->tripletType(), m_drr->r12(), m_drr->r12_binSize(),  m_drr->r13(), m_drr->r13_binSize(), m_drr->nbins());
+    shared_ptr<Triplet> drr3 = Triplet::Create(m_drr->tripletType(), m_drr->r12(), m_drr->r12_binSize(),  m_drr->r13(), m_drr->r13_binSize(), m_drr->nbins());
     
     vector<shared_ptr<Triplet>> drr1_regions;
     vector<shared_ptr<Triplet>> drr2_regions;

@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>uniq2nest</TITLE>
+<META NAME="description" CONTENT="uniq2nest">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_vec2ang.htm">
+<LINK REL="previous" HREF="sub_unfold_weightsfile.htm">
+<LINK REL="next" HREF="sub_vec2ang.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_unfold_weightsfile.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_vec2ang.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html521"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_unfold_weightsfile.htm">unfold_weightsfile</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_vec2ang.htm">vec2ang</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION10700"></A>
+<A ID="sub:uniq2nest"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">uniq2nest</SPAN></div><hr>
+<H3>This F90 facility turns the Unique Identifier <!-- MATH
+ $u = p + 4 N_{\mathrm{side}}^2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img232.png"
+ ALT="$u = p + 4 N_{\mathrm{side}}^2$"></SPAN>, into the parameter <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> (a power of 2) and the pixel index <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="sub_img35.png"
+ ALT="$p$"></SPAN>. See <A HREF="./intro_Geometric_Algebraic_Propert.htm#intro:unique">&rdquo;The Unique Identifier scheme&rdquo;</A> section in 
+<A ID="tex2html31"
+  HREF="intro.htm">&rdquo;<strong>HEALPix</strong> Introduction Document&rdquo;</A>
+for more details.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/pix_tools.F90"><strong>src/f90/mod/pix_tools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">uniq2nest</SPAN>(
+<A HREF="#sub:uniq2nest:puniq">puniq</A>, 
+<A HREF="#sub:uniq2nest:nside">nside</A>, 
+<A HREF="#sub:uniq2nest:pnest">pnest</A>
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">name</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:300px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:300px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:50px">
+puniq <A ID="sub:uniq2nest:puniq"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:50px">I4B/I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:300px">The <strong>HEALPix</strong> Unique pixel identifier. Must be <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.41ex; " SRC="sub_img297.png"
+ ALT="$\ge 4$"></SPAN>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:50px">nside <A ID="sub:uniq2nest:nside"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:50px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:300px">The <strong>HEALPix</strong> <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> parameter.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:50px">pnest <A ID="sub:uniq2nest:pnest"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:50px">I4B/I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:300px">(NESTED scheme) pixel identification number over the range {0,<!-- MATH
+ $12N_{\mathrm{side}}^2-1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img233.png"
+ ALT="$12N_{\mathrm{side}}^2-1$"></SPAN>}.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use <A HREF="sub_healpix_modules_module.htm#sub:healpix_modules">healpix_modules</A>
+<BR>
+integer(I4B) :: nside, pnest 
+<BR>
+call uniq2nest(4, nside, pnest)
+<BR>
+print*,nside,pnest</div>
+<blockquote>
+<TABLE   STYLE="width:374;">
+<TR><TD>
+returns  
+<BR>
+1 0 
+<BR>
+since the pixel with Unique ID number 4 is the first pixel (<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.55ex; " SRC="sub_img234.png"
+ ALT="$p=0$"></SPAN>) at <!-- MATH
+ $N_{\mathrm{side}}=$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img235.png"
+ ALT="$N_{\mathrm{side}}=$"></SPAN> 1.
+</TD></TR>
+</TABLE>
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">uniq2nest</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_nest2uniq.htm#sub:nest2uniq">nest2uniq</A></B>
+<DD>Transforms Nside and Nested pixel number into Unique <strong>HEALPix</strong> pixel ID number
+  <DT>
+<B><A HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm#sub:pix_tools">pix2xxx, ...</A></B>
+<DD>to turn NESTED pixel index into sky coordinates and back
+  </DL>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_unfold_weightsfile.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_vec2ang.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html521"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_unfold_weightsfile.htm">unfold_weightsfile</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_vec2ang.htm">vec2ang</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

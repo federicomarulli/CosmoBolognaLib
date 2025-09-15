@@ -2,7 +2,11 @@
 // Example code: how to model the monopole of the two-point correlation function in redshift space
 // ===============================================================================================
 
+#include "LCDM.h"
 #include "Modelling_TwoPointCorrelation1D_monopole.h"
+
+using namespace std;
+
 
 int main () {
 
@@ -12,15 +16,15 @@ int main () {
     // ---------------- use default cosmological parameters and set sigma8 ------------
     // --------------------------------------------------------------------------------
   
-    cbl::cosmology::Cosmology cosmology;
-    cosmology.set_sigma8(0.8);
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
+    cosmology->set_parameter("sigma8",0.8);
 
   
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
 
-    const std::string file_catalogue = "../input/cat.dat";
+    const string file_catalogue = "../input/cat.dat";
   
     const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -45,8 +49,8 @@ int main () {
     const int nbins = 10;     // number of bins
     const double shift = 0.5; // spatial shift used to set the bin centre 
 
-    const std::string dir = "../output/";
-    const std::string file = "xi.dat";
+    const string dir = "../output/";
+    const string file = "xi.dat";
 
   
     // measure the monopole of the two-point correlation function and estimate Poissonian errors
@@ -90,7 +94,7 @@ int main () {
     model_twop.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_);
 
     // maximise the posterior
-    model_twop.maximize_posterior({1., 1.}, 10000, 1.e-5);
+    model_twop.maximize_posterior({1., 1.}, 10000, 2.e-5);
     
     // run the MCMC method to sample the posterior
     const int chain_size = 1000; // the size the chain lenght
@@ -111,7 +115,7 @@ int main () {
     
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

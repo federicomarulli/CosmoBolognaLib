@@ -35,9 +35,8 @@
 #ifndef __MODFUNCTWOP__
 #define __MODFUNCTWOP__
 
-#include "Cosmology.h"
 #include "Modelling_MassObservableRelation.h"
-
+#include "Modelling_PowerSpectrum_Angular.h"
 
 // ============================================================================
 
@@ -68,6 +67,9 @@ namespace cbl {
 	
 	/// mass-observable scaling relation
 	std::shared_ptr<modelling::massobsrel::Modelling_MassObservableRelation> scaling_relation;
+	
+	/// angular power spectrum
+	std::shared_ptr<modelling::angularpk::Modelling_PowerSpectrum_angular> angularpk;
 	
 	/// typical absolute error on redshift
 	double z_abs_err = -1;
@@ -154,7 +156,7 @@ namespace cbl {
 	double var;
 
 	/// cosmological parameters
-	std::vector<cosmology::CosmologicalParameter> Cpar;
+	std::vector<std::string> Cpar;
 
 	/// FV 0 &rarr; exponential form for f(v); 1 &rarr; Gaussian form for f(v); where f(v) is the velocity distribution function
 	int FV;
@@ -308,6 +310,12 @@ namespace cbl {
 
 	/// fiducial bias value
 	double bias;
+	
+	/// if true the bias is estimated directly using mass and redshift of the halo catalogue
+	bool bias_from_sample = false;
+	
+	/// if true the quadrupole of the 3D correlation function is included in the angular correlation function model. It works only in redshift space
+	bool include_quadrupole = false;
 
 	/// fiducial \f$D_V\f$
 	double DVfid;
@@ -317,6 +325,9 @@ namespace cbl {
 
 	/// fiducial \f$H(z)\f$
 	double HHfid;
+	
+	/// fiducial \f$r_s\f$
+	double rsfid;
 
 	/// &Delta;, the overdensity
 	double Delta;
@@ -329,7 +340,7 @@ namespace cbl {
 
 	/// Pointer to normal random numbers generator
 	std::shared_ptr<cbl::random::NormalRandomNumbers> gau_ran;
-
+	
 	/// cluster masses proxy
 	std::shared_ptr<cbl::data::Data> cluster_mass_proxy;
 
@@ -377,120 +388,51 @@ namespace cbl {
 
 	/// vector containing the masses
 	std::vector<double> mass;
+	
+	/// cluster redshift
+	std::vector<double> cluster_redshift;
 
 	/// cosmology used to measure the cluster masses
-	cosmology::Cosmology cosmology_mass;
+	std::shared_ptr<cosmology::Cosmology> cosmology_mass;
 
 	/// redshift_source vector containing the redshifts of the source galaxies, in case the cluster masses are estimated from weak lensing
 	std::vector<double> redshift_source;
+	
+	/// bestfit parameters for the redshift distribution of_sources
+	std::vector<double> dN_par;
+	
+	/// the distribution type of dN/dz
+	std::string distribution_type;
 
+	/// interpoolation type 
+	std::string interpType;
+
+	/// specify if you are in real or redshift space (for function xi0_linear_bias_cosmology) 
+	bool redshift_space;
+	
+	/// the area covered by the survey, in square degrees
+	double area_degrees;
+	
+	/// specify angular units (for angular 2pt correlation function) 
+	cbl::CoordinateUnits theta_units;
+
+	/// the redshift evolution function in the scaling relation
+	std::function<double(const double, const double, const std::shared_ptr<void>)> fz;
+
+	/// weights for completeness and purity of number counts in lambda* redshift bins 
+	std::vector<double> SF_weights;
+
+	///minimum proxy in a given proxy bin
+	double proxy_min;
+
+	///maximum proxy in a given proxy bin
+	double proxy_max;
+		
 	/**
 	 *  @brief default constructor
 	 */
 	STR_data_model () = default;
       };
-
-      /**
-       *  @brief true k and \f$\mu\f$ power spectrum coordinates as a
-       *  function of observed ones
-       
-       *  this function computes k' and \f$\mu'\f$ power spectrum
-       *  coordinates in the true cosmology from k and \f$\mu\f$
-       *  coordinates estimated in a fiducial cosmology, using the
-       *  Alcock-Paczynski parameters (see e.g. Beutler et al. 2016,
-       *  sec 5.2 ( https://arxiv.org/pdf/1607.03150.pdf):
-       *
-       *  \f[ k' = \frac{k}{\alpha_\perp} \sqrt{1+\mu^2 \left[ \left(
-       *  \frac{\alpha_\parallel}{\alpha_\perp}\right)^{-2}-1 \right]}
-       *  \, , \f]
-       *
-       *  \f[ \mu' = \mu\frac{\alpha_\perp}{\alpha_\parallel}
-       *  \frac{1}{\sqrt{1+\mu^2\left[\left(
-       *  \frac{\alpha_\parallel}{\alpha_\perp}
-       *  \right)^{-2}-1\right]}} \, , \f]
-       *
-       *  @param kk the wave vector module
-       *
-       *  @param mu the line of sight cosine
-       *
-       *  @param alpha_perp the shift transverse to the l.o.s.
-       *
-       *  @param alpha_par the shift parallel to the l.o.s.
-       *
-       *  @return a vector containing k' and \f$\mu'\f$ coordinates
-       */
-      std::vector<double> true_k_mu_AP (const double kk, const double mu, const double alpha_perp, const double alpha_par);
-
-      /**
-       *  @brief the multipole of order l of the power spectrum
-       *
-       *  The function computes the legendre polynomial expansion of
-       *  the \f$P(k, \mu)\f$:
-       *
-       *  \f[ P_l(k) = \frac{2l+1}{2} \int_{-1}^{1} \mathrm{d}\mu P(k,
-       *  \mu) L_l(\mu) \f]
-       *
-       *  where \f$l\f$ is the order of the expansion and
-       *  \f$L_l(\mu)\f$ is the Legendere polynomial of order \f$l\f$;
-       *  \f$P(k, \mu)\f$ is computed by cbl::modelling::twopt::Pkmu
-       *
-       *  @param kk the wave vector module
-       *
-       *  @param l the order of the expansion
-       *
-       *  @param model the \f$P(k,\mu)\f$ model
-       *
-       *  @param parameter vector containing parameter values
-       *
-       *  @param pk_interp vector containing power spectrum
-       *  interpolating functions
-       *
-       *  @param prec the integral precision
-       *
-       *  @param alpha_perp the shift transverse to the l.o.s.
-       *
-       *  @param alpha_par the shift parallel to the l.o.s.
-       *
-       *  @return the multipole expansion of \f$P(k, \mu)\f$ at given
-       *  \f$k\f$
-       */
-      double Pk_l (const double kk, const int l, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5, const double alpha_perp = 1., const double alpha_par = 1.);
-
-      /**
-       *  @brief the multipole of order l of the power spectrum
-       *
-       *  The function computes the legendre polynomial expansion of
-       *  the \f$P(k, \mu)\f$:
-       *
-       *  \f[ P_l(k) = \frac{2l+1}{2} \int_{-1}^{1} \mathrm{d}\mu P(k,
-       *  \mu) L_l(\mu) \f]
-       *
-       *  where \f$l\f$ is the order of the expansion and
-       *  \f$L_l(\mu)\f$ is the Legendere polynomial of order \f$l\f$;
-       *  \f$P(k, \mu)\f$ is computed by
-       *  cbl::modelling::twopt::Pkmu
-       *
-       *  @param kk the wave vector module vector
-       *
-       *  @param l the order of the expansion
-       *
-       *  @param model the \f$P(k,\mu)\f$ model
-       *
-       *  @param parameter vector containing parameter values
-       *
-       *  @param pk_interp vector containing power spectrum
-       *  interpolating functions
-       *
-       *  @param prec the integral precision
-       *
-       *  @param alpha_perp the shift transverse to the l.o.s.
-       *
-       *  @param alpha_par the shift parallel to the l.o.s.
-       *
-       *  @return the multipole expansion of \f$P(k, \mu)\f$ at given
-       *  \f$k\f$
-       */
-      std::vector<double> Pk_l (const std::vector<double> kk, const int l, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5, const double alpha_perp = 1., const double alpha_par = 1.);
 
       /**
        *  @brief the interpolating function of multipole expansion of
@@ -503,7 +445,7 @@ namespace cbl {
        *  P_l(k) j_l(ks) \f]
        *
        *  where \f$j_l(ks)\f$ are the Bessel functions, and
-       *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
+       *  \f$P_l(k)\f$ is computed by cbl::modelling::powspec::Pk_l
        *
        *  @param kk the wave vector module vector
        *
@@ -540,7 +482,7 @@ namespace cbl {
        *  P_l(k) j_l(ks) \f]
        *
        *  where \f$j_l(ks)\f$ are the Bessel functions, and
-       *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
+       *  \f$P_l(k)\f$ is computed by cbl::modelling::powspec::Pk_l
        *
        *  @param rr vector of scales to compute multipoles
        *
@@ -576,7 +518,7 @@ namespace cbl {
        *  P_l(k) j_l(ks) \f]
        *
        *  where \f$j_l(ks)\f$ are the Bessel functions, and
-       *  \f$P_l(k)\f$ is computed by cbl::modelling::twopt::Pk_l
+       *  \f$P_l(k)\f$ is computed by cbl::modelling::powspec::Pk_l
        *
        *  @param rr vector of scales to compute multipoles
        *
@@ -719,38 +661,6 @@ namespace cbl {
       std::vector<double> wp_from_Xi_rppi (const std::vector<double> rp, const double pimax, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double prec=1.e-5, const double alpha_perp = 1., const double alpha_par = 1.);
 
       /**
-       *  @brief the power spectrum terms
-       *  obtained integrating the redshift space 2D power spectrum
-       *
-       *  the function returns the analytic solutions of the integral
-       *  of the redshift space 2D power spectrum along \f$\mu\f$:
-       *
-       *  \f$P(k,\mu) = P_\mathrm{DM}(k) (b+f\mu^2)^2
-       *  \exp(-k^2\mu^2\sigma^2)\f$.
-       *
-       *  Solutions are :
-       *
-       *  \f[
-       *   P'(k) = P_\mathrm{DM}(k) \frac{\sqrt{\pi}}{2 k \sigma} \mathrm{erf}(k\sigma) ; \\
-       *   P''(k) = \frac{f}{(k\sigma)^3} P_\mathrm{DM}(k) \left[\frac{\sqrt{\pi}}{2}\mathrm{erf}(k\sigma)
-       *    -k\sigma\exp(-k^2\sigma^2)\right] ; \\
-       *   P'''(k) = \frac{f^2}{(k\sigma)^5}P_\mathrm{DM}(k) \left\{ \frac{3\sqrt{\pi}}{8}\mathrm{erf}(k\sigma) \right. \\ \left.
-       *   - \frac{k\sigma}{4}\left[2(k\sigma)^2+3\right]\exp(-k^2\sigma^2)\right\} . \\
-       *   \f]
-       *
-       *  @param kk the binned wave vector modules
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param SigmaS streaming scale
-       *
-       *  @param PkDM dark matter power spectrum interpolator
-       *
-       *  @return the damped two-point correlation monopole.
-       */
-      std::vector<std::vector<double>> damped_Pk_terms (const std::vector<double> kk, const double linear_growth_rate, const double SigmaS, const std::shared_ptr<cbl::glob::FuncGrid> PkDM);
-
-      /**
        *  @brief the damped two-point correlation monopole;
        *  from Sereno et al. 2015
        *
@@ -763,7 +673,7 @@ namespace cbl {
        *  \f$\xi''(s)\f$, \f$\xi'''(s)\f$ are
        *  the Fourier anti-transform of the power spectrum terms
        *  obtained integrating the redshift space 2D power spectrum
-       *  along \f$\mu\f$ (see cbl::modelling::twopt.:damped_Pk_terms).
+       *  along \f$\mu\f$ (see cbl::modelling::powspec::damped_Pk_terms).
        *
        *  @param ss vector of scales
        *
@@ -781,728 +691,46 @@ namespace cbl {
        */
       std::vector<double> damped_Xi (const std::vector<double> ss, const double bias, const double linear_growth_rate, const double SigmaS, const std::vector<double> kk, const std::shared_ptr<cbl::glob::FuncGrid> PkDM);
       
-      /**
-       *  @brief the power spectrum as a function of k and \f$\mu\f$
-       *
-       *  this function computes the redshift-space power spectrum:
-       *  
-       *  \f[ \frac{P(k', \mu')}{\alpha_\perp^2\alpha_\parallel} \f]
-       *
-       *  where
-       *
-       *  \f[ k' = \frac{k}{\alpha_\perp} \sqrt{1+\mu^2 \left[ \left(
-       *  \frac{\alpha_\parallel}{\alpha_\perp}\right)^{-2}-1 \right]}
-       *  \, , \f]
-       *
-       *  \f[ \mu' = \mu\frac{\alpha_\perp}{\alpha_\parallel}
-       *  \frac{1}{\sqrt{1+\mu^2\left[\left(
-       *  \frac{\alpha_\parallel}{\alpha_\perp}
-       *  \right)^{-2}-1\right]}} \, , \f]      
-       *
-       *  with one of the following models:
-       *
-       *  - the dispersion + de-wiggled model, implemented in
-       *    cbl::modelling::twopt::Pkmu_DeWiggled
-       *
-       *  - the dispersion + mode-coupling model, implemented in
-       *    cbl::modelling::twopt::Pkmu_ModeCoupling
-       *
-       *  - the dispersion model with either Gaussian or Lorentzian
-       *    damping, implemented in
-       *    cbl::modelling::twopt::Pkmu_dispersion
-       *
-       *  - the Scoccimarro model with either Gaussian or Lorentzian
-       *    damping, implemented in
-       *    cbl::modelling::twopt::Pkmu_Scoccimarro,
-       *    cbl::modelling::twopt::Pkmu_Scoccimarro_fitPezzotta and
-       *    cbl::modelling::twopt::Pkmu_Scoccimarro_fitBel
-       *
-       *  - the TNS model with either Gaussian or Lorentzian damping,
-       *    implemented in cbl::modelling::twopt::Pkmu_TNS
-       *
-       *  - the extended model with either Gaussian or Lorentzian
-       *    damping, implemented in cbl::modelling::twopt::Pkmu_eTNS
-       *
-       *  The Alcock-Paczynski term has been introduced following
-       *  Ballinger et al. 1998,
-       *  (https://arxiv.org/pdf/astro-ph/9605017.pdf), Beutler et
-       *  al. 2016, sec 5.2 (https://arxiv.org/pdf/1607.03150.pdf)
-       *
-       *  The above models may differ for both the redshit-space
-       *  distortions and the non-linear power spectrum
-       *  implementation, and may have different numbers of free
-       *  parameters.
-       *
-       *  @param kk the true wave vector module, \f$k'\f$
-       *
-       *  @param mu the true line-of-sight cosine. \f$\mu'\f$
-       *
-       *  @param model the anisotropic power spectrum model; the
-       *  possible options are: dispersion_Gauss, dispersion_Lorentz,
-       *  dispersion_dewiggled, dispersion_modecoupling,
-       *  Scoccimarro_Gauss, Scoccimarro_Lorentz
-       *  Scoccimarro_Pezzotta_Gauss, Scoccimarro_Pezzotta_Lorentz,
-       *  Scoccimarro_Bel_Gauss, Scoccimarro_Bel_Lorentz, TNS_Gauss,
-       *  TNS_Lorentz, eTNS_Gauss, eTNS_Lorentz
-       *
-       *  @param parameter vector containing parameter values
-       *
-       *  @param pk_interp vector containing power spectrum
-       *  interpolating functions
-       *
-       *  @param alpha_perp the shift transverse to the l.o.s.
-       *
-       *  @param alpha_par the shift parallel to the l.o.s.
-       *
-       *  @return \f$ \frac{P(k',
-       *  \mu')}{\alpha_\perp^2\alpha_\parallel} \f$
-       */
-      double Pkmu (const double kk, const double mu, const std::string model, const std::vector<double> parameter, const std::vector<std::shared_ptr<glob::FuncGrid>> pk_interp, const double alpha_perp = 1., const double alpha_par = 1.);
-      
-      /**
-       *  @brief the redshift-space galaxy power spectrum, as a
-       *  function of \f$k\f$ and \f$\mu\f$, predicted by the
-       *  de-wiggled model
-       *
-       *  this function computes the redshift-space BAO-damped power
-       *  spectrum model \f$P(k, \mu)\f$ (see e.g. Beutler et al. 2016
-       *  https://arxiv.org/pdf/1607.03149.pdf); Vargas-Magana et
-       *  al. 2018 https://arxiv.org/pdf/1610.03506.pdf):
-       *
-       *  \f[ P(k, \mu) = \left(1+\beta\mu^2 \right)^2 \left(
-       *  \frac{1}{1+\left(kf\Sigma_S\mu\right)^2} \right)^2 P_{NL}(k)
-       *  \f]
-       *
-       *  where
-       *
-       *  \f[ P_{NL}(k) = b^2 \left\{ \left[ P_{lin}(k) - P_{nw}(k)
-       *  \right] e^{-k^2\Sigma_{NL}^2}+P_{nw}(k) \right\} , \f]
-       *
-       *  \f$\mu = k_{\parallel} / k\f$, \f$P_{lin}\f$, \f$P_{nw}\f$
-       *  are the linear and the de-wiggled power spectra,
-       *  respectively (Eisenstein et al. 1998), and \f$\beta = f/b\f$
-       *  with \f$f\f$ the linear growth rate and \f$b\f$ the bias,
-       *  and \f$\Sigma_S\f$ is the streaming scale that parameterises
-       *  the Fingers of God effect at small scales.
-       *  The BAO damping is parametrised via \f$\Sigma^2_{NL} = 0.5
-       *  (1-\mu'^2)\Sigma^2_{\perp}+\mu'^2\Sigma^2_{\parallel} \f$,
-       *  where \f$\Sigma_{\perp}\f$ and \f$\Sigma_{\parallel}\f$ are
-       *  the damping term in the transverse and parallel directions
-       *  to the line of sight, respectively.
-       *
-       *  @param kk the wave vector module
-       *
-       *  @param mu the line of sight cosine
-       *
-       *  @param sigmaNL_perp the damping in the direction transverse
-       *  to the l.o.s.
-       *
-       *  @param sigmaNL_par the damping in the direction parallel to
-       *  the l.o.s.
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param bias the linear bias
-       *
-       *  @param SigmaS streaming scale
-       *
-       *  @param Pk linear power spectrum interpolator
-       *
-       *  @param Pk_NW de-wiggled power spectrum interpolator
-       *
-       *  @return \f$P(k, \mu)\f$
-       */
-      double Pkmu_DeWiggled (const double kk, const double mu, const double sigmaNL_perp, const double sigmaNL_par, const double linear_growth_rate, const double bias, const double SigmaS, const std::shared_ptr<cbl::glob::FuncGrid> Pk, const std::shared_ptr<cbl::glob::FuncGrid> Pk_NW);
 
       /**
-       *  @brief the redshift-space galaxy power spectrum, as a
-       *  function of \f$k\f$ and \f$\mu\f$, predicted by the
-       *  mode-coupling model
+       * @brief compute the bias averaged in the redshift bin,
+       * using the mass-intrinsic richness scaling relation
        *
-       *  this function computes the redshift-space mode-coupling
-       *  power spectrum model \f$P(k, \mu)\f$ (see e.g. Sanchez et
-       *  al. 2013 https://arxiv.org/pdf/1312.4854.pdf; Beutler et
-       *  al. 2016 https://arxiv.org/pdf/1607.03149.pdf):
+       * @param alpha alpha
        *
-       *  \f[ P(k, \mu) = \left(1+\beta\mu^2 \right)^2 \left(
-       *  \frac{1}{1+\left(kf\sigma_v\mu\right)^2} \right)^2 P_{NL}(k)
-       *  \f]
+       * @param beta beta
        *
-       *  where
+       * @param gamma gamma
        *
-       *  \f[ P_{NL}(k) = b^2 \left\{ P_{L}(k)e^{-(k\mu\sigma_v)^2}
-       *  +A_{MC}P_{MC}(k) \right\} , \f]
+       * @param scatter0 scatter0
        *
-       *  \f$\mu = k_{\parallel} / k\f$, \f$P_{lin}\f$, \f$P_{MC}\f$
-       *  are the linear and the linear and 1loop correction power
-       *  spectra, and \f$\beta = f/b\f$
-       *  with \f$f\f$ the linear growth rate and \f$b\f$ the bias,
-       *  \f$\sigma_v\f$ is the streaming scale that parameterises
-       *  the Fingers of God effect at small scales and A_{MC} is the
-       *  mode coupling bias.
+       * @param scatterM scatterM
        *
-       *  @param kk the wave vector module
+       * @param scatterM_exp scatterM_exp
        *
-       *  @param mu the line of sight cosine
+       * @param scatterz scatterz
        *
-       *  @param linear_growth_rate the linear growth rate
+       * @param scatterz_exp scatterz_exp
        *
-       *  @param bias the linear bias
+       * @param log_base logarithmic base used in the scaling relation
        *
-       *  @param sigmav the streaming scale
+       * @param mass_pivot mass pivot in the scaling relation
        *
-       *  @param AMC the mode coupling bias
+       * @param proxy_pivot mass proxy pivot in the scaling relation
        *
-       *  @param PkLin linear power spectrum interpolator
+       * @param redshift_pivot redshift pivot in the scaling relation
        *
-       *  @param PkMC the 1loop power spectrum correction
+       * @param scalRel_pars scaling relation parameters
        *
-       *  @return \f$P(k, \mu)\f$
+       * @param interp_DN interpolated amplitude of the growing mode
+       *
+       * @param inputs pointer to the structure that contains the power spectrum angular data model
+       *
+       * @return values of redshift distribution as a function of redshift
+       * and mass proxy
+       *
        */
-      double Pkmu_ModeCoupling (const double kk, const double mu, const double linear_growth_rate, const double bias, const double sigmav, const double AMC, const std::shared_ptr<cbl::glob::FuncGrid> PkLin, const std::shared_ptr<cbl::glob::FuncGrid> PkMC);
-
-      /**
-       *  @brief the redshift-space galaxy power spectrum, as a
-       *  function of \f$k\f$ and \f$\mu\f$, predicted by the
-       *  dispersion model
-       *
-       *  this function computes the redshift-space power spectrum
-       *  \f$P(k, \mu)\f$ for the so-called dispersion model (see
-       *  e.g. Pezzotta et al. 2017 https://arxiv.org/abs/1612.05645):
-       *
-       *  \f[ P(k, \mu) = D_{FoG}(k, \mu, f,
-       *  \sigma_v)\left(1+\frac{f}{b}\mu^2\right)^2b^2P^{lin}(k) \f]
-       *
-       *  where \f$f\f$ is the linear growth rate, \f$b\f$ is the
-       *  linear galaxy bias, \f$\mu\f$ is the cosine of the angle
-       *  between the line-of-sight and the comoving separation,
-       *  \f$P^{lin}(k')\f$ is the real-space matter power spectrum,
-       *  which is computed by cbl::cosmology::Cosmology::Pk_matter, and
-       *  \f$D_{FoG}\f$ is a damping factor used to model the random
-       *  peculiar motions at small scales, which can be either
-       *  Gaussian:
-       *
-       *  \f[ D_{FoG}(k, \mu, f, \sigma_v) =
-       *  e^{-k^2\mu^2f^2\sigma_v^2} \f]
-       *  
-       *  or Lorentzian:
-       *
-       *  \f[ D_{FoG}(k, \mu, f, \sigma_v) =
-       *  \frac{1}{1+k^2\mu^2f^2\sigma_v^2} \f]
-       *
-       *  @author J.E. Garcia-Farieta
-       *  @author joegarciafa@unal.edu.co
-       *
-       *  @param kk the wave vector module
-       *
-       *  @param mu the line of sight cosine
-       *
-       *  @param DFoG the damping factor (Gaussian or Lorentzian)
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param bias the linear bias
-       *
-       *  @param sigmav the streaming scale
-       *
-       *  @param Pklin linear power spectrum interpolator
-       *
-       *  @return \f$P(k, \mu)\f$
-       */
-      double Pkmu_dispersion (const double kk, const double mu, const std::string DFoG, const double linear_growth_rate, const double bias, const double sigmav, const std::shared_ptr<cbl::glob::FuncGrid> Pklin);
-
-      /**
-       *  @brief the redshift-space galaxy power spectrum, as a
-       *  function of \f$k\f$ and \f$\mu\f$, predicted by the
-       *  Scoccimarro model
-       
-       *  this function computes the redshift-space power spectrum
-       *  \f$P(k, \mu)\f$ for the Scoccimarro model, in 1-loop
-       *  approximation using (standard) Perturbation Theory (see
-       *  e.g. Scoccimarro 2004
-       *  https://arxiv.org/abs/astro-ph/0407214):
-       *
-       *  \f[ P(k, \mu) = D_{FoG}(k, \mu, f \sigma_v)
-       *  \left(b^2P_{\delta\delta}(k) + 2fb\mu^2P_{\delta\theta}(k) +
-       *  f^2\mu^4P_{\theta\theta}(k)\right) \f]
-       *
-       *  where \f$f\f$ is the linear growth rate, \f$b\f$ is the
-       *  linear galaxy bias, \f$\mu\f$ is the cosine of the angle
-       *  between the line-of-sight and the comoving separation,
-       *  \f$P_{\delta\delta}(k)\f$, \f$P_{\delta\theta}(k)\f$ and
-       *  \f$P_{\theta\theta}(k)\f$ are the real-space matter power
-       *  spectrum and the real-space density-velocity divergence
-       *  cross-spectrum and the real-space velocity divergence
-       *  auto-spectrum, computed at 1-loop using (Standard)
-       *  Perturbation Theory as implemented in the CPT Library
-       *  [http://www2.yukawa.kyoto-u.ac.jp/~atsushi.taruya/cpt_pack.html]
-       *  by cbl::cosmology::Cosmology::Pk_TNS_dd_dt_tt, \f$D_{FoG}\f$
-       *  is a damping factor used to model the random peculiar
-       *  motions at small scales, which can be either Gaussian:
-       *
-       *  \f[ D_{FoG}(k, \mu, f, \sigma_v) =
-       *  e^{-k^2\mu^2f^2\sigma_v^2} \f]
-       *  
-       *  or Lorentzian:
-       *
-       *  \f[ D_{FoG}(k, \mu, f, \sigma_v) =
-       *  \frac{1}{1+k^2\mu^2f^2\sigma_v^2} \f]
-       *
-       *  @author J.E. Garcia-Farieta
-       *  @author joegarciafa@unal.edu.co
-       *
-       *  @param kk the wave vector module
-       *
-       *  @param mu the line of sight cosine
-       *
-       *  @param DFoG the damping factor (Gaussian or Lorentzian)
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param bias the linear bias
-       *
-       *  @param sigmav the streaming scale
-       *
-       *  @param Pk_DeltaDelta power spectrum interpolator
-       *
-       *  @param Pk_DeltaTheta power spectrum interpolator
-       *
-       *  @param Pk_ThetaTheta power spectrum interpolator
-       *
-       *  @return \f$P(k, \mu)\f$
-       */
-      double Pkmu_Scoccimarro (const double kk, const double mu, const std::string DFoG, const double linear_growth_rate, const double bias, const double sigmav, const std::shared_ptr<cbl::glob::FuncGrid> Pk_DeltaDelta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_DeltaTheta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_ThetaTheta);
-      
-      /**
-       *  @brief the redshift-space galaxy power spectrum, as a
-       *  function of \f$k\f$ and \f$\mu\f$, predicted by the
-       *  Scoccimarro model
-       *
-       *  this function computes the redshift-space power spectrum
-       *  \f$P(k, \mu)\f$ for the Scoccimarro model, using fitting
-       *  functions for \f$P_{\delta\theta}(k)\f$ and
-       *  \f$P_{\theta\theta}(k)\f$ following Pezzotta et al. 2017
-       *  https://arxiv.org/abs/1612.05645, Mohammad et al. 2018
-       *  https://arxiv.org/abs/1807.05999, Bel et al. 2019
-       *  https://arxiv.org/abs/1809.09338 :
-       *
-       *  \f[ P(k, \mu) = D_{FoG}(k, \mu, f \sigma_v)
-       *  \left(b^2P_{\delta\delta}(k) + 2fb\mu^2P_{\delta\theta}(k) +
-       *  f^2\mu^4P_{\theta\theta}(k)\right) \f]
-       *
-       *  where \f$f\f$ is the linear growth rate, \f$b\f$ is the
-       *  linear galaxy bias, \f$\mu\f$ is the cosine of the angle
-       *  between the line-of-sight and the comoving separation,
-       *  \f$D_{FoG}\f$ is a damping factor used to model the random
-       *  peculiar motions at small scales, which can be either
-       *  Gaussian:
-       *
-       *  \f[ D_{FoG}(k, \mu, f, \sigma_v) =
-       *  e^{-k^2\mu^2f^2\sigma_v^2} \f]
-       *  
-       *  or Lorentzian:
-       *
-       *  \f[ D_{FoG}(k, \mu, f, \sigma_v) =
-       *  \frac{1}{1+k^2\mu^2f^2\sigma_v^2} \f]
-       *
-       *  and \f$P_{\delta\delta}(k)\f$, \f$P_{\delta\theta}(k)\f$ and
-       *  \f$P_{\theta\theta}(k)\f$ are the real-space matter power
-       *  spectrum, the real-space density-velocity divergence
-       *  cross-spectrum and the real-space velocity divergence
-       *  auto-spectrum. \f$P_{\delta\theta}(k)\f$ and
-       *  \f$P_{\theta\theta}(k)\f$ are approximated as follows:
-       *
-       *  \f[ P_{\delta\theta}(k) =
-       *  \left(P_{\delta\delta}(k)P^{lin}(k)e^{-k/k_\delta} \right)^{1/2}
-       *  \,, \f]
-       *
-       *  \f[ P_{\theta\theta}(k) = P^{lin}(k)e^{-k/k_\theta} \f]
-       *
-       *  where both the linear power spectrum \f$P^{lin}(k)\f$, and
-       *  the non-linear power spectrum \f$P_{\delta\delta}(k)\f$ are
-       *  computed by cbl::cosmology::Cosmology::Pk_matter, and
-       *  \f$k_\delta\f$, \f$k_\theta\f$ are free parameters.
-       *
-       *  @author J.E. Garcia-Farieta
-       *  @author joegarciafa@unal.edu.co
-       *
-       *  @param kk the wave vector module
-       *
-       *  @param mu the line of sight cosine
-       *
-       *  @param DFoG the damping factor (Gaussian or Lorentzian)
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param bias the linear bias
-       *
-       *  @param sigmav the streaming scale
-       *
-       *  @param kd fitting parameter
-       *
-       *  @param kt fitting parameter
-       *
-       *  @param Pklin linear power spectrum interpolator
-       *
-       *  @param Pknonlin nolinear power spectrum interpolator
-       *
-       *  @return \f$P(k, \mu)\f$
-       */
-      double Pkmu_Scoccimarro_fitPezzotta (const double kk, const double mu, const std::string DFoG, const double linear_growth_rate, const double bias, const double sigmav, const double kd, const double kt, const std::shared_ptr<cbl::glob::FuncGrid> Pklin, const std::shared_ptr<cbl::glob::FuncGrid> Pknonlin);
-
-      /**
-       *  @brief the redshift-space galaxy power spectrum, as a
-       *  function of \f$k\f$ and \f$\mu\f$, predicted by the
-       *  Scoccimarro model
-       *
-       *  this function computes the redshift-space power spectrum
-       *  \f$P(k, \mu)\f$ for the Scoccimarro model, using fitting
-       *  functions for \f$P_{\delta\theta}(k)\f$ and
-       *  \f$P_{\theta\theta}(k)\f$ folowing Bel et al. 2019
-       *  https://arxiv.org/abs/1809.09338 :
-       *
-       *  \f[ P(k, \mu) = D_{FoG}(k, \mu, f \sigma_v)
-       *  \left(b^2P_{\delta\delta}(k) + 2fb\mu^2P_{\delta\theta}(k) +
-       *  f^2\mu^4P_{\theta\theta}(k)\right) \f]
-       *
-       *  where \f$f\f$ is the linear growth rate, \f$b\f$ is the
-       *  linear galaxy bias, \f$\mu\f$ is the cosine of the angle
-       *  between the line-of-sight and the comoving separation,
-       *  \f$D_{FoG}\f$ is a damping factor used to model the random
-       *  peculiar motions at small scales, which can be either
-       *  Gaussian:
-       *
-       *  \f[ D_{FoG}(k, \mu, f, \sigma_v) =
-       *  e^{-k^2\mu^2f^2\sigma_v^2} \f]
-       *  
-       *  or Lorentzian:
-       *
-       *  \f[ D_{FoG}(k, \mu, f, \sigma_v) =
-       *  \frac{1}{1+k^2\mu^2f^2\sigma_v^2} \f]
-       *
-       *  and \f$P_{\delta\delta}(k)\f$, \f$P_{\delta\theta}(k)\f$ and
-       *  \f$P_{\theta\theta}(k)\f$ are the real-space matter power
-       *  spectrum, the real-space density-velocity divergence
-       *  cross-spectrum and the real-space velocity divergence
-       *  auto-spectrum. \f$P_{\delta\theta}(k)\f$ and
-       *  \f$P_{\theta\theta}(k)\f$ are approximated as follows:
-       *
-       *  \f[ P_{\delta\theta}(k) =
-       *  \left(P_{\delta\delta}(k)P^{lin}(k)\right)^{1/2}e^{-k/k_\delta-a_0k^6}
-       *  \, , \f]
-       *
-       *  \f[ P_{\theta\theta}(k) = P^{lin}(k)e^{-k(a_1+a_2k+a_3k^2)}
-       *  \f]
-       *
-       *  where both the linear power spectrum \f$P^{lin}(k)\f$, and
-       *  the non-linear power spectrum \f$P_{\delta\delta}(k)\f$ are
-       *  computed by cbl::cosmology::Cosmology::Pk_matter, and
-       *  \f$k_\delta\f$, \f$a_0\f$, \f$a_1\f$, \f$a_2\f$, \f$a_3\f$
-       *  are free parameters.
-       *
-       *  @author J.E. Garcia-Farieta
-       *  @author joegarciafa@unal.edu.co
-       *
-       *  @param kk the wave vector module
-       *
-       *  @param mu the line of sight cosine
-       *
-       *  @param DFoG the damping factor (Gaussian or Lorentzian)
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param bias the linear bias
-       *
-       *  @param sigmav the streaming scale
-       *
-       *  @param kd fitting parameter
-       *
-       *  @param bb fitting parameter
-       *
-       *  @param a1 fitting parameter
-       *
-       *  @param a2 fitting parameter
-       *
-       *  @param a3 fitting parameter
-       *
-       *  @param Pklin linear power spectrum interpolator
-       *
-       *  @param Pknonlin nolinear power spectrum interpolator
-       *
-       *  @return \f$P(k, \mu)\f$
-       */
-      double Pkmu_Scoccimarro_fitBel (const double kk, const double mu, const std::string DFoG, const double linear_growth_rate, const double bias, const double sigmav, const double kd, const double bb, const double a1, const double a2, const double a3, const std::shared_ptr<cbl::glob::FuncGrid> Pklin, const std::shared_ptr<cbl::glob::FuncGrid> Pknonlin);
-
-      /**
-       *  @brief the redshift-space galaxy power spectrum, as a
-       *  function of \f$k\f$ and \f$\mu\f$, predicted by the TNS
-       *  (Taruya, Nishimichi and Saito) model
-       *
-       *  this function computes the redshift-space power spectrum
-       *  \f$P(k, \mu)\f$ for the (Taruya, Nishimichi and Saito) TNS
-       *  model, in 1-loop approximation using (standard) Perturbation
-       *  Theory (see e.g. Taruya et. al, 2010
-       *  https://arxiv.org/abs/1006.0699 and Taruya et al., 2013
-       *  https://arxiv.org/abs/1301.3624):
-       *
-       *  \f[ P(k, \mu) = D_{FoG}(k, \mu, f,
-       *  \sigma_v)\left(b^2P_{\delta\delta}(k) +
-       *  2fb\mu^2P_{\delta\theta}(k) + f^2\mu^4P_{\theta\theta}(k) +
-       *  b^3A(k, \mu, f) + b^4B(k, \mu, f)\right) \f]
-       *
-       *  \f[ A(k, \mu ; f) = j_{1} \int d^{3} r e^{i \boldsymbol{k}
-       *  \cdot \boldsymbol{r}}\left\langle A_{1} A_{2}
-       *  A_{3}\right\rangle_{c}=k \mu f \int \frac{d^{3} p}{(2
-       *  \pi)^{3}}
-       *  \frac{p_{z}}{p^{2}}\left\{B_{\sigma}(\boldsymbol{p},
-       *  \boldsymbol{k}-\boldsymbol{p},-\boldsymbol{k})-B_{\sigma}(\boldsymbol{p},
-       *  \boldsymbol{k},-\boldsymbol{k}-\boldsymbol{p})\right\}\, ,
-       *  \f]
-       *
-       *  \f[ B(k, \mu ; f)=j_{1}^{2} \int d^{3} r e^{i \boldsymbol{k}
-       *  \cdot \boldsymbol{r}}\left\langle A_{1}
-       *  A_{2}\right\rangle_{c}\left\langle A_{1}
-       *  A_{3}\right\rangle_{c}=(k \mu f)^{2} \int \frac{d^{3} p}{(2
-       *  \pi)^{3}} F_{\sigma}(\boldsymbol{p})
-       *  F_{\sigma}(\boldsymbol{k}-\boldsymbol{p}) \f]
-       *
-       *  where \f$f\f$ is the linear growth rate, \f$b\f$ is the
-       *  linear galaxy bias, \f$\mu\f$ is the cosine of the angle
-       *  between the line-of-sight and the comoving separation,
-       *  \f$P_{\delta\delta}(k)\f$, \f$P_{\delta\theta}(k)\f$ and
-       *  \f$P_{\theta\theta}(k)\f$ are the real-space matter power
-       *  spectrum and the real-space density-velocity divergence
-       *  cross-spectrum and the real-space velocity divergence
-       *  auto-spectrum, computed at 1-loop using (Standard)
-       *  Perturbation Theory as implemented in the CPT Library
-       *  [http://www2.yukawa.kyoto-u.ac.jp/~atsushi.taruya/cpt_pack.html]
-       *  by cbl::cosmology::Cosmology::Pk_TNS_dd_dt_tt, all the terms
-       *  in the power spectrum correction correction terms are
-       *  computed by
-       *  cbl::cosmology::Cosmology::Pk_TNS_AB_terms_1loop,
-       *  \f$D_{FoG}\f$ is a damping factor used to model the random
-       *  peculiar motions at small scales, which can be either
-       *  Gaussian:
-       *
-       *  \f[ D_{FoG}(k, \mu, f, \sigma_v) =
-       *  e^{-k^2\mu^2f^2\sigma_v^2} \f]
-       *  
-       *  or Lorentzian:
-       *
-       *  \f[ D_{FoG}(k, \mu, f, \sigma_v) =
-       *  \frac{1}{1+k^2\mu^2f^2\sigma_v^2} \f]
-       *
-       *  @author J.E. Garcia-Farieta
-       *  @author joegarciafa@unal.edu.co
-       *       
-       *  @param kk the wave vector module
-       *
-       *  @param mu the line of sight cosine
-       *
-       *  @param DFoG the damping factor (Gaussian or Lorentzian)
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param bias the linear bias
-       *
-       *  @param sigmav the streaming scale
-       *
-       *  @param Pk_DeltaDelta power spectrum interpolator
-       *
-       *  @param Pk_DeltaTheta power spectrum interpolator
-       *
-       *  @param Pk_ThetaTheta power spectrum interpolator
-       *
-       *  @param Pk_A11 power spectrum interpolator
-       *
-       *  @param Pk_A12 power spectrum interpolator
-       *
-       *  @param Pk_A22 power spectrum interpolator
-       *
-       *  @param Pk_A23 power spectrum interpolator
-       *
-       *  @param Pk_A33 power spectrum interpolator
-       *
-       *  @param Pk_B12 power spectrum interpolator
-       *
-       *  @param Pk_B13 power spectrum interpolator
-       *
-       *  @param Pk_B14 power spectrum interpolator
-       *
-       *  @param Pk_B22 power spectrum interpolator
-       *
-       *  @param Pk_B23 power spectrum interpolator
-       *
-       *  @param Pk_B24 power spectrum interpolator
-       *
-       *  @param Pk_B33 power spectrum interpolator
-       *
-       *  @param Pk_B34 power spectrum interpolator
-       *
-       *  @param Pk_B44 power spectrum interpolator
-       *
-       *  @return \f$P(k, \mu)\f$
-       */
-      double Pkmu_TNS (const double kk, const double mu, const std::string DFoG, const double linear_growth_rate, const double bias, const double sigmav, const std::shared_ptr<cbl::glob::FuncGrid> Pk_DeltaDelta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_DeltaTheta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_ThetaTheta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A11, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A12, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A22, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A23, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A33, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B12, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B13, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B14, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B22, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B23, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B24, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B33, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B34, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B44);
-
-      /**
-       *  @brief the redshift-space galaxy power spectrum, as a
-       *  function of \f$k\f$ and \f$\mu\f$, predicted by the extended
-       *  TNS (Taruya, Nishimichi and Saito) model
-       *
-       *  this function computes the so-called extended TNS
-       *  redshift-space power spectrum \f$P(k, \mu)\f$ (see
-       *  e.g. Beutler et al. 2014 https://arxiv.org/abs/1312.4611;
-       *  Gil-Marìn et al. 2014 https://arxiv.org/abs/1407.1836; de la
-       *  Torre et al. https://arxiv.org/abs/1612.05647) which is
-       *  computed in 1-loop aproximation using (standard)
-       *  Perturbation Theory (Taruya et al. 2010
-       *  https://arxiv.org/abs/1006.0699; Taruya et al. 2013
-       *  https://arxiv.org/abs/1301.3624; McDonald and Roy 2019
-       *  https://arxiv.org/abs/0902.0991):
-       *
-       *  \f[ P(k, \mu) = D_{FoG}(k, \mu, f,
-       *  \sigma_v)\left[P_{\mathrm{g}, \delta \delta}(k) +2 f \mu^{2}
-       *  P_{\mathrm{g}, \delta \theta}(k)+f^{2} \mu^{4} P_{\theta
-       *  \theta}(k) + b_{1}^{3} A(k, \mu, f/b_{1})+b_{1}^{4} B(k,
-       *  \mu, f/b_{1})\right] \f]
-       *
-       *  where
-       *
-       *  \f[ P_{\mathrm{g}, \delta \delta}(k) = b_{1}^{2} P_{\delta
-       *  \delta}(k)+2 b_{2} b_{1} P_{b 2, \delta}(k)+2 b_{s^2} b_{1}
-       *  P_{b s 2, \delta}(k) \\ +2 b_{3 \mathrm{nl}} b_{1}
-       *  \sigma_{3}^{2}(k) P_{\mathrm{m}}^{\mathrm{lin}}(k)+b_{2}^{2}
-       *  P_{b 22}(k) \\ +2 b_{2} b_{s^2} P_{b 2 s 2}(k)+b_{s^2}^{2}
-       *  P_{b s 22}(k)+N \f]
-       *
-       *  \f[ P_{\mathrm{g}, \delta \theta}(k) = b_{1} P_{\delta
-       *  \theta}(k)+b_{2} P_{b 2, \theta}(k)+b_{s^2} P_{b s 2,
-       *  \theta}(k) \\ +b_{3 \mathrm{nl}} \sigma_{3}^{2}(k)
-       *  P_{\mathrm{m}}^{\mathrm{lin}}(k) \f]
-       *
-       *  and
-       *
-       *  \f[ A(k, \mu ; f) = j_{1} \int d^{3} r\, e^{i \boldsymbol{k}
-       *  \cdot \boldsymbol{r}}\left\langle A_{1} A_{2}
-       *  A_{3}\right\rangle_{c} = k \mu f \int \frac{d^{3} p}{(2
-       *  \pi)^{3}}
-       *  \frac{p_{z}}{p^{2}}\left\{B_{\sigma}(\boldsymbol{p},
-       *  \boldsymbol{k}-\boldsymbol{p},-\boldsymbol{k}) -
-       *  B_{\sigma}(\boldsymbol{p},
-       *  \boldsymbol{k},-\boldsymbol{k}-\boldsymbol{p})\right\} \, ,
-       *  \f]
-       *
-       *  \f[ B(k, \mu ; f) = j_{1}^{2} \int d^{3} r\, e^{i
-       *  \boldsymbol{k} \cdot \boldsymbol{r}}\left\langle A_{1}
-       *  A_{2}\right\rangle_{c}\left\langle A_{1}
-       *  A_{3}\right\rangle_{c} = (k \mu f)^{2} \int \frac{d^{3}
-       *  p}{(2 \pi)^{3}} F_{\sigma}(\boldsymbol{p})
-       *  F_{\sigma}(\boldsymbol{k}-\boldsymbol{p}) \, , \f]
-       *
-       *  \f[ b_{s^2} = -\frac{4}{7}(b_1-1)\, , \f]
-       *
-       *  \f[ b_{3 \mathrm{nl}} = \frac{32}{315}(b_1-1) \f]
-       *
-       *  where \f$f\f$ is the linear growth rate, \f$b\f$ is the
-       *  linear galaxy bias, \f$\mu\f$ is the cosine of the angle
-       *  between the line-of-sight and the comoving separation,
-       *  \f$P_{\delta\delta}(k)\f$, \f$P_{\delta\theta}(k)\f$ and
-       *  \f$P_{\theta\theta}(k)\f$ are the real-space matter power
-       *  spectrum and the real-space density-velocity divergence
-       *  cross-spectrum and the real-space velocity divergence
-       *  auto-spectrum, computed at 1-loop using (Standard)
-       *  Perturbation Theory as implemented in the CPT Library
-       *  [http://www2.yukawa.kyoto-u.ac.jp/~atsushi.taruya/cpt_pack.html]
-       *  by cbl::cosmology::Cosmology::Pk_TNS_dd_dt_tt, all the terms
-       *  in the power spectrum correction correction terms are
-       *  computed by cbl::cosmology::Cosmology::Pk_TNS_AB_terms_1loop
-       *  and cbl::cosmology::Cosmology::Pk_eTNS_terms_1loop,
-       *  \f$D_{FoG}\f$ is a damping factor used to model the random
-       *  peculiar motions at small scales, which can be either
-       *  Gaussian:
-       *
-       *  \f[ D_{FoG}(k, \mu, f, \sigma_v) =
-       *  e^{-k^2\mu^2f^2\sigma_v^2} \f]
-       *  
-       *  or Lorentzian:
-       *
-       *  \f[ D_{FoG}(k, \mu, f, \sigma_v) =
-       *  \frac{1}{1+k^2\mu^2f^2\sigma_v^2} \f]
-       *
-       *  @author J.E. Garcia-Farieta
-       *  @author joegarciafa@unal.edu.co
-       *
-       *  @param kk the wave vector module
-       *
-       *  @param mu the line of sight cosine
-       *
-       *  @param DFoG the damping factor (Gaussian or Lorentzian)
-       *
-       *  @param linear_growth_rate the linear growth rate
-       *
-       *  @param bias the linear bias
-       *
-       *  @param bias2 the second order local bias
-       *
-       *  @param sigmav the streaming scale
-       *
-       *  @param Ncorr constant stochasticity term
-       *
-       *  @param Pk_DeltaDelta power spectrum interpolator
-       *
-       *  @param Pk_DeltaTheta power spectrum interpolator
-       *
-       *  @param Pk_ThetaTheta power spectrum interpolator
-       *
-       *  @param Pk_A11 power spectrum interpolator
-       *
-       *  @param Pk_A12 power spectrum interpolator
-       *
-       *  @param Pk_A22 power spectrum interpolator
-       *
-       *  @param Pk_A23 power spectrum interpolator
-       *
-       *  @param Pk_A33 power spectrum interpolator
-       *
-       *  @param Pk_B12 power spectrum interpolator
-       *
-       *  @param Pk_B13 power spectrum interpolator
-       *
-       *  @param Pk_B14 power spectrum interpolator
-       *
-       *  @param Pk_B22 power spectrum interpolator
-       *
-       *  @param Pk_B23 power spectrum interpolator
-       *
-       *  @param Pk_B24 power spectrum interpolator
-       *
-       *  @param Pk_B33 power spectrum interpolator
-       *
-       *  @param Pk_B34 power spectrum interpolator
-       *
-       *  @param Pk_B44 power spectrum interpolator
-       *
-       *  @param Pk_b2d power spectrum interpolator
-       *
-       *  @param Pk_b2v power spectrum interpolator
-       *
-       *  @param Pk_b22 power spectrum interpolator
-       *
-       *  @param Pk_bs2d power spectrum interpolator
-       *
-       *  @param Pk_bs2v power spectrum interpolator
-       *
-       *  @param Pk_b2s2 power spectrum interpolator
-       *
-       *  @param Pk_bs22 power spectrum interpolator
-       *
-       *  @param sigma32Pklin power spectrum interpolator
-       *
-       *  @return \f$P(k, \mu)\f$
-       */
-      double Pkmu_eTNS (const double kk, const double mu, const std::string DFoG, const double linear_growth_rate, const double bias, const double bias2, const double sigmav, const double Ncorr, const std::shared_ptr<cbl::glob::FuncGrid> Pk_DeltaDelta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_DeltaTheta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_ThetaTheta, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A11, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A12, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A22, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A23, const std::shared_ptr<cbl::glob::FuncGrid> Pk_A33, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B12, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B13, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B14, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B22, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B23, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B24, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B33, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B34, const std::shared_ptr<cbl::glob::FuncGrid> Pk_B44, const std::shared_ptr<cbl::glob::FuncGrid> Pk_b2d, const std::shared_ptr<cbl::glob::FuncGrid> Pk_b2v, const std::shared_ptr<cbl::glob::FuncGrid> Pk_b22, const std::shared_ptr<cbl::glob::FuncGrid> Pk_bs2d, const std::shared_ptr<cbl::glob::FuncGrid> Pk_bs2v, const std::shared_ptr<cbl::glob::FuncGrid> Pk_b2s2, const std::shared_ptr<cbl::glob::FuncGrid> Pk_bs22, const std::shared_ptr<cbl::glob::FuncGrid> sigma32Pklin);
-
+      double bias_from_scaling_relation(const double alpha, const double beta, const double gamma,  const double scatter0, const double scatterM, const double scatterM_exp, const double scatterz, const double scatterz_exp, double log_base, double mass_pivot, double proxy_pivot, double redshift_pivot, std::vector<double> scalRel_pars, cbl::glob::FuncGrid interp_DN, std::shared_ptr<void> inputs);
     }
   }
 }

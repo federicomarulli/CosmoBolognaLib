@@ -1,0 +1,145 @@
+/* CCS for Healpix HTML documentation */
+
+
+body { color: #000000;
+	background: #FFFFFA;
+	margin: 10px 10px 10px 10px;
+	font: 85% 'Lucida Grande', Geneva, Verdana, Arial, Helvetica, Tahoma, sans-serif;
+	line-height: normal;
+}
+	/* font: small 'Lucida Grande', Geneva, Verdana, Arial, Helvetica, sans-serif; */
+
+
+/* Century Schoolbook font is very similar to Computer Modern Math: cmmi */
+/* .BOLDMATH { font-family: "Century Schoolbook", serif; font-weight: bold } */
+/* .MATH     { font-family: "Century Schoolbook", serif; }  */
+/* .MATH I   { font-family: "Century Schoolbook", serif; font-style: italic } */
+.BOLDMATH   { font-family: "Century Schoolbook", serif; font-weight: bold  ; font-size: 110% ; }
+.MATH       { font-family: "Century Schoolbook", serif                     ; font-size: 110% ; }
+.MATH I     { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: 110% ; }
+.MATH SUB   { font-family: "Century Schoolbook", serif                     ; font-size: 90%; }
+.MATH SUB I { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: 90%; }
+.MATH SUP   { font-family: "Century Schoolbook", serif                     ; font-size: 90%; }
+.MATH SUP I { font-family: "Century Schoolbook", serif; font-style: italic ; font-size: 90%; }
+
+SMALL.XTINY		{ font-size : 50% ;} /*<small class="xtiny"> ... </small>*/
+SMALL.TINY		{ font-size : 60% ;}
+SMALL.SCRIPTSIZE	{ font-size : 70% ;}
+SMALL.FOOTNOTESIZE	{ font-size : 92% ;} /*in use  (was 85%) */
+SMALL.SMALL		{ font-size : 92% ;} /*in use*/
+BIG.LARGE		{ font-size : 106% ;} /*in use*/
+BIG.XLARGE		{ font-size : 112% ;} /*in use*/
+BIG.XXLARGE		{ font-size : 130% ;}
+BIG.HUGE		{ font-size : 150% ;}
+BIG.XHUGE		{ font-size : 200% ;} /*<big class="xhuge"> ... </big>*/
+
+/* SMALL.XTINY		{ font-size : xx-small } */
+/* SMALL.TINY		{ font-size : x-small  }  */
+/* SMALL.SCRIPTSIZE	{ font-size : small    } */
+/* SMALL.FOOTNOTESIZE	{ font-size : smaller } */
+/* SMALL.SMALL		{ font-size : inherit } */
+/* BIG.LARGE		{ font-size : inherit } */
+/* BIG.XLARGE		{ font-size : larger   } */
+/* BIG.XXLARGE		{ font-size : large    } */
+/* BIG.HUGE		{ font-size : x-large  } */
+/* BIG.XHUGE		{ font-size : xx-large } */
+
+
+
+p { 	padding: 0px 0px 0px 0px; 
+	margin: 1.12em 0; 
+	line-height: normal;
+  }
+
+blockquote { 
+	font-size: inherit;
+	line-height: normal;
+}
+
+caption { 
+	font-size: 92%;
+	vertical-align: bottom;
+/*	color: #401030; */
+
+}
+
+tt { 
+	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace;
+	font-size: 100%;
+}
+kbd { 
+	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace;
+	font-size: 100%;
+}
+SPAN.texttt { 
+	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace ; 
+	font-size: 100%;}
+DIV.texttt { 
+	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace ; 
+	font-size: 100%;}
+pre { 
+	font-family: "Lucida Console", "Lucida Sans Typewriter", Courier, sans-serif, monospace;
+	font-size: 100%;
+}
+
+
+/* heading styles */
+h1, h2, h3, h4, h5 {
+	font-family: 'Trebuchet MS', Tahoma, Arial, Sans-serif;
+	color: #555555;
+	padding: 5px 10px 5px 0px;
+}	
+h1.center {text-align: center;}
+
+p.center {text-align: center;}
+
+
+address { font-size: smaller }
+
+/* mathematics styles */
+DIV.displaymath		{ text-align:center; }	/* math displays */
+TD.eqno			{ }	/* equation-number cells */
+
+
+
+/* document-specific styles come next */
+/* DIV.abstract { color: #FF0000; }  */
+DIV.centerline		{   }
+DIV.em		{   }
+DIV.navigation		{ 
+	text-align: center;  
+}
+DIV.quote		{   }
+DIV.small		{   }
+DIV.verse		{   }
+DIV.center	{text-align: center;}
+DIV.mathdisplay {text-align: center;}
+DIV.facility    {font-size: 400%; font-weight: bold;}
+
+SPAN.Alph		{   }
+SPAN.arabic		{   }
+SPAN.bf		{   }
+SPAN.it		{   }
+SPAN.sc		{   }
+SPAN.textbf		{ font-weight: bold;  }
+SPAN.tt		{   }
+SPAN.textit	{ font-style: italic;  }
+SPAN.colordoc   { color: #cc0000; } /* dark red */
+SPAN.scriptsize { font-size : 70% ; }/* color: #00cc00; } */
+
+
+TABLE.PAD TD	{ padding:3px; }
+TABLE.BORDER TH	{ 
+	border:1px solid black; 
+	background-color: #fafafa;}
+TABLE.BORDER TD	{ border:1px solid black; }
+TABLE.BORDER TR:nth-child(even) { background-color: #fffff0; vertical-align:top;}
+TABLE.BORDER TR:nth-child(odd)  { background-color: #fffffa; vertical-align:top;}
+TABLE.equation	{ width:100%; text-align:center; }	/* place eq nos at right/left edge */
+TABLE.equation > *	{ vertical-align:baseline; }
+TABLE.equation TD	{ white-space:nowrap; text-align:center;}
+TABLE		{ border-collapse: collapse; }
+
+
+CAPTION.BOTTOM { caption-side:bottom; }
+

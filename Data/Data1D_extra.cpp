@@ -86,7 +86,7 @@ void cbl::data::Data1D_extra::read (const string input_file, const int skip_nlin
 
       // if the size of the column_data vector is 0, the columns of
       // data values are the ones specified in input
-      const int ind_data = (column_data.size()==0) ? column_data_default : column_data[cl]-1;
+      const int ind_data = (column_data.size()==0) ? column_data_default-1 : column_data[cl]-1;
       checkDim(num, ind_data+1, "num", false);
       m_data.emplace_back(num[ind_data]);
 
@@ -94,7 +94,7 @@ void cbl::data::Data1D_extra::read (const string input_file, const int skip_nlin
       // error values are the ones specified in input; if the error
       // column is not present, the errors will be set to 1, by
       // default
-      const size_t ind_error = (column_errors.size()==0) ? column_error_default : column_errors[cl]-1;
+      const size_t ind_error = (column_errors.size()==0) ? column_error_default-1 : column_errors[cl]-1;
       if (num.size()<ind_error+1 && column_errors.size()>1)
 	WarningMsgCBL("the errors cannot be retrieved from the provided input file, and will be set to 1", "read", "Data1D_extra.cpp");
       m_error.emplace_back((num.size()<ind_error+1) ? 1 : num[ind_error]);

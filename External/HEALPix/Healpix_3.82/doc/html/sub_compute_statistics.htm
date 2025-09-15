@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>compute_statistics*</TITLE>
+<META NAME="description" CONTENT="compute_statistics*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_concatnl.htm">
+<LINK REL="previous" HREF="sub_complex_fft.htm">
+<LINK REL="next" HREF="sub_concatnl.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_complex_fft.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_concatnl.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html345"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_complex_fft.htm">complex_fft</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_concatnl.htm">concatnl</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION1900"></A>
+<A ID="sub:compute_statistics"></A>
+<BR>
+ 
+</H1>
+
+<P>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">compute_statistics*</SPAN></div><hr>
+<H3>This routine computes the min, max, absolute deviation and first four order moment of a data set</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/statistics.f90"><strong>src/f90/mod/statistics.f90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">compute_statistics*</SPAN>(
+<A HREF="#sub:compute_statistics:data">data</A>,<A HREF="#sub:compute_statistics:stats">stats</A><i><font color="#224422">[,&nbsp;<A HREF="#sub:compute_statistics:badval">badval</A>]</font></i>
+)</h3></blockquote>
+Arguments appearing in <i><font color="#224422">italic</font></i> are
+optional.
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:250px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+data<A ID="sub:compute_statistics:data"></A>(:)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">data set <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img140.png"
+ ALT="$\{x_i\}$"></SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">stats<A ID="sub:compute_statistics:stats"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">tstats</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">structure containing the statistics of the
+                   data. The respective fields (stats%<EM>field</EM>) are:</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">ntot</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&ndash;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">total number of data points</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">nvalid</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&ndash;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">number <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img141.png"
+ ALT="$n$"></SPAN> of valid data points</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">mind, maxd</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&ndash;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">minimum and maximum valid data</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">average</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&ndash;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">average of valid points <!-- MATH
+ $m= \sum_i x_i / n$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img142.png"
+ ALT="$m= \sum_i x_i / n$"></SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">absdev</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&ndash;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">absolute deviation <!-- MATH
+ $a= \sum_i|x_i-m|/n$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img143.png"
+ ALT="$a= \sum_i\vert x_i-m\vert/n$"></SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">var</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&ndash;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">variance <!-- MATH
+ $\sigma^2 = \sum(x_i-m)^2/ (n-1)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="sub_img144.png"
+ ALT="$\sigma^2 = \sum(x_i-m)^2/ (n-1)$"></SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">rms</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&ndash;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">standard deviation <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img145.png"
+ ALT="$\sigma$"></SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">skew</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&ndash;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">skewness factor <!-- MATH
+ $s = \sum(x_i-m)^3 / (n\sigma^3)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="sub_img146.png"
+ ALT="$s = \sum(x_i-m)^3 / (n\sigma^3)$"></SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">kurt</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&ndash;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">kurtosis factor <!-- MATH
+ $k = \sum(x_i-m)^4 / (n\sigma^4) - 3$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="sub_img147.png"
+ ALT="$k = \sum(x_i-m)^4 / (n\sigma^4) - 3$"></SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">badval<A ID="sub:compute_statistics:badval"></A></font></i> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">sentinel value given to bad data points. Data points with this
+                   value will be ignored during calculation of the statistics. If
+                   not set, all points will be considered. <B>Do not set to 0!</B>.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use statistics, only: compute_statistics, print_statistics, tstats 
+<BR>
+type(tstats) :: stats 
+<BR>... 
+<BR>
+compute_statistics(map, stats)  
+<BR>
+print*,stats%average, stats%rms
+<BR>
+print_statistics(stats) 
+<BR></div>
+<blockquote>
+Computes the statistics of <SPAN style="font-family:monospace">map</SPAN>, prints its average and <EM>rms</EM> and
+prints the whole list of statistical measures.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">compute_statistics*</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_median.htm#sub:median">median</A></B>
+<DD>routine to compute median of a data set
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_complex_fft.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_concatnl.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html345"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_complex_fft.htm">complex_fft</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_concatnl.htm">concatnl</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

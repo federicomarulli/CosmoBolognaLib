@@ -42,52 +42,52 @@ using namespace cbl;
 // ============================================================================================
 
 
-double cbl::modelling::cosmo::cosmological_measurements (const double redshift, const std::string data_type, const cbl::cosmology::Cosmology cosmology)
+double cbl::modelling::cosmo::cosmological_measurements (const double redshift, const std::string data_type, const std::shared_ptr<cosmology::Cosmology> cosmology)
 {
   if (data_type=="DV")
-    return cosmology.D_V(redshift);
+    return cosmology->D_V(redshift);
   
   else if (data_type=="DV/rs")
-    return cosmology.D_V(redshift)/cosmology.rs();
+    return cosmology->D_V(redshift)/cosmology->sound_horizon_at_drag_epoch();
   
   else if (data_type=="rs/DV")
-    return cosmology.rs()/cosmology.D_V(redshift);
+    return cosmology->sound_horizon_at_drag_epoch()/cosmology->D_V(redshift);
   
   else if(data_type=="DA")
-    return cosmology.D_A(redshift);
+    return cosmology->D_A(redshift);
   
   else if (data_type=="DA/rs")
-    return cosmology.D_A(redshift)/cosmology.rs();
+    return cosmology->D_A(redshift)/cosmology->sound_horizon_at_drag_epoch();
   
   else if (data_type=="rs/DA")
-    return cosmology.rs()/cosmology.D_A(redshift);
+    return cosmology->sound_horizon_at_drag_epoch()/cosmology->D_A(redshift);
 
   else if(data_type=="DM")
-    return cosmology.D_M(redshift);
+    return cosmology->D_M(redshift);
   
   else if (data_type=="DM/rs")
-    return cosmology.D_M(redshift)/cosmology.rs();
+    return cosmology->D_M(redshift)/cosmology->sound_horizon_at_drag_epoch();
   
   else if (data_type=="rs/DM")
-    return cosmology.rs()/cosmology.D_M(redshift);
+    return cosmology->sound_horizon_at_drag_epoch()/cosmology->D_M(redshift);
   
   else if(data_type=="HH")
-    return cosmology.HH(redshift);
+    return cosmology->Hubble(redshift);
 
   else if (data_type=="HH*rs")
-    return cosmology.HH(redshift)*cosmology.rs();
+    return cosmology->Hubble(redshift)*cosmology->sound_horizon_at_drag_epoch();
 
   else if(data_type=="DH")
-    return cbl::par::cc/cosmology.HH(redshift);
+    return par::cc/cosmology->Hubble(redshift);
 
   else if (data_type=="DH/rs")
-    return cbl::par::cc/cosmology.HH(redshift)/cosmology.rs();
+    return par::cc/cosmology->Hubble(redshift)/cosmology->sound_horizon_at_drag_epoch();
 
   else if (data_type=="rs/DH")
-    return cosmology.rs()/(cbl::par::cc/cosmology.HH(redshift));
+    return cosmology->sound_horizon_at_drag_epoch()/(par::cc/cosmology->Hubble(redshift));
 
   else if (data_type=="DL")
-    return cosmology.D_L(redshift);
+    return cosmology->D_L(redshift);
 
   else
     ErrorCBL("the input data_type is not allowed!", "cosmological_measurements", "ModelFunction_Cosmology.cpp");
@@ -105,19 +105,19 @@ std::vector<double> cbl::modelling::cosmo::cosmological_measurements_model (cons
   shared_ptr<STR_data_model_cosmology> pp = static_pointer_cast<STR_data_model_cosmology>(inputs);
 
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
+  const std::shared_ptr<cosmology::Cosmology> cosmology = pp->cosmology->clone();
 
   // input likelihood parameters
 
   // set the cosmological parameters used to compute the dark matter
   // two-point correlation function in real space
   for (size_t i=0; i<pp->Cpar.size(); ++i)
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
+    cosmology->set_parameter(pp->Cpar[i], parameter[i]);
 
   vector<double> output;
 
-  for(size_t i=0; i<redshift.size(); i++) 
-    output.push_back(cbl::modelling::cosmo::cosmological_measurements(redshift[i], pp->data_type[i], cosmo));
+  for (size_t i=0; i<redshift.size(); i++) 
+    output.push_back(cbl::modelling::cosmo::cosmological_measurements(redshift[i], pp->data_type[i], cosmology));
 
   return output;
 }
@@ -132,22 +132,22 @@ std::vector<double> cbl::modelling::cosmo::cosmological_measurements_model_CMB_D
   shared_ptr<STR_data_model_cosmology> pp = static_pointer_cast<STR_data_model_cosmology>(inputs);
 
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
+  auto cosmology = pp->cosmology->clone();
 
   // input likelihood parameters
 
   // set the cosmological parameters used to compute the dark matter
   // two-point correlation function in real space
   for (size_t i=0; i<pp->Cpar.size(); ++i)
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
+    cosmology->set_parameter(pp->Cpar[i], parameter[i]);
 
   vector<double> output;
 
   for(size_t i=0; i<redshift.size()-pp->distance_prior->dataset()->ndata(); i++)
-    output.push_back(cbl::modelling::cosmo::cosmological_measurements(redshift[i], pp->data_type[i], cosmo));
+    output.push_back(cbl::modelling::cosmo::cosmological_measurements(redshift[i], pp->data_type[i], cosmology));
 
-  vector<double> mm = pp->distance_prior->model(cosmo);
-  for(size_t i=0; i<mm.size(); i++)
+  vector<double> mm = pp->distance_prior->model(cosmology);
+  for (size_t i=0; i<mm.size(); i++)
     output.push_back(mm[i]);
 
   return output;

@@ -227,7 +227,7 @@ namespace cbl {
        *
        *  @return the value of the m_data vector at position i,j
        */
-      double data (const int i, const int j) const {return m_data[m_index[i][j]];} 
+      double data (const int i, const int j) const { return m_data[m_index[i][j]]; } 
 
       /**
        *  @brief get data

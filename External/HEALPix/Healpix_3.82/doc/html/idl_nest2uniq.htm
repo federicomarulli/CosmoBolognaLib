@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>nest2uniq</TITLE>
+<META NAME="description" CONTENT="nest2uniq">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_npix2nside.htm">
+<LINK REL="previous" HREF="idl_neighbours_ring.htm">
+<LINK REL="next" HREF="idl_npix2nside.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_neighbours_ring.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_npix2nside.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html403"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_neighbours_ring.htm">neighbours_ring</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_npix2nside.htm">npix2nside</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4700"></A>
+<A ID="idl:nest2uniq"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">nest2uniq</SPAN></div><hr>
+<H3>This IDL facility turns <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN> and (NESTED) pixel index into the Unique Identifier  . 
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/toolkit/nest2uniq.pro"><strong>src/idl/toolkit/nest2uniq.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+nest2uniq, 
+<A HREF="#idl:nest2uniq:nside">Nside</A>,
+<A HREF="#idl:nest2uniq:pnest">Pnest</A>,
+<A HREF="#idl:nest2uniq:puniq">Puniq</A> 
+[,<A HREF="#idl:nest2uniq:help">/HELP</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>Nside</B>
+<DD><A ID="idl:nest2uniq:nside"></A> (IN, scalar or vector Integer) The <strong>HEALPix</strong> <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN> parameter(s)
+<DT>
+<B>Pnest</B>
+<DD><A ID="idl:nest2uniq:pnest"></A> (IN, scalar or vector Integer) (NESTED scheme) pixel identification number(s) in the range {0,<!-- MATH
+ $12N_{\mathrm{side}}^2-1$
+ -->
+<SPAN CLASS="MATH">12<I>N</I><SUB>side</SUB><SUP><i>2</i></SUP>-1</SPAN>}. If <A HREF="#idl:nest2uniq:nside"><SPAN style="font-family:monospace">Nside</SPAN></A> is a scalar, <A HREF="#idl:nest2uniq:pnest"><SPAN style="font-family:monospace">Pnest</SPAN></A> can a be a scalar or a vector, if <A HREF="#idl:nest2uniq:nside"><SPAN style="font-family:monospace">Nside</SPAN></A> is a vector,
+<A HREF="#idl:nest2uniq:pnest"><SPAN style="font-family:monospace">Pnest</SPAN></A> must be a vector of the same size
+<DT>
+<B>Puniq</B>
+<DD><A ID="idl:nest2uniq:puniq"></A> (OUT, same size as <A HREF="#idl:nest2uniq:pnest"><SPAN style="font-family:monospace">Pnest</SPAN></A>) The <strong>HEALPix</strong> Unique pixel identifier(s). 
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>/HELP</B>
+<DD><A ID="idl:nest2uniq:help"></A> If set, a documentation header is printed out, and the routine exits
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">nest2uniq</SPAN> turns the parameter <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN> (a power of 2) and the pixel index <SPAN CLASS="MATH"><I>p</I></SPAN> into the Unique ID number <!-- MATH
+ $u = p + 4 N_{\mathrm{side}}^2$
+ -->
+<SPAN CLASS="MATH"><I>u</I> = <I>p</I> + 4 <I>N</I><SUB>side</SUB><SUP><i>2</i></SUP></SPAN>. See <A HREF="./intro_Geometric_Algebraic_Propert.htm#intro:unique">&rdquo;The Unique Identifier scheme&rdquo;</A> section in 
+<A ID="tex2html89"
+  HREF="intro.htm">&rdquo;<strong>HEALPix</strong> Introduction Document&rdquo;</A>
+for more details.
+
+</blockquote>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">nest2uniq, [1, 2, 4], [0, 0, 0], puniq</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT">print, puniq</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+<TABLE   STYLE="width:374;">
+<TR><TD>
+returns  
+<BR>
+4 16 64 
+<BR>
+since the first pixels (<SPAN CLASS="MATH"><I>p</I>=0</SPAN>) at <!-- MATH
+ $N_{\mathrm{side}}=$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB>=</SPAN> 1, 2 and 4 are respectively the pixels with Unique ID numbers 4, 16 and 64.
+</TD></TR>
+</TABLE>
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">nest2uniq</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="idl_uniq2nest.htm#idl:uniq2nest">uniq2nest</A></B>
+<DD>Transforms Unique <strong>HEALPix</strong> pixel ID number into Nside and Nested pixel number
+  <DT>
+<B><A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools">pix2xxx,...</A></B>
+<DD>to turn NESTED pixel index into sky coordinates and back
+  </DL>
+
+<P>
+
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_neighbours_ring.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_npix2nside.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html403"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_neighbours_ring.htm">neighbours_ring</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_npix2nside.htm">npix2nside</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

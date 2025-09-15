@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: /tmp/fileBLdsoh.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(33.588369,-4.4736768,33.591985,-4.465838,33.591951,-4.340835,33.57622,-4.3405791,33.502906,-4.3397777,33.482247,-4.341566,33.47505,-4.344755,33.475058,-4.465396,33.492077,-4.472957) # color=red dash=1

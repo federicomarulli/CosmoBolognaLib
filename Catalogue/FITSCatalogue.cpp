@@ -38,12 +38,13 @@
 using namespace std;
 
 using namespace cbl;
+using namespace glob;
 
 
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const bool read_weights, const bool read_regions, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const int seed)
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const bool read_weights, const bool read_regions, const double nSub, const double fact, const std::shared_ptr<cosmology::Cosmology> cosmology, const CoordinateUnits inputUnits, const int seed)
 { 
   // parameters for random numbers used in case nSub!=1
   random::UniformRandomNumbers ran(0., 1., seed);
@@ -75,7 +76,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 	else if (coordinateType==CoordinateType::_observed_) { // observed coordinates (R.A., Dec, redshift)
 	  if (table[2][i]*fact>0) {
 	    observedCoordinates coord = {table[0][i]*fact, table[1][i]*fact, table[2][i]*fact};
-	    m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosm, (read_weights) ? table[3][i] : 1., (read_regions) ? (long)table[(read_weights) ? 4 : 3][i] : 1)));
+	    m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosmology, (read_weights) ? table[3][i] : 1., (read_regions) ? (long)table[(read_weights) ? 4 : 3][i] : 1)));
 	  }
 	  else WarningMsgCBL("the object "+conv(i, par::fINT)+" has z = "+conv(table[2][i]*fact, par::fDP2)+", and it will be not included in the catalogue!", "Catalogue", "FITSCatalogue.cpp");
 	}
@@ -91,7 +92,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const std::vector<Var> attribute, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const int seed)
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const std::vector<std::string> column_names, const std::vector<Var> attribute, const double nSub, const double fact, const std::shared_ptr<cosmology::Cosmology> cosmology, const CoordinateUnits inputUnits, const int seed)
 {
   // preliminary check on vector sizes
   size_t nvar;
@@ -132,7 +133,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 	  m_object.push_back(move(Object::Create(objectType, defaultComovingCoord, 1.)));
 	
 	else if (coordinateType==cbl::CoordinateType::_observed_)
-	  m_object.push_back(move(Object::Create(objectType, defaultObservedCoord, inputUnits, cosm, 1.)));
+	  m_object.push_back(move(Object::Create(objectType, defaultObservedCoord, inputUnits, cosmology, 1.)));
 
 	
 #pragma omp parallel num_threads(num_threads)
@@ -142,7 +143,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 	
 	    for (size_t ii=prev_nObj; ii<nObjects(); ii++) {
 	      double temp = ((varMap[i]==Var::_RA_) || (varMap[i]==Var::_Dec_)) ? radians(table[i][ii], inputUnits) : table[i][ii];
-	      set_var(ii, varMap[i], ((varMap[i]==Var::_X_) || (varMap[i]==Var::_Y_) || (varMap[i]==Var::_Z_)) ? temp*fact : temp, cosm);
+	      set_var(ii, varMap[i], ((varMap[i]==Var::_X_) || (varMap[i]==Var::_Y_) || (varMap[i]==Var::_Z_)) ? temp*fact : temp, cosmology);
 	    }
 	    
 	  }

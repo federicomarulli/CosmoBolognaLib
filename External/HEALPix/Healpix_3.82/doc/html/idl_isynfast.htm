@@ -1,0 +1,320 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>isynfast</TITLE>
+<META NAME="description" CONTENT="isynfast">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_lm2index.htm">
+<LINK REL="previous" HREF="idl_ismoothing.htm">
+<LINK REL="next" HREF="idl_lm2index.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_ismoothing.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_lm2index.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html389"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_ismoothing.htm">ismoothing</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_lm2index.htm">lm2index</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4000"></A>
+<A ID="idl:isynfast"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">isynfast</SPAN></div><hr>
+<H3>This IDL facility provides an interface to F90 '<A HREF="./fac_synfast.htm#fac:synfast">synfast</A>' facility. It can be
+used to generate sky maps and/or <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> from power spectra (<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img4.png"
+ ALT="$C(\ell)$"></SPAN>), synthesize maps from
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> or simulate maps from <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img4.png"
+ ALT="$C(\ell)$"></SPAN> and constraining <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN>.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/interfaces/isynfast.pro"><strong>src/idl/interfaces/isynfast.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+ISYNFAST, <A HREF="#idl:isynfast:cl_in">cl_in</A>[, <A HREF="#idl:isynfast:map_out">map_out</A>,
+      <A HREF="#idl:isynfast:alm_in">alm_in=</A>,  <A HREF="#idl:isynfast:alm_out">alm_out=</A>, <A HREF="#idl:isynfast:apply_windows">apply_windows=</A>, <A HREF="#idl:isynfast:beam_file">beam_file=</A>, <A HREF="#idl:isynfast:binpath">binpath=</A>, <A HREF="#idl:isynfast:double">double=</A>, <A HREF="#idl:isynfast:fwhm_arcmin">fwhm_arcmin=</A>, <A HREF="#idl:isynfast:help">help=</A>,
+      <A HREF="#idl:isynfast:iseed">iseed=</A>, <A HREF="#idl:isynfast:keep_tmp_files">keep_tmp_files=</A>, <A HREF="#idl:isynfast:lmax">lmax=</A>, <A HREF="#idl:isynfast:nlmax">nlmax=</A>, <A HREF="#idl:isynfast:nside">nside=</A>, <A HREF="#idl:isynfast:nsmax">nsmax=</A>, <A HREF="#idl:isynfast:plmfile">plmfile=</A>,
+      <A HREF="#idl:isynfast:simul_type">simul_type=</A>, <A HREF="#idl:isynfast:silent">silent=</A>, <A HREF="#idl:isynfast:tmpdir">tmpdir=</A>, <A HREF="#idl:isynfast:windowfile">windowfile=</A>, <A HREF="#idl:isynfast:winfiledir">winfiledir=</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>cl_in<A ID="idl:isynfast:cl_in"></A></B>
+<DD>input power spectrum, can be a FITS file, or a memory array containing the
+        <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img4.png"
+ ALT="$C(\ell)$"></SPAN>, used to generate a map or a set of gaussian alm 
+<BR>
+If empty quotes (&rdquo;) or a zero (0) are provided, it will be interpreted as "No input C(l)", in
+   which case some input alm's (alm_in) are required.
+    <DT>
+<B>map_out<A ID="idl:isynfast:map_out"></A></B>
+<DD>optional output: <EM>RING ordered</EM> map synthetised from the power spectrum or from constraining alm
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>alm_in<A ID="idl:isynfast:alm_in"></A>=</B>
+<DD>optional input (constraining) alm (must be a FITS file)           <b>default:</b>no alm
+
+<P>
+<DT>
+<B>alm_out<A ID="idl:isynfast:alm_out"></A>=</B>
+<DD>contains on output the effective alm (must be a FITS file)
+
+<P>
+<DT>
+<B>/apply_windows<A ID="idl:isynfast:apply_windows"></A></B>
+<DD>if set, beam and pixel windows are applied to input alm_in
+(if any)
+
+<P>
+<DT>
+<B>beam_file<A ID="idl:isynfast:beam_file"></A>=</B>
+<DD>beam window function, either a FITS file or an array (see <A HREF="./fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:beamfiles">&rdquo;Beam window function files&rdquo;</A> section
+in the <A ID="tex2html53"
+  HREF="facilities.htm"><strong>HEALPix</strong> Fortran Facilities document</A>)
+
+<P>
+<DT>
+<B>binpath<A ID="idl:isynfast:binpath"></A>=</B>
+<DD>full path to back-end routine <b>default:</b>$HEXE/synfast, then $HEALPIX/bin/synfast
+<BR>              &ndash; a binpath starting with / (or <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img74.png"
+ ALT="$\backslash$"></SPAN>), <SPAN CLASS="MATH">&nbsp;</SPAN> or $ is interpreted as absolute
+<BR>              &ndash; a binpath starting with ./ is interpreted as relative to current directory
+<BR>              &ndash; all other binpaths are relative to $HEALPIX
+
+<P>
+<DT>
+<B>/double<A ID="idl:isynfast:double"></A></B>
+<DD>if set, I/O is done in double precision <b>default:</b>single precision I/O
+
+<P>
+<DT>
+<B>fwhm_arcmin<A ID="idl:isynfast:fwhm_arcmin"></A>=</B>
+<DD>gaussian beam FWHM in arcmin <b>default:</b>0
+
+<P>
+<DT>
+<B>/help<A ID="idl:isynfast:help"></A></B>
+<DD>if set, prints extended help
+
+<P>
+<DT>
+<B>iseed<A ID="idl:isynfast:iseed"></A>=</B>
+<DD>integer seed of radom sequence <b>default:</b>0
+
+<P>
+<DT>
+<B>/keep_tmp_files<A ID="idl:isynfast:keep_tmp_files"></A></B>
+<DD>if set, temporary files are not discarded at the end of the
+                   run
+
+<P>
+<DT>
+<B>lmax<A ID="idl:isynfast:lmax"></A>=, nlmax<A ID="idl:isynfast:nlmax"></A>=</B>
+<DD>maximum multipole simulation <b>default:</b>2*<!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN>
+
+<P>
+<DT>
+<B>nside<A ID="idl:isynfast:nside"></A>=, nsmax<A ID="idl:isynfast:nsmax"></A>=</B>
+<DD>Healpix resolution parameter <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN>
+
+<P>
+<DT>
+<B>plmfile<A ID="idl:isynfast:plmfile"></A>=</B>
+<DD>FITS file containing precomputed Spherical Harmonics (deprecated) <b>default:</b>no file
+
+<P>
+<DT>
+<B>simul_type<A ID="idl:isynfast:simul_type"></A>=</B>
+<DD>1) Temperature only 
+<BR>
+2) Temperature + polarisation 
+<BR>
+3) Temperature + 1st derivatives 
+<BR>
+4) Temperature + 1st &amp; 2nd derivatives 
+<BR>
+5) T+P + 1st derivatives 
+<BR>
+6) T+P + 1st &amp; 2nd derivates
+	<b>default:</b>2: T+P
+
+<P>
+<DT>
+<B>/silent<A ID="idl:isynfast:silent"></A></B>
+<DD>if set, works silently
+
+<P>
+<DT>
+<B>tmpdir<A ID="idl:isynfast:tmpdir"></A>=</B>
+<DD>directory in which are written temporary files 
+ <b>default:</b>IDL_TMPDIR (see IDL documentation)
+
+<P>
+<DT>
+<B>windowfile<A ID="idl:isynfast:windowfile"></A>=</B>
+<DD>FITS file containing pixel window 
+        <b>default:</b>determined automatically by back-end routine.
+      Do not set this keyword unless you really know what you are doing
+
+<P>
+<DT>
+<B>winfiledir<A ID="idl:isynfast:winfiledir"></A>=</B>
+<DD>directory where the pixel windows are to be found 
+        <b>default:</b>determined automatically by back-end routine.
+      Do not set this keyword unless you really know what you are doing
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">isynfast</SPAN> is an interface to F90 '<A HREF="./fac_synfast.htm#fac:synfast">synfast</A>' F90 facility. It
+requires some disk space on which to write the parameter file and the other
+temporary files. Most data can be provided/generated as an external FITS
+file, or as a memory array.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">isynfast</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">isynfast</SPAN>.
+    <DT>
+<B>synfast</B>
+<DD>F90 facility called by <SPAN CLASS="colordoc">isynfast</SPAN>.
+    <DT>
+<B><A HREF="idl_ialteralm.htm#idl:ialteralm">ialteralm</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_alteralm.htm#fac:alteralm">alteralm</A>
+    <DT>
+<B><A HREF="idl_ianafast.htm#idl:ianafast">ianafast</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_anafast.htm#fac:anafast">anafast</A> and C++ anafast_cxx
+    <DT>
+<B><A HREF="idl_iprocess_mask.htm#idl:iprocess_mask">iprocess_mask</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_process_mask.htm#fac:process_mask">process_mask</A>
+    <DT>
+<B><A HREF="idl_ismoothing.htm#idl:ismoothing">ismoothing</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_smoothing.htm#fac:smoothing">smoothing</A>
+</DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">isynfast</SPAN>, '$HEALPIX/test/cl.fits', map, fwhm=30, nside=256, /silent</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="idl_mollview.htm#idl:mollview">mollview</A>, map, 1, title='I'</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="idl_mollview.htm#idl:mollview">mollview</A>, map, 2, title='Q'</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+will synthetize and plot I and Q  maps consistent with WMAP-1yr best fit power
+spectrum and observed with a circular gaussian 30 arcmin beam.
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_ismoothing.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_lm2index.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html389"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_ismoothing.htm">ismoothing</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_lm2index.htm">lm2index</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

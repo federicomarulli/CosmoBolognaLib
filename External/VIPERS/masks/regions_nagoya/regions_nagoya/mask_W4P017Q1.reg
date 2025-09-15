@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: /tmp/fileegbxkn.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(334.50732,1.031027,334.51192,1.03114,334.51573,1.032473,334.53348,1.0299606,334.61284,1.033216,334.6195,1.036832,334.61951,1.159318,334.61632,1.162413,334.51567,1.162819,334.50988,1.158312,334.50747,1.154823) # color=red dash=1

@@ -168,9 +168,10 @@ namespace cbl {
        *  @brief set the parameters for the interpolated distribution
        *  @param values the values to be extracted
        *  @param weights the values weights
+       *  @param interpolation_method the method of interpolation
        */
-      virtual void set_interpolated_distribution (const std::vector<double> values, const std::vector<double> weights)
-      { (void)values; (void)weights; ErrorCBL("error!", "set_interpolated_distribution", "RandomNumbers.h"); }
+      virtual void set_interpolated_distribution (const std::vector<double> values, const std::vector<double> weights, const std::string interpolation_method)
+      { (void)values; (void)weights; (void)interpolation_method; ErrorCBL("error!", "set_interpolated_distribution", "RandomNumbers.h"); }
 
       /**
        *  @brief set parameters for interpolated distribution

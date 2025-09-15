@@ -1,0 +1,214 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>bl2fits</TITLE>
+<META NAME="description" CONTENT="bl2fits">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_cartcursor.htm">
+<LINK REL="previous" HREF="idl_bl2beam.htm">
+<LINK REL="next" HREF="idl_cartcursor.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_bl2beam.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_cartcursor.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html339"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_bl2beam.htm">bl2beam</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_cartcursor.htm">cartcursor</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION1500"></A>
+<A ID="idl:bl2fits"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">bl2fits</SPAN></div><hr>
+<H3>This IDL facility provides a means to
+write into a FITS file as an ascii table extension a (beam) window function
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img2.png"
+ ALT="$B(\ell)$"></SPAN>. Adds additional
+headers if required. The facility is primarily intended to allow the
+user to write an arbitrary window function into a FITS file in 
+the correct format to be ingested by the <strong>HEALPix</strong> simulation facilities
+<A HREF="./fac_synfast.htm#fac:synfast"><SPAN style="font-family:monospace">synfast</SPAN></A>, 
+<A HREF="idl_isynfast.htm#idl:isynfast"><SPAN style="font-family:monospace">isynfast</SPAN></A>, 
+and others 
+(see <A HREF="./fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:beamfiles">&rdquo;Beam window function files&rdquo;</A>
+in the <A ID="tex2html34"
+  HREF="facilities.htm"><strong>HEALPix</strong> Fortran Facilities document</A>).
+<br><br></H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/fits/bl2fits.pro"><strong>src/idl/fits/bl2fits.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+BL2FITS, <A HREF="#idl:bl2fits:bl_array">bl_array</A>, <A HREF="#idl:bl2fits:fitsfile">fitsfile</A>, [HDR = , <A HREF="#idl:bl2fits:HELP">/HELP</A>, XHDR =]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>bl_array<A ID="idl:bl2fits:bl_array"></A></B>
+<DD>real or double array of Bl coefficients to be written to
+      file. This has dimension (lmax+1,<SPAN CLASS="MATH"><I>n</I></SPAN>) with <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.41ex; " SRC="idl_img52.png"
+ ALT="$1\le n \le 3$"></SPAN>, given in the sequence T E B.
+    <DT>
+<B>fitsfile<A ID="idl:bl2fits:fitsfile"></A></B>
+<DD>String containing the name of the file to be written.
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>HDR<A ID="idl:bl2fits:HDR"></A>=</B>
+<DD>String array containing the (non-trivial) primary header
+      for the FITS file. 
+    <DT>
+<B>/HELP<A ID="idl:bl2fits:HELP"></A></B>
+<DD>If set, a help message is printed out, no file is written
+
+<P>
+<DT>
+<B>XHDR<A ID="idl:bl2fits:XHDR"></A>=</B>
+<DD>String array containing the (non-trivial) extension header
+      for the FITS file. 
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">bl2fits</SPAN> writes the input <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img2.png"
+ ALT="$B(\ell)$"></SPAN> coefficients into a FITS
+file containing an ascii table extension. Optional headers conforming
+to the FITS convention can also be written to the output file. All
+required FITS header keywords (like SIMPLE, BITPIX, ...) are automatically generated by the
+routine and should NOT be duplicated in the optional header inputs
+(they would be ignored anyway).
+The one/two/three column(s) are automatically named 
+<SPAN style="font-family:monospace">TEMPERATURE</SPAN>, <SPAN style="font-family:monospace">GRAD</SPAN>, <SPAN style="font-family:monospace">CURL</SPAN>
+respectively.
+If the window function is provided in a double precision array, the output format
+will automatically feature more decimal places.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">bl2fits</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">bl2fits</SPAN>.
+    <DT>
+<B><A HREF="idl_fits2cl.htm#idl:fits2cl">fits2cl</A></B>
+<DD>provides the complimentary routine to read in a
+      window function or power spectrum from a FITS file.
+    <DT>
+<B>synfast</B>
+<DD>utilises the output file generated by <SPAN CLASS="colordoc">bl2fits</SPAN>(option <SPAN style="font-family:monospace">beam_file</SPAN>).
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">beam1 =  gaussbeam(10., 2000, 1)</TD>
+</TR>
+<TR><TD CLASS="LEFT">beam2 =  gaussbeam(15., 2000, 1)</TD>
+</TR>
+<TR><TD CLASS="LEFT">beam  =  (beam1 + beam2) / 2.</TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">bl2fits</SPAN>,  beam, 'beam.fits'</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+<SPAN CLASS="colordoc">bl2fits</SPAN> writes the beam window function stored in the variable <SPAN style="font-family:monospace">beam</SPAN>
+(=Legendre transform of a circular beam)
+into the output FITS file <SPAN style="font-family:monospace">beam.fits</SPAN>.
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_bl2beam.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_cartcursor.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html339"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_bl2beam.htm">bl2beam</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_cartcursor.htm">cartcursor</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

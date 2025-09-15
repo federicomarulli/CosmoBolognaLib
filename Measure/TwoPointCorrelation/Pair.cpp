@@ -23,8 +23,9 @@
  *
  *  @brief Methods of the class Pair  
  *
- *  This file contains the implementation of all the methods of the
- *  classes Pair*, used to handle pairs of objects of any kind
+ *  This file contains the implementation of the factory methods of
+ *  the abstract class Pair, used to handle pairs of objects of any
+ *  kind
  *
  *  @author Federico Marulli 
  *

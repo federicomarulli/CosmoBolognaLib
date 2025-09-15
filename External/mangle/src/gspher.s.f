@@ -1,32 +1,32 @@
 c-----------------------------------------------------------------------
-c © A J S Hamilton 2001
+c ï¿½ A J S Hamilton 2001
 c-----------------------------------------------------------------------
       subroutine gspher(area,bound,vert,w,lmax1,im,nw,rp,cm,np,npc,ibv,
      *  iphi,tol,phw,iord,v,ldegen)
       integer lmax1,im,nw,np,npc,ibv,iphi
       logical ldegen
-      real*10 area,bound(2),vert(2),w(im,nw),rp(3,np),cm(np),tol
+      real*16 area,bound(2),vert(2),w(im,nw),rp(3,np),cm(np),tol
 c        work arrays (could be automatic if compiler supports it)
       integer iord(2*np)
-      real*10 phw(2,np),v(lmax1)
+      real*16 phw(2,np),v(lmax1)
 c
 c        parameters
       include 'pi.par'
-      real*10 TWOPI
-      parameter (TWOPI=2._10*PI)
+      real*16 TWOPI
+      parameter (TWOPI=2._16*PI)
 c        intrinsics
       intrinsic abs
 c        externals
       integer garpi,gsegij,gzeroar
 c        data variables
-      real*10 big
-      real*10 dphmin
+      real*16 big
+      real*16 dphmin
 c        local (automatic) variables
       integer i,iarea,ik,iseg,j,jm,jml,jmu,jp,jpl,jpu,k,km,kp,l,
      *  nbd,nbd0m,nbd0p,ni,nmult,retry,scmi
 C     logical warn
       logical whole
-      real*10 bik,ci,cmi,cmik,cmk,cti,ctk,ctpsi,
+      real*16 bik,ci,cmi,cmik,cmk,cti,ctk,ctpsi,
      *  d,darea,dbound(2),dph,dvert(2),ikchk,ikran,
      *  ph,phi,phii,phm,php,psi,psip,ri,rii,si,sk,sqrt4pi,t,tolin,
      *  xi(3),yi(3)
@@ -169,9 +169,9 @@ c Work arrays: phw and iord should be dimensioned at least 2*np.
 c              v should be dimensioned at least lmax1.
 c
 c        set azimuthal angle of non-intersection to big
-      data big /1.e6_10/
+      data big /1.e6_16/
 c        possible multiple intersection when dph < dphmin
-      data dphmin /1.e-8_10/
+      data dphmin /1.e-8_16/
 c
 c        input tolerance to multiple intersections
       tolin=tol
@@ -182,14 +182,14 @@ c        initialise error flag to no error
       ldegen=.false.
 C     warn=.false.
 c        zero stuff
-      area=0._10
-      bound(1)=0._10
-      bound(2)=0._10
-      vert(1)=0._10
-      vert(2)=0._10
+      area=0._16
+      bound(1)=0._16
+      bound(2)=0._16
+      vert(1)=0._16
+      vert(2)=0._16
       do j=1,nw
         do i=1,im
-          w(i,j)=0._10
+          w(i,j)=0._16
         enddo
       enddo
 c        check for zero area because one circle is null
@@ -202,35 +202,35 @@ c        number of non-intersecting circles bounding area
       nbd0m=0
       nbd0p=0
 c        error check on evaluation of vertex terms
-      ikchk=0._10
+      ikchk=0._16
 c        area=sqrt(4pi)*monopole
-      sqrt4pi=sqrt(4._10*PI)
+      sqrt4pi=sqrt(4._16*PI)
 c        harmonics defined so point iphi is at zero azimuthal angle
-      rii=0._10
+      rii=0._16
       if (iphi.ge.1) rii=sqrt(rp(1,iphi)**2+rp(2,iphi)**2)
-      phii=0._10
-      if (rii.gt.0._10) phii=atan2(rp(2,iphi),rp(1,iphi))
+      phii=0._16
+      if (rii.gt.0._16) phii=atan2(rp(2,iphi),rp(1,iphi))
 c--------identify boundary segments around each circle i in turn
       do 280 i=1,np
 c        cm(i).ge.2 means include whole sphere, which is no constraint
-        if (cm(i).ge.2._10) goto 280
+        if (cm(i).ge.2._16) goto 280
 c        there is a constraint, so area is not whole sphere
         whole=.false.
 c        scmi * cmi = 1-cos th(i)
-        if (cm(i).ge.0._10) then
+        if (cm(i).ge.0._16) then
           scmi=1
         else
           scmi=-1
         endif
         cmi=abs(cm(i))
 c        ci = cos th(i)
-        ci=1._10-cmi
+        ci=1._16-cmi
 c        si = sin th(i)
-        si=sqrt(cmi*(2._10-cmi))
+        si=sqrt(cmi*(2._16-cmi))
 c........ri, phi, rp(3,i) are cylindrical coordinates of rp(i)
         ri=sqrt(rp(1,i)**2+rp(2,i)**2)
-        if (ri.eq.0._10.or.i.eq.iphi) then
-          phi=0._10
+        if (ri.eq.0._16.or.i.eq.iphi) then
+          phi=0._16
         else
           phi=atan2(rp(2,i),rp(1,i))-phii
         endif
@@ -239,20 +239,20 @@ c The direction of yi is important here,
 c unlike some other subroutines (gphi, garea, gphbv, gvlim, gvphi)
 c where yi can point in any abitrary direction.
 c        set yi in direction z x rp(i)
-        if (ri.gt.0._10) then
+        if (ri.gt.0._16) then
           yi(1)=-rp(2,i)/ri
           yi(2)=rp(1,i)/ri
-          yi(3)=0._10
+          yi(3)=0._16
 c        if rp(i) is along z-axis, set yi in direction z x rp(iphi)
-        elseif (rii.gt.0._10) then
+        elseif (rii.gt.0._16) then
           yi(1)=-rp(2,iphi)/rii
           yi(2)=rp(1,iphi)/rii
-          yi(3)=0._10
+          yi(3)=0._16
 c        if rp(iphi) is also along z-axis, set yi along y-axis
-        elseif (ri.eq.0._10.and.rii.eq.0._10) then
-          yi(1)=0._10
-          yi(2)=1._10
-          yi(3)=0._10
+        elseif (ri.eq.0._16.and.rii.eq.0._16) then
+          yi(1)=0._16
+          yi(2)=1._16
+          yi(3)=0._16
         endif
 c        xi in direction yi x rp(i)
         xi(1)=yi(2)*rp(3,i)-yi(3)*rp(2,i)
@@ -265,14 +265,14 @@ c        i circle lies outside polygon
 c        area of polygon is zero
         if (ni.eq.-2) then
 c        area can be non-zero from psi at multiple intersections
-          area=0._10
-          bound(1)=0._10
-          bound(2)=0._10
-          vert(1)=0._10
-          vert(2)=0._10
+          area=0._16
+          bound(1)=0._16
+          bound(2)=0._16
+          vert(1)=0._16
+          vert(2)=0._16
           do l=1,nw
             do k=1,im
-              w(k,l)=0._10
+              w(k,l)=0._16
             enddo
           enddo
           goto 410
@@ -286,13 +286,13 @@ c........i circle has no intersections
           endif
           dph=TWOPI
           if (scmi.lt.0) dph=-dph
-          ph=0._10
+          ph=0._16
 c        increment area
           darea=cmi*dph
           area=area+darea
 c        bound(1) term is length of boundary
           dbound(1)=si*abs(dph)
-          dbound(2)=(1._10/si-2._10*si)*abs(dph)
+          dbound(2)=(1._16/si-2._16*si)*abs(dph)
 c        standard
           if (ibv.eq.0
 c        cross
@@ -348,7 +348,7 @@ c        contribution to area from the boundary segment
             area=area+darea
 c        bound(1) term is length of boundary
             dbound(1)=si*abs(dph)
-            dbound(2)=(1._10/si-2._10*si)*abs(dph)
+            dbound(2)=(1._16/si-2._16*si)*abs(dph)
 c        standard
             if (ibv.eq.0
 c        cross
@@ -398,25 +398,25 @@ c        ikchk = ikchk - ikran, subtracted as unsigned long long's
 c        ikchk = ikchk + ikran, added as unsigned long long's
               call ikrandp(ikchk,ikran)
               cmk=abs(cm(k))
-              sk=sqrt(cmk*(2._10-cmk))
+              sk=sqrt(cmk*(2._16-cmk))
 c        cmik = 1-cos th(ik)
               cmik=((rp(1,i)-rp(1,k))**2+(rp(2,i)-rp(2,k))**2
-     *          +(rp(3,i)-rp(3,k))**2)/2._10
+     *          +(rp(3,i)-rp(3,k))**2)/2._16
 c        bik = cik-ci*ck
 c        d = 1-ci^2-ck^2-cik^2+2*ci*ck*cik
 c        cos psi = bik/(si*sk)
 c        sin psi = sqrt(d)/(si*sk)
 c        psi = atan(sqrt(d)/bik) is exterior angle at intersection
               bik=(cmi+cmk)-cmi*cmk-cmik
-              if ((scmi.ge.0.and.cm(k).lt.0._10)
-     *          .or.(scmi.lt.0.and.cm(k).ge.0._10)) bik=-bik
+              if ((scmi.ge.0.and.cm(k).lt.0._16)
+     *          .or.(scmi.lt.0.and.cm(k).ge.0._16)) bik=-bik
 c        i and k circles kiss
               if (phw(1,k).eq.phw(2,k)) then
-                d=0._10
+                d=0._16
               else
-                d=-(cmi-cmk)**2+cmik*(2._10*((cmi+cmk)-cmi*cmk)-cmik)
+                d=-(cmi-cmk)**2+cmik*(2._16*((cmi+cmk)-cmi*cmk)-cmik)
 c        assert that circles at least touch
-                if (d.lt.0._10) d=0._10
+                if (d.lt.0._16) d=0._16
                 d=sqrt(d)
               endif
               ctpsi=bik/d
@@ -424,31 +424,31 @@ c        assert that circles at least touch
 c        increment area
               area=area-psi
 c        t=tan psi/2
-              if (bik.gt.0._10) then
+              if (bik.gt.0._16) then
                 t=d/(bik+sqrt(bik**2+d**2))
-              elseif (bik.lt.0._10) then
+              elseif (bik.lt.0._16) then
                 t=(-bik+sqrt(bik**2+d**2))/d
-              elseif (bik.eq.0._10) then
-                t=1._10
+              elseif (bik.eq.0._16) then
+                t=1._16
               endif
 c        cti = cot th(i)
-              cti=(1._10-cmi)/si
+              cti=(1._16-cmi)/si
               if (scmi.lt.0) cti=-cti
 c        ctk = cot th(k)
-              ctk=(1._10-cmk)/sk
-              if (cm(k).lt.0._10) ctk=-ctk
+              ctk=(1._16-cmk)/sk
+              if (cm(k).lt.0._16) ctk=-ctk
 c        standard
               if (ibv.eq.0
      *          .or.(ibv.eq.1.and.i.gt.npc.and.k.gt.npc)
      *          .or.(ibv.eq.2.and.i.gt.npc.and.k.gt.npc)
      *          .or.(ibv.eq.3.and.((i.gt.npc.and.k.gt.npc)
      *                         .or.(i.le.npc.and.k.le.npc)))) then
-                if (psi.eq.0._10) then
-                  dvert(1)=0._10
-                  dvert(2)=0._10
+                if (psi.eq.0._16) then
+                  dvert(1)=0._16
+                  dvert(2)=0._16
                 else
-                  dvert(1)=1._10-psi*ctpsi
-                  dvert(2)=t*(3._10+t**2)*(cti+ctk)/2._10
+                  dvert(1)=1._16-psi*ctpsi
+                  dvert(2)=t*(3._16+t**2)*(cti+ctk)/2._16
                 endif
                 vert(1)=vert(1)+dvert(1)
                 vert(2)=vert(2)+dvert(2)
@@ -457,40 +457,40 @@ c        cross
                 if (i.le.npc.and.k.le.npc) then
                   continue
                 else
-                  dvert(1)=PI/2._10*ctpsi
-                  dvert(2)=t*(3._10+t**2)*(cti+ctk)/2._10
+                  dvert(1)=PI/2._16*ctpsi
+                  dvert(2)=t*(3._16+t**2)*(cti+ctk)/2._16
                   vert(1)=vert(1)-dvert(1)
-                  vert(2)=vert(2)+dvert(2)/2._10
-                  t=1._10/t
-                  dvert(2)=t*(3._10+t**2)*(cti-ctk)/2._10
+                  vert(2)=vert(2)+dvert(2)/2._16
+                  t=1._16/t
+                  dvert(2)=t*(3._16+t**2)*(cti-ctk)/2._16
                   if (i.gt.npc) then
-                    vert(2)=vert(2)-dvert(2)/2._10
+                    vert(2)=vert(2)-dvert(2)/2._16
                   elseif (k.gt.npc) then
-                    vert(2)=vert(2)+dvert(2)/2._10
+                    vert(2)=vert(2)+dvert(2)/2._16
                   endif
                 endif
 c        intersection
               elseif (ibv.eq.2) then
                 if (i.le.npc.and.k.le.npc) then
-                  if (psi.eq.0._10) then
-                    dvert(1)=0._10
-                    dvert(2)=0._10
+                  if (psi.eq.0._16) then
+                    dvert(1)=0._16
+                    dvert(2)=0._16
                   else
-                    dvert(1)=1._10-psi*ctpsi
-                    dvert(2)=t*(3._10+t**2)*(cti+ctk)/2._10
+                    dvert(1)=1._16-psi*ctpsi
+                    dvert(2)=t*(3._16+t**2)*(cti+ctk)/2._16
                   endif
                   vert(1)=vert(1)-dvert(1)
                   vert(2)=vert(2)-dvert(2)
                 else
 c        psip = pi - psi
                   psip=atan2(d,-bik)
-                  if (psip.eq.0._10) then
-                    dvert(1)=0._10
-                    dvert(2)=0._10
+                  if (psip.eq.0._16) then
+                    dvert(1)=0._16
+                    dvert(2)=0._16
                   else
-                    dvert(1)=1._10+psip*ctpsi
-                    t=1._10/t
-                    dvert(2)=t*(3._10+t**2)*(cti-ctk)/2._10
+                    dvert(1)=1._16+psip*ctpsi
+                    t=1._16/t
+                    dvert(2)=t*(3._16+t**2)*(cti-ctk)/2._16
                   endif
                   vert(1)=vert(1)-dvert(1)
                   if (i.gt.npc) then
@@ -501,12 +501,12 @@ c        psip = pi - psi
                 endif
 c        union
               elseif (ibv.eq.3) then
-                if (psi.eq.0._10) then
-                  dvert(1)=0._10
-                  dvert(2)=0._10
+                if (psi.eq.0._16) then
+                  dvert(1)=0._16
+                  dvert(2)=0._16
                 else
-                  dvert(1)=1._10-psi*ctpsi
-                  dvert(2)=t*(3._10+t**2)*(cti+ctk)/2._10
+                  dvert(1)=1._16-psi*ctpsi
+                  dvert(2)=t*(3._16+t**2)*(cti+ctk)/2._16
                 endif
                 vert(1)=vert(1)-dvert(1)
                 vert(2)=vert(2)+dvert(2)
@@ -514,9 +514,9 @@ c        union
 C             print *,'     intersect',i,k,' area +=',-psi,' =',area
 C             print *,'     dvert =',dvert(1),dvert(2),
 C    *          ' vert =',vert(1),vert(2)
-C             print *,' cot(',psi,') =',1._10/tan(psi),
+C             print *,' cot(',psi,') =',1._16/tan(psi),
 C    *          ' should =',ctpsi
-C             print *,' tan(',psi,'/2) =',tan(psi/2._10),
+C             print *,' tan(',psi,'/2) =',tan(psi/2._16),
 C    *          ' should =',t 
 C             print *,' cot(th_i) =',cti,' cot(th_k) =',ctk
 c        peculiar monopole term
@@ -531,7 +531,7 @@ c        do another segment
         endif
   280 continue
 c--------check on whether ik endpoints matched ki endpoints
-      if (ikchk.ne.0._10) then
+      if (ikchk.ne.0._16) then
 C       warn=.true.
 c       print *,'*** from gspher: at tol =',tol,
 c    *    ', ikchk=',ikchk,' should be 0'

@@ -756,7 +756,7 @@ namespace cbl {
        *  second axis
        */
       virtual void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy);
-
+        
       /**
        *  @brief write the model at xx computing 16th, 50th and 84th
        *  percentiles from the chains
@@ -792,6 +792,57 @@ namespace cbl {
        *  @param thin the position step
        */
       virtual void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> yy, const int start=0, const int thin=1);
+
+      /**
+       *  @brief write the model at xx computing 16th, 50th and 84th
+       *  percentiles from the chains
+       *
+       *  @param output_dir the output directory
+       *
+       *  @param output_file the output file
+       *
+       *  @param nmultipoles the number of multipoles in output
+       *
+       *  @param xx vector of points at which the model is computed,
+       *
+       *  @param start the starting position for each chain
+       *
+       *  @param thin the position step
+       */
+      virtual void write_model_from_chains (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const int start=0, const int thin=1)
+      {(void)output_dir; (void)output_file; (void)nmultipoles; (void)xx; (void)start; (void)thin; cbl::ErrorCBL("", "write_model_from_chains", "Modelling.h");}
+      
+      /**
+       *  @brief write the model at xx for given parameters
+       *
+       *  @param output_dir the output directory
+       *
+       *  @param output_file the output file
+       *
+       *  @param nmultipoles the number of multipoles in output
+       *
+       *  @param xx vector of points at which the model is computed
+       *
+       *  @param parameters vector containing the input parameters
+       *  used to compute the model
+       */
+      virtual void write_model (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx, const std::vector<double> parameters)
+      {(void)output_dir; (void)output_file; (void)nmultipoles; (void)xx; (void)parameters; cbl::ErrorCBL("", "write_model", "Modelling.h");}
+      
+      /**
+       *  @brief write the model at xx with best-fit parameters
+       *  obtained from likelihood maximization
+       *
+       *  @param output_dir the output directory
+       *
+       *  @param output_file the output file
+       *
+       *  @param nmultipoles the number of multipoles in output
+       *
+       *  @param xx vector of points at which the model is computed
+       */
+      virtual void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const int nmultipoles, const std::vector<double> xx)
+      {(void)output_dir; (void)output_file; (void)nmultipoles; (void)xx; cbl::ErrorCBL("", "write_model_at_bestfit", "Modelling.h");}
 
       /**
        *  @brief the reduced \f$\chi^2\f$

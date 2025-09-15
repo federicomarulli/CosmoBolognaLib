@@ -1,0 +1,298 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>fits2alm</TITLE>
+<META NAME="description" CONTENT="fits2alm">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_fits2cl.htm">
+<LINK REL="previous" HREF="idl_euler_matrix_new.htm">
+<LINK REL="next" HREF="idl_fits2cl.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_euler_matrix_new.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_fits2cl.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html353"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_euler_matrix_new.htm">euler_matrix_new</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_fits2cl.htm">fits2cl</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION2200"></A>
+<A ID="idl:fits2alm"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">fits2alm</SPAN></div><hr>
+<H3>This IDL routine provides a means to 
+read from a FITS file binary table extension(s) containing spherical
+harmonic coefficients <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> (and optional errors) and their index. Reads
+header information if required. The facility is intended to enable 
+the user to read the output from the <strong>HEALPix</strong> facilities <SPAN  CLASS="textbf">anafast</SPAN> and <SPAN  CLASS="textbf">synfast</SPAN>.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/fits/fits2alm.pro
+<P>
+"><strong>src/idl/fits/fits2alm.pro
+<P>
+</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+FITS2ALM, <A HREF="#idl:fits2alm:index">index</A>, 
+<A HREF="#idl:fits2alm:alm_array">alm_array</A>, 
+<A HREF="#idl:fits2alm:fitsfile">fitsfile</A>, [<A HREF="#idl:fits2alm:signal">signal</A>, 
+<A HREF="#idl:fits2alm:help">/HELP</A>, 
+<A HREF="#idl:fits2alm:hdr">HDR=</A>, 
+<A HREF="#idl:fits2alm:lmax">LMAX=</A>, 
+<A HREF="#idl:fits2alm:lmin">LMIN=</A>, 
+<A HREF="#idl:fits2alm:xhdr">XHDR=</A> ]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>index</B>
+<DD><A ID="idl:fits2alm:index"></A> Long array containing the index for the corresponding
+                 array of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients (and errors if required). The
+                 index <SPAN CLASS="MATH"><I>i</I></SPAN> is related to <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img19.png"
+ ALT="$(\ell, m)$"></SPAN> by the relation <BR>
+                 <!-- MATH
+ $i = \ell^2 + \ell + m + 1.$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.28ex; " SRC="idl_img54.png"
+ ALT="$i = \ell^2 + \ell + m + 1.$"></SPAN> <BR>
+This has dimension
+    nl (see below).
+    <DT>
+<B>alm_array</B>
+<DD><A ID="idl:fits2alm:alm_array"></A> Real or double array of alm coefficients read from the
+      file. This has dimension (nl,nalm,nsig) &ndash; corresponding to
+<BR>
+nl   = number of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img19.png"
+ ALT="$(\ell, m)$"></SPAN> indices <BR>
+nalm = 2 for real and imaginary parts of alm coefficients or
+             4 for above plus corresponding error values <BR>
+nsig = number of signals to be written (1 for any of T E B
+             or 3 if ALL to be written). Each signal is stored
+             in a separate extension.
+    <DT>
+<B>fitsfile</B>
+<DD><A ID="idl:fits2alm:fitsfile"></A>String containing the name of the file to be
+      read.
+    <DT>
+<B>signal</B>
+<DD><A ID="idl:fits2alm:signal"></A>String defining the signal coefficients to read
+                  Valid options: 'T', 'E', 'B' or 'ALL' <BR>
+	<b>default:</b>'T'.  
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>HDR=</B>
+<DD><A ID="idl:fits2alm:hdr"></A>String array containing the primary header read from the FITS
+      file. 
+    <DT>
+<B>/HELP</B>
+<DD><A ID="idl:fits2alm:help"></A>If set, the routine documentation header is shown and the routine exits	
+    <DT>
+<B>LMAX=</B>
+<DD><A ID="idl:fits2alm:lmax"></A>Largest <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN> multipole  to be output
+    <DT>
+<B>LMIN=</B>
+<DD><A ID="idl:fits2alm:lmin"></A>Smallest <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN> multipole to be output. If LMIN (resp. LMAX) is below (above) the range of <SPAN CLASS="MATH"><I>l</I></SPAN>'s present in the file,
+              it will be silently ignored
+    <DT>
+<B>XHDR=</B>
+<DD><A ID="idl:fits2alm:xhdr"></A>String array containing the read extension header(s). If
+                  ALL signals are required, then the three extension 
+                  headers are returned appended into one string array.
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">fits2alm</SPAN> reads binary table extension(s) 
+which contain the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients (and associated errors if present)
+from a FITS file. FITS headers can also optionally be read from the 
+input file. 
+
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">fits2alm</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">fits2alm</SPAN>.
+    <DT>
+<B><A HREF="idl_alm2fits.htm#idl:alm2fits">alm2fits</A></B>
+<DD>provides the complimentary routine to write
+      <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients into a FITS file.
+    <DT>
+<B><A HREF="idl_alm_i2t.htm#idl:alm_i2t">alm_i2t</A>, <A HREF="idl_alm_t2i.htm#idl:alm_t2i">alm_t2i</A></B>
+<DD>these facilities turn indexed lists of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> into 2D a(l,m) tables and back
+    <DT>
+<B><A HREF="idl_index2lm.htm#idl:index2lm">index2lm</A></B>
+<DD>converts the index 
+    <!-- MATH
+ $i =\ell^2 + \ell + m + 1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.28ex; " SRC="idl_img10.png"
+ ALT="$i = \ell^2 + \ell + m + 1$"></SPAN> returned by <SPAN CLASS="colordoc">fits2alm</SPAN> into <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN> and <SPAN CLASS="MATH"><I>m</I></SPAN>
+    <DT>
+<B><A HREF="idl_lm2index.htm#idl:lm2index">lm2index</A></B>
+<DD>converts (<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN>, <SPAN CLASS="MATH"><I>m</I></SPAN>) vectors into 
+    <!-- MATH
+ $i =\ell^2 + \ell + m + 1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.28ex; " SRC="idl_img10.png"
+ ALT="$i = \ell^2 + \ell + m + 1$"></SPAN>
+    <DT>
+<B><A HREF="idl_fits2cl.htm#idl:fits2cl">fits2cl</A></B>
+<DD>routine to read/compute <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img4.png"
+ ALT="$C(\ell)$"></SPAN> power spectra from a file containing <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img4.png"
+ ALT="$C(\ell)$"></SPAN> or <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients
+<DT>
+<B><A HREF="idl_ianafast.htm#idl:ianafast">ianafast</A>, <A HREF="idl_isynfast.htm#idl:isynfast">isynfast</A></B>
+<DD>IDL routine providing <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients file to be read by <SPAN CLASS="colordoc">fits2alm</SPAN>.
+    <DT>
+<B>alteralm, anafast, synfast</B>
+<DD>F90 facilities providing <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients file to be read by <SPAN CLASS="colordoc">fits2alm</SPAN>.
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">fits2alm</SPAN>, index, alm, 'alm.fits', HDR = hdr, XHDR = xhdr</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+<SPAN CLASS="colordoc">fits2alm</SPAN> reads from the input FITS file <SPAN style="font-family:monospace">alm.fits</SPAN> 
+the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients into the variable <SPAN style="font-family:monospace">alm</SPAN>  with optional headers
+passed by the string variables <SPAN style="font-family:monospace">hdr</SPAN> and <SPAN style="font-family:monospace">xhdr</SPAN>. Upon return <SPAN style="font-family:monospace">index</SPAN>
+will contain the value of <!-- MATH
+ $\ell^2 + \ell + m + 1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.28ex; " SRC="idl_img55.png"
+ ALT="$\ell^2 + \ell + m + 1$"></SPAN> for each <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN>
+found in the file.
+</blockquote>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_euler_matrix_new.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_fits2cl.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html353"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_euler_matrix_new.htm">euler_matrix_new</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_fits2cl.htm">fits2cl</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

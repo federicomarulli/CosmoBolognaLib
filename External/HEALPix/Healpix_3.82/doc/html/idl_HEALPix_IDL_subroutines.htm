@@ -1,0 +1,303 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>HEALPix/IDL subroutines</TITLE>
+<META NAME="description" CONTENT="HEALPix/IDL subroutines">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_TABLE_CONTENTS.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev_g.png"> 
+<A
+ HREF="main.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html101"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong>Up:</strong> <A
+ HREF="main.htm">Main Page</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<A ID="idl:idlxxx"></A>
+
+<P>
+<H1 class="center"><strong>HEALPix</strong> IDL Facilities Overview</H1>
+<div id=abstract class="center">This document is an overview of the <strong>HEALPix</strong> IDL facilities.</div>
+<P class="center"><STRONG>Eric Hivon, Anthony J.&nbsp;Banday, Benjamin D.&nbsp;Wandelt, Frode
+K.&nbsp;Hansen and Krzysztof M.&nbsp;G&#243;orski</STRONG></P>
+<BR><P class="center"><I>Revision: </I>Version 3.82; July 28, 2022</P>
+<P class="center"><A ID="tex2html1"
+  HREF="https://healpix.sourceforge.io">https://healpix.sourceforge.io</A>
+<BR><A ID="tex2html2"
+  HREF="http://healpix.sf.net">http://healpix.sf.net</A></P>
+
+<BR><HR>
+<!--Table of Child-Links-->
+<A ID="CHILD_LINKS"></A>
+
+<UL CLASS="ChildLinks">
+<LI><A ID="tex2html103"
+  HREF="idl_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+<LI><A ID="tex2html104"
+  HREF="idl_Using_HEALPix_IDL_facilitie.htm">Using the <strong>HEALPix</strong>-IDL facilities</A>
+<UL>
+<LI><A ID="tex2html105"
+  HREF="idl_Using_HEALPix_IDL_facilitie.htm#SECTION210">Using <strong>HEALPix</strong>-IDL together with other IDL libraries</A>
+<LI><A ID="tex2html106"
+  HREF="idl_Using_HEALPix_IDL_facilitie.htm#SECTION220">Using GDL or FL instead of IDL</A>
+</UL>
+<BR>
+<LI><A ID="tex2html107"
+  HREF="idl_What_is_available.htm">What is available?</A>
+<UL>
+<LI><A ID="tex2html108"
+  HREF="idl_What_is_available.htm#SECTION310">Maps related tools</A>
+<LI><A ID="tex2html109"
+  HREF="idl_What_is_available.htm#SECTION320">Pixels related tools</A>
+<LI><A ID="tex2html110"
+  HREF="idl_What_is_available.htm#SECTION330">Power spectrum, alm, beam and pixel window functions</A>
+<LI><A ID="tex2html111"
+  HREF="idl_What_is_available.htm#SECTION340">Other tools</A>
+</UL>
+<BR>
+<LI><A ID="tex2html112"
+  HREF="idl_Changes_in_release_3_82.htm">Changes in release 3.82</A>
+<LI><A ID="tex2html113"
+  HREF="idl_Previous_changes.htm">Previous changes</A>
+<UL>
+<LI><A ID="tex2html114"
+  HREF="idl_Previous_changes.htm#SECTION501">Changes between release 3.70 and 3.80</A>
+<LI><A ID="tex2html115"
+  HREF="idl_Previous_changes.htm#SECTION502">Changes between release 3.60 and 3.70</A>
+<LI><A ID="tex2html116"
+  HREF="idl_Previous_changes.htm#SECTION503">Changes between release 3.50 and 3.60</A>
+<LI><A ID="tex2html117"
+  HREF="idl_Previous_changes.htm#SECTION504">Changes between releases 3.40 and 3.50</A>
+<LI><A ID="tex2html118"
+  HREF="idl_Previous_changes.htm#SECTION505">Changes between releases 3.31 and 3.40</A>
+<LI><A ID="tex2html119"
+  HREF="idl_Previous_changes.htm#SECTION506">Changes between releases 3.30 and 3.31</A>
+<LI><A ID="tex2html120"
+  HREF="idl_Previous_changes.htm#SECTION507">Changes between releases 3.20 and 3.30</A>
+<LI><A ID="tex2html121"
+  HREF="idl_Previous_changes.htm#SECTION508">Changes between releases 3.11 and 3.20</A>
+<LI><A ID="tex2html122"
+  HREF="idl_Previous_changes.htm#SECTION509">Changes between releases 3.00 and 3.11</A>
+<LI><A ID="tex2html123"
+  HREF="idl_Previous_changes.htm#SECTION5010">Changes between releases 2.20 and 3.00</A>
+<LI><A ID="tex2html124"
+  HREF="idl_Previous_changes.htm#SECTION5011">Changes between release 2.0 and 2.20</A>
+</UL>
+<BR>
+<LI><A ID="tex2html125"
+  HREF="idl_alm_i2t.htm">alm_i2t</A>
+<LI><A ID="tex2html126"
+  HREF="idl_alm_t2i.htm">alm_t2i</A>
+<LI><A ID="tex2html127"
+  HREF="idl_alm2fits.htm">alm2fits</A>
+<LI><A ID="tex2html128"
+  HREF="idl_ang2vec.htm">ang2vec</A>
+<LI><A ID="tex2html129"
+  HREF="idl_angulardistance.htm">angulardistance</A>
+<LI><A ID="tex2html130"
+  HREF="idl_azeqview.htm">azeqview</A>
+<LI><A ID="tex2html131"
+  HREF="idl_beam2bl.htm">beam2bl</A>
+<LI><A ID="tex2html132"
+  HREF="idl_bin_llcl.htm">bin_llcl</A>
+<LI><A ID="tex2html133"
+  HREF="idl_bl2beam.htm">bl2beam</A>
+<LI><A ID="tex2html134"
+  HREF="idl_bl2fits.htm">bl2fits</A>
+<LI><A ID="tex2html135"
+  HREF="idl_cartcursor.htm">cartcursor</A>
+<LI><A ID="tex2html136"
+  HREF="idl_cartview.htm">cartview</A>
+<LI><A ID="tex2html137"
+  HREF="idl_change_polcconv.htm">change_polcconv </A>
+<LI><A ID="tex2html138"
+  HREF="idl_cl2fits.htm">cl2fits</A>
+<LI><A ID="tex2html139"
+  HREF="idl_convert_oldhpx2cmbfast.htm">convert_oldhpx2cmbfast</A>
+<LI><A ID="tex2html140"
+  HREF="idl_euler_matrix_new.htm">euler_matrix_new</A>
+<LI><A ID="tex2html141"
+  HREF="idl_fits2alm.htm">fits2alm</A>
+<LI><A ID="tex2html142"
+  HREF="idl_fits2cl.htm">fits2cl</A>
+<LI><A ID="tex2html143"
+  HREF="idl_gaussbeam.htm">gaussbeam</A>
+<LI><A ID="tex2html144"
+  HREF="idl_getdisc_ring.htm">getdisc_ring </A>
+<LI><A ID="tex2html145"
+  HREF="idl_getsize_fits.htm">getsize_fits </A>
+<LI><A ID="tex2html146"
+  HREF="idl_gnomcursor.htm">gnomcursor</A>
+<LI><A ID="tex2html147"
+  HREF="idl_gnomview.htm">gnomview</A>
+<LI><A ID="tex2html148"
+  HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm">healpix_doc: PDF, HTML and EPUB documentation</A>
+<LI><A ID="tex2html149"
+  HREF="idl_healpixwindow.htm">healpixwindow</A>
+<LI><A ID="tex2html150"
+  HREF="idl_help_st.htm">help_st</A>
+<LI><A ID="tex2html151"
+  HREF="idl_hpx2dm.htm">hpx2dm</A>
+<LI><A ID="tex2html152"
+  HREF="idl_hpx2gs.htm">hpx2gs</A>
+<LI><A ID="tex2html153"
+  HREF="idl_ialteralm.htm">ialteralm</A>
+<LI><A ID="tex2html154"
+  HREF="idl_ianafast.htm">ianafast</A>
+<LI><A ID="tex2html155"
+  HREF="idl_index2lm.htm">index2lm</A>
+<LI><A ID="tex2html156"
+  HREF="idl_init_healpix_healpix_system.htm">init_healpix and !healpix system variable</A>
+<LI><A ID="tex2html157"
+  HREF="idl_iprocess_mask.htm">iprocess_mask</A>
+<LI><A ID="tex2html158"
+  HREF="idl_ismoothing.htm">ismoothing</A>
+<LI><A ID="tex2html159"
+  HREF="idl_isynfast.htm">isynfast</A>
+<LI><A ID="tex2html160"
+  HREF="idl_lm2index.htm">lm2index</A>
+<LI><A ID="tex2html161"
+  HREF="idl_median_filter.htm">median_filter </A>
+<LI><A ID="tex2html162"
+  HREF="idl_mollcursor.htm">mollcursor</A>
+<LI><A ID="tex2html163"
+  HREF="idl_mollview.htm">mollview</A>
+<LI><A ID="tex2html164"
+  HREF="idl_neighbours_nest.htm">neighbours_nest</A>
+<LI><A ID="tex2html165"
+  HREF="idl_neighbours_ring.htm">neighbours_ring</A>
+<LI><A ID="tex2html166"
+  HREF="idl_nest2uniq.htm">nest2uniq</A>
+<LI><A ID="tex2html167"
+  HREF="idl_npix2nside.htm">npix2nside </A>
+<LI><A ID="tex2html168"
+  HREF="idl_nside2npix.htm">nside2npix</A>
+<LI><A ID="tex2html169"
+  HREF="idl_nside2npweights.htm">nside2npweights</A>
+<LI><A ID="tex2html170"
+  HREF="idl_nside2ntemplates.htm">nside2ntemplates</A>
+<LI><A ID="tex2html171"
+  HREF="idl_orthcursor.htm">orthcursor</A>
+<LI><A ID="tex2html172"
+  HREF="idl_orthview.htm">orthview</A>
+<LI><A ID="tex2html173"
+  HREF="idl_outline_earth.htm">outline_earth</A>
+<LI><A ID="tex2html174"
+  HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm">pix2xxx, ang2xxx, vec2xxx, nest2ring, ring2nest</A>
+<LI><A ID="tex2html175"
+  HREF="idl_planck_colors.htm">planck_colors</A>
+<LI><A ID="tex2html176"
+  HREF="idl_query_disc.htm">query_disc </A>
+<LI><A ID="tex2html177"
+  HREF="idl_query_polygon.htm">query_polygon </A>
+<LI><A ID="tex2html178"
+  HREF="idl_query_strip.htm">query_strip </A>
+<LI><A ID="tex2html179"
+  HREF="idl_query_triangle.htm">query_triangle </A>
+<LI><A ID="tex2html180"
+  HREF="idl_read_fits_cut4.htm">read_fits_cut4 </A>
+<LI><A ID="tex2html181"
+  HREF="idl_read_fits_map.htm">read_fits_map</A>
+<LI><A ID="tex2html182"
+  HREF="idl_read_fits_partial.htm">read_fits_partial</A>
+<LI><A ID="tex2html183"
+  HREF="idl_read_fits_s.htm">read_fits_s </A>
+<LI><A ID="tex2html184"
+  HREF="idl_read_tqu.htm">read_tqu</A>
+<LI><A ID="tex2html185"
+  HREF="idl_remove_dipole.htm">remove_dipole</A>
+<LI><A ID="tex2html186"
+  HREF="idl_reorder.htm">reorder </A>
+<LI><A ID="tex2html187"
+  HREF="idl_rotate_coord.htm">rotate_coord</A>
+<LI><A ID="tex2html188"
+  HREF="idl_same_shape_pixels_nest_same.htm">same_shape_pixels_nest &amp; same_shape_pixels_ring</A>
+<LI><A ID="tex2html189"
+  HREF="idl_template_pixel_nest_templat.htm">template_pixel_nest &amp; template_pixel_ring</A>
+<LI><A ID="tex2html190"
+  HREF="idl_ud_grade.htm">ud_grade</A>
+<LI><A ID="tex2html191"
+  HREF="idl_unfold_weights.htm">unfold_weights</A>
+<LI><A ID="tex2html192"
+  HREF="idl_uniq2nest.htm">uniq2nest</A>
+<LI><A ID="tex2html193"
+  HREF="idl_vec2ang.htm">vec2ang </A>
+<LI><A ID="tex2html194"
+  HREF="idl_write_fits_cut4.htm">write_fits_cut4 </A>
+<LI><A ID="tex2html195"
+  HREF="idl_write_fits_map.htm">write_fits_map</A>
+<LI><A ID="tex2html196"
+  HREF="idl_write_fits_partial.htm">write_fits_partial</A>
+<LI><A ID="tex2html197"
+  HREF="idl_write_fits_sb.htm">write_fits_sb</A>
+<LI><A ID="tex2html198"
+  HREF="idl_write_tqu.htm">write_tqu</A>
+<LI><A ID="tex2html199"
+  HREF="idl_About_this_document.htm">About this document ...</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev_g.png"> 
+<A
+ HREF="main.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html101"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong>Up:</strong> <A
+ HREF="main.htm">Main Page</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

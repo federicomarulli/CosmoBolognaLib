@@ -197,9 +197,17 @@ namespace cbl {
        *  log-likelihood function (natural logarithm)
        *
        *  @param model_parameters parameters of the likelihood
+       *
+       *  @param prec the precision required in the inversion of the
+       *  covariance matrix
+       *
+       *  @param Nres \f$N_{res}\f$, the number of catalogue
+       *  resamplings used to estimate the covariance matrix;
+       *  \f$N_{res}=-1\f$ if the covariance matrix has not been
+       *  estimated with resampling methods
        *  
        */
-      Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const Likelihood_function log_likelihood_function, const std::shared_ptr<ModelParameters> model_parameters=NULL);
+      Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const Likelihood_function log_likelihood_function, const std::shared_ptr<ModelParameters> model_parameters=NULL, const double prec=1.e-10, const int Nres=-1);
 
       /**
        *  @brief default destructor

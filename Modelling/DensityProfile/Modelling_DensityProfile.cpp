@@ -35,6 +35,7 @@
 
 
 #include "Modelling_DensityProfile.h"
+#include "Modelling_NumberCounts.h"
 #include "Data1D.h"
 
 using namespace std;
@@ -44,61 +45,179 @@ using namespace cbl;
 
 // ===========================================================================================
 
-cbl::modelling::densityprofile::Modelling_DensityProfile::Modelling_DensityProfile (const std::shared_ptr<cbl::measure::stackprofile::StackedDensityProfile> profile, const std::string profile_author, const bool _2halo, const std::string halo_def, const double Delta)
-{
-  m_data = profile->dataset();
-  m_profile_author = profile_author;
-  m_2halo = _2halo;
+
+cbl::modelling::densityprofile::Modelling_DensityProfile::Modelling_DensityProfile (const std::shared_ptr<cbl::measure::stackprofile::StackedDensityProfile> dataset, const std::string probe, const std::vector<double> zl_bin_edges_for_N_zs, const std::vector<double> zs, const std::vector<std::vector<double>> N_zs, const std::vector<double> purity_background)
+{  
+  m_data = dataset->dataset();
   m_mass_is_derived = false;
-  m_halo_def = halo_def;
-  m_Delta = Delta;
+  m_set_probe_model(probe, zl_bin_edges_for_N_zs, zs, N_zs, purity_background);  
 }
 
 
 // ===========================================================================================
 
-cbl::modelling::densityprofile::Modelling_DensityProfile::Modelling_DensityProfile (const std::shared_ptr<cbl::data::Data> dataset, const std::string profile_author, const bool _2halo, const std::string halo_def, const double Delta)
+cbl::modelling::densityprofile::Modelling_DensityProfile::Modelling_DensityProfile (const std::shared_ptr<cbl::data::Data> dataset, const std::string probe, const std::vector<double> zl_bin_edges_for_N_zs, const std::vector<double> zs, const std::vector<std::vector<double>> N_zs, const std::vector<double> purity_background)
 {
   m_data = dataset;
-  m_profile_author = profile_author;
-  m_2halo = _2halo;
   m_mass_is_derived = false;
-  m_halo_def = halo_def;
-  m_Delta = Delta;
+  m_set_probe_model(probe, zl_bin_edges_for_N_zs, zs, N_zs, purity_background);
 }
 
 
 // ===========================================================================================
 
-void cbl::modelling::densityprofile::Modelling_DensityProfile::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const double contrast, const double logM_base, const double mass_pivot, const std::string bias_author, const std::string method_Pk, std::string interp_type)
+
+void cbl::modelling::densityprofile::Modelling_DensityProfile::m_set_probe_model (const std::string probe, const std::vector<double> zl_bin_edges_for_N_zs, const std::vector<double> zs, const std::vector<std::vector<double>> N_zs, const std::vector<double> purity_background)
 {
-  m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  // Set the function returning the probe's model
+  if ( (probe != "DeltaSigma") && (probe != "g") )
+    ErrorCBL("Wrong declaration of the probe!", "Modelling_DensityProfile", "Modelling_DensityProfile.cpp");
+
+  m_data_model.probe = probe;
+
+  // checks regarding the source redshift distributions
+  if ( (zs.size() == 0) && (N_zs.size() == 0) && (probe == "g") )
+    ErrorCBL("If the reduced shear is the probe, the source redshift distribution must be provided!", "Modelling_DensityProfile", "Modelling_DensityProfile.cpp");
+  
+  if ( (zl_bin_edges_for_N_zs.size() - 1 != N_zs.size()) && (probe == "g") )
+    ErrorCBL("The size of zl_bin_edges_for_N_zs must be equal to the one of N_zs plus 1!", "Modelling_DensityProfile", "Modelling_DensityProfile.cpp");
+
+  if ( (purity_background.size() != N_zs.size()) && (probe == "g") )
+    ErrorCBL("The sizes of purity_background and N_zs must be equal!", "Modelling_DensityProfile", "Modelling_DensityProfile.cpp");
+
+  for (size_t i=0; i<N_zs.size(); i++)
+    if ( (zs.size() != N_zs[i].size()) && (probe == "g") )
+      ErrorCBL("The sizes of zs and the ones of the N_zs elements must be equal!", "Modelling_DensityProfile", "Modelling_DensityProfile.cpp");
+
+  for (size_t i=0; i<purity_background.size(); i++)
+    if ( ( (purity_background[i] < 0.) || (purity_background[i] > 1.) ) && (probe == "g") )
+      ErrorCBL("The elements of purity_background must be defined between 0 and 1!", "Modelling_DensityProfile", "Modelling_DensityProfile.cpp");
+
+  // Set the parameters
+  m_data_model.zs = zs;
+  m_data_model.N_zs = N_zs;
+  m_data_model.zl_bin_edges_for_N_zs = zl_bin_edges_for_N_zs;
+  m_data_model.purity_background = purity_background;
+
+  // interpolate P_background as a function of lens redshift
+  if (zl_bin_edges_for_N_zs.size()>2) {
+    
+    std::vector<double> zl_bin_centres(zl_bin_edges_for_N_zs.size() - 1);
+    for (size_t i=0; i<zl_bin_edges_for_N_zs.size() - 1; i++)
+      zl_bin_centres[i] = 0.5 * (zl_bin_edges_for_N_zs[i] + zl_bin_edges_for_N_zs[i+1]);
+  
+    m_data_model.purity_background_interp = cbl::glob::FuncGrid(zl_bin_centres, m_data_model.purity_background, "Spline");
+    
+  }
+}
+
+
+// ===========================================================================================
+
+
+void cbl::modelling::densityprofile::Modelling_DensityProfile::set_data_model (const std::shared_ptr<cosmology::Cosmology> cosmology, const std::string profile_author, const bool two_halo, const std::string halo_def, const double Delta, const double redshift, const double logM_base, const double mass_pivot, const std::string bias_author, const std::string method_Pk, std::string interp_type)
+{ 
+  m_data_model.cosmology = move(cosmology);
   m_data_model.cosmology->set_unit(true); // Force cosmological units
+
+  m_data_model.profile_author = profile_author;
+  m_data_model.two_halo = two_halo;
+  m_data_model.halo_def = halo_def;
+  m_data_model.Delta = Delta;
   
   m_data_model.redshift = redshift;
-  m_data_model.contrast = contrast;
   m_data_model.logM_base = logM_base;
   m_data_model.mass_pivot = mass_pivot;
 
   m_data_model.bias_author = bias_author;
   m_data_model.method_Pk = method_Pk;
   m_data_model.interp_type = interp_type;
+
+  // source redshift distribution
+  if ( (m_data_model.N_zs.size() != 1) && (m_data_model.probe == "g") )
+    ErrorCBL("Exactly one source redshift distribution must be provided in this case! "+cbl::conv(m_data_model.N_zs.size(), cbl::par::fINT)+" were provided.", "set_data_model", "Modelling_DensityProfile.cpp");
 }
 
 
 // ===========================================================================================
 
-void cbl::modelling::densityprofile::Modelling_DensityProfile::set_data_model (const cosmology::Cosmology cosmology, const double redshift, const double mass_proxy, const double redshift_pivot, const double proxy_pivot, const double contrast, const double logM_base, const double mass_pivot, const double Nclusters, const std::string bias_author, const std::string method_Pk, std::string interp_type)
+
+void cbl::modelling::densityprofile::Modelling_DensityProfile::set_data_model (const std::shared_ptr<cosmology::Cosmology> cosmology, const std::string profile_author, const bool two_halo, const std::string halo_def, const double Delta, const std::vector<double> redshift_obs, const std::vector<double> mass_proxy_obs, const std::vector<double> Pz_params, const std::vector<double> Pproxy_params, const double redshift_pivot, const double proxy_pivot, const double logM_base, const double mass_pivot, const std::string bias_author, const std::string method_Pk, std::string interp_type)
 {
-  m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
-  m_data_model.cosmology->set_unit(true); // Force cosmological units
+  if ( redshift_obs.size() != mass_proxy_obs.size() )
+    ErrorCBL("Redshift and mass proxy vectors must have the same size!", "set_data_model", "Modelling_DensityProfile.cpp");
+
+  m_data_model.min_extracted = 1.e-3; // minimum value an extracted quantity can assume
+
+  // define the skew-normal PDF
+  std::function<double(double, std::shared_ptr<void>, std::vector<double>)> skewnorm = 
+    [](double x, std::shared_ptr<void> pp, std::vector<double> params) -> double {
+
+      (void) pp;
+      
+      double mu = params[0];
+      double sigma = params[1];
+      double alpha = params[2];
+		   
+      double normpdf = 1. / ( sigma * sqrt(2. * cbl::par::pi) ) * exp( - pow(x - mu, 2.) / (2. * pow(sigma, 2)) ); 
+      double normcdf = 0.5 * ( 1. + erf( alpha * (x - mu) / sigma / sqrt(2.) ) );
+    
+      return 2 * normpdf * normcdf;
+	
+    };
+
+  // extract redshift values from P(z_tr|z_ob,proxy_ob)
+  if (Pz_params.size() != 3)
+    ErrorCBL("Pz_params must be a vector with size equal to 3.", "set_data_model", "Modelling_DensityProfile.cpp");
+
+  if ( (Pz_params[0] == 0.) && (Pz_params[1] == 0.) ) {
+    
+    m_data_model.redshifts = redshift_obs;
+
+  }
+  else {
+
+    cbl::random::CustomDistributionRandomNumbers rand (skewnorm, NULL, Pz_params, 666, -1., 1.);
+
+    m_data_model.redshifts.resize(redshift_obs.size());
+
+    for (size_t i=0; i<m_data_model.redshifts.size(); i++)
+      m_data_model.redshifts[i] = std::max(m_data_model.min_extracted, rand() * (1. + redshift_obs[i]) + redshift_obs[i]);
+
+  }
+
+  // extract mass proxy values from P(proxy_tr|proxy_ob,z_ob)
+  if (Pproxy_params.size() != 3)
+    ErrorCBL("Pproxy_params must be a vector with size equal to 3.", "set_data_model", "Modelling_DensityProfile.cpp");
+
+  if ( (Pproxy_params[0] == 0.) && (Pproxy_params[1] == 0.) ) {
+    
+    m_data_model.mass_proxies = mass_proxy_obs;
+
+  }
+  else {
+
+    cbl::random::CustomDistributionRandomNumbers rand (skewnorm, NULL, Pproxy_params, 666, -1., 1.);
+
+    m_data_model.mass_proxies.resize(mass_proxy_obs.size());
+
+    for (size_t i=0; i<m_data_model.mass_proxies.size(); i++)
+      m_data_model.mass_proxies[i] = std::max(m_data_model.min_extracted, rand() * mass_proxy_obs[i] + mass_proxy_obs[i]);
+
+  }
   
-  m_data_model.redshift = redshift;
-  m_data_model.mass_proxy = mass_proxy;
+  // set the rest of the model parameters
+  m_data_model.cosmology = move(cosmology);
+  m_data_model.cosmology->set_unit(true); // Force cosmological units
+
+  m_data_model.profile_author = profile_author;
+  m_data_model.two_halo = two_halo;
+  m_data_model.halo_def = halo_def;
+  m_data_model.Delta = Delta;
+  
   m_data_model.redshift_pivot = redshift_pivot;
   m_data_model.proxy_pivot = proxy_pivot;
   
-  m_data_model.contrast = contrast;
   m_data_model.logM_base = logM_base;
   m_data_model.mass_pivot = mass_pivot;
 
@@ -116,25 +235,151 @@ void cbl::modelling::densityprofile::Modelling_DensityProfile::set_data_model (c
   modelling::massobsrel::Modelling_MassObservableRelation scaling_relation (dataset);
   m_data_model.scaling_relation = make_shared<modelling::massobsrel::Modelling_MassObservableRelation>(scaling_relation);
 
-  (m_data_model.scaling_relation)->set_data_model(cosmology, {redshift}, redshift_pivot, proxy_pivot, logM_base, {Nclusters});
+  (m_data_model.scaling_relation)->set_data_model(cosmology, {m_data_model.redshifts}, redshift_pivot, proxy_pivot, logM_base);
+
+  // assign a background sample purity to each cluster, based on its observed redshift
+  if ( (m_data_model.probe == "g") && (m_data_model.zl_bin_edges_for_N_zs.size() != 2) && (redshift_obs.size() == 1) )
+    ErrorCBL("If only one cluster is present in the sample, only one source redshift distribution must be provided!", "set_data_model", "Modelling_DensityProfile.cpp");
+  
+  m_data_model.N_zs_index.resize(redshift_obs.size(),-1);
+  
+  if (m_data_model.zl_bin_edges_for_N_zs.size() != 0) {
+  
+    for (size_t j=0; j<redshift_obs.size(); j++)
+      for (size_t i=0; i<m_data_model.zl_bin_edges_for_N_zs.size() - 1; i++)
+	if ( (redshift_obs[j] >= m_data_model.zl_bin_edges_for_N_zs[i]) && (redshift_obs[j] < m_data_model.zl_bin_edges_for_N_zs[i+1]) )
+	  m_data_model.N_zs_index[j] = i;
+	else if (redshift_obs[j] == m_data_model.zl_bin_edges_for_N_zs[m_data_model.zl_bin_edges_for_N_zs.size()])
+	  m_data_model.N_zs_index[j] = m_data_model.zl_bin_edges_for_N_zs.size() - 2;
+
+    for (size_t j=0; j<redshift_obs.size(); j++)
+      if (m_data_model.N_zs_index[j] == -1)
+	ErrorCBL("I could not find a redshift bin for at least one cluster!", "set_data_model", "Modelling_DensityProfile.cpp");
+
+  } else {
+
+    for (size_t j=0; j<redshift_obs.size(); j++)
+      m_data_model.N_zs_index[j] = 0;
+    
+  }
 }
 
 
 // ===========================================================================================
 
-void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_DensityProfile_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution Rt_prior, const statistics::PriorDistribution concentration_prior, const statistics::PriorDistribution logM_prior, const statistics::PriorDistribution f_off_prior, const statistics::PriorDistribution sigma_off_prior, const statistics::PriorDistribution anisotropic_boost_prior, const statistics::PriorDistribution orientation_boost_prior)
+
+void cbl::modelling::densityprofile::Modelling_DensityProfile::set_data_model (const std::shared_ptr<cosmology::Cosmology> cosmology, const std::string profile_author, const bool two_halo, const std::string halo_def, const double Delta, const double redshift_min, const double redshift_max, const double mass_proxy_min, const double mass_proxy_max, const double z_error, const double proxy_rel_error, const double redshift_pivot, const double proxy_pivot, const double logM_base, const double mass_pivot, const std::vector<double> redshift_points_completeness, const std::vector<double> proxy_points_completeness, const std::vector<std::vector<double>> completeness, const std::string bias_author, const std::string method_Pk, std::string interp_type, const std::string MF_author)
 {  
+  m_data_model.cosmology = move(cosmology);
+  m_data_model.cosmology->set_unit(true); // Force cosmological units
+  
+  if ( (redshift_points_completeness.size() > 0) && (proxy_points_completeness.size() > 0) )
+    m_data_model.completeness_interp = cbl::glob::FuncGrid2D(redshift_points_completeness, proxy_points_completeness, completeness, "Cubic");  
+  else {    
+    std::vector<double> dummy_values = cbl::linear_bin_vector(10, 0., 10000.);
+    std::vector<std::vector<double>> dummy_completeness(dummy_values.size(), std::vector<double>(dummy_values.size(), 1.));
+    m_data_model.completeness_interp = cbl::glob::FuncGrid2D(dummy_values, dummy_values, dummy_completeness, "Cubic");
+  }
+  
+  m_data_model.profile_author = profile_author;
+  m_data_model.two_halo = two_halo;
+  m_data_model.halo_def = halo_def;
+  m_data_model.Delta = Delta;
+  
+  m_data_model.z_min = redshift_min;
+  m_data_model.z_max = redshift_max;
+  m_data_model.mass_proxy_min = mass_proxy_min;
+  m_data_model.mass_proxy_max = mass_proxy_max;
+  
+  m_data_model.z_error = z_error;
+  this->set_P_proxy(0., 0., 0., proxy_rel_error, 0., 0.);
+  
+  m_data_model.redshift_pivot = redshift_pivot;
+  m_data_model.proxy_pivot = proxy_pivot;
+  
+  m_data_model.logM_base = logM_base;
+  m_data_model.mass_pivot = mass_pivot;
+
+  m_data_model.bias_author = bias_author;
+  m_data_model.method_Pk = method_Pk;
+  m_data_model.interp_type = interp_type;
+
+  m_data_model.MF_author = MF_author;
+  m_data_model.isTheoretical_MF = true;
+  m_data_model.k_min = 1.e-4;
+  m_data_model.k_max = 100;
+  m_data_model.kk = logarithmic_bin_vector(500, m_data_model.k_min, m_data_model.k_max);
+  m_data_model.norm = -1;
+  m_data_model.store_output = false;
+  m_data_model.output_root = "test";
+  m_data_model.prec = 1.e-4;
+  m_data_model.Mass_vector = logarithmic_bin_vector(200, 1.e10, 1.e16);
+
+  m_mass_is_derived = true;
+
+  // Build a dummy dataset for the scaling relation Modelling object, useful only to avoid internal errors
+  std::vector<double> dummy_vec = {1.};
+  std::shared_ptr<cbl::data::Data> dataset = std::make_shared<cbl::data::Data1D>(cbl::data::Data1D(dummy_vec, dummy_vec, dummy_vec));
+  
+  // Build the scaling relation object
+  modelling::massobsrel::Modelling_MassObservableRelation scaling_relation (dataset);
+  m_data_model.scaling_relation = make_shared<modelling::massobsrel::Modelling_MassObservableRelation>(scaling_relation);
+
+  (m_data_model.scaling_relation)->set_data_model(cosmology, {0.}, redshift_pivot, proxy_pivot, logM_base);
+}
+
+
+// ===========================================================================================
+
+void cbl::modelling::densityprofile::Modelling_DensityProfile::set_P_proxy (const double A_mu, const double B_mu, const double C_mu, const double A_sigma, const double B_sigma, const double C_sigma)
+{
+  if (m_model != NULL)
+    ErrorCBL("This function must be called before the definition of the model!", "set_P_proxy", "Modelling_DensityProfile.cpp");
+  
+  m_data_model.Plambda_A_mu = A_mu;
+  m_data_model.Plambda_B_mu = B_mu;
+  m_data_model.Plambda_C_mu = C_mu;
+  m_data_model.Plambda_A_sigma = A_sigma;
+  m_data_model.Plambda_B_sigma = B_sigma;
+  m_data_model.Plambda_C_sigma = C_sigma;
+  
+  m_data_model.Plambda_mean_fc = [] (const double proxy_tr, const double z_tr, const double A_mu, const double B_mu, const double C_mu)
+				 {
+				   return proxy_tr + A_mu * proxy_tr * exp(- proxy_tr * (B_mu + C_mu * z_tr));
+				 };
+
+  m_data_model.Plambda_std_fc = [] (const double proxy_tr, const double z_tr, const double A_sigma, const double B_sigma, const double C_sigma)
+				 {
+				   return A_sigma * proxy_tr * exp(- proxy_tr * (B_sigma + C_sigma * z_tr));
+				 };
+}
+
+
+// ===========================================================================================
+
+void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_DensityProfile_cosmology_DK14 (const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution Rt_prior, const statistics::PriorDistribution concentration_prior, const statistics::PriorDistribution logM_prior, const statistics::PriorDistribution f_off_prior, const statistics::PriorDistribution sigma_off_prior, const statistics::PriorDistribution anisotropic_boost_prior, const statistics::PriorDistribution orientation_boost_prior, const statistics::PriorDistribution be_prior, const statistics::PriorDistribution se_prior, const statistics::PriorDistribution alpha_0_prior, const statistics::PriorDistribution alpha_nu_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_0_prior)
+{
+  if ( m_data_model.profile_author != "DK14" )
+    ErrorCBL("This function can be used only if the DK14 profile is assumed!", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
+
   m_data_model.Cpar = cosmo_param;
 
-  const size_t nParams = cosmo_param.size()+7; // The total number of parameters is given by the cosmological ones + 7, since the density profile has 7 parameters (Rt, conc, logM, f_off, sigma_off, AB_fact, OB_fact)
+  const size_t nParams = cosmo_param.size()+15; // The total number of parameters is given by the cosmological ones + 15
+  const int n_derivedPars = 2;
 
   vector<statistics::ParameterType> Par_type (nParams, statistics::ParameterType::_Base_);
+  Par_type[Par_type.size()-1] = statistics::ParameterType::_Derived_;
+  Par_type[Par_type.size()-2] = statistics::ParameterType::_Derived_;
+  
   vector<string> Par_string (nParams);
-  std::vector<statistics::PriorDistribution> param_prior (nParams);
+  std::vector<statistics::PriorDistribution> param_prior (nParams-n_derivedPars);
 
   // Set the names and priors of the cosmological parameters
-  for (size_t i=0; i<cosmo_param.size(); i++){
-    Par_string[i] = CosmologicalParameter_name(cosmo_param[i]);
+  if (cosmo_param.size() != cosmo_prior.size())
+    ErrorCBL("cosmo_param and cosmo_prior must have the same size!", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
+  
+  for (size_t i=0; i<cosmo_param.size(); i++) {
+    Par_string[i] = cosmo_param[i];
     param_prior[i] = cosmo_prior[i];
   }
 
@@ -155,52 +400,190 @@ void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_Density
   Par_string[cosmo_param.size()+6] = "OB_fact";
   param_prior[cosmo_param.size()+6] = orientation_boost_prior;
 
-  // set the parameter indices, used in the model function
-  m_data_model.i_Rt = cosmo_param.size();
-  m_data_model.i_conc = cosmo_param.size()+1;
-  m_data_model.i_logM = cosmo_param.size()+2;
-  m_data_model.i_foff = cosmo_param.size()+3;
-  m_data_model.i_sigmaoff = cosmo_param.size()+4;
-  m_data_model.i_AB = cosmo_param.size()+5;
-  m_data_model.i_OB = cosmo_param.size()+6;
+  Par_string[cosmo_param.size()+7] = "b_e";
+  param_prior[cosmo_param.size()+7] = be_prior;
+  Par_string[cosmo_param.size()+8] = "s_e";
+  param_prior[cosmo_param.size()+8] = se_prior;
 
-  m_data_model.i_Rt_func = 0;
-  m_data_model.i_foff_func = 1;
-  m_data_model.i_sigmaoff_func = 2;
-  m_data_model.i_AB_func = 3;
-  m_data_model.i_OB_func = 4;
+  Par_string[cosmo_param.size()+9] = "alpha_0";
+  param_prior[cosmo_param.size()+9] = alpha_0_prior;
+  Par_string[cosmo_param.size()+10] = "alpha_nu";
+  param_prior[cosmo_param.size()+10] = alpha_nu_prior;
 
-  // set the functions returning the model parameters
-  m_data_model.get_parameter.resize(5);
-  m_data_model.priors_excluded.resize(5);
-  
-  for (size_t i=0; i<m_data_model.get_parameter.size(); i++)    
-    m_data_model.get_parameter[i] = [] (std::vector<double> &par, const int idx, std::vector<statistics::PriorDistribution> prior, const int i_prior) {
-				      (void)prior; (void)i_prior; return par[idx];
-				    };
+  Par_string[cosmo_param.size()+11] = "beta";
+  param_prior[cosmo_param.size()+11] = beta_prior;
+  Par_string[cosmo_param.size()+12] = "gamma_0";
+  param_prior[cosmo_param.size()+12] = gamma_0_prior;
 
-  m_data_model.priors_excluded[0] = Rt_prior;
-  m_data_model.priors_excluded[1] = f_off_prior;
-  m_data_model.priors_excluded[2] = sigma_off_prior;
-  m_data_model.priors_excluded[3] = anisotropic_boost_prior;
-  m_data_model.priors_excluded[4] = orientation_boost_prior;
+  Par_string[cosmo_param.size()+13] = "Rsp";
+  Par_string[cosmo_param.size()+14] = "Rsp_rDelta";
 
   // Build the HaloProfile object
-  cosmology::HaloProfile halo_profile (*(m_data_model.cosmology), m_data_model.redshift, 0., 0., m_Delta, m_profile_author, m_halo_def, 0., true, false, 0., 0.);
+  cosmology::HaloProfile halo_profile (m_data_model.cosmology, m_data_model.two_halo, m_data_model.redshift, 2., 1.e14, m_data_model.Delta, m_data_model.profile_author, m_data_model.halo_def, 0., true, false, 0., 0., 0., 0., 0., m_data_model.bias_author, m_data_model.method_Pk);
   m_data_model.halo_profile = make_shared<cosmology::HaloProfile>(halo_profile);
 
   // Set the function returning the concentration
   m_data_model.conc_func = [] (const double conc, cbl::cosmology::HaloProfile halo_profile) {(void)halo_profile; return conc;};
 
-  // Set the function returning the 2-halo term
-  if (m_2halo)
-    m_data_model.two_halo_func = [] (const std::vector<double> radius, cbl::cosmology::HaloProfile halo_profile, const std::string bias_author, const std::string method_Pk, const std::string interp_type) {
-				   return halo_profile.DeltaSigma_2h(radius, bias_author, method_Pk, interp_type);};
-  else
-    m_data_model.two_halo_func = [] (const std::vector<double> radius, cbl::cosmology::HaloProfile halo_profile, const std::string bias_author, const std::string method_Pk, const std::string interp_type) {
-				   (void)halo_profile; (void)bias_author; (void)method_Pk; (void)interp_type;
-				   std::vector<double> res (radius.size(), 0.);
-				   return res;};
+  // input data used to construct the model
+  auto inputs = make_shared<STR_Profile_data_model>(m_data_model);
+
+  // set prior
+  m_set_prior(param_prior);
+
+  m_data_model.Par_type = Par_type;
+  m_data_model.Par_string = Par_string;
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_density_DK14, nParams, Par_type, Par_string, inputs));
+}
+
+
+// ===========================================================================================
+
+void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_DensityProfile_cosmology_DK14 (const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution Rt_prior, const std::string cM_author, const statistics::PriorDistribution logM_prior, const statistics::PriorDistribution f_off_prior, const statistics::PriorDistribution sigma_off_prior, const statistics::PriorDistribution anisotropic_boost_prior, const statistics::PriorDistribution orientation_boost_prior, const statistics::PriorDistribution be_prior, const statistics::PriorDistribution se_prior, const statistics::PriorDistribution alpha_0_prior, const statistics::PriorDistribution alpha_nu_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_0_prior)
+{
+  if ( m_data_model.profile_author != "DK14" )
+    ErrorCBL("This function can be used only if the DK14 profile is assumed!", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
+
+  m_data_model.Cpar = cosmo_param;
+
+  const size_t nParams = cosmo_param.size()+15; // The total number of parameters is given by the cosmological ones + 15
+  const int n_derivedPars = 3;
+
+  vector<statistics::ParameterType> Par_type (nParams, statistics::ParameterType::_Base_);
+  Par_type[cosmo_param.size()+1] = statistics::ParameterType::_Derived_;
+  Par_type[Par_type.size()-1] = statistics::ParameterType::_Derived_;
+  Par_type[Par_type.size()-2] = statistics::ParameterType::_Derived_;
+  
+  vector<string> Par_string (nParams);
+  std::vector<statistics::PriorDistribution> param_prior (nParams-n_derivedPars);
+
+  // Set the names and priors of the cosmological parameters
+  if (cosmo_param.size() != cosmo_prior.size())
+    ErrorCBL("cosmo_param and cosmo_prior must have the same size!", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
+  
+  for (size_t i=0; i<cosmo_param.size(); i++){
+    Par_string[i] = cosmo_param[i];
+    param_prior[i] = cosmo_prior[i];
+  }
+
+  // Set the names and priors for the density profile parameters
+  Par_string[cosmo_param.size()] = "Rt";
+  param_prior[cosmo_param.size()] = Rt_prior;
+  
+  Par_string[cosmo_param.size()+1] = "concentration";
+  
+  Par_string[cosmo_param.size()+2] = "logM";
+  param_prior[cosmo_param.size()+1] = logM_prior;
+  Par_string[cosmo_param.size()+3] = "f_off";
+  param_prior[cosmo_param.size()+2] = f_off_prior;
+  Par_string[cosmo_param.size()+4] = "sigma_off";
+  param_prior[cosmo_param.size()+3] = sigma_off_prior;
+
+  Par_string[cosmo_param.size()+5] = "AB_fact";
+  param_prior[cosmo_param.size()+4] = anisotropic_boost_prior;
+  Par_string[cosmo_param.size()+6] = "OB_fact";
+  param_prior[cosmo_param.size()+5] = orientation_boost_prior;
+
+  Par_string[cosmo_param.size()+7] = "b_e";
+  param_prior[cosmo_param.size()+6] = be_prior;
+  Par_string[cosmo_param.size()+8] = "s_e";
+  param_prior[cosmo_param.size()+7] = se_prior;
+
+  Par_string[cosmo_param.size()+9] = "alpha_0";
+  param_prior[cosmo_param.size()+8] = alpha_0_prior;
+  Par_string[cosmo_param.size()+10] = "alpha_nu";
+  param_prior[cosmo_param.size()+9] = alpha_nu_prior;
+
+  Par_string[cosmo_param.size()+11] = "beta";
+  param_prior[cosmo_param.size()+10] = beta_prior;
+  Par_string[cosmo_param.size()+12] = "gamma_0";
+  param_prior[cosmo_param.size()+11] = gamma_0_prior;
+
+  Par_string[cosmo_param.size()+13] = "Rsp";
+  Par_string[cosmo_param.size()+14] = "Rsp_rDelta";
+
+  // Build the HaloProfile object
+  cosmology::HaloProfile halo_profile (m_data_model.cosmology, m_data_model.two_halo, m_data_model.redshift, cM_author, 1.e14, m_data_model.Delta, m_data_model.profile_author, m_data_model.halo_def, 0., true, false, 0., 0., 0., 0., 0., m_data_model.bias_author, m_data_model.method_Pk);
+  m_data_model.halo_profile = make_shared<cosmology::HaloProfile>(halo_profile);
+
+  // Set the function returning the concentration
+  m_data_model.conc_func = [] (const double conc, cbl::cosmology::HaloProfile halo_profile) { (void)conc; return halo_profile.concentration(); };
+
+  // input data used to construct the model
+  auto inputs = make_shared<STR_Profile_data_model>(m_data_model);
+
+  // set prior
+  m_set_prior(param_prior);
+
+  m_data_model.Par_type = Par_type;
+  m_data_model.Par_string = Par_string;
+
+  // construct the model
+  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_density_DK14, nParams, Par_type, Par_string, inputs));
+}
+
+
+// ===========================================================================================
+
+void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_DensityProfile_cosmology (const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution Rt_prior, const statistics::PriorDistribution concentration_prior, const statistics::PriorDistribution logM_prior, const statistics::PriorDistribution f_off_prior, const statistics::PriorDistribution sigma_off_prior, const statistics::PriorDistribution anisotropic_boost_prior, const statistics::PriorDistribution orientation_boost_prior)
+{
+  if ( (m_data_model.profile_author != "NFW") && (m_data_model.profile_author != "NFW_trunc") && (m_data_model.profile_author != "Einasto") )
+    ErrorCBL("You cannot use this set_model if the "+m_data_model.profile_author+" profile is assumed! Check the other set_model functions in this class. This error message was implemented to avoid the use of DK14 profile along with this set_model.", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
+  
+  m_data_model.Cpar = cosmo_param;
+
+  const size_t nParams = cosmo_param.size()+9; // The total number of parameters is given by the cosmological ones + 9, since the density profile has 9 parameters (Rt, conc, logM, f_off, sigma_off, AB_fact, OB_fact, Rsp, Rsp_rDelta)
+  const int n_derivedPars = 2;
+
+  vector<statistics::ParameterType> Par_type (nParams, statistics::ParameterType::_Base_);
+  Par_type[Par_type.size()-1] = statistics::ParameterType::_Derived_;
+  Par_type[Par_type.size()-2] = statistics::ParameterType::_Derived_;
+  
+  vector<string> Par_string (nParams);
+  std::vector<statistics::PriorDistribution> param_prior (nParams-n_derivedPars);
+
+  // Set the names and priors of the cosmological parameters
+  if (cosmo_param.size() != cosmo_prior.size())
+    ErrorCBL("cosmo_param and cosmo_prior must have the same size!", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
+  
+  for (size_t i=0; i<cosmo_param.size(); i++){
+    Par_string[i] = cosmo_param[i];
+    param_prior[i] = cosmo_prior[i];
+  }
+
+  // Set the names and priors for the density profile parameters
+  Par_string[cosmo_param.size()] = "Rt";
+  if (m_data_model.profile_author == "NFW_trunc")
+    param_prior[cosmo_param.size()] = Rt_prior;
+  else {
+    param_prior[cosmo_param.size()] = cbl::statistics::PriorDistribution {cbl::glob::DistributionType::_Constant_, 0.};
+    cbl::WarningMsgCBL("I set the truncation factor equal to zero and constant, since it is not used in the "+m_data_model.profile_author+" model.", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
+  }
+  Par_string[cosmo_param.size()+1] = "concentration";
+  param_prior[cosmo_param.size()+1] = concentration_prior;
+  Par_string[cosmo_param.size()+2] = "logM";
+  param_prior[cosmo_param.size()+2] = logM_prior;
+  Par_string[cosmo_param.size()+3] = "f_off";
+  param_prior[cosmo_param.size()+3] = f_off_prior;
+  Par_string[cosmo_param.size()+4] = "sigma_off";
+  param_prior[cosmo_param.size()+4] = sigma_off_prior;
+
+  Par_string[cosmo_param.size()+5] = "AB_fact";
+  param_prior[cosmo_param.size()+5] = anisotropic_boost_prior;
+  Par_string[cosmo_param.size()+6] = "OB_fact";
+  param_prior[cosmo_param.size()+6] = orientation_boost_prior;
+
+  Par_string[cosmo_param.size()+7] = "Rsp";
+  Par_string[cosmo_param.size()+8] = "Rsp_rDelta";
+
+  // Build the HaloProfile object
+  cosmology::HaloProfile halo_profile (m_data_model.cosmology, m_data_model.two_halo, m_data_model.redshift, 2., 1.e14, m_data_model.Delta, m_data_model.profile_author, m_data_model.halo_def, 0., true, false, 0., 0., 0., 0., 0., m_data_model.bias_author, m_data_model.method_Pk);
+  m_data_model.halo_profile = make_shared<cosmology::HaloProfile>(halo_profile);
+
+  // Set the function returning the concentration
+  m_data_model.conc_func = [] (const double conc, cbl::cosmology::HaloProfile halo_profile) {(void)halo_profile; return conc;};
 
   // input data used to construct the model
   auto inputs = make_shared<STR_Profile_data_model>(m_data_model);
@@ -217,28 +600,41 @@ void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_Density
 
 // ===========================================================================================
 
-void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_DensityProfile_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution Rt_prior, const std::string cM_author, const statistics::PriorDistribution logM_prior, const statistics::PriorDistribution f_off_prior, const statistics::PriorDistribution sigma_off_prior, const statistics::PriorDistribution anisotropic_boost_prior, const statistics::PriorDistribution orientation_boost_prior)
-{  
+void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_DensityProfile_cosmology (const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution Rt_prior, const std::string cM_author, const statistics::PriorDistribution logM_prior, const statistics::PriorDistribution f_off_prior, const statistics::PriorDistribution sigma_off_prior, const statistics::PriorDistribution anisotropic_boost_prior, const statistics::PriorDistribution orientation_boost_prior)
+{
+  if ( (m_data_model.profile_author != "NFW") && (m_data_model.profile_author != "NFW_trunc") && (m_data_model.profile_author != "Einasto") )
+    ErrorCBL("You cannot use this set_model if the "+m_data_model.profile_author+" profile is assumed! Check the other set_model functions in this class. This error message was implemented to avoid the use of DK14 profile along with this set_model.", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
+  
   m_data_model.Cpar = cosmo_param;
 
-  const size_t nParams = cosmo_param.size()+7; // The total number of parameters is given by the cosmological ones + 7, since the density profile has 6 base parameters (Rt, logM, f_off, sigma_off, AB_fact, OB_fact) and 1 derived parameter (conc)
-  const int n_derivedPars = 1;
+  const size_t nParams = cosmo_param.size()+9;
+  const int n_derivedPars = 3;
 
   vector<statistics::ParameterType> Par_type (nParams, statistics::ParameterType::_Base_);
   Par_type[cosmo_param.size()+1] = statistics::ParameterType::_Derived_;
+  Par_type[Par_type.size()-1] = statistics::ParameterType::_Derived_;
+  Par_type[Par_type.size()-2] = statistics::ParameterType::_Derived_;
   
   vector<string> Par_string (nParams);
   std::vector<statistics::PriorDistribution> param_prior (nParams-n_derivedPars);
 
   // Set the names and priors of the cosmological parameters
+  if (cosmo_param.size() != cosmo_prior.size())
+    ErrorCBL("cosmo_param and cosmo_prior must have the same size!", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
+  
   for (size_t i=0; i<cosmo_param.size(); i++){
-    Par_string[i] = CosmologicalParameter_name(cosmo_param[i]);
+    Par_string[i] = cosmo_param[i];
     param_prior[i] = cosmo_prior[i];
   }
 
   // Set the names and priors for the density profile parameters
   Par_string[cosmo_param.size()] = "Rt";
-  param_prior[cosmo_param.size()] = Rt_prior;
+  if (m_data_model.profile_author == "NFW_trunc")
+    param_prior[cosmo_param.size()] = Rt_prior;
+  else {
+    param_prior[cosmo_param.size()] = cbl::statistics::PriorDistribution {cbl::glob::DistributionType::_Constant_, 0.};
+    cbl::WarningMsgCBL("I set the truncation factor equal to zero and constant, since it is not used in the "+m_data_model.profile_author+" model.", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
+  }
   
   Par_string[cosmo_param.size()+1] = "concentration";
 
@@ -254,52 +650,15 @@ void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_Density
   Par_string[cosmo_param.size()+6] = "OB_fact";
   param_prior[cosmo_param.size()+5] = orientation_boost_prior;
 
-  // set the parameter indices, used in the model function
-  m_data_model.i_Rt = cosmo_param.size();
-  m_data_model.i_conc = cosmo_param.size()+1;
-  m_data_model.i_logM = cosmo_param.size()+2;
-  m_data_model.i_foff = cosmo_param.size()+3;
-  m_data_model.i_sigmaoff = cosmo_param.size()+4;
-  m_data_model.i_AB = cosmo_param.size()+5;
-  m_data_model.i_OB = cosmo_param.size()+6;
-
-  m_data_model.i_Rt_func = 0;
-  m_data_model.i_foff_func = 1;
-  m_data_model.i_sigmaoff_func = 2;
-  m_data_model.i_AB_func = 3;
-  m_data_model.i_OB_func = 4;
-
-  // set the functions returning the model parameters
-  m_data_model.get_parameter.resize(5);
-  m_data_model.priors_excluded.resize(5);
-  
-  for (size_t i=0; i<m_data_model.get_parameter.size(); i++)    
-    m_data_model.get_parameter[i] = [] (std::vector<double> &par, const int idx, std::vector<statistics::PriorDistribution> prior, const int i_prior) {
-				      (void)prior; (void)i_prior; return par[idx];
-				    };
-
-  m_data_model.priors_excluded[0] = Rt_prior;
-  m_data_model.priors_excluded[1] = f_off_prior;
-  m_data_model.priors_excluded[2] = sigma_off_prior;
-  m_data_model.priors_excluded[3] = anisotropic_boost_prior;
-  m_data_model.priors_excluded[4] = orientation_boost_prior;
+  Par_string[cosmo_param.size()+7] = "Rsp";
+  Par_string[cosmo_param.size()+8] = "Rsp_rDelta";
 
   // Build the HaloProfile object
-  cosmology::HaloProfile halo_profile (*(m_data_model.cosmology), m_data_model.redshift, cM_author, 0., m_Delta, m_profile_author, m_halo_def, 0., true, false, 0., 0.);
+  cosmology::HaloProfile halo_profile (m_data_model.cosmology, m_data_model.two_halo, m_data_model.redshift, cM_author, 1.e14, m_data_model.Delta, m_data_model.profile_author, m_data_model.halo_def, 0., true, false, 0., 0., 0., 0., 0., m_data_model.bias_author, m_data_model.method_Pk);
   m_data_model.halo_profile = make_shared<cosmology::HaloProfile>(halo_profile);
 
   // Set the function returning the concentration
   m_data_model.conc_func = [] (const double conc, cbl::cosmology::HaloProfile halo_profile) { (void)conc; return halo_profile.concentration(); };
-
-  // Set the function returning the 2-halo term
-  if (m_2halo)
-    m_data_model.two_halo_func = [] (const std::vector<double> radius, cbl::cosmology::HaloProfile halo_profile, const std::string bias_author, const std::string method_Pk, const std::string interp_type) {
-				   return halo_profile.DeltaSigma_2h(radius, bias_author, method_Pk, interp_type);};
-  else
-    m_data_model.two_halo_func = [] (const std::vector<double> radius, cbl::cosmology::HaloProfile halo_profile, const std::string bias_author, const std::string method_Pk, const std::string interp_type) {
-				   (void)halo_profile; (void)bias_author; (void)method_Pk; (void)interp_type;
-				   std::vector<double> res (radius.size(), 0.);
-				   return res;};
   
   // input data used to construct the model
   auto inputs = make_shared<STR_Profile_data_model>(m_data_model);
@@ -314,155 +673,45 @@ void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_Density
   m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_density, nParams, Par_type, Par_string, inputs));
 }
 
-
 // ===========================================================================================
 
-void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_DensityProfile_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const std::string z_evo, const statistics::PriorDistribution Rt_prior, const statistics::PriorDistribution concentration_prior, const statistics::PriorDistribution f_off_prior, const statistics::PriorDistribution sigma_off_prior, const statistics::PriorDistribution anisotropic_boost_prior, const statistics::PriorDistribution orientation_boost_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior)
+void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_DensityProfile_cosmology (const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const std::string z_evo, const statistics::PriorDistribution Rt_prior, const statistics::PriorDistribution c0_prior, const statistics::PriorDistribution cM_prior, const statistics::PriorDistribution cz_prior, const statistics::PriorDistribution f_off0_prior, const statistics::PriorDistribution f_offM_prior, const statistics::PriorDistribution f_offz_prior, const statistics::PriorDistribution sigma_off0_prior, const statistics::PriorDistribution sigma_offM_prior, const statistics::PriorDistribution sigma_offz_prior, const statistics::PriorDistribution anisotropic_boost_prior, const statistics::PriorDistribution orientation_boost_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution purity_prior)
 {
+  if ( (m_data_model.profile_author != "NFW") && (m_data_model.profile_author != "NFW_trunc") && (m_data_model.profile_author != "Einasto") )
+    ErrorCBL("You cannot use this set_model if the "+m_data_model.profile_author+" profile is assumed! Check the other set_model functions in this class. This error message was implemented to avoid the use of DK14 profile along with this set_model.", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
+  
   if (m_mass_is_derived == false)
     ErrorCBL("If the mass is derived from the scaling relation, you must use the correct set_data_model!", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
   
   m_data_model.Cpar = cosmo_param;
 
-  const size_t nParams = cosmo_param.size()+14; // The total number of parameters is given by the cosmological ones, + 14 base parameters.
+  const size_t nParams = cosmo_param.size()+23; // The total number of parameters is given by the cosmological ones, + 21 base parameters and 2 derived parameters (Rsp, Rsp_rDelta)
+  const int n_derivedPars = 2;
   
   vector<statistics::ParameterType> Par_type (nParams, statistics::ParameterType::_Base_);
+  Par_type[Par_type.size()-1] = statistics::ParameterType::_Derived_;
+  Par_type[Par_type.size()-2] = statistics::ParameterType::_Derived_;
   
   vector<string> Par_string (nParams);
-  std::vector<statistics::PriorDistribution> param_prior (nParams);
+  std::vector<statistics::PriorDistribution> param_prior (nParams-n_derivedPars);
 
   // Set the names and priors of the cosmological parameters
+  if (cosmo_param.size() != cosmo_prior.size())
+    ErrorCBL("cosmo_param and cosmo_prior must have the same size!", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
+  
   for (size_t i=0; i<cosmo_param.size(); i++){
-    Par_string[i] = CosmologicalParameter_name(cosmo_param[i]);
+    Par_string[i] = cosmo_param[i];
     param_prior[i] = cosmo_prior[i];
   }
 
   // Set the names and priors for the density profile parameters
   Par_string[cosmo_param.size()] = "Rt";
-  param_prior[cosmo_param.size()] = Rt_prior;
-  Par_string[cosmo_param.size()+1] = "concentration";
-  param_prior[cosmo_param.size()+1] = concentration_prior;
-  
-  Par_string[cosmo_param.size()+2] = "f_off";
-  param_prior[cosmo_param.size()+2] = f_off_prior;
-  Par_string[cosmo_param.size()+3] = "sigma_off";
-  param_prior[cosmo_param.size()+3] = sigma_off_prior;
-
-  Par_string[cosmo_param.size()+4] = "AB_fact";
-  param_prior[cosmo_param.size()+4] = anisotropic_boost_prior;
-  Par_string[cosmo_param.size()+5] = "OB_fact";
-  param_prior[cosmo_param.size()+5] = orientation_boost_prior;
-  
-  Par_string[cosmo_param.size()+6] = "alpha";
-  param_prior[cosmo_param.size()+6] = alpha_prior;
-  Par_string[cosmo_param.size()+7] = "beta";
-  param_prior[cosmo_param.size()+7] = beta_prior;
-  Par_string[cosmo_param.size()+8] = "gamma";
-  param_prior[cosmo_param.size()+8] = gamma_prior;
-  Par_string[cosmo_param.size()+9] = "scatter0";
-  param_prior[cosmo_param.size()+9] = scatter0_prior;
-  Par_string[cosmo_param.size()+10] = "scatterM";
-  param_prior[cosmo_param.size()+10] = scatterM_prior;
-  Par_string[cosmo_param.size()+11] = "scatterM_exponent";
-  param_prior[cosmo_param.size()+11] = scatterM_exponent_prior;
-  Par_string[cosmo_param.size()+12] = "scatterz";
-  param_prior[cosmo_param.size()+12] = scatterz_prior;
-  Par_string[cosmo_param.size()+13] = "scatterz_exponent";
-  param_prior[cosmo_param.size()+13] = scatterz_exponent_prior;
-
-  // set the parameter indices, used in the model function
-  m_data_model.i_Rt = cosmo_param.size();
-  m_data_model.i_conc = cosmo_param.size()+1;
-  m_data_model.i_foff = cosmo_param.size()+2;
-  m_data_model.i_sigmaoff = cosmo_param.size()+3;
-  m_data_model.i_AB = cosmo_param.size()+4;
-  m_data_model.i_OB = cosmo_param.size()+5;
-
-  m_data_model.i_Rt_func = 0;
-  m_data_model.i_foff_func = 1;
-  m_data_model.i_sigmaoff_func = 2;
-  m_data_model.i_AB_func = 3;
-  m_data_model.i_OB_func = 4;
-
-  // set the functions returning the model parameters
-  m_data_model.get_parameter.resize(5);
-  m_data_model.priors_excluded.resize(5);
-  
-  for (size_t i=0; i<m_data_model.get_parameter.size(); i++)    
-    m_data_model.get_parameter[i] = [] (std::vector<double> &par, const int idx, std::vector<statistics::PriorDistribution> prior, const int i_prior) {
-				      (void)prior; (void)i_prior; return par[idx];
-				    };
-
-  m_data_model.priors_excluded[0] = Rt_prior;
-  m_data_model.priors_excluded[1] = f_off_prior;
-  m_data_model.priors_excluded[2] = sigma_off_prior;
-  m_data_model.priors_excluded[3] = anisotropic_boost_prior;
-  m_data_model.priors_excluded[4] = orientation_boost_prior;
-
-  // Build the HaloProfile object
-  cosmology::HaloProfile halo_profile (*(m_data_model.cosmology), m_data_model.redshift, 0., 0., m_Delta, m_profile_author, m_halo_def, 0., true, false, 0., 0.);
-  m_data_model.halo_profile = make_shared<cosmology::HaloProfile>(halo_profile);
-
-  // Set the scaling relation object
-  (m_data_model.scaling_relation)->set_model_MassObservableRelation_cosmology (z_evo, cosmo_param, cosmo_prior, alpha_prior, beta_prior, gamma_prior, scatter0_prior, scatterM_prior, scatterM_exponent_prior, scatterz_prior, scatterz_exponent_prior);
-
-  // Set the likelihood for the scaling relation (only to avoid internal errors, of course it is not used)
-  (m_data_model.scaling_relation)->set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_, {});
-
-  // Set the function returning the concentration
-  m_data_model.conc_scaling_relation_func = [] (const double conc, const double c0=0, const double cM=0, const double cz=0, const double logM=0, const double logz=0) {
-					      (void)c0; (void)cM; (void)cz; (void)logM; (void)logz; return conc;
-					    };
-
-  // Set the function returning the 2-halo term
-  if (m_2halo)
-    m_data_model.two_halo_func_fast = [] (const std::vector<double> radius, cbl::cosmology::HaloProfile halo_profile, const double bias, const std::string method_Pk, const std::string interp_type) {
-				   return halo_profile.DeltaSigma_2h(radius, bias, method_Pk, interp_type);};
-  else
-    m_data_model.two_halo_func_fast = [] (const std::vector<double> radius, cbl::cosmology::HaloProfile halo_profile, const double bias, const std::string method_Pk, const std::string interp_type) {
-				   (void)halo_profile; (void)bias; (void)method_Pk; (void)interp_type;
-				   std::vector<double> res (radius.size(), 0.);
-				   return res;};
-  
-  // input data used to construct the model
-  auto inputs = make_shared<STR_Profile_data_model>(m_data_model);
-
-  // set prior
-  m_set_prior(param_prior);
-
-  m_data_model.Par_type = Par_type;
-  m_data_model.Par_string = Par_string;
-
-  // construct the model
-  m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_density_scaling_relation, nParams, Par_type, Par_string, inputs));
-}
-
-
-// ===========================================================================================
-
-void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_DensityProfile_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const std::string z_evo, const statistics::PriorDistribution Rt_prior, const statistics::PriorDistribution c0_prior, const statistics::PriorDistribution cM_prior, const statistics::PriorDistribution cz_prior, const statistics::PriorDistribution f_off0_prior, const statistics::PriorDistribution f_offM_prior, const statistics::PriorDistribution f_offz_prior, const statistics::PriorDistribution sigma_off0_prior, const statistics::PriorDistribution sigma_offM_prior, const statistics::PriorDistribution sigma_offz_prior, const statistics::PriorDistribution anisotropic_boost_prior, const statistics::PriorDistribution orientation_boost_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior)
-{
-  if (m_mass_is_derived == false)
-    ErrorCBL("If the mass is derived from the scaling relation, you must use the correct set_data_model!", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
-  
-  m_data_model.Cpar = cosmo_param;
-
-  const size_t nParams = cosmo_param.size()+20; // The total number of parameters is given by the cosmological ones, + 20 base parameters.
-  
-  vector<statistics::ParameterType> Par_type (nParams, statistics::ParameterType::_Base_);
-  
-  vector<string> Par_string (nParams);
-  std::vector<statistics::PriorDistribution> param_prior (nParams);
-
-  // Set the names and priors of the cosmological parameters
-  for (size_t i=0; i<cosmo_param.size(); i++){
-    Par_string[i] = CosmologicalParameter_name(cosmo_param[i]);
-    param_prior[i] = cosmo_prior[i];
+  if (m_data_model.profile_author == "NFW_trunc")
+    param_prior[cosmo_param.size()] = Rt_prior;
+  else {
+    param_prior[cosmo_param.size()] = cbl::statistics::PriorDistribution {cbl::glob::DistributionType::_Constant_, 0.};
+    cbl::WarningMsgCBL("I set the truncation factor equal to zero and constant, since it is not used in the "+m_data_model.profile_author+" model.", "set_model_DensityProfile_cosmology", "Modelling_DensityProfile.cpp");
   }
-
-  // Set the names and priors for the density profile parameters
-  Par_string[cosmo_param.size()] = "Rt";
-  param_prior[cosmo_param.size()] = Rt_prior;
   
   Par_string[cosmo_param.size()+1] = "c0";
   param_prior[cosmo_param.size()+1] = c0_prior;
@@ -506,9 +755,11 @@ void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_Density
   Par_string[cosmo_param.size()+19] = "scatterz_exponent";
   param_prior[cosmo_param.size()+19] = scatterz_exponent_prior;
 
-  // Build the HaloProfile object
-  cosmology::HaloProfile halo_profile (*(m_data_model.cosmology), m_data_model.redshift, 0., 0., m_Delta, m_profile_author, m_halo_def, 0., true, false, 0., 0.);
-  m_data_model.halo_profile = make_shared<cosmology::HaloProfile>(halo_profile);
+  Par_string[cosmo_param.size()+20] = "purity";
+  param_prior[cosmo_param.size()+20] = purity_prior;
+
+  Par_string[cosmo_param.size()+21] = "Rsp";
+  Par_string[cosmo_param.size()+22] = "Rsp_rDelta";
 
   // Set the scaling relation object
   (m_data_model.scaling_relation)->set_model_MassObservableRelation_cosmology (z_evo, cosmo_param, cosmo_prior, alpha_prior, beta_prior, gamma_prior, scatter0_prior, scatterM_prior, scatterM_exponent_prior, scatterz_prior, scatterz_exponent_prior);
@@ -517,21 +768,10 @@ void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_Density
   (m_data_model.scaling_relation)->set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_, {});
 
   // Set the function returning the concentration
-  m_data_model.conc_scaling_relation_func = [] (const double conc, const double c0, const double cM, const double cz, const double logM, const double logz) {
-					      (void)conc;
+  m_data_model.conc_scaling_relation_func = [] (const double c0, const double cM, const double cz, const double logM, const double logz) {
 					      const double logc = c0 + cM*logM + cz*logz;
 					      return pow(10, logc);
 					    };
-  
-  // Set the function returning the 2-halo term
-  if (m_2halo)
-    m_data_model.two_halo_func_fast = [] (const std::vector<double> radius, cbl::cosmology::HaloProfile halo_profile, const double bias, const std::string method_Pk, const std::string interp_type) {
-				   return halo_profile.DeltaSigma_2h(radius, bias, method_Pk, interp_type);};
-  else
-    m_data_model.two_halo_func_fast = [] (const std::vector<double> radius, cbl::cosmology::HaloProfile halo_profile, const double bias, const std::string method_Pk, const std::string interp_type) {
-				   (void)halo_profile; (void)bias; (void)method_Pk; (void)interp_type;
-				   std::vector<double> res (radius.size(), 0.);
-				   return res;};
   
   // input data used to construct the model
   auto inputs = make_shared<STR_Profile_data_model>(m_data_model);
@@ -546,337 +786,177 @@ void cbl::modelling::densityprofile::Modelling_DensityProfile::set_model_Density
   m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_density_scaling_relation_evolving_concentration_offcentering, nParams, Par_type, Par_string, inputs));
 }
 
-
 // ===========================================================================================
 
-void  cbl::modelling::densityprofile::Modelling_DensityProfile::exclude_parameter_from_MCMC (const std::string parameter) {
+std::vector<double> cbl::modelling::densityprofile::Modelling_DensityProfile::mass_expected_value (const std::vector<double> z_ob, const std::vector<double> mass_proxy_ob, const std::shared_ptr<cosmology::Cosmology> cosmology, const double alpha, const double beta, const double gamma, const double scatter0, const double scatterM, const double scatterM_exp, const double scatterz, const double scatterz_exp)
+{
 
-  for (size_t i=0; i<m_data_model.Par_type.size(); i++) {
-    
-    switch (m_data_model.Par_type[i])
-      {
-	
-      case (statistics::ParameterType::_Base_):
+  if (m_data_model.isTheoretical_MF == false)
+    ErrorCBL("This function is designed only for the case of expected values weighted over the theoretical mass function.", "mass_expected_value", "Modelling_DensityProfile.cpp");;
 
-	break;
+  // Define the redshift and mass vectors used to interpolate the following cosmological quantities
+  std::vector<std::vector<double>> int_limits = cbl::modelling::numbercounts::get_integration_limits
+    (
+     cosmology, cbl::Min(z_ob), cbl::Max(z_ob), cbl::Min(mass_proxy_ob), cbl::Max(mass_proxy_ob), m_data_model.z_error,
+     m_data_model.Plambda_mean_fc, m_data_model.Plambda_A_mu, m_data_model.Plambda_B_mu, m_data_model.Plambda_C_mu,
+     m_data_model.Plambda_std_fc, m_data_model.Plambda_A_sigma, m_data_model.Plambda_B_sigma, m_data_model.Plambda_C_sigma,
+     m_data_model.scaling_relation, alpha, beta, gamma, scatter0, scatterM, scatterM_exp, scatterz, scatterz_exp,
+     m_data_model.redshift_pivot, m_data_model.proxy_pivot, m_data_model.mass_pivot, m_data_model.logM_base
+     );
 
-      default:
-	ErrorCBL("Work in progress. It is not possible to use this function if a derived parameter is set!", "exclude_parameter_from_MCMC", "Modelling_DensityProfile.cpp");
-	break;
-	
-      }
-    
-  }
+  double z_min = int_limits[2][0] * 0.99;
+  double z_max = int_limits[2][1] * 1.01;
 
-  // »»»
-  if (m_evolving_offcentering)
-    ErrorCBL("Work in progress. If the offcentering parameters evolve with redshift and mass proxy, this function can not be used!", "exclude_parameter_from_MCMC", "Modelling_DensityProfile.cpp");
+  double M_min = pow(m_data_model.logM_base, int_limits[0][0]) * m_data_model.mass_pivot * 0.99;
+  double M_max = pow(m_data_model.logM_base, int_limits[0][1]) * m_data_model.mass_pivot * 1.01;
   
-  if (m_likelihood != NULL)
-    ErrorCBL("This function must be used before setting the likelihood!", "exclude_parameter_from_MCMC", "Modelling_DensityProfile.cpp");
+  // interpolate sigmaM and its derivative
+  cosmology::PkXi PX(cosmology);
+  std::vector<double> Pk = PX.Pk_matter(m_data_model.kk, m_data_model.method_Pk, false, 0., m_data_model.store_output, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec, cbl::par::defaultString, true);
+  const std::vector<cbl::glob::FuncGrid> interp = cbl::modelling::numbercounts::sigmaM_dlnsigmaM (cbl::logarithmic_bin_vector(500, M_min, M_max), cosmology, m_data_model.kk, Pk, "Spline", m_data_model.k_max);
 
-  // »»»
-  std::vector<statistics::PriorDistribution> priors;
-  for (size_t i=0; i<m_parameter_priors.size(); i++)
-    priors.push_back(*m_parameter_priors[i]);
+  // interpolate the growth factor
+  const std::vector<double> z_for_DN = cbl::linear_bin_vector(100, z_min, z_max);
+  std::vector<double> DN (z_for_DN.size(), 0.);
+  for (size_t i=0; i<z_for_DN.size(); i++)
+    DN[i] = cosmology->DN(z_for_DN[i]);
+  cbl::glob::FuncGrid interp_DN (z_for_DN, DN, "Spline");
 
-  if (parameter == "Rt") {
-    
-    m_data_model.Par_type.erase(m_data_model.Par_type.begin()+m_data_model.i_Rt);
-    m_data_model.Par_string.erase(m_data_model.Par_string.begin()+m_data_model.i_Rt);
-    priors.erase(priors.begin()+m_data_model.i_Rt);
-    
-    m_data_model.get_parameter[m_data_model.i_Rt_func] = [] (std::vector<double> &par, const int idx, std::vector<statistics::PriorDistribution> prior, const int i_prior) {
-							   (void)par; (void)idx;
-							   srand(time(0));
-							   return prior[i_prior].sample(rand());
-							 };
-    
-    m_data_model.i_conc = m_data_model.i_conc - 1;
-    m_data_model.i_logM = m_data_model.i_logM - 1;
-    m_data_model.i_foff = m_data_model.i_foff - 1;
-    m_data_model.i_sigmaoff = m_data_model.i_sigmaoff - 1;
-    m_data_model.i_AB = m_data_model.i_AB - 1;
-    m_data_model.i_OB = m_data_model.i_OB - 1;
-    
-  }
-  else if (parameter == "f_off") {
-
-    m_data_model.Par_type.erase(m_data_model.Par_type.begin()+m_data_model.i_foff);
-    m_data_model.Par_string.erase(m_data_model.Par_string.begin()+m_data_model.i_foff);
-    priors.erase(priors.begin()+m_data_model.i_foff);
-
-    m_data_model.get_parameter[m_data_model.i_foff_func] = [] (std::vector<double> &par, const int idx, std::vector<statistics::PriorDistribution> prior, const int i_prior) {
-							   (void)par; (void)idx;
-							   srand(time(0));
-							   return prior[i_prior].sample(rand());
-							 };
-    
-    m_data_model.i_sigmaoff = m_data_model.i_sigmaoff - 1;
-    m_data_model.i_AB = m_data_model.i_AB - 1;
-    m_data_model.i_OB = m_data_model.i_OB - 1;
-    
-  }
-  else if (parameter == "sigma_off") {
-    
-    m_data_model.Par_type.erase(m_data_model.Par_type.begin()+m_data_model.i_sigmaoff);
-    m_data_model.Par_string.erase(m_data_model.Par_string.begin()+m_data_model.i_sigmaoff);
-    priors.erase(priors.begin()+m_data_model.i_sigmaoff);
-    
-    m_data_model.get_parameter[m_data_model.i_sigmaoff_func] = [] (std::vector<double> &par, const int idx, std::vector<statistics::PriorDistribution> prior, const int i_prior) {
-							   (void)par; (void)idx;
-							   srand(time(0));
-							   return prior[i_prior].sample(rand());
-							 };
-    
-    m_data_model.i_AB = m_data_model.i_AB - 1;
-    m_data_model.i_OB = m_data_model.i_OB - 1;
-    
-  }
-  else if (parameter == "AB_fact") {
-    
-    m_data_model.Par_type.erase(m_data_model.Par_type.begin()+m_data_model.i_AB);
-    m_data_model.Par_string.erase(m_data_model.Par_string.begin()+m_data_model.i_AB);
-    priors.erase(priors.begin()+m_data_model.i_AB);
-    
-    m_data_model.get_parameter[m_data_model.i_AB_func] = [] (std::vector<double> &par, const int idx, std::vector<statistics::PriorDistribution> prior, const int i_prior) {
-							   (void)par; (void)idx;
-							   srand(time(0));
-							   return prior[i_prior].sample(rand());
-							 };
-    
-    m_data_model.i_OB = m_data_model.i_OB - 1;
-    
-  }
-  else if (parameter == "OB_fact") {
-    
-    m_data_model.Par_type.erase(m_data_model.Par_type.begin()+m_data_model.i_OB);
-    m_data_model.Par_string.erase(m_data_model.Par_string.begin()+m_data_model.i_OB);
-    priors.erase(priors.begin()+m_data_model.i_OB);
-    
-    m_data_model.get_parameter[m_data_model.i_OB_func] = [] (std::vector<double> &par, const int idx, std::vector<statistics::PriorDistribution> prior, const int i_prior) {
-							   (void)par; (void)idx;
-							   srand(time(0));
-							   return prior[i_prior].sample(rand());
-							 };
-    
-  }
-
-  else
-    ErrorCBL("Wrong parameter declaration ("+parameter+").", "exclude_parameter_from_MCMC", "Modelling_DensityProfile.cpp");
-
-  auto inputs = make_shared<STR_Profile_data_model>(m_data_model);
-  m_set_prior(priors);
-
-  m_model.reset();
-
-  if (m_mass_is_derived)
-    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_density_scaling_relation, m_data_model.Par_string.size(), m_data_model.Par_type, m_data_model.Par_string, inputs));
-  else
-    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&model_density, m_data_model.Par_string.size(), m_data_model.Par_type, m_data_model.Par_string, inputs));
-
-  WarningMsgCBL("New set of MCMC parameters:", "exclude_parameter_from_MCMC", "Modelling_DensityProfile.cpp");
-  for (size_t i=0; i<m_data_model.Par_string.size(); i++)
-    coutCBL << m_data_model.Par_string[i] << endl;
+  // mass expected values
+  return cbl::modelling::densityprofileaux::compute_mass_expected_value (z_ob, mass_proxy_ob, m_data_model.MF_author, m_data_model.halo_def, m_data_model.Delta, m_data_model.z_error, m_data_model.Plambda_mean_fc, m_data_model.Plambda_A_mu, m_data_model.Plambda_B_mu, m_data_model.Plambda_C_mu, m_data_model.Plambda_std_fc, m_data_model.Plambda_A_sigma, m_data_model.Plambda_B_sigma, m_data_model.Plambda_C_sigma, interp[0], interp[1], interp_DN, cosmology, alpha, beta, gamma, scatter0, scatterM, scatterM_exp, scatterz, scatterz_exp, m_data_model.completeness_interp, m_data_model.scaling_relation, m_data_model.redshift_pivot, m_data_model.proxy_pivot, m_data_model.mass_pivot, m_data_model.logM_base);
   
 }
 
 // ===========================================================================================
 
 std::vector<double> cbl::modelling::densityprofile::model_density (const std::vector<double> radius, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
-{
+{  
   // structure contaning the required input data
   shared_ptr<STR_Profile_data_model> pp = static_pointer_cast<STR_Profile_data_model>(inputs);
 
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
+  std::shared_ptr<cosmology::Cosmology> cosmology = pp->cosmology->clone();
 
   // redefine the HaloProfile object
   cbl::cosmology::HaloProfile halo_profile = *pp->halo_profile;
 
   // set the cosmological parameters
   for (size_t i=0; i<pp->Cpar.size(); ++i)
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
+    cosmology->set_parameter(pp->Cpar[i], parameter[i]);
   
   // set the cluster parameters
-  halo_profile.set_cosmology(cosmo);
+  halo_profile.set_cosmology(cosmology, false);
+  
+  const double Rt = parameter[pp->Cpar.size()];
+  const double f_off = parameter[pp->Cpar.size()+3];
+  const double sigma_off = parameter[pp->Cpar.size()+4];
+  const double AB_fact = parameter[pp->Cpar.size()+5];
+  const double OB_fact = parameter[pp->Cpar.size()+6];
 
-  const double Rt = pp->get_parameter[pp->i_Rt_func](parameter, pp->i_Rt, pp->priors_excluded, pp->i_Rt_func);
-  const double f_off = pp->get_parameter[pp->i_foff_func](parameter, pp->i_foff, pp->priors_excluded, pp->i_foff_func);
-  const double sigma_off = pp->get_parameter[pp->i_sigmaoff_func](parameter, pp->i_sigmaoff, pp->priors_excluded, pp->i_sigmaoff_func);
-  const double AB_fact = pp->get_parameter[pp->i_AB_func](parameter, pp->i_AB, pp->priors_excluded, pp->i_AB_func);
-  const double OB_fact = pp->get_parameter[pp->i_OB_func](parameter, pp->i_OB, pp->priors_excluded, pp->i_OB_func);
-
-  const double mass = pow(pp->logM_base, parameter[pp->i_logM])*pp->mass_pivot;
+  const double mass = pow(pp->logM_base, parameter[pp->Cpar.size()+2])*pp->mass_pivot;
   
   halo_profile.set_trunc_fact(Rt);
   halo_profile.set_mass(mass * (1+OB_fact));
   halo_profile.set_f_off(f_off);
   halo_profile.set_sigma_off(sigma_off);
+  halo_profile.set_AB_fact(AB_fact);
   
-  halo_profile.set_concentration(pp->conc_func(parameter[pp->i_conc], halo_profile));  
-  parameter[pp->i_conc] = halo_profile.concentration();
+  halo_profile.set_concentration(pp->conc_func(parameter[pp->Cpar.size()+1], halo_profile));  
+  parameter[pp->Cpar.size()+1] = halo_profile.concentration();
 
-  // Compute DeltaSigma
-  std::vector<double> one_halo = halo_profile.DeltaSigma(radius);  
-  std::vector<double> two_halo = pp->two_halo_func(radius, halo_profile, pp->bias_author, pp->method_Pk, pp->interp_type);
-
-  std::vector<double> total_profile (radius.size());  
-  for (size_t j=0; j<radius.size(); j++)    
-    total_profile[j] = one_halo[j] + two_halo[j] * (1.+AB_fact);
-
-  return total_profile;
+  // Compute the splashback radius, if possible, and the profile
+  if (pp->two_halo) {
+    halo_profile.update_2halo();
+    const double Rsp = cbl::modelling::densityprofileaux::splashback_radius(halo_profile.rho(radius), radius);
+    const double overdensity =  cosmology->rho_crit(pp->redshift) * halo_profile.Delta();
+    const double rDelta = pow( 3. * (mass * (1+OB_fact)) / (4. * cbl::par::pi * overdensity), 1./3. );
+    parameter[parameter.size()-2] = Rsp;
+    parameter[parameter.size()-1] = Rsp / rDelta;
+  }
+  else {
+    // We extract a random number between -1 and 0 to avoid problems in the posterior derivation.
+    srand(time(0));
+    cbl::random::UniformRandomNumbers extract(-1, 0, rand());
+    parameter[parameter.size()-2] = extract();
+    parameter[parameter.size()-1] = extract();
+  }
+  
+  if (pp->probe == "DeltaSigma")
+    return halo_profile.DeltaSigma(radius);
+  else {
+    std::vector<double> profile = halo_profile.g(radius, pp->zs, pp->N_zs[0]);    
+    for (size_t i=0; i<profile.size(); i++)
+      profile[i] = profile[i] * pp->purity_background[0];
+    return profile;
+  }
 }
 
 // ===========================================================================================
 
-std::vector<double> cbl::modelling::densityprofile::compute_model_density_scaling_relation (const std::vector<double> radius, cbl::cosmology::Cosmology cosmo, cbl::cosmology::HaloProfile halo_profile, shared_ptr<STR_Profile_data_model> pp, const double conc, const double c0, const double cM, const double cz, const double AB_fact, const double OB_fact, const double alpha, const double beta, const double gamma, const double scatter0, const double scatterM, const double scatterM_exp, const double scatterz, const double scatterz_exp)
-{
-  auto cosmo_ptr = std::make_shared<cbl::cosmology::Cosmology>(cosmo);
-  
-  // Define the integrand
-  double sqrt_Nclusters = sqrt( (pp->scaling_relation)->data_model().Nclusters[0] );
-  
-  cbl::glob::FuncGrid DeltaSigma_Rj_interp;
-  std::shared_ptr<void> ptr;
-  
-  auto integrand = [&] (const double x)
-		   {
-		     double mass = pow(pp->logM_base,x)*pp->mass_pivot;
-		       
-		     // Compute P(M|lambda,z)
-		     double log_lambda = log(pp->mass_proxy/pp->proxy_pivot)/log(pp->logM_base);
-		     double log_f_z = log( (pp->scaling_relation)->data_model().fz(pp->redshift, pp->redshift_pivot, cosmo_ptr) )/log(pp->logM_base);
-		       
-		     double mean = alpha + beta*log_lambda + gamma*log_f_z;
-		     double scatter_intr = std::abs(scatter0 + scatterM*pow(log_lambda, scatterM_exp) + scatterz*pow(log_f_z, scatterz_exp)) / sqrt_Nclusters;
-		     double P_M__lambda_z = cbl::gaussian(x, ptr, {mean,scatter_intr});
-
-		     // Compute the halo excess surface profile
-		     double DeltaSigma = DeltaSigma_Rj_interp(mass);
-		       
-		     return DeltaSigma * P_M__lambda_z;
-		   };
-
-  // Find the minimum and maximum masses, given the parameters of the scaling relation and the intrinsic scatter
-  double log_lambda = log(pp->mass_proxy/pp->proxy_pivot)/log(pp->logM_base);
-  double log_f_z = log( (pp->scaling_relation)->data_model().fz(pp->redshift, pp->redshift_pivot, cosmo_ptr) )/log(pp->logM_base);
-
-  double logM = alpha + beta*log_lambda + gamma*log_f_z;
-
-  double scatter = std::abs( scatter0 + scatterM*pow(log_lambda, scatterM_exp) + scatterz*pow(log_f_z, scatterz_exp) ) / sqrt_Nclusters;
-
-  double min_logM = logM-3.5*scatter;
-  double max_logM = logM+3.5*scatter;
-
-  // »»»»»»»»»»»»»»»»»»
-  // Compute DeltaSigma
-  // »»»»»»»»»»»»»»»»»»
-
-  const std::vector<double> Mass_vector = cbl::logarithmic_bin_vector(5, pow(pp->logM_base,min_logM)*pp->mass_pivot * (1-std::abs(OB_fact)), pow(pp->logM_base,max_logM)*pp->mass_pivot * (1+std::abs(OB_fact)));
-
-  // For the halo bias in the two-halo term, compute:
-  // - Delta
-  // - growth factor
-  // - the interpolated sigmaM
-  double Delta = halo_profile.Delta() / cosmo.OmegaM(pp->redshift);
-  double DN = cosmo.DN(pp->redshift);
-
-  std::vector<double> sigmaM (Mass_vector.size(), 0.);
-  for (size_t i=0; i<sigmaM.size(); i++)
-    sigmaM[i] = sqrt( cosmo.sigma2M(Mass_vector[i], pp->method_Pk, 0., false, "test", "Linear", 100.) );
-  cbl::glob::FuncGrid sigmaM_interp (Mass_vector, sigmaM, "Spline");
-
-  
-  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
-  // Compute DeltaSigma between maximum and minimum masses, and interpolate it for a given radius
-  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
-  
-  std::vector<std::vector<double>> total_profile_4interp(Mass_vector.size(), std::vector<double>(radius.size()));
-
-  // 0) Since DeltaSigma_2h / bias_halo is constant, compute it only once
-  const std::vector<double> normalised_2h = pp->two_halo_func_fast(radius, halo_profile, 1., pp->method_Pk, pp->interp_type);
-
-  // 1) For a given mass, compute DeltaSigma at all radii
-  for (size_t i=0; i<total_profile_4interp.size(); i++) {
-
-    double mass = Mass_vector[i] * (1+OB_fact);
-    halo_profile.set_mass(mass);
-    halo_profile.set_concentration( pp->conc_scaling_relation_func( conc, c0, cM, cz, log10(mass/pp->mass_pivot), log10((1+pp->redshift)/(1+pp->redshift_pivot)) ) );
-
-    double bias = cosmo.bias_halo(mass, sigmaM_interp(mass), pp->redshift, DN, pp->bias_author, false, par::defaultString, "Linear", Delta, -1, -1, 0.001, 100., 1.e-2, pp->method_Pk);
-    
-    std::vector<double> one_halo = halo_profile.DeltaSigma(radius);
-    std::vector<double> two_halo = normalised_2h;
-
-    for (size_t j=0; j<total_profile_4interp[i].size(); j++)
-      total_profile_4interp[i][j] = one_halo[j] + two_halo[j] * bias * (1.+AB_fact);
-    
-  }
-
-  std::vector<double> total_profile(radius.size());
-  
-  for (size_t j=0; j<radius.size(); j++) {
-
-    // 2) Given a radius, interpolate DeltaSigma as a function of mass
-    std::vector<double> DeltaSigma_Rj_4interp(Mass_vector.size());
-    
-    for (size_t i=0; i<Mass_vector.size(); i++)
-      DeltaSigma_Rj_4interp[i] = total_profile_4interp[i][j];
-
-    DeltaSigma_Rj_interp = cbl::glob::FuncGrid (Mass_vector, DeltaSigma_Rj_4interp, "Spline");
-
-    // Integrate
-    total_profile[j] = wrapper::gsl::GSL_integrate_qag(integrand, min_logM, max_logM);
-    
-  }
-  
-  return total_profile;
-}
-
-// ===========================================================================================
-
-std::vector<double> cbl::modelling::densityprofile::model_density_scaling_relation (const std::vector<double> radius, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
+std::vector<double> cbl::modelling::densityprofile::model_density_DK14 (const std::vector<double> radius, const std::shared_ptr<void> inputs, std::vector<double> &parameter)
 {
   // structure contaning the required input data
   shared_ptr<STR_Profile_data_model> pp = static_pointer_cast<STR_Profile_data_model>(inputs);
-  
+
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
+  std::shared_ptr<cosmology::Cosmology> cosmology = pp->cosmology->clone();
 
   // redefine the HaloProfile object
   cbl::cosmology::HaloProfile halo_profile = *pp->halo_profile;
 
   // set the cosmological parameters
   for (size_t i=0; i<pp->Cpar.size(); ++i)
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
+    cosmology->set_parameter(pp->Cpar[i], parameter[i]);
   
   // set the cluster parameters
-  halo_profile.set_cosmology(cosmo);
+  halo_profile.set_cosmology(cosmology, false);
 
-  const double Rt = pp->get_parameter[pp->i_Rt_func](parameter, pp->i_Rt, pp->priors_excluded, pp->i_Rt_func);
-  const double f_off = pp->get_parameter[pp->i_foff_func](parameter, pp->i_foff, pp->priors_excluded, pp->i_foff_func);
-  const double sigma_off = pp->get_parameter[pp->i_sigmaoff_func](parameter, pp->i_sigmaoff, pp->priors_excluded, pp->i_sigmaoff_func);
-  const double AB_fact = pp->get_parameter[pp->i_AB_func](parameter, pp->i_AB, pp->priors_excluded, pp->i_AB_func);
-  const double OB_fact = pp->get_parameter[pp->i_OB_func](parameter, pp->i_OB, pp->priors_excluded, pp->i_OB_func);
+  const double Rt = parameter[pp->Cpar.size()];
+  const double f_off = parameter[pp->Cpar.size()+3];
+  const double sigma_off = parameter[pp->Cpar.size()+4];
+  const double AB_fact = parameter[pp->Cpar.size()+5];
+  const double OB_fact = parameter[pp->Cpar.size()+6];
+  const double b_e = parameter[pp->Cpar.size()+7];
+  const double s_e = parameter[pp->Cpar.size()+8];
+  const double alpha_0 = parameter[pp->Cpar.size()+9];
+  const double alpha_nu = parameter[pp->Cpar.size()+10];
+  const double beta = parameter[pp->Cpar.size()+11];
+  const double gamma_0 = parameter[pp->Cpar.size()+12];
 
+  const double mass = pow(pp->logM_base, parameter[pp->Cpar.size()+2])*pp->mass_pivot;
+  
   halo_profile.set_trunc_fact(Rt);
+  halo_profile.set_mass(mass * (1+OB_fact));
   halo_profile.set_f_off(f_off);
   halo_profile.set_sigma_off(sigma_off);
+  halo_profile.set_b_e(b_e);
+  halo_profile.set_s_e(s_e);
+  halo_profile.set_AB_fact(AB_fact);
+  halo_profile.set_alpha(alpha_0, alpha_nu);
+  halo_profile.set_beta(beta);
+  halo_profile.set_gamma_0(gamma_0);
+  
+  halo_profile.set_concentration(pp->conc_func(parameter[pp->Cpar.size()+1], halo_profile));  
+  parameter[pp->Cpar.size()+1] = halo_profile.concentration();
 
-  const double conc = parameter[pp->i_conc];
+  if (pp->two_halo)
+    ErrorCBL("If the DK14 profile is assumed, the 2-halo term cannot be included.", "model_density_DK14", "Modelling_DensityProfile.cpp");
 
-  // set the scaling relation parameters  
-  const double alpha = parameter[parameter.size()-8];
-  const double beta = parameter[parameter.size()-7];
-  const double gamma = parameter[parameter.size()-6];
-  const double scatter0 = parameter[parameter.size()-5];
-  const double scatterM = parameter[parameter.size()-4];
-  const double scatterM_exp = parameter[parameter.size()-3];
-  const double scatterz = parameter[parameter.size()-2];
-  const double scatterz_exp = parameter[parameter.size()-1];
-
-  return cbl::modelling::densityprofile::compute_model_density_scaling_relation(radius, cosmo, halo_profile, pp, conc, 0., 0., 0., AB_fact, OB_fact, alpha, beta, gamma, scatter0, scatterM, scatterM_exp, scatterz, scatterz_exp);
+  // Compute the profile and the splashback radius
+  const double Rsp = cbl::modelling::densityprofileaux::splashback_radius(halo_profile.rho(radius), radius);
+  const double overdensity =  cosmology->rho_crit(pp->redshift) * halo_profile.Delta();
+  const double rDelta = pow( 3. * (mass * (1+OB_fact)) / (4. * cbl::par::pi * overdensity), 1./3. );
+  parameter[parameter.size()-2] = Rsp;
+  parameter[parameter.size()-1] = Rsp / rDelta;
+  
+  if (pp->probe == "DeltaSigma")
+    return halo_profile.DeltaSigma(radius);
+  else {
+    std::vector<double> profile = halo_profile.g(radius, pp->zs, pp->N_zs[0]);
+    for (size_t i=0; i<profile.size(); i++)
+      profile[i] = profile[i] * pp->purity_background[0];
+    return profile;
+  }
 }
 
 // ===========================================================================================
@@ -887,41 +967,141 @@ std::vector<double> cbl::modelling::densityprofile::model_density_scaling_relati
   shared_ptr<STR_Profile_data_model> pp = static_pointer_cast<STR_Profile_data_model>(inputs);
   
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
-
-  // redefine the HaloProfile object
-  cbl::cosmology::HaloProfile halo_profile = *pp->halo_profile;
-
-  // set the cosmological parameters
+  std::shared_ptr<cosmology::Cosmology> cosmology = pp->cosmology->clone();
   for (size_t i=0; i<pp->Cpar.size(); ++i)
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
-  
-  // set the cluster parameters
-  halo_profile.set_cosmology(cosmo);
+    cosmology->set_parameter(pp->Cpar[i], parameter[i]);
 
+  // halo parameters
   const double Rt = parameter[pp->Cpar.size()];
   const double c0 = parameter[pp->Cpar.size()+1];
   const double cM = parameter[pp->Cpar.size()+2];
   const double cz = parameter[pp->Cpar.size()+3];
-  const double f_off = parameter[pp->Cpar.size()+4] * pow(pp->mass_proxy/pp->proxy_pivot, parameter[pp->Cpar.size()+5]) * pow((1+pp->redshift)/(1+pp->redshift_pivot), parameter[pp->Cpar.size()+6]);
-  const double sigma_off = parameter[pp->Cpar.size()+7] * pow(pp->mass_proxy/pp->proxy_pivot, parameter[pp->Cpar.size()+8]) * pow((1+pp->redshift)/(1+pp->redshift_pivot), parameter[pp->Cpar.size()+9]);
+  const double f_off0 = parameter[pp->Cpar.size()+4];
+  const double f_offM = parameter[pp->Cpar.size()+5];
+  const double f_offz = parameter[pp->Cpar.size()+6];
+  const double sigma_off0 = parameter[pp->Cpar.size()+7];
+  const double sigma_offM = parameter[pp->Cpar.size()+8];
+  const double sigma_offz = parameter[pp->Cpar.size()+9];
   const double AB_fact = parameter[pp->Cpar.size()+10];
   const double OB_fact = parameter[pp->Cpar.size()+11];
 
-  halo_profile.set_trunc_fact(Rt);
-  halo_profile.set_f_off(f_off);
-  halo_profile.set_sigma_off(sigma_off);
+  // scaling relation parameters  
+  const double alpha = parameter[pp->Cpar.size()+12];
+  const double beta = parameter[pp->Cpar.size()+13];
+  const double gamma = parameter[pp->Cpar.size()+14];
+  const double scatter0 = parameter[pp->Cpar.size()+15];
+  const double scatterM = parameter[pp->Cpar.size()+16];
+  const double scatterM_exp = parameter[pp->Cpar.size()+17];
+  const double scatterz = parameter[pp->Cpar.size()+18];
+  const double scatterz_exp = parameter[pp->Cpar.size()+19];
 
-  // set the scaling relation parameters  
-  const double alpha = parameter[parameter.size()-8];
-  const double beta = parameter[parameter.size()-7];
-  const double gamma = parameter[parameter.size()-6];
-  const double scatter0 = parameter[parameter.size()-5];
-  const double scatterM = parameter[parameter.size()-4];
-  const double scatterM_exp = parameter[parameter.size()-3];
-  const double scatterz = parameter[parameter.size()-2];
-  const double scatterz_exp = parameter[parameter.size()-1];
+  // purity
+  const double purity = parameter[parameter.size()-3];
+  if ( (purity < 0) || (purity > 1) )
+    ErrorCBL("The purity must range between 0 and 1!", "model_density_scaling_relation_evolving_concentration_offcentering", "Modelling_DensityProfile.cpp");
 
-  return cbl::modelling::densityprofile::compute_model_density_scaling_relation(radius, cosmo, halo_profile, pp, 0., c0, cM, cz, AB_fact, OB_fact, alpha, beta, gamma, scatter0, scatterM, scatterM_exp, scatterz, scatterz_exp);
+
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+  // Interpolate DeltaSigma and Sigma as a function of redshift and mass
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+
+  std::vector<double> redshift_vector, Mass_vector;
+  
+  if (pp->isTheoretical_MF) {
+
+    // Define the (optimal) redshift and mass vectors
+    std::vector<std::vector<double>> int_limits = cbl::modelling::numbercounts::get_integration_limits
+    (
+     cosmology, pp->z_min, pp->z_max, pp->mass_proxy_min, pp->mass_proxy_max, pp->z_error,
+     pp->Plambda_mean_fc, pp->Plambda_A_mu, pp->Plambda_B_mu, pp->Plambda_C_mu, pp->Plambda_std_fc, pp->Plambda_A_sigma, pp->Plambda_B_sigma, pp->Plambda_C_sigma,
+     pp->scaling_relation, alpha, beta, gamma, scatter0, scatterM, scatterM_exp, scatterz, scatterz_exp, pp->redshift_pivot, pp->proxy_pivot, pp->mass_pivot, pp->logM_base
+     );
+
+    double z_min = int_limits[2][0] * 0.99;
+    double z_max = int_limits[2][1] * 1.01;
+    redshift_vector = cbl::linear_bin_vector(std::max(4, (int)((z_max-z_min)/0.1)), z_min, z_max);
+
+    double M_min = pow(pp->logM_base, int_limits[0][0]) * pp->mass_pivot * 0.99;
+    double M_max = pow(pp->logM_base, int_limits[0][1]) * pp->mass_pivot * 1.01;
+    Mass_vector = cbl::logarithmic_bin_vector(std::min( 20, std::max(5, (int)((log10(M_max)-log10(M_min))*5)) ), M_min, M_max);
+
+  } else {
+
+    // Define the (optimal) redshift vector
+    double z_min = cbl::Min(pp->redshifts);
+    double z_max = cbl::Max(pp->redshifts);
+    redshift_vector = cbl::linear_bin_vector(std::max(4, (int)((z_max-z_min)/0.1)), z_min, z_max);
+    
+    // Define the (optimal) mass vector
+    double proxy_min = cbl::Min(pp->mass_proxies);
+    double proxy_max = cbl::Max(pp->mass_proxies);
+    std::vector<double> min_max = modelling::densityprofileaux::min_max_logMass(z_min, z_max, proxy_min, proxy_max, alpha, beta, gamma, scatter0, scatterM, scatterM_exp, scatterz, scatterz_exp, cosmology, pp->scaling_relation, pp->redshift_pivot, pp->proxy_pivot, pp->logM_base);
+
+    double M_min = pow(pp->logM_base, min_max[0]) * pp->mass_pivot;
+    double M_max = pow(pp->logM_base, min_max[1]) * pp->mass_pivot;
+    Mass_vector = cbl::logarithmic_bin_vector(std::min( 20, std::max(5, (int)((log10(M_max)-log10(M_min))*5)) ), M_min, M_max);
+    
+  }
+
+  // Interpolate the profiles
+  std::vector<std::vector<cbl::glob::FuncGrid2D>> interp_vec = cbl::modelling::densityprofileaux::interpolated_profiles (radius, redshift_vector, Mass_vector, cosmology, pp->profile_author, pp->two_halo, pp->halo_def, pp->Delta, AB_fact, pp->bias_author, pp->method_Pk, pp->conc_scaling_relation_func, c0, cM, cz, sigma_off0, sigma_offM, sigma_offz, Rt, pp->redshift_pivot, pp->mass_pivot);
+  std::vector<cbl::glob::FuncGrid2D> DeltaSigma_interp_cen = interp_vec[0];
+  std::vector<cbl::glob::FuncGrid2D> DeltaSigma_interp_off = interp_vec[1];
+  std::vector<cbl::glob::FuncGrid2D> Sigma_interp_cen = interp_vec[2];
+  std::vector<cbl::glob::FuncGrid2D> Sigma_interp_off = interp_vec[3];
+
+
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+  // If the probe is g, interpolate Sigma_crit
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+
+  cbl::glob::FuncGrid inv_Scrit_interp;
+  if (pp->probe == "g")
+    inv_Scrit_interp = modelling::densityprofileaux::Sigma_crit_factor_interp(redshift_vector, pp->zl_bin_edges_for_N_zs, pp->zs, pp->N_zs, cosmology);
+
+  
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+  // Compute the profile and the splashback radius
+  // »»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»
+
+  std::vector<double> profile (radius.size(), 0.);
+  
+  if (pp->isTheoretical_MF) {
+
+    // compute the power spectrum
+    cosmology::PkXi PX(cosmology);
+    std::vector<double> Pk = PX.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, cbl::par::defaultString, true);
+
+    // interpolate sigmaM and its derivative
+    const std::vector<cbl::glob::FuncGrid> interp = cbl::modelling::numbercounts::sigmaM_dlnsigmaM (cbl::logarithmic_bin_vector(200, cbl::Min(Mass_vector), cbl::Max(Mass_vector)), cosmology, pp->kk, Pk, "Spline", pp->k_max);
+
+    // interpolate the growth factor
+    const std::vector<double> z_for_DN = cbl::linear_bin_vector(10, cbl::Min(redshift_vector), cbl::Max(redshift_vector));
+    std::vector<double> DN (z_for_DN.size(), 0.);
+    for (size_t i=0; i<z_for_DN.size(); i++)
+      DN[i] = cosmology->DN(z_for_DN[i]);
+    cbl::glob::FuncGrid DN_interp (z_for_DN, DN, "Spline");
+
+    // interpolation range for the background purity
+    const int vec_size = (int)(pp->zl_bin_edges_for_N_zs.size());
+    std::vector<double> P_bkg_interp_range;
+
+    if (vec_size > 0)
+      P_bkg_interp_range = {0.5 * (pp->zl_bin_edges_for_N_zs[0] + pp->zl_bin_edges_for_N_zs[1]), 0.5 * (pp->zl_bin_edges_for_N_zs[vec_size-2] + pp->zl_bin_edges_for_N_zs[vec_size-1])};
+    
+    // compute the profile
+    profile = cbl::modelling::densityprofileaux::compute_model_density_scaling_relation(pp->MF_author, pp->halo_def, pp->Delta, pp->z_min, pp->z_max, pp->mass_proxy_min, pp->mass_proxy_max, pp->z_error, pp->Plambda_mean_fc, pp->Plambda_A_mu, pp->Plambda_B_mu, pp->Plambda_C_mu, pp->Plambda_std_fc, pp->Plambda_A_sigma, pp->Plambda_B_sigma, pp->Plambda_C_sigma, interp[0], interp[1], DN_interp, radius, pp->probe, DeltaSigma_interp_cen, DeltaSigma_interp_off, Sigma_interp_cen, Sigma_interp_off, inv_Scrit_interp, cosmology, f_off0, f_offM, f_offz, OB_fact, alpha, beta, gamma, scatter0, scatterM, scatterM_exp, scatterz, scatterz_exp, purity, pp->completeness_interp, pp->scaling_relation, pp->redshift_pivot, pp->proxy_pivot, pp->mass_pivot, pp->logM_base, pp->purity_background_interp, P_bkg_interp_range);
+    
+  } else
+    profile = cbl::modelling::densityprofileaux::compute_model_density_scaling_relation(pp->redshifts, pp->mass_proxies, radius, pp->probe, DeltaSigma_interp_cen, DeltaSigma_interp_off, Sigma_interp_cen, Sigma_interp_off, inv_Scrit_interp, cosmology, f_off0, f_offM, f_offz, OB_fact, alpha, beta, gamma, scatter0, scatterM, scatterM_exp, scatterz, scatterz_exp, purity, pp->scaling_relation, pp->redshift_pivot, pp->proxy_pivot, pp->mass_pivot, pp->logM_base, pp->purity_background, pp->N_zs_index);
+  
+  // At the moment, the splashback radius derivation is not implemented for this model.
+  // We extract a random number between -1 and 0 to avoid problems in the posterior derivation.
+  srand(time(0));
+  cbl::random::UniformRandomNumbers extract(-1, 0, rand());
+  parameter[parameter.size()-2] = extract();
+  parameter[parameter.size()-1] = extract();
+
+  return profile;
 }
 

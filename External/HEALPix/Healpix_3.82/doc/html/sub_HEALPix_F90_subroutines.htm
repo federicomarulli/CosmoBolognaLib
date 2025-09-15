@@ -1,0 +1,386 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>HEALPix Fortran90 Subroutines Overview</TITLE>
+<META NAME="description" CONTENT="HEALPix Fortran90 Subroutines Overview">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_TABLE_CONTENTS.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev_g.png"> 
+<A
+ HREF="main.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html33"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong>Up:</strong> <A
+ HREF="main.htm">Main Page</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<A ID="sub:subroutines"></A>
+
+<H1 class="center"><strong>HEALPix</strong> Fortran90 Subroutines Overview</H1>
+<div id=abstract class="center">This document is an overview of the <strong>HEALPix</strong> Fortran90 subroutines.</div>
+<P class="center"><STRONG>Eric Hivon, Hans K.&nbsp;Eriksen, Frode K.&nbsp;Hansen, Benjamin D.&nbsp;Wandelt, Krzysztof M.&nbsp;G&#243;rski,
+Anthony J.&nbsp;Banday and Martin Reinecke</STRONG></P>
+<BR><P class="center"><I>Revision: </I>Version 3.82; July 28, 2022</P>
+<P class="center"><A ID="tex2html1"
+  HREF="https://healpix.sourceforge.io">https://healpix.sourceforge.io</A>
+<BR><A ID="tex2html2"
+  HREF="http://healpix.sf.net">http://healpix.sf.net</A></P>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A ID="CHILD_LINKS"></A>
+
+<UL CLASS="ChildLinks">
+<LI><A ID="tex2html35"
+  HREF="sub_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+<LI><A ID="tex2html36"
+  HREF="sub_Conventions.htm">Conventions</A>
+<LI><A ID="tex2html37"
+  HREF="sub_Changes_between_releases_3_.htm">Changes between releases 3.80 and 3.82</A>
+<LI><A ID="tex2html38"
+  HREF="sub_Older_Changes.htm">Older Changes</A>
+<UL>
+<LI><A ID="tex2html39"
+  HREF="sub_Older_Changes.htm#SECTION410">Changes between releases 3.00 and 3.80</A>
+<UL>
+<LI><A ID="tex2html40"
+  HREF="sub_Older_Changes.htm#SECTION411">Version 3.80</A>
+<LI><A ID="tex2html41"
+  HREF="sub_Older_Changes.htm#SECTION412">Version 3.70</A>
+<LI><A ID="tex2html42"
+  HREF="sub_Older_Changes.htm#SECTION413">Version 3.60</A>
+<LI><A ID="tex2html43"
+  HREF="sub_Older_Changes.htm#SECTION414">Version 3.50</A>
+<LI><A ID="tex2html44"
+  HREF="sub_Older_Changes.htm#SECTION415">Version 3.40</A>
+<LI><A ID="tex2html45"
+  HREF="sub_Older_Changes.htm#SECTION416">Version 3.31</A>
+<LI><A ID="tex2html46"
+  HREF="sub_Older_Changes.htm#SECTION417">Version 3.30</A>
+<LI><A ID="tex2html47"
+  HREF="sub_Older_Changes.htm#SECTION418">Version 3.20</A>
+<LI><A ID="tex2html48"
+  HREF="sub_Older_Changes.htm#SECTION419">Version 3.11</A>
+<LI><A ID="tex2html49"
+  HREF="sub_Older_Changes.htm#SECTION4110">Version 3.10</A>
+</UL>
+<LI><A ID="tex2html50"
+  HREF="sub_Older_Changes.htm#SECTION420">Changes up to release 3.00</A>
+<UL>
+<LI><A ID="tex2html51"
+  HREF="sub_Older_Changes.htm#SECTION421">Version 3.00</A>
+<LI><A ID="tex2html52"
+  HREF="sub_Older_Changes.htm#SECTION422">Version 2.20</A>
+<LI><A ID="tex2html53"
+  HREF="sub_Older_Changes.htm#SECTION423">Version 2.14</A>
+<LI><A ID="tex2html54"
+  HREF="sub_Older_Changes.htm#SECTION424">Versions 2.10 and 2.13</A>
+<LI><A ID="tex2html55"
+  HREF="sub_Older_Changes.htm#SECTION425">Version 2.0</A>
+<LI><A ID="tex2html56"
+  HREF="sub_Older_Changes.htm#SECTION426">Version 1.2</A>
+</UL>
+</UL>
+<BR>
+<LI><A ID="tex2html57"
+  HREF="sub_add_card.htm">add_card</A>
+<LI><A ID="tex2html58"
+  HREF="sub_add_dipole.htm">add_dipole*</A>
+<LI><A ID="tex2html59"
+  HREF="sub_alm2cl.htm">alm2cl*</A>
+<LI><A ID="tex2html60"
+  HREF="sub_alm2map.htm">alm2map*</A>
+<LI><A ID="tex2html61"
+  HREF="sub_alm2map_der.htm">alm2map_der*</A>
+<LI><A ID="tex2html62"
+  HREF="sub_alm2map_spin.htm">alm2map_spin*</A>
+<LI><A ID="tex2html63"
+  HREF="sub_alms2fits.htm">alms2fits*</A>
+<LI><A ID="tex2html64"
+  HREF="sub_alter_alm.htm">alter_alm*</A>
+<LI><A ID="tex2html65"
+  HREF="sub_ang2vec.htm">ang2vec</A>
+<LI><A ID="tex2html66"
+  HREF="sub_angdist.htm">angdist</A>
+<LI><A ID="tex2html67"
+  HREF="sub_apply_mask.htm">apply_mask</A>
+<LI><A ID="tex2html68"
+  HREF="sub_assert_assert_alloc_assert_.htm">assert, assert_alloc, assert_directory_present, assert_present, fatal_error</A>
+<LI><A ID="tex2html69"
+  HREF="sub_brag_openmp.htm">brag_openmp</A>
+<LI><A ID="tex2html70"
+  HREF="sub_complex_fft.htm">complex_fft</A>
+<LI><A ID="tex2html71"
+  HREF="sub_compute_statistics.htm">compute_statistics*</A>
+<LI><A ID="tex2html72"
+  HREF="sub_concatnl.htm">concatnl</A>
+<LI><A ID="tex2html73"
+  HREF="sub_convert_inplace.htm">convert_inplace*</A>
+<LI><A ID="tex2html74"
+  HREF="sub_convert_nest2ring.htm">convert_nest2ring*</A>
+<LI><A ID="tex2html75"
+  HREF="sub_convert_ring2nest.htm">convert_ring2nest*</A>
+<LI><A ID="tex2html76"
+  HREF="sub_coordsys2euler_zyz.htm">coordsys2euler_zyz</A>
+<LI><A ID="tex2html77"
+  HREF="sub_create_alm.htm">create_alm*</A>
+<LI><A ID="tex2html78"
+  HREF="sub_del_card.htm">del_card</A>
+<LI><A ID="tex2html79"
+  HREF="sub_dist2holes_nest.htm">dist2holes_nest</A>
+<LI><A ID="tex2html80"
+  HREF="sub_dump_alms.htm">dump_alms*</A>
+<LI><A ID="tex2html81"
+  HREF="sub_fill_holes_nest.htm">fill_holes_nest</A>
+<LI><A ID="tex2html82"
+  HREF="sub_fits2alms.htm">fits2alms*</A>
+<LI><A ID="tex2html83"
+  HREF="sub_fits2cl.htm">fits2cl*</A>
+<LI><A ID="tex2html84"
+  HREF="sub_gaussbeam.htm">gaussbeam</A>
+<LI><A ID="tex2html85"
+  HREF="sub_generate_beam.htm">generate_beam</A>
+<LI><A ID="tex2html86"
+  HREF="sub_get_card.htm">get_card</A>
+<LI><A ID="tex2html87"
+  HREF="sub_get_healpix_data_dir_get_he.htm">get_healpix_data_dir, get_healpix_main_dir, get_healpix_test_dir</A>
+<LI><A ID="tex2html88"
+  HREF="sub_get_healpix_pixel_weight_fi.htm">get_healpix_pixel_weight_file,&nbsp;<SPAN CLASS="MATH"><IMG
+ STYLE="height: 0.23ex; vertical-align: -0.10ex; " SRC="sub_img1.png"
+ ALT="$\ldots $"></SPAN>
+get_healpix_weight_file</A>
+<LI><A ID="tex2html89"
+  HREF="sub_getArgument.htm">getArgument</A>
+<LI><A ID="tex2html90"
+  HREF="sub_getEnvironment.htm">getEnvironment</A>
+<LI><A ID="tex2html91"
+  HREF="sub_getdisc_ring.htm">getdisc_ring</A>
+<LI><A ID="tex2html92"
+  HREF="sub_getnumext_fits.htm">getnumext_fits</A>
+<LI><A ID="tex2html93"
+  HREF="sub_getsize_fits.htm">getsize_fits</A>
+<LI><A ID="tex2html94"
+  HREF="sub_healpix_modules_module.htm">healpix_modules module</A>
+<LI><A ID="tex2html95"
+  HREF="sub_healpix_types_module.htm">healpix_types module</A>
+<LI><A ID="tex2html96"
+  HREF="sub_in_ring.htm">in_ring</A>
+<LI><A ID="tex2html97"
+  HREF="sub_input_map.htm">input_map*</A>
+<LI><A ID="tex2html98"
+  HREF="sub_input_tod.htm">input_tod*</A>
+<LI><A ID="tex2html99"
+  HREF="sub_long_count_long_size.htm">long_count,&nbsp;long_size</A>
+<LI><A ID="tex2html100"
+  HREF="sub_map2alm.htm">map2alm*</A>
+<LI><A ID="tex2html101"
+  HREF="sub_map2alm_iterative.htm">map2alm_iterative*</A>
+<LI><A ID="tex2html102"
+  HREF="sub_map2alm_spin.htm">map2alm_spin*</A>
+<LI><A ID="tex2html103"
+  HREF="sub_maskborder_nest.htm">maskborder_nest</A>
+<LI><A ID="tex2html104"
+  HREF="sub_medfiltmap.htm">medfiltmap*</A>
+<LI><A ID="tex2html105"
+  HREF="sub_median.htm">median*</A>
+<LI><A ID="tex2html106"
+  HREF="sub_merge_headers.htm">merge_headers</A>
+<LI><A ID="tex2html107"
+  HREF="sub_mpi_alm_tools.htm">mpi_alm_tools*</A>
+<LI><A ID="tex2html108"
+  HREF="sub_mpi_alm2map.htm">mpi_alm2map*</A>
+<LI><A ID="tex2html109"
+  HREF="sub_mpi_alm2map_simple.htm">mpi_alm2map_simple*</A>
+<LI><A ID="tex2html110"
+  HREF="sub_mpi_alm2map_slave.htm">mpi_alm2map_slave</A>
+<LI><A ID="tex2html111"
+  HREF="sub_mpi_cleanup_alm_tools.htm">mpi_cleanup_alm_tools</A>
+<LI><A ID="tex2html112"
+  HREF="sub_mpi_initialize_alm_tools.htm">mpi_initialize_alm_tools</A>
+<LI><A ID="tex2html113"
+  HREF="sub_mpi_map2alm.htm">mpi_map2alm*</A>
+<LI><A ID="tex2html114"
+  HREF="sub_mpi_map2alm_simple.htm">mpi_map2alm_simple*</A>
+<LI><A ID="tex2html115"
+  HREF="sub_mpi_map2alm_slave.htm">mpi_map2alm_slave</A>
+<LI><A ID="tex2html116"
+  HREF="sub_nArguments.htm">nArguments</A>
+<LI><A ID="tex2html117"
+  HREF="sub_neighbours_nest.htm">neighbours_nest</A>
+<LI><A ID="tex2html118"
+  HREF="sub_nest2uniq.htm">nest2uniq</A>
+<LI><A ID="tex2html119"
+  HREF="sub_npix2nside.htm">npix2nside</A>
+<LI><A ID="tex2html120"
+  HREF="sub_nside2npix.htm">nside2npix</A>
+<LI><A ID="tex2html121"
+  HREF="sub_nside2npweights.htm">nside2npweights</A>
+<LI><A ID="tex2html122"
+  HREF="sub_nside2ntemplates.htm">nside2ntemplates</A>
+<LI><A ID="tex2html123"
+  HREF="sub_number_of_alms.htm">number_of_alms</A>
+<LI><A ID="tex2html124"
+  HREF="sub_output_map.htm">output_map*</A>
+<LI><A ID="tex2html125"
+  HREF="sub_parse_init_parse_int_parse_.htm">parse_init, parse_int, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 0.23ex; vertical-align: -0.10ex; " SRC="sub_img1.png"
+ ALT="$\ldots $"></SPAN>, parse_finish</A>
+<LI><A ID="tex2html126"
+  HREF="sub_pixel_window.htm">pixel_window</A>
+<LI><A ID="tex2html127"
+  HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm">pix2xxx,ang2xxx,vec2xxx, nest2ring,ring2nest</A>
+<LI><A ID="tex2html128"
+  HREF="sub_planck_rng_derived_type.htm">planck_rng derived type</A>
+<LI><A ID="tex2html129"
+  HREF="sub_plm_gen.htm">plm_gen</A>
+<LI><A ID="tex2html130"
+  HREF="sub_query_disc.htm">query_disc</A>
+<LI><A ID="tex2html131"
+  HREF="sub_query_polygon.htm">query_polygon</A>
+<LI><A ID="tex2html132"
+  HREF="sub_query_strip.htm">query_strip</A>
+<LI><A ID="tex2html133"
+  HREF="sub_query_triangle.htm">query_triangle</A>
+<LI><A ID="tex2html134"
+  HREF="sub_rand_gauss.htm">rand_gauss</A>
+<LI><A ID="tex2html135"
+  HREF="sub_rand_init.htm">rand_init</A>
+<LI><A ID="tex2html136"
+  HREF="sub_rand_uni.htm">rand_uni</A>
+<LI><A ID="tex2html137"
+  HREF="sub_read_asctab.htm">read_asctab*</A>
+<LI><A ID="tex2html138"
+  HREF="sub_read_bintab.htm">read_bintab*</A>
+<LI><A ID="tex2html139"
+  HREF="sub_read_conbintab.htm">read_conbintab*</A>
+<LI><A ID="tex2html140"
+  HREF="sub_read_dbintab.htm">read_dbintab</A>
+<LI><A ID="tex2html141"
+  HREF="sub_read_fits_cut4.htm">read_fits_cut4</A>
+<LI><A ID="tex2html142"
+  HREF="sub_read_fits_partial.htm">read_fits_partial</A>
+<LI><A ID="tex2html143"
+  HREF="sub_read_par.htm">read_par</A>
+<LI><A ID="tex2html144"
+  HREF="sub_real_fft.htm">real_fft</A>
+<LI><A ID="tex2html145"
+  HREF="sub_remove_dipole.htm">remove_dipole*</A>
+<LI><A ID="tex2html146"
+  HREF="sub_ring_analysis.htm">ring_analysis</A>
+<LI><A ID="tex2html147"
+  HREF="sub_ring_num.htm">ring_num</A>
+<LI><A ID="tex2html148"
+  HREF="sub_ring_synthesis.htm">ring_synthesis</A>
+<LI><A ID="tex2html149"
+  HREF="sub_rotate_alm.htm">rotate_alm*</A>
+<LI><A ID="tex2html150"
+  HREF="sub_same_shape_pixels_nest_same.htm">same_shape_pixels_nest, same_shape_pixels_ring</A>
+<LI><A ID="tex2html151"
+  HREF="sub_scan_directories.htm">scan_directories</A>
+<LI><A ID="tex2html152"
+  HREF="sub_size_holes_nest.htm">size_holes_nest</A>
+<LI><A ID="tex2html153"
+  HREF="sub_string_strlowcase_strupcase.htm">string, strlowcase, strupcase</A>
+<LI><A ID="tex2html154"
+  HREF="sub_surface_triangle.htm">surface_triangle</A>
+<LI><A ID="tex2html155"
+  HREF="sub_template_pixel_nest_templat.htm">template_pixel_nest, template_pixel_ring</A>
+<LI><A ID="tex2html156"
+  HREF="sub_udgrade_nest.htm">udgrade_nest*</A>
+<LI><A ID="tex2html157"
+  HREF="sub_udgrade_ring.htm">udgrade_ring*</A>
+<LI><A ID="tex2html158"
+  HREF="sub_unfold_weightsfile.htm">unfold_weightsfile</A>
+<LI><A ID="tex2html159"
+  HREF="sub_uniq2nest.htm">uniq2nest</A>
+<LI><A ID="tex2html160"
+  HREF="sub_vec2ang.htm">vec2ang</A>
+<LI><A ID="tex2html161"
+  HREF="sub_vect_prod.htm">vect_prod</A>
+<LI><A ID="tex2html162"
+  HREF="sub_write_asctab.htm">write_asctab*</A>
+<LI><A ID="tex2html163"
+  HREF="sub_write_bintab.htm">write_bintab*</A>
+<LI><A ID="tex2html164"
+  HREF="sub_write_bintabh.htm">write_bintabh*</A>
+<LI><A ID="tex2html165"
+  HREF="sub_write_dbintab.htm">write_dbintab</A>
+<LI><A ID="tex2html166"
+  HREF="sub_write_fits_cut4.htm">write_fits_cut4</A>
+<LI><A ID="tex2html167"
+  HREF="sub_write_fits_partial.htm">write_fits_partial</A>
+<LI><A ID="tex2html168"
+  HREF="sub_write_minimal_header.htm">write_minimal_header</A>
+<LI><A ID="tex2html169"
+  HREF="sub_write_plm.htm">write_plm</A>
+<LI><A ID="tex2html170"
+  HREF="sub_xcc_v_convert.htm">xcc_v_convert</A>
+<LI><A ID="tex2html171"
+  HREF="sub_About_this_document.htm">About this document ...</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev_g.png"> 
+<A
+ HREF="main.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html33"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong>Up:</strong> <A
+ HREF="main.htm">Main Page</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

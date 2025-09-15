@@ -2,7 +2,11 @@
 // Example code: how to measure the connected and reduced three-point correlation functions
 // ========================================================================================
 
+#include "LCDM.h"
 #include "Modelling_ThreePointCorrelation_comoving_reduced.h"
+
+using namespace std;
+
 
 int main () {
 
@@ -12,14 +16,14 @@ int main () {
     // ---------------- set the cosmological parameters  ------------
     // --------------------------------------------------------------
 
-    cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
 
   
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
   
-    std::string file_catalogue = "../input/cat.dat";
+    string file_catalogue = "../input/cat.dat";
 
     cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -47,10 +51,10 @@ int main () {
   
     // output data
   
-    const std::string dir_output = "../output/";
-    const std::string dir_triplets = dir_output;
-    const std::string dir_2pt = dir_output;
-    const std::string file_output = "3pt.dat";
+    const string dir_output = "../output/";
+    const string dir_triplets = dir_output;
+    const string dir_2pt = dir_output;
+    const string file_output = "3pt.dat";
 
   
     // measure the connected and reduced three-point correlation functions and write the output
@@ -66,11 +70,11 @@ int main () {
     // ---------------- read Q dark matter (DEMNUNI) ----------------
     // --------------------------------------------------------------
 
-    const std::string file_Q = "../input/zeta_lin_DM_z1.1_u2s5.00.dat";
-    std::ifstream fin(file_Q); cbl::checkIO(fin, file_Q);
+    const string file_Q = "../input/zeta_lin_DM_z1.1_u2s5.00.dat";
+    ifstream fin(file_Q); cbl::checkIO(fin, file_Q);
 
     double theta, Q, err;
-    std::vector<double> Q_DM;
+    vector<double> Q_DM;
     while (fin >> theta >> Q >> err) 
         Q_DM.emplace_back(Q);
 
@@ -123,7 +127,7 @@ int main () {
 
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

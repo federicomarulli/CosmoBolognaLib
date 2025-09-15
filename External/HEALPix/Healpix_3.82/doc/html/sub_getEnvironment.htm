@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>getEnvironment</TITLE>
+<META NAME="description" CONTENT="getEnvironment">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_getdisc_ring.htm">
+<LINK REL="previous" HREF="sub_getArgument.htm">
+<LINK REL="next" HREF="sub_getdisc_ring.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_getArgument.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_getdisc_ring.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html383"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_getArgument.htm">getArgument</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_getdisc_ring.htm">getdisc_ring</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION3800"></A>
+<A ID="sub:getenvironment"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">getEnvironment</SPAN></div><hr>
+<H3>This subroutine emulates the C routine <SPAN style="font-family:monospace">getenv</SPAN>, which returns the value of
+an environment variable.
+<BR>
+Starting with release 3.60, it calls the F2003 extension subroutine <SPAN  CLASS="texttt">get_environment_variable</SPAN>.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/extension.F90"><strong>src/f90/mod/extension.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">getEnvironment</SPAN>(
+<A HREF="#sub:getenvironment:name">name</A>, <A HREF="#sub:getenvironment:value">value</A>
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:225px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+name<A ID="sub:getenvironment:name"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">name of the environment variable</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">value<A ID="sub:getenvironment:value"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">value of the environment variable</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use extension 
+<BR>
+character(len=128) :: healpixdir 
+<BR>
+call <SPAN CLASS="colordoc">getEnvironment</SPAN>('HEALPIX', healpixdir) 
+<BR>
+print*,healpixdir</div>
+<blockquote>
+Will return the value of the <SPAN style="font-family:monospace">$HEALPIX</SPAN> system variable (if it is defined)
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">getEnvironment</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_getArgument.htm#sub:getargument">getArgument</A></B>
+<DD>returns list of command line arguments
+  <DT>
+<B><A HREF="sub_nArguments.htm#sub:narguments">nArguments</A></B>
+<DD>returns number of command line arguments
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_getArgument.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_getdisc_ring.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html383"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_getArgument.htm">getArgument</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_getdisc_ring.htm">getdisc_ring</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

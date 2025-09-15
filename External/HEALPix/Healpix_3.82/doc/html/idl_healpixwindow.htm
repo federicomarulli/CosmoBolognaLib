@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>healpixwindow</TITLE>
+<META NAME="description" CONTENT="healpixwindow">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_help_st.htm">
+<LINK REL="previous" HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm">
+<LINK REL="next" HREF="idl_help_st.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_help_st.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html369"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm">healpix_doc: PDF, HTML and EPUB documentation</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_help_st.htm">help_st</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION3000"></A>
+<A ID="idl:healpixwindow"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">healpixwindow</SPAN></div><hr>
+<H3>This IDL facility provides the window function in <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN> associated with the
+Healpix pixel of resolution Nside.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/misc/healpixwindow.pro"><strong>src/idl/misc/healpixwindow.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+<A HREF="#idl:healpixwindow:wpix">wpix</A>=HEALPIXWINDOW(<A HREF="#idl:healpixwindow:nside">Nside</A> 
+[, <A HREF="#idl:healpixwindow:Dim">Dim</A>, 
+<A HREF="#idl:healpixwindow:directory">DIRECTORY=</A>,
+<A HREF="#idl:healpixwindow:help">HELP=</A>,
+<A HREF="#idl:healpixwindow:lmax">LMAX=</A>])
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>Nside<A ID="idl:healpixwindow:nside"></A></B>
+<DD>resolution parameter
+    <DT>
+<B>Wpix<A ID="idl:healpixwindow:wpix"></A></B>
+<DD>the pixel window function, computed for the multipoles <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN> in {0,...,<A HREF="#idl:healpixwindow:lmax"><SPAN  CLASS="texttt">LMAX</SPAN></A>}
+    <DT>
+<B>Dim<A ID="idl:healpixwindow:Dim"></A></B>
+<DD>scalar integer, optional. 
+<BR>
+If absent or set to 0 or 1,
+          the output has size (<A HREF="#idl:healpixwindow:lmax"><SPAN  CLASS="texttt">LMAX</SPAN></A>+1) and is the temperature
+    window function;
+<BR>
+if set to <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.41ex; " SRC="idl_img60.png"
+ ALT="$2 \le$"></SPAN> Dim <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.41ex; " SRC="idl_img61.png"
+ ALT="$\le 4$"></SPAN> ,
+          the output has size (<A HREF="#idl:healpixwindow:lmax"><SPAN  CLASS="texttt">LMAX</SPAN></A>+1,Dim)
+          and contains in that order : 
+<BR>
+the TEMPERATURE window function,
+<BR>
+the GRAD/ELECTRIC polarization one
+<BR>
+the CURL/MAGNETIC polarization one
+<BR>
+the TEMPERATURE*GRAD one.
+   <DT>
+<B>DIRECTORY=<A ID="idl:healpixwindow:directory"></A></B>
+<DD>directory in which the precomputed pixel window file is looked for.
+<BR>          <b>default:</b><A HREF="idl_init_healpix_healpix_system.htm#idl:init_healpix"><SPAN  CLASS="texttt">!healpix.path.data</SPAN></A>
+   <DT>
+<B>HELP=<A ID="idl:healpixwindow:help"></A></B>
+<DD>if set, a documentatin header is printed out, 
+    and the routine exits
+   <DT>
+<B>LMAX=<A ID="idl:healpixwindow:lmax"></A></B>
+<DD>maximum multipole included in Wpix. 
+	Must be in [0, 4 <A HREF="#idl:healpixwindow:nside">Nside</A>].
+        Negative values are ignored.
+	<b>default:</b>4 Nside.
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">healpixwindow</SPAN> computes the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN> space window function due to the finite size of the
+<strong>HEALPix</strong> pixels. The typical size of a pixel (square root of its uniform surface
+area) is <!-- MATH
+ $\sqrt{3/\pi}\ 3600/N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 3.56ex; vertical-align: -1.17ex; " SRC="idl_img67.png"
+ ALT="$\sqrt{3/\pi}\ 3600/N_{\mathrm{side}}$"></SPAN> arcmin.
+If a unpixelated sky has a power spectrum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img4.png"
+ ALT="$C(\ell)$"></SPAN>, the same
+sky pixelated with a resolution parameter Nside 
+will have the power spectrum <!-- MATH
+ $C(\ell)_{\mathrm{pix}} = C(\ell)
+W(\ell)^2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.75ex; " SRC="idl_img68.png"
+ ALT="$C(\ell)_{\mathrm{pix}} = C(\ell)
+W(\ell)^2$"></SPAN> where <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img8.png"
+ ALT="$W(\ell)$"></SPAN> is given by <SPAN CLASS="colordoc">healpixwindow</SPAN>(Nside). The polarized
+pixel window function is also provided (when Dim <SPAN CLASS="MATH">&gt;</SPAN> 1).
+This routine reads some FITS files located in the subdirectory <SPAN style="font-family:monospace">data/</SPAN> of the
+<strong>HEALPix</strong> distribution, unless the keyword <SPAN style="font-family:monospace">Directory</SPAN> is set otherwise.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">healpixwindow</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run healpixwindow<DT>
+<B><A HREF="idl_gaussbeam.htm#idl:gaussbeam">gaussbeam</A></B>
+<DD>computes the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN> space window function associated with
+    a gaussian beam
+    <DT>
+<B>synfast</B>
+<DD>F90 code to generate CMB maps of given power spectrum at a
+    given resolution (=pixel size)
+    <DT>
+<B>anafast</B>
+<DD>F90 code to compute the power spectrum of a <strong>HEALPix</strong> sky map
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">wpix = <SPAN CLASS="colordoc">healpixwindow</SPAN>(256)</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+wpix contains the window function in {0,...,1024} of the <strong>HEALPix</strong> pixel with resolution
+parameter 256 (pixel size of 13.7 arcmin)</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_help_st.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html369"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm">healpix_doc: PDF, HTML and EPUB documentation</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_help_st.htm">help_st</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

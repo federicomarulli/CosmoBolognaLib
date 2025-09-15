@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>read_bintab*</TITLE>
+<META NAME="description" CONTENT="read_bintab*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_read_conbintab.htm">
+<LINK REL="previous" HREF="sub_read_asctab.htm">
+<LINK REL="next" HREF="sub_read_conbintab.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_read_asctab.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_read_conbintab.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html479"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_read_asctab.htm">read_asctab*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_read_conbintab.htm">read_conbintab*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION8600"></A>
+<A ID="sub:read_bintab"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">read_bintab*</SPAN></div><hr>
+<H3>This routine reads a <strong>HEALPix</strong> map from a binary FITS-file. The routine can read a temperature map or both temperature and polarisation maps (T,Q,U)</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/fitstools.F90"><strong>src/f90/mod/fitstools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">read_bintab*</SPAN>(
+<A HREF="#sub:read_bintab:filename">filename</A>, <A HREF="#sub:read_bintab:map">map</A>, <A HREF="#sub:read_bintab:npixtot">npixtot</A>, <A HREF="#sub:read_bintab:nmaps">nmaps</A>, <A HREF="#sub:read_bintab:nullval">nullval</A>, <A HREF="#sub:read_bintab:anynull">anynull</A><i><font color="#224422">[,<A HREF="#sub:read_bintab:header">header</A>, <A HREF="#sub:read_bintab:units">units</A>, <A HREF="#sub:read_bintab:extno">extno</A>]</font></i>
+)</h3></blockquote>
+Arguments appearing in <i><font color="#224422">italic</font></i> are
+optional.
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">name&nbsp;&amp;d&nbsp;imensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">
+filename<A ID="sub:read_bintab:filename"></A>(LEN=<kbd>filenamelen</kbd>)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">filename of FITS-file containing the map(s).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">npixtot<A ID="sub:read_bintab:npixtot"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">Number of pixels to be read from map.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">nmaps<A ID="sub:read_bintab:nmaps"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">number of maps to be read, 1 for temperature only, and 3 for (T,Q,U).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">map<A ID="sub:read_bintab:map"></A>(0:npixtot-1,1:nmaps)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">the map read from the FITS-file.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">nullval<A ID="sub:read_bintab:nullval"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">value of missing pixels in the map.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">anynull<A ID="sub:read_bintab:anynull"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">LGT</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px"><SPAN style="font-family:monospace">.TRUE.</SPAN>, if there are missing pixels, and <SPAN style="font-family:monospace">.FALSE.</SPAN>
+                   otherwise.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px"><i><font color="#224422">header<A ID="sub:read_bintab:header"></A></font></i>(LEN=80)(1:)(OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">character string array
+                   containing the FITS header read from the file. Its
+                   dimension has to be defined prior to calling the
+                   routine</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px"><i><font color="#224422">units<A ID="sub:read_bintab:units"></A></font></i>(LEN=*)(1:nmaps)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">character string array
+                   containing the physical units of each map read</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px"><i><font color="#224422">extno<A ID="sub:read_bintab:extno"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">extension number to read the data from
+                   (0 based).<b>default:</b>0 (the first extension is read)</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">call read_bintab ('map.fits', map, 12*32**2, 1, nullval, anynull)  
+<BR></div>
+<blockquote>
+Reads a <strong>HEALPix</strong> temperature map from the file `map.fits' to the array
+map(0:12*32**2-1,1:1). The pixel number 12*32**2 is the number of pixels in a
+<!-- MATH
+ $N_{\mathrm{side}}=32$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img264.png"
+ ALT="$N_{\mathrm{side}}=32$"></SPAN> <strong>HEALPix</strong> map. 
+If there are missing pixels in the input file (with
+value <SPAN style="font-family:monospace">NaN</SPAN> (Not a Number), <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.29ex; " SRC="sub_img202.png"
+ ALT="$\pm$"></SPAN><SPAN style="font-family:monospace">Infinity</SPAN>, or matching the FITS
+keyword <SPAN style="font-family:monospace">BAD_DATA</SPAN>) then <SPAN style="font-family:monospace">anynull</SPAN> is <SPAN style="font-family:monospace">.TRUE.</SPAN> and these pixels get the value returned in <SPAN style="font-family:monospace">nullval</SPAN>. 
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">read_bintab*</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">fitstools</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B>printerror</B>
+<DD>routine for printing FITS error messages.
+  <DT>
+<B><SPAN  CLASS="textbf">cfitsio</SPAN></B>
+<DD>library for FITS file handling.		
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">read_bintab*</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_input_map.htm#sub:input_map">input_map</A></B>
+<DD>Routine which reads a map using <SPAN CLASS="colordoc">read_bintab*</SPAN> and fills missing pixels with a given value.
+  <DT>
+<B><A HREF="sub_map2alm.htm#sub:map2alm">map2alm</A></B>
+<DD>Routine which analyse a map and returns the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img230.png"
+ ALT="$a_{lm}$"></SPAN>
+  coefficients.
+  <DT>
+<B><A HREF="sub_read_fits_cut4.htm#sub:read_fits_cut4">read_fits_cut4</A></B>
+<DD>Routine to read cut sky <strong>HEALPix</strong> FITS maps
+  <DT>
+<B><A HREF="sub_write_plm.htm#sub:write_plm">write_plm</A>, <A HREF="sub_write_bintab.htm#sub:write_bintab">write_bintab</A></B>
+<DD>Routines to write <strong>HEALPix</strong> FITS maps
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_read_asctab.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_read_conbintab.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html479"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_read_asctab.htm">read_asctab*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_read_conbintab.htm">read_conbintab*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

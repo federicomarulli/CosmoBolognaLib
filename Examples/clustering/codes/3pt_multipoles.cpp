@@ -2,8 +2,12 @@
 // Example code: how to measure the three-point correlation function multipoles
 // ============================================================================
 
+#include "LCDM.h"
 #include "ThreePointCorrelation_comoving_multipoles.h"
 #include "GlobalFunc.h"
+
+using namespace std;
+
 
 int main () {
 
@@ -13,14 +17,14 @@ int main () {
     // ---------------- set the cosmological parameters  ------------
     // --------------------------------------------------------------
 
-    cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
 
   
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
   
-    std::string file_catalogue = "../input/cat.dat";
+    string file_catalogue = "../input/cat.dat";
 
     cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -46,9 +50,9 @@ int main () {
   
     // output data
   
-    const std::string dir_output = "../output/";
-    const std::string dir_triplets = "../output/triplets/";
-    const std::string file_output = "zeta_multipoles.dat";
+    const string dir_output = "../output/";
+    const string dir_triplets = "../output/triplets/";
+    const string file_output = "zeta_multipoles.dat";
   
     // measure the connected three-point correlation functions legendre coefficients and write the output
 
@@ -60,7 +64,7 @@ int main () {
 
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

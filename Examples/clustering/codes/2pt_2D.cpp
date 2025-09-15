@@ -2,7 +2,11 @@
 // Example code: how to model the 2D two-point correlation function in Cartesian coordinates, xi(rp, pi), in redshift-space
 // ========================================================================================================================
 
+#include "LCDM.h"
 #include "TwoPointCorrelation2D.h"
+
+using namespace std;
+
 
 int main () {
 
@@ -12,14 +16,14 @@ int main () {
     // ---------------- set the cosmological parameters ------------
     // -------------------------------------------------------------
   
-    const cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
-  
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
+    
   
     // ----------------------------------------------------------
     // ---------------- read the input catalogue ----------------
     // ----------------------------------------------------------
   
-    const std::string file_catalogue = "../input/cat.dat";
+    const string file_catalogue = "../input/cat.dat";
 
     const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
   
@@ -39,8 +43,8 @@ int main () {
 
     // ----- output data ----- 
 
-    const std::string dir_pairs = "../output/";
-    const std::string dir_output = "../output/";
+    const string dir_pairs = "../output/";
+    const string dir_output = "../output/";
 
   
     // ----- measure the 2D correlation function in Cartesian coordinates, xi(rp,pi), and store the outputs ----- 
@@ -65,7 +69,7 @@ int main () {
 
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

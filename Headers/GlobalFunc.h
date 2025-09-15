@@ -36,6 +36,7 @@
 #define __GLOBALFUNC__
 
 
+#include "PkXi.h"
 #include "ThreePointCorrelation.h"
 
 
@@ -96,7 +97,7 @@ namespace cbl {
    *
    *  @param [in] zbin_max maximum redshift of the output binning
    *
-   *  @param [in] cosm object of class Cosmology
+   *  @param [in] cosmology pointer to an object of class Cosmology
    *
    *  @param [in] Area area of the survey
    *
@@ -114,7 +115,7 @@ namespace cbl {
    *
    *  @param [in] seed the random seed
    */
-  void Vmax_DC_distribution (std::vector<double> &dc, std::vector<double> &nObj, const std::vector<double> D_C, const std::vector<double> zobj_min, const std::vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, cosmology::Cosmology &cosm, const double Area, const int nObjRan, const bool norm=1, const std::string file_Vmax=par::defaultString, const double delta_dc_Vmax=100., const int seed=3213);
+  void Vmax_DC_distribution (std::vector<double> &dc, std::vector<double> &nObj, const std::vector<double> D_C, const std::vector<double> zobj_min, const std::vector<double> zobj_max, const double z_min, const double z_max, const double zbin_min, const double zbin_max, const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const double Area, const int nObjRan, const bool norm=1, const std::string file_Vmax=par::defaultString, const double delta_dc_Vmax=100., const int seed=3213);
 
   /**
    *  @brief the Alcock-Pacinski factor used to shift comoving
@@ -129,7 +130,7 @@ namespace cbl {
    *  @return D<SUB>V</SUB>[cosm2]/D<SUB>V</SUB>[cosm1], where
    *  D<SUB>V</SUB> is Cosmology::D_V
    */
-  double AP_shift_r (const double redshift, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2);
+  double AP_shift_r (const double redshift, const std::shared_ptr<cbl::cosmology::Cosmology> cosm1, const std::shared_ptr<cbl::cosmology::Cosmology> cosm2);
 
   /**
    *  @brief the Alcock-Pacinski factor used to shift comoving
@@ -144,7 +145,7 @@ namespace cbl {
    *  @return D<SUB>A</SUB>[cosm1]/D<SUB>A</SUB>[cosm2], where
    *  D<SUB>A</SUB> is Cosmology::D_A
    */
-  double AP_shift_rp (const double redshift, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2);
+  double AP_shift_rp (const double redshift, const std::shared_ptr<cbl::cosmology::Cosmology> cosm1, const std::shared_ptr<cbl::cosmology::Cosmology> cosm2);
 
   /**
    *  @brief the Alcock-Pacinski factor used to shift comoving
@@ -158,7 +159,7 @@ namespace cbl {
    *
    *  @return H[cosm2]/H[cosm1], where H is Cosmology::HH
    */
-  double AP_shift_pi (const double redshift, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2);
+  double AP_shift_pi (const double redshift, const std::shared_ptr<cbl::cosmology::Cosmology> cosm1, const std::shared_ptr<cbl::cosmology::Cosmology> cosm2);
 
   /**
    *  @brief the maximum comoving separations to be used for the AP
@@ -191,7 +192,7 @@ namespace cbl {
    *  @param [out] rM_AP the maximum value of the comoving distance
    *  over all the test cosmologies cosm2
    */
-  void max_separations_AP (const double Rp_max, const double Pi_max, const double redshift, const cosmology::Cosmology &cosm1, const std::vector<cosmology::Cosmology> &cosm2, double &rpM_AP, double &piM_AP, double &rM_AP);
+  void max_separations_AP (const double Rp_max, const double Pi_max, const double redshift, const std::shared_ptr<cbl::cosmology::Cosmology> cosm1, const std::vector<std::shared_ptr<cbl::cosmology::Cosmology>> cosm2, double &rpM_AP, double &piM_AP, double &rM_AP);
 
   /**
    *  @brief the 1D two-point correlation function converted from one
@@ -215,7 +216,7 @@ namespace cbl {
    *
    *  @return the converted two-point correlation function, &xi;(R)
    */
-  double converted_xi (const double RR, const double redshift, const std::vector<double> rr, const std::vector<double> Xi, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2, const bool direction);
+  double converted_xi (const double RR, const double redshift, const std::vector<double> rr, const std::vector<double> Xi, const std::shared_ptr<cbl::cosmology::Cosmology> cosm1, const std::shared_ptr<cbl::cosmology::Cosmology> cosm2, const bool direction);
 
   /**
    *  @brief the 2D two-point correlation function converted from one
@@ -245,9 +246,10 @@ namespace cbl {
    *  @param direction 0 &rarr; cosm2 \f$ \rightarrow \f$ cosm1; 1 &rarr; cosm1
    *  \f$ \rightarrow \f$ cosm2;
    *
-   *  @return the converted two-point correlation function, &xi;(R<SUB>p</SUB>,&Pi;)
+   *  @return the converted two-point correlation function,
+   *  &xi;(R<SUB>p</SUB>,&Pi;)
    */
-  double converted_xi (const double RP, const double PI, const double redshift, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double> > Xi, const cosmology::Cosmology &cosm1, const cosmology::Cosmology &cosm2, const bool direction); 
+  double converted_xi (const double RP, const double PI, const double redshift, const std::vector<double> rp, const std::vector<double> pi, const std::vector<std::vector<double> > Xi, const std::shared_ptr<cbl::cosmology::Cosmology> cosm1, const std::shared_ptr<cbl::cosmology::Cosmology> cosm2, const bool direction); 
 
   ///@}
 
@@ -268,7 +270,7 @@ namespace cbl {
    *  @param [out] redshift_min the minimum redshift
    *  @param [out] redshift_max the maximum redshift
    */
-  void redshift_range (const double mean_redshift, const double boxSide, cosmology::Cosmology &real_cosm, double &redshift_min, double &redshift_max); 
+  void redshift_range (const double mean_redshift, const double boxSide, const std::shared_ptr<cbl::cosmology::Cosmology> real_cosm, double &redshift_min, double &redshift_max); 
 
   /**
    *  @brief get the volume of a simulation box
@@ -287,7 +289,7 @@ namespace cbl {
    *
    *  @return the volume of the simulation
    */
-  double volume (const double boxSize, const int frac, const double Bord, const double mean_redshift, cosmology::Cosmology &real_cosm);
+  double volume (const double boxSize, const int frac, const double Bord, const double mean_redshift, const std::shared_ptr<cbl::cosmology::Cosmology> real_cosm);
 
   /**
    *  @brief convert a set of coordinates from real-space to
@@ -326,7 +328,7 @@ namespace cbl {
    *
    *  @param[in] seed the random seed
    */
-  void coord_zSpace (std::vector<double> &ra, std::vector<double> &dec, std::vector<double> &redshift, std::vector<double> &xx, std::vector<double> &yy, std::vector<double> &zz, const std::vector<double> vx, const std::vector<double> vy, const std::vector<double> vz, const double sigmaV, cosmology::Cosmology &real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int seed=3213);
+  void coord_zSpace (std::vector<double> &ra, std::vector<double> &dec, std::vector<double> &redshift, std::vector<double> &xx, std::vector<double> &yy, std::vector<double> &zz, const std::vector<double> vx, const std::vector<double> vy, const std::vector<double> vz, const double sigmaV, const std::shared_ptr<cbl::cosmology::Cosmology> real_cosm, const double mean_redshift, const double redshift_min, const double redshift_max, const int seed=3213);
 
   /**
    *  @brief create a mock catalogue, subdividing a box into sub-boxes
@@ -378,7 +380,7 @@ namespace cbl {
    *
    *  @param [out] Volume the mock volume
    */
-  void create_mocks (const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const std::vector<double> vx, const std::vector<double> vy, const std::vector<double> vz, const std::vector<double> var1, const std::vector<double> var2, const std::vector<double> var3, const std::string output_dir, const double boxSize, const int frac, const double Bord, const double mean_redshift, cosmology::Cosmology &real_cosm, const int REAL, const double sigmaV, const int idum, double &Volume);
+  void create_mocks (const std::vector<double> xx, const std::vector<double> yy, const std::vector<double> zz, const std::vector<double> vx, const std::vector<double> vy, const std::vector<double> vz, const std::vector<double> var1, const std::vector<double> var2, const std::vector<double> var3, const std::string output_dir, const double boxSize, const int frac, const double Bord, const double mean_redshift, const std::shared_ptr<cbl::cosmology::Cosmology> real_cosm, const int REAL, const double sigmaV, const int idum, double &Volume);
 
   /**
    *  @brief set the object region in sub-boxes
@@ -424,7 +426,7 @@ namespace cbl {
    *  with cbl::catalogue::Catalogue::set\_region(), both
    *  in the input data catalogue and in the random catalogue.
    *
-   *  @author Giorgio Lesci (giorgio.lesci2@unibo.it)
+   *  @author Giorgio Lesci (giorgio.lesci2@unibo.it) and Massimiliano Romanello
    *
    *  @param data input data catalogue
    *
@@ -540,7 +542,7 @@ namespace cbl {
    * field using Nearest Grid Point (NGP) method; 0 \f$ \rightarrow
    * \f$ compute density field using Cloud-in-cell (CIC) method
    */
-  void reconstruction_fourier_space (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool random_RSD, const cosmology::Cosmology cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type=0);
+  void reconstruction_Fourier_space (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool random_RSD, const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type=0);
 
   /**
    * @brief return a sample with objects displaced, according to the
@@ -601,7 +603,7 @@ namespace cbl {
    *
    * @return the best-fit values 
    */
-  std::vector<double> fit_covariance_matrix_2PCF_monopole (const std::vector<double> mean, const std::vector<std::vector<double>> mock_xi0, const bool doJK, const cbl::cosmology::Cosmology cosmology, const double nObjects, const double Volume, const double bias, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const std::string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
+  std::vector<double> fit_covariance_matrix_2PCF_monopole (const std::vector<double> mean, const std::vector<std::vector<double>> mock_xi0, const bool doJK, const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const double nObjects, const double Volume, const double bias, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const std::string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
 
   /**
    * @brief generate mock measurementes 
@@ -639,7 +641,7 @@ namespace cbl {
    *
    * @return the best-fit values 
    */
-  std::shared_ptr<cbl::data::Data> generate_mock_2PCF_monopole (const cbl::cosmology::Cosmology cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const std::string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
+  std::shared_ptr<cbl::data::Data> generate_mock_2PCF_monopole (const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const std::string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
 
   /**
    * @brief generate mock measurementes 
@@ -677,7 +679,7 @@ namespace cbl {
    *
    * @return the best-fit values 
    */
-  std::shared_ptr<cbl::data::Data> generate_mock_2PCF_multipoles (const cbl::cosmology::Cosmology cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const std::string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
+  std::shared_ptr<cbl::data::Data> generate_mock_2PCF_multipoles (const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const double bias, const double nObjects, const double Volume, const double redshift, const double rMin, const double rMax, const int nbins, const cbl::BinType bin_type, const std::string method_Pk="CAMB", const double sigma_NL=0., const bool NL=true);
 
   ///@}
 

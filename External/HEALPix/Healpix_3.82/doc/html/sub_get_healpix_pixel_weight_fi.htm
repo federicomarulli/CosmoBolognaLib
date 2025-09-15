@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>get_healpix_pixel_weight_file,&nbsp;
+get_healpix_weight_file</TITLE>
+<META NAME="description" CONTENT="get_healpix_pixel_weight_file,&nbsp;
+get_healpix_weight_file">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_getArgument.htm">
+<LINK REL="previous" HREF="sub_get_healpix_data_dir_get_he.htm">
+<LINK REL="next" HREF="sub_getArgument.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_get_healpix_data_dir_get_he.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_getArgument.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html379"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_get_healpix_data_dir_get_he.htm">get_healpix_data_dir, get_healpix_main_dir, get_healpix_test_dir</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_getArgument.htm">getArgument</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION3600"></A>
+<A ID="sub:get_healpix_xxx_file"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">get_healpix_weight_file,&nbsp;<SPAN CLASS="MATH"><IMG
+ STYLE="height: 0.23ex; vertical-align: -0.10ex; " SRC="sub_img1.png"
+ ALT="$\ldots $"></SPAN></SPAN></div><hr>
+<H3>Functions are available to return the standardized name of 
+pre-generated FITS files required by some <strong>HEALPix</strong> facilities and subroutines.
+Those files are available in the <SPAN  CLASS="texttt">data</SPAN> subdirectory, whose full path is returned by
+companion functions such as <A HREF="sub_get_healpix_data_dir_get_he.htm#sub:get_healpix_xxx_dir"><SPAN  CLASS="texttt">get_healpix_data_dir</SPAN></A>.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/paramfile_io.F90"><strong>src/f90/mod/paramfile_io.F90</strong></a>&nbsp;  
+
+<P>
+
+<SPAN CLASS="LARGE"><SPAN  CLASS="textbf">FUNCTIONS: </SPAN></SPAN>
+<BR>
+<SPAN style="font-family:monospace">winfile = get_healpix_pixel_window_file(nside)</SPAN> <A ID="sub:get_healpix_xxx_file:ghpwf"></A>
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">returns, for the <SPAN  CLASS="texttt">nside</SPAN> provided, 
+  the name of the FITS file containing the window function associated with the <strong>HEALPix</strong> pixel 
+(of the form <SPAN  CLASS="texttt">pixel_window_n*.fits</SPAN>).</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR><SPAN style="font-family:monospace">w8file = get_healpix_weight_file(nside, won)</SPAN>  <A ID="sub:get_healpix_xxx_file:ghw8f"></A>
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">returns the name of the FITS file containing the
+	ring-based or pixel-based weights for the given <strong>HEALPix</strong> resolution parameter <SPAN  CLASS="texttt">nside</SPAN>. 
+If <SPAN  CLASS="texttt">won</SPAN> <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.10ex; " SRC="sub_img172.png"
+ ALT="$= 1$"></SPAN>, the output of 
+<A HREF="#sub:get_healpix_xxx_file:ghrw8f"><SPAN  CLASS="texttt">get_healpix_ring_weight_file(nside)</SPAN></A> is returned,
+while if <SPAN  CLASS="texttt">won</SPAN> <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.10ex; " SRC="sub_img173.png"
+ ALT="$= 2$"></SPAN>, it is the output of 
+<A HREF="#sub:get_healpix_xxx_file:ghpw8f"><SPAN  CLASS="texttt">get_healpix_pixel_weight_file(nside)</SPAN></A>.
+<SPAN  CLASS="texttt">won</SPAN><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img109.png"
+ ALT="$=0$"></SPAN> will return an empty string, while
+other choices of <SPAN  CLASS="texttt">won</SPAN> will result in errors.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR><SPAN style="font-family:monospace">w8rfile = get_healpix_ring_weight_file(nside)</SPAN> <A ID="sub:get_healpix_xxx_file:ghrw8f"></A>
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">returns, for the <SPAN  CLASS="texttt">nside</SPAN> provided, 
+ the name of the FITS file containing the ring-based weights 
+(of the form <SPAN  CLASS="texttt">weight_ring_n*.fits</SPAN>).</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR><SPAN style="font-family:monospace">w8pfile = get_healpix_pixel_weight_file(nside)</SPAN> <A ID="sub:get_healpix_xxx_file:ghpw8f"></A>
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">returns, for the <SPAN  CLASS="texttt">nside</SPAN> provided, 
+   the name of the FITS file containing the pixel-based weights 
+(of the form <SPAN  CLASS="texttt">weight_pixel_n*.fits</SPAN>). Some of them (for power of 2 <SPAN  CLASS="texttt">nside</SPAN> in <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img174.png"
+ ALT="$[16,2048]$"></SPAN>) 
+are located in the <SPAN  CLASS="texttt">data</SPAN> directory, the
+other ones can be generated with the <SPAN  CLASS="texttt">compute_weights</SPAN> C++ facility.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR>
+
+<P>
+
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_get_healpix_data_dir_get_he.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_getArgument.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html379"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_get_healpix_data_dir_get_he.htm">get_healpix_data_dir, get_healpix_main_dir, get_healpix_test_dir</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_getArgument.htm">getArgument</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

@@ -2,8 +2,12 @@
 // Example code: how to measure the angle-averaged two-point correlation function, estimating the errors with different methods 
 // ============================================================================================================================
 
+#include "LCDM.h"
 #include "TwoPointCorrelation1D_monopole.h"
 #include "GlobalFunc.h"
+
+using namespace std;
+
 
 int main () {
 
@@ -13,9 +17,9 @@ int main () {
     // ---------------- use default cosmological parameters ------------
     // -----------------------------------------------------------------
 
-    const cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
-  
-  
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
+
+    
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------

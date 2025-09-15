@@ -106,9 +106,9 @@ void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_model (c
 // ============================================================================================
 
 
-void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_Q_nonlocal (const cosmology::Cosmology cosmology, const double r1, const double r2, const std::vector<double> theta, const string model, const std::vector<double> kk, const std::vector<double> Pk_matter)
+void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_Q_nonlocal (const std::shared_ptr<cosmology::Cosmology> cosmology, const double r1, const double r2, const std::vector<double> theta, const string model, const std::vector<double> kk, const std::vector<double> Pk_matter)
 {
-  m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  m_data_model.cosmology = move(cosmology);
   m_data_model.r1 = r1;
   m_data_model.r2 = r2;
   m_data_model.theta = theta;
@@ -121,9 +121,9 @@ void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_Q_nonloc
 // ============================================================================================
 
 
-void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_model_zeta_RSD (const double r1, const double r2, const cosmology::Cosmology cosmology, const double redshift, const string method_Pk, const bool NL, const int max_ll, const double k_min, const double k_max, const int step_k, const double r_min, const double r_max, const int step_r, const bool force_realSpace, const bool use_k, const bool store_output, const string output_root, const int norm, const double prec)
+void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_model_zeta_RSD (const double r1, const double r2, const std::shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const string method_Pk, const bool NL, const int max_ll, const double k_min, const double k_max, const int step_k, const double r_min, const double r_max, const int step_r, const bool force_realSpace, const bool use_k, const bool store_output, const string output_root, const int norm, const double prec)
 {
-  m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  m_data_model.cosmology = move(cosmology);
 
   m_data_model.r1 = r1;
   m_data_model.r2 = r2;
@@ -146,15 +146,17 @@ void cbl::modelling::threept::Modelling_ThreePointCorrelation::set_data_model_ze
   m_data_model.max_ll = max_ll; 
   m_data_model.use_k = use_k;
   
+  cosmology::PkXi PX(m_data_model.cosmology);
 
   try {
     m_data_model.sigma8_z = m_data_model.cosmology->sigma8(m_data_model.redshift);
   }
   catch(cbl::glob::Exception &exc) { 
-    coutCBL << "sigma8 is not set, computing from the power spectrum, method_Pk = "+m_data_model.method_Pk << endl; 
-    m_data_model.sigma8_z = m_data_model.cosmology->sigma8_Pk(m_data_model.method_Pk, m_data_model.redshift, m_data_model.store_output, m_data_model.output_root);
+    coutCBL << "sigma8 is not set, computing from the power spectrum, method_Pk = "+m_data_model.method_Pk << endl;
+  
+    m_data_model.sigma8_z = PX.sigma8_Pk(m_data_model.method_Pk, m_data_model.redshift, m_data_model.store_output, m_data_model.output_root);
   }
   m_data_model.linear_growth_rate_z = m_data_model.cosmology->linear_growth_rate(m_data_model.redshift, 1.);
 
-  m_data_model.Pk_matter = m_data_model.cosmology->Pk_matter(m_data_model.kk, m_data_model.method_Pk, m_data_model.NL, m_data_model.redshift, m_data_model.store_output, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec);
+  m_data_model.Pk_matter = PX.Pk_matter(m_data_model.kk, m_data_model.method_Pk, m_data_model.NL, m_data_model.redshift, m_data_model.store_output, m_data_model.output_root, m_data_model.norm, m_data_model.k_min, m_data_model.k_max, m_data_model.prec);
 }

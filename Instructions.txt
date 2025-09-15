@@ -8,7 +8,9 @@
 2) implement the software
 
 3) add the new file(s) in Python/Lib/ required for Swig (if one or
-   more new classes are implemented)
+   more new classes are implemented); if the added file is an header
+   file (i.e. .h), add it also in Headers/CBL.h; update the local em
+   and vm scripts
 
 4) test the new software on local environment, both in C++ and Python
 
@@ -17,7 +19,9 @@
 
 6) update test.py, adding the command for the new example(s)
 
-7) run one of the following commands
+7) add new unit tests in UnitTests/
+
+8) run one of the following commands
 
    - for one or more C++ examples:
      ./test.py valgrind C++ new_example1 new_example2 ...
@@ -46,4 +50,4 @@
    commands, and/or one or more of the following options can be added
    (in any order): nocompile nopy nodoc
 
-8) if everything is OK, push the new code into the DIFA git repository!
+9) if everything is OK, push the new code into the DIFA git repository!

@@ -10,7 +10,8 @@ import os
 import matplotlib.pyplot as plt
 
 # set the cosmological model 
-cosmology = cbl.Cosmology(cbl.CosmologicalModel__Planck18_)
+cosmology = cbl.LCDM("Planck18")
+PX = cbl.PkXi(cosmology)
 
 # compute the linear growth rate at z=1
 redshift = 1.
@@ -24,7 +25,7 @@ kk = np.logspace(-4, 2, 500)
 rr = np.linspace(1, 150, 100)
 
 # compute the matter power spectrum
-Pk = cosmology.Pk_matter(kk, "CAMB", False, redshift)
+Pk = PX.Pk_matter(kk, "CAMB", False, redshift)
 interpPk = cbl.FuncGrid(dv(kk), dv(Pk), "Spline")
 
 # set the redshift errors
@@ -42,7 +43,7 @@ ax.set_xscale("log")
 ax.set_yscale("log")
 
 for ss in SigmaZ:
-   SigmaS = cbl.cc*ss*(1.+redshift)/cosmology.HH(redshift)
+   SigmaS = cbl.cc*ss*(1.+redshift)/cosmology.Hubble(redshift)
    xi = cbl.damped_Xi(dv(rr), bias, linear_growth_rate, SigmaS, dv(kk), interpPk)
 
    ax.plot(rr, xi, label=r"$\sigma_z = %g$"%ss)

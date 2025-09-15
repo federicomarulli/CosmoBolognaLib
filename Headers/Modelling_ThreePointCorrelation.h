@@ -35,7 +35,6 @@
 #ifndef __MODELLINGTHREEPOINT__
 #define __MODELLINGTHREEPOINT__
 
-
 #include "ThreePointCorrelation.h"
 #include "Modelling.h"
 #include "ModelFunction_ThreePointCorrelation.h"
@@ -110,13 +109,13 @@ namespace cbl {
 	 *  @brief static factory used to construct modelling of 
 	 *  three-point correlation functions of any type
 	 *
-	 *  @param threep the three-point correlation function to
+	 *  @param threept the three-point correlation function to
 	 *  model
 	 *
 	 *  @return a pointer to an object of class 
 	 *  Modelling_ThreePointCorrelation of a given type
 	 */
-	static std::shared_ptr<Modelling_ThreePointCorrelation> Create (const std::shared_ptr<measure::threept::ThreePointCorrelation> threep);
+	static std::shared_ptr<Modelling_ThreePointCorrelation> Create (const std::shared_ptr<measure::threept::ThreePointCorrelation> threept);
 
 	/**
 	 *  @brief static factory used to construct modelling of 
@@ -140,7 +139,8 @@ namespace cbl {
 	 *  @brief return the type of correlation function
 	 *  @return the type of correlation function
 	 */
-	measure::threept::ThreePType threePType () { return m_threePType; }
+	measure::threept::ThreePType threePType ()
+	{ return m_threePType; }
 
 
 	// ============================================================================================
@@ -220,7 +220,7 @@ namespace cbl {
          *
 	 *  
 	 */
-	void set_data_model_zeta_RSD (const double r1, const double r2, const cbl::cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk="CAMB", const bool NL=false, const int max_ll=5, const double k_min=1.e-4, const double k_max=100, const int step_k=500, const double r_min=1.e-4, const double r_max=200, const int step_r=200, const bool force_realSpace=false, const bool use_k=false, const bool store_output=true, const std::string output_root=cbl::par::defaultString, const int norm=-1, const double prec=1.e-4);
+	void set_data_model_zeta_RSD (const double r1, const double r2, const std::shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const std::string method_Pk="CAMB", const bool NL=false, const int max_ll=5, const double k_min=1.e-4, const double k_max=100, const int step_k=500, const double r_min=1.e-4, const double r_max=200, const int step_r=200, const bool force_realSpace=false, const bool use_k=false, const bool store_output=true, const std::string output_root=cbl::par::defaultString, const int norm=-1, const double prec=1.e-4);
 
 	/**
 	 *  @brief set the data model for the three-point correlation
@@ -238,12 +238,12 @@ namespace cbl {
 	 *
 	 *  @param kk vector containing wavevector moduls
 	 *
-	 *  @param Pk_matter vector containing the theoretical dark matter 
-         *  power-spectrum
+	 *  @param Pk_matter vector containing the theoretical dark
+         *  matter power-spectrum
 	 *
 	 *  
 	 */
-	void set_data_Q_nonlocal (const cosmology::Cosmology cosmology, const double r1, const double r2, const std::vector<double> theta, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter);
+	void set_data_Q_nonlocal (const std::shared_ptr<cosmology::Cosmology> cosmology, const double r1, const double r2, const std::vector<double> theta, const std::string model, const std::vector<double> kk, const std::vector<double> Pk_matter);
 
       };
     }

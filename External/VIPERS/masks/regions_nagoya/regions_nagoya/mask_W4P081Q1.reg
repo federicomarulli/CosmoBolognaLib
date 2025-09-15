@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileeDiIHW.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(330.194624,2.238053,330.310574,2.238250,330.310844,2.244228,330.310784,2.294778,330.306864,2.315820,330.308364,2.327850,330.310814,2.333077,330.310904,2.362287,330.302004,2.369039,330.210664,2.369131,330.198724,2.363183,330.194184,2.357666) # color=red dash=1

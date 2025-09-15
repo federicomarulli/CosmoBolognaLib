@@ -34,7 +34,7 @@
 #ifndef __MODFUNCTHREEP__
 #define __MODFUNCTHREEP__
 
-#include "Cosmology.h"
+#include "3PCF.h"
 
 
 // ============================================================================
@@ -60,7 +60,7 @@ namespace cbl {
 	std::vector<double> Q_DM;
 
 	/// cosmology
-	std::shared_ptr<cosmology::Cosmology> cosmology;
+	std::shared_ptr<cosmology::Cosmology> cosmology;	
 
 	/// 1st side of the triangle
 	double r1;

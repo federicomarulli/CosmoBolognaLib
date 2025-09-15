@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>get_card</TITLE>
+<META NAME="description" CONTENT="get_card">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_get_healpix_data_dir_get_he.htm">
+<LINK REL="previous" HREF="sub_generate_beam.htm">
+<LINK REL="next" HREF="sub_get_healpix_data_dir_get_he.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_generate_beam.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_get_healpix_data_dir_get_he.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html375"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_generate_beam.htm">generate_beam</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_get_healpix_data_dir_get_he.htm">get_healpix_data_dir, get_healpix_main_dir, get_healpix_test_dir</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION3400"></A>
+<A ID="sub:get_card"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">get_card</SPAN></div><hr>
+<H3>This routine reads a keyword of any kind from a FITS header. It is a wrapper to
+other routines that read keywords of different kinds.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/head_fits.F90"><strong>src/f90/mod/head_fits.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">get_card</SPAN>(
+<A HREF="#sub:get_card:header">header</A>, <A HREF="#sub:get_card:kwd">kwd</A>, <A HREF="#sub:get_card:value">value</A>, <A HREF="#sub:get_card:comment">comment</A>
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">
+header<A ID="sub:get_card:header"></A>(LEN=80) DIMENSION(:)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">The header to read the keyword from.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">kwd<A ID="sub:get_card:kwd"></A>(LEN=8)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the FITS keyword to read (NOT case sensitive).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">value<A ID="sub:get_card:value"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">any</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the value read for the keyword. 
+The type of the fortran variable 'value' (double, real, integer, logical or
+                   character) should match the type under which the
+                   value is written in the FITS file, except if
+                   'value' is a character string, in which case it can read any
+                   keyword value, or if 'value' if real or double, in which case
+                   it can read any numerical value. Note that long string values
+(more than 68 characters in length) are supported.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">comment<A ID="sub:get_card:comment"></A>(LEN=*)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">comment read for the keyword.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">call get_card(header,'NsIdE',nside,comment)  
+<BR></div>
+<blockquote>
+if <SPAN style="font-family:monospace">nside</SPAN> is defined as an integer, it
+will contain on output the value of NSIDE (say 256) found in header
+</blockquote>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">call get_card(header,'ORDERING',ordering,comment)  
+<BR></div>
+<blockquote>
+if <SPAN style="font-family:monospace">ordering</SPAN> is defined as an character string, it
+will contain on output the value of ORDERING (say 'RING') found in header
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">get_card</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">cfitsio</SPAN></B>
+<DD>library for FITS file handling.		
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">get_card</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_add_card.htm#sub:add_card">add_card</A></B>
+<DD>general purpose routine to write any keywords into a FITS
+  file header
+  <DT>
+<B><A HREF="sub_del_card.htm#sub:del_card">del_card</A></B>
+<DD>routine to discard a keyword from a FITS header
+  <DT>
+<B><A HREF="sub_read_par.htm#sub:read_par">read_par</A>, <A HREF="sub_number_of_alms.htm#sub:number_of_alms">number_of_alms</A></B>
+<DD>routines to read specific keywords from a
+  header in a FITS file.
+  <DT>
+<B><A HREF="sub_getsize_fits.htm#sub:getsize_fits">getsize_fits</A></B>
+<DD>function returning the size of the data set in a fits
+  file and reading some other useful FITS keywords
+  <DT>
+<B><A HREF="sub_merge_headers.htm#sub:merge_headers">merge_headers</A></B>
+<DD>routine to merge two FITS headers
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_generate_beam.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_get_healpix_data_dir_get_he.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html375"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_generate_beam.htm">generate_beam</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_get_healpix_data_dir_get_he.htm">get_healpix_data_dir, get_healpix_main_dir, get_healpix_test_dir</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

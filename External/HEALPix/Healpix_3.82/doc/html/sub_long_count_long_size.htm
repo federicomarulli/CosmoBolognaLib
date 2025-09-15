@@ -1,0 +1,216 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>long_count,&nbsp;long_size</TITLE>
+<META NAME="description" CONTENT="long_count,&nbsp;long_size">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_map2alm.htm">
+<LINK REL="previous" HREF="sub_input_tod.htm">
+<LINK REL="next" HREF="sub_map2alm.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_input_tod.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_map2alm.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html401"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_input_tod.htm">input_tod*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_map2alm.htm">map2alm*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4700"></A>
+<A ID="sub:long_intrinsic"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">long_count,&nbsp;long_size</SPAN></div><hr>
+<H3>The Fortran90 module <SPAN style="font-family:monospace">long_intrinsic</SPAN> contains a subset of  
+intrinsic functions (currently <SPAN style="font-family:monospace">count</SPAN> and <SPAN style="font-family:monospace">size</SPAN>) compiled so that they return <A HREF="sub_healpix_types_module.htm#sub:healpix_types">I8B</A> variables
+instead of the default integer (generally <A HREF="sub_healpix_types_module.htm#sub:healpix_types">I4B</A>),
+therefore allowing the handling of arrays with more than <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.29ex; " SRC="sub_img204.png"
+ ALT="$2^{31}-1$"></SPAN>
+elements.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/long_intrinsic.F90"><strong>src/f90/mod/long_intrinsic.F90</strong></a>&nbsp;  
+
+<P>
+
+<SPAN CLASS="LARGE"><SPAN  CLASS="textbf">FUNCTIONS: </SPAN></SPAN>
+<BR>
+<SPAN style="font-family:monospace"><A HREF="#sub:long_intrinsic:cnt">cnt</A> = long_count(<A HREF="#sub:long_intrinsic:mask1">mask1</A>)</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">returns the I8B integer value that is
+the number of elements of the logical array <SPAN style="font-family:monospace">mask1</SPAN> that have the value <SPAN style="font-family:monospace">true</SPAN>.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<P>
+<SPAN style="font-family:monospace"><A HREF="#sub:long_intrinsic:sz">sz</A> = long_size(<A HREF="#sub:long_intrinsic:array1">array1</A> 
+[,<A HREF="#sub:long_intrinsic:dim">dim</A>])</SPAN> 
+<BR><SPAN style="font-family:monospace"><A HREF="#sub:long_intrinsic:sz">sz</A> = long_size(<A HREF="#sub:long_intrinsic:array2">array2</A> 
+[,<A HREF="#sub:long_intrinsic:dim">dim</A>])</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">returns the I8B integer value that is
+the size of the 1D array <SPAN style="font-family:monospace">array1</SPAN> or 2D array <SPAN style="font-family:monospace">array2</SPAN> or their
+extent along the dimension <SPAN style="font-family:monospace">dim</SPAN> if the scalar integer <SPAN style="font-family:monospace">dim</SPAN> is provided.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:235px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+cnt <A ID="sub:long_intrinsic:cnt"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">number of elements with value <SPAN style="font-family:monospace">true</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">sz <A ID="sub:long_intrinsic:sz"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">size or extent of array</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">mask1(:) <A ID="sub:long_intrinsic:mask1"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">LGT</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">1D logical array</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">array1(:) <A ID="sub:long_intrinsic:array1"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B/ I8B/ SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">1D integer or real array</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">array2(:,:) <A ID="sub:long_intrinsic:array2"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B/ I8B/ SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">2D integer or real array</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">dim <A ID="sub:long_intrinsic:dim"></A>   (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">dimension (starting at 1) along which the array
+extent is measured.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use <A HREF="sub_healpix_modules_module.htm#sub:healpix_modules">healpix_modules</A> 
+<BR>
+real(SP), dimension(:,:), allocatable :: bigarray 
+<BR>
+allocate(bigarray(2_i8b**31+5, 3)) 
+<BR>
+print*,       size(bigarray),       size(bigarray,1),       size(bigarray,dim=2) 
+<BR>
+print*, long_size(bigarray), long_size(bigarray,1), long_size(bigarray,dim=2) 
+<BR>
+deallocate(bigarray)</div>
+<blockquote>Will return (with default compilation options)
+<PRE><TT>
+     -2147483633 -2147483643  3 
+<BR>
+6442450959 		 2147483653 		 3
+</TT></PRE>
+meaning that <SPAN style="font-family:monospace">long_size</SPAN> handles correctly this large array while by default
+<SPAN style="font-family:monospace">size</SPAN> does not.</blockquote>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_input_tod.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_map2alm.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html401"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_input_tod.htm">input_tod*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_map2alm.htm">map2alm*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

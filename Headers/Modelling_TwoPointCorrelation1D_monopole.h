@@ -27,9 +27,9 @@
  *  Modelling_TwoPointCorrelation1D_monopole, used to model the monopole
  *  of two-point correlation function
  *
- *  @author Federico Marulli, Alfonso Veropalumbo
+ *  @author Federico Marulli, Alfonso Veropalumbo, Massimiliano Romanello
  *
- *  @author federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it
+ *  @author federico.marulli3@unibo.it, alfonso.veropalumbo@unibo.it, massimilia.romanell2@unibo.it
  */
 
 #ifndef __MODELLINGTWOPOINTMON__
@@ -162,7 +162,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_bias_eff_grid (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<double> min_par, const std::vector<double> max_par, const std::vector<int> nbins_par, const std::string dir, const std::string file_grid_bias);
+	void set_bias_eff_grid (const std::vector<std::string> cosmo_param, const std::vector<double> min_par, const std::vector<double> max_par, const std::vector<int> nbins_par, const std::string dir, const std::string file_grid_bias);
 
 	/**
 	 *  @brief set a grid with effective bias values estimating
@@ -194,7 +194,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_bias_eff_grid (const std::string file_selection_function, const std::vector<int> column, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<double> min_par, const std::vector<double> max_par, const std::vector<int> nbins_par, const std::string dir, const std::string file_grid_bias);
+	void set_bias_eff_grid (const std::string file_selection_function, const std::vector<int> column, const std::vector<std::string> cosmo_param, const std::vector<double> min_par, const std::vector<double> max_par, const std::vector<int> nbins_par, const std::string dir, const std::string file_grid_bias);
 	
 	/**
 	 *  @brief set the model to fit the full shape of the monopole
@@ -334,6 +334,34 @@ namespace cbl {
 	void set_model_sigma8_bias (const statistics::PriorDistribution sigma8_prior={}, const statistics::PriorDistribution bias_prior={});
 	
 	/**
+	 *  @brief set the model to fit the monopole of the two-point
+	 *  correlation function in real space
+	 *
+	 *  the model is the following:
+	 *
+	 *  \f[\xi_0(r) = b^2 \cdot \xi_{\rm DM}(r)\f]
+	 *
+	 *  the model has 1+N parameters: 
+	 *    - bias
+	 *    - N cosmological paramters
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters
+	 *
+	 *  @param bias_prior prior for the parameter
+	 *  \f$b_{\rm eff}\f$
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param cosmo_param_prior vector containing the priors for
+	 *  the cosmological parameters
+	 *
+	 *  
+	 */
+	void set_model_realSpace (const statistics::PriorDistribution bias_prior={}, const std::vector<std::string> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
+	
+	/**
 	 *  @brief set the model to fit the full shape of the monopole
 	 *  of the two-point correlation function
 	 *
@@ -361,7 +389,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_model_linear_bias_cosmology (const statistics::PriorDistribution bias_prior={}, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
+	void set_model_linear_bias_cosmology (const statistics::PriorDistribution bias_prior={}, const std::vector<std::string> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
 	
         /**
 	 *  @brief set the model to fit the full shape of the monopole
@@ -429,7 +457,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_model_linear_cosmology_clusters_grid (const cbl::cosmology::CosmologicalParameter cosmo_param, const statistics::PriorDistribution cosmo_param_prior, const std::string dir, const std::string file_grid_bias, const double min_par, const double max_par, const int nbins_par, const std::string file_selection_function=par::defaultString, const std::vector<int> column={0, 1, 2});
+	void set_model_linear_cosmology_clusters_grid (const std::string cosmo_param, const statistics::PriorDistribution cosmo_param_prior, const std::string dir, const std::string file_grid_bias, const double min_par, const double max_par, const int nbins_par, const std::string file_selection_function=par::defaultString, const std::vector<int> column={0, 1, 2});
 		
 	/**
 	 *  @brief set the model to fit the full shape of the monopole
@@ -486,7 +514,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_model_linear_cosmology_clusters_grid (const cbl::cosmology::CosmologicalParameter cosmo_param1, const statistics::PriorDistribution cosmo_param_prior1, const cbl::cosmology::CosmologicalParameter cosmo_param2, const statistics::PriorDistribution cosmo_param_prior2, const std::string dir, const std::string file_grid_bias, const double min_par1, const double max_par1, const int nbins_par1, const double min_par2, const double max_par2, const int nbins_par2, const std::string file_selection_function=par::defaultString, const std::vector<int> column={0, 1, 2});
+	void set_model_linear_cosmology_clusters_grid (const std::string cosmo_param1, const statistics::PriorDistribution cosmo_param_prior1, const std::string cosmo_param2, const statistics::PriorDistribution cosmo_param_prior2, const std::string dir, const std::string file_grid_bias, const double min_par1, const double max_par1, const int nbins_par1, const double min_par2, const double max_par2, const int nbins_par2, const std::string file_selection_function=par::defaultString, const std::vector<int> column={0, 1, 2});
 	
 	/**
 	 *  @brief set the model to fit the full shape of the monopole
@@ -513,7 +541,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_model_linear_cosmology_cluster_selection_function (const statistics::PriorDistribution alpha_prior, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior);
+	void set_model_linear_cosmology_cluster_selection_function (const statistics::PriorDistribution alpha_prior, const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior);
 
 	
 	/**
@@ -542,7 +570,145 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_model_linear_cosmology_clusters (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
+	void set_model_linear_cosmology_clusters (const std::vector<std::string> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
+	
+	/**
+	 *  @brief set the model to fit the full shape of the monopole
+	 *  of the two-point correlation function with cluster masses
+	 *  provided in input
+	 *
+	 *  the model is the following:
+	 *
+	 *  \f[\xi_0(s) = b^2 \left[ 1 + \frac{2 \beta}{3}
+	 *  \cdot + \frac{\beta^2}{5} \right] \cdot
+	 *  \xi_{\rm DM}(s)\f]
+	 *
+	 *  with \f[\beta=f/b\f]. 
+	 *
+	 *  The model has N cosmological parameters.
+	 *  The bias is considered a derived parameter, from cosmology.
+	 *
+	 *  the dark matter two-point correlation function is computed
+	 *  using the input cosmological parameters; the linear
+	 *  effective bias is computed theoretically for each cosmology in two ways: 
+	 *  using the provided halo masses with cbl::cosmology::bias_eff_mass, 
+	 *  or with cbl::cosmology::bias_eff_selection_function
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param cosmo_param_prior vector containing the priors for
+	 *  the cosmological parameters
+	 *
+	 *  
+	 */
+	void set_model_linear_theoretical_bias (const std::vector<std::string> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
+
+	/**
+	 *  @brief set the model to fit the full shape of the monopole
+	 *  of the two-point correlation function with cluster masses
+	 *  provided in input
+	 *
+	 *  the model is the following:
+	 *
+	 *  \f[\xi_0(s) = b^2 \left[ 1 + \frac{2 \beta}{3}
+	 *  \cdot + \frac{\beta^2}{5} \right] \cdot
+	 *  \xi_{\rm DM}(s, \Sigma_{NL}) \f]
+	 *
+	 *  with \f$\beta=f/b\f$. 
+	 *  Redshift space distorsion are modelled in the Kaiser limit, 
+	 *  if the user chooses redshift space in set_data_model_bias.
+	 *  Otherwise, they are neglected. Photometric errors are modelled
+	 *  with a Gaussian damping factor:
+	 *
+	 *   \f[ P(k, \mu)=P(k)\, b_\mathrm{eff}^2
+	 *   \left(1+\frac{f}{b_\mathrm{eff}} \mu^2\right)^2 \mathrm{exp}(-k^2\mu^2\sigma^2) , \f]
+	 *
+	 *  where \f$\sigma=\frac{c\sigma_z}{H(z)}\f$.
+	 *  We account for the nonlinear damping at the BAO peak:
+	 *
+	 *  \f[ P(k)=[P_\mathrm{lin}(k)-P_\mathrm{nw}(k)]e^{-k^2\Sigma^2_{\mathrm{NL}}/2}+P_\mathrm{nw}(k), \f]
+	 *
+	 *  where \f$P_\mathrm{lin}\f$ is the linear power spectrum
+	 *  and \f$P_\mathrm{nw}\f$ is the de-wiggled power spectrum,
+	 *  computed with the parametrisation of Eiseinstein_Hu. 
+	 *
+	 *  The model has N cosmological parameters, plus: 
+	 *    - \f$\Sigma_{NL}\f$ damping at BAO
+	 *
+	 *  The linear effective bias is considered a derived parameter,
+	 *  from cosmology, and computed from the input cluster masses
+	 *  in two ways: 
+	 *  using the provided halo masses with cbl::cosmology::bias_eff_mass
+	 *  or with cbl::cosmology::bias_eff_selection_function
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param cosmo_param_prior vector containing the priors for
+	 *  the cosmological parameters
+	 *
+	 *  @param sigmaNL_prior prior for the parameter \f$\Sigma_{NL}\f$
+	 *  
+	 */
+	void set_model_linear_theoretical_bias_BAO (const std::vector<std::string> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={}, const statistics::PriorDistribution sigmaNL_prior={});
+
+	/**
+	 *  @brief set the model to fit the full shape of the monopole
+	 *  of the two-point correlation function with cluster masses
+	 *  provided in input
+	 *
+	 *  the model is the following:
+	 *
+	 *  \f[\xi_0(s) = b^2 \left[ 1 + \frac{2 \beta}{3}
+	 *  \cdot + \frac{\beta^2}{5} \right] \cdot
+	 *  \xi_{\rm DM}(s, \Sigma_{NL})\ + A_0 + A_1/s
+	 *  +A_2/s^2\f]
+	 *
+	 *  with \f$\beta=f/b\f$. 
+	 *  Redshift space distorsion are modelled in the Kaiser limit, 
+	 *  if the user chooses redshift space in set_data_model_bias.
+	 *  Otherwise, they are neglected. Photometric errors are modelled
+	 *  with a Gaussian damping factor:
+	 *
+	 *   \f[ P(k, \mu)=P(k)\, b_\mathrm{eff}^2
+	 *   \left(1+\frac{f}{b_\mathrm{eff}} \mu^2\right)^2 \mathrm{exp}(-k^2\mu^2\sigma^2) , \f]
+	 *
+	 *  where \f$\sigma=\frac{c\sigma_z}{H(z)}\f$.
+	 *  We account for the nonlinear damping at the BAO peak:
+	 *
+	 *  \f[ P(k)=[P_\mathrm{lin}(k)-P_\mathrm{nw}(k)]e^{-k^2\Sigma^2_{\mathrm{NL}}/2}+P_\mathrm{nw}(k), \f]
+	 *
+	 *  where \f$P_\mathrm{lin}\f$ is the linear power spectrum
+	 *  and \f$P_\mathrm{nw}\f$ is the de-wiggled power spectrum,
+	 *  computed with the parametrisation of Eiseinstein_Hu. 
+	 *
+	 *  The model has N cosmological parameters, plus: 
+	 *    - \f$A_0, A_1, A2\f$ parameters of the polynomial
+	 *    - \f$\Sigma_{NL}\f$ damping at BAO
+	 *
+	 *  The linear effective bias is considered a derived parameter,
+	 *  from cosmology, and computed from the input cluster masses
+	 *  in two ways: 
+	 *  using the provided halo masses with cbl::cosmology::bias_eff_mass
+	 *  or with cbl::cosmology::bias_eff_selection_function
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param cosmo_param_prior vector containing the priors for
+	 *  the cosmological parameters
+	 *
+	 *  @param sigmaNL_prior prior for the parameter \f$\Sigma_{NL}\f$
+	 *
+	 *  @param A0_prior prior for the parameter \f$A_0\f$
+	 *
+	 *  @param A1_prior prior for the parameter \f$A_1\f$
+	 *
+	 *  @param A2_prior prior for the parameter \f$A_2\f$
+	 *  
+	 */
+	void set_model_linear_theoretical_bias_BAO_poly (const std::vector<std::string> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={}, const statistics::PriorDistribution sigmaNL_prior={}, const statistics::PriorDistribution A0_prior={}, const statistics::PriorDistribution A1_prior={}, const statistics::PriorDistribution A2_prior={});
 	
 	/**
 	 *  @brief set the function to model the monopole of the
@@ -694,7 +860,7 @@ namespace cbl {
 	 *  \f$\xi''(r)\f$, \f$\xi'''(r)\f$ are the Fourier
 	 *  anti-transform of the power spectrum terms obtained
 	 *  integrating the redshift space 2D power spectrum along
-	 *  \f$\mu\f$ (see cbl::modelling::twopt.:damped_Pk_terms)
+	 *  \f$\mu\f$ (see cbl::modelling::powspec::damped_Pk_terms)
 	 *
 	 *  @param bias_prior prior for the parameter bias
 	 *  \f$b(z)\f$
@@ -721,7 +887,7 @@ namespace cbl {
 	 *  \f$\xi''(r)\f$, \f$\xi'''(r)\f$ are the Fourier
 	 *  anti-transform of the power spectrum terms obtained
 	 *  integrating the redshift space 2D power spectrum along
-	 *  \f$\mu\f$ (see cbl::modelling::twopt.:damped_Pk_terms)
+	 *  \f$\mu\f$ (see cbl::modelling::powspec::damped_Pk_terms)
 	 *
 	 *  @param M0_prior prior for the parameter \f$M_0\f$, the
 	 *  intercept of the scaling relation
@@ -787,7 +953,7 @@ namespace cbl {
 	 *  \f$\xi''(r)\f$, \f$\xi'''(r)\f$ are the Fourier
 	 *  anti-transform of the power spectrum terms obtained
 	 *  integrating the redshift space 2D power spectrum along
-	 *  \f$\mu\f$ (see cbl::modelling::twopt.:damped_Pk_terms)
+	 *  \f$\mu\f$ (see cbl::modelling::powspec::damped_Pk_terms)
 	 *
 	 *  @param cosmo_param vector of enums containing cosmological
 	 *  parameters
@@ -817,14 +983,15 @@ namespace cbl {
 	 *  redshift-dependent term of the intrinsic scatter, \f$ e_z \f$
 	 *
 	 *  @param sigmaz_prior prior for the parameter
-	 *  \f$\sigma_z(z)\f$
+	 *  \f$\sigma_z(z)\f$. If the photometric error has a (1+z) dependence, 
+	 *  specify it in the input.  
 	 *
 	 *  @param z_evo functional form of the redshift evolution
 	 *  function in the scaling relation. See the documentation
 	 *  of cbl::modelling::massobsrel::Modelling_MassObservableRelation
 	 *  
 	 */
-	void set_model_scaling_relation_sigmaz_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution sigmaz_prior, const std::string z_evo);
+	void set_model_scaling_relation_sigmaz_cosmology (const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution sigmaz_prior, const std::string z_evo);
 
 	///@}
 

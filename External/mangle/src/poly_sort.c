@@ -1,23 +1,26 @@
 /*------------------------------------------------------------------------------
-© M E C Swanson 2005
+ï¿½ M E C Swanson 2005
 ------------------------------------------------------------------------------*/
 #include <stdlib.h>
 #include "manglefn.h"
 
 /*polygon comparison functions*/
-int poly_cmp_pixel(polygon **poly1, polygon **poly2)
+int poly_cmp_pixel(const void *poly1, const void *poly2)
 {
-  int pixel=(*poly1)->pixel - (*poly2)->pixel;
+  polygon **p1 = poly1, **p2 = poly2;
+  int pixel=(*p1)->pixel - (*p2)->pixel;
   return(pixel);
 }
-int poly_cmp_id(polygon **poly1, polygon **poly2)
+int poly_cmp_id(const void *poly1, const void *poly2)
 {
-  int id=(*poly1)->id - (*poly2)->id;
+  polygon **p1 = poly1, **p2 = poly2;
+  int id=(*p1)->id - (*p2)->id;
   return(id);
 }
-int poly_cmp_weight(polygon **poly1, polygon **poly2)
+int poly_cmp_weight(const void *poly1, const void *poly2)
 {
-  long double weight=(*poly1)->weight - (*poly2)->weight;
+  polygon **p1 = poly1, **p2 = poly2;
+  long double weight=(*p1)->weight - (*p2)->weight;
   return(weight);
 }
 

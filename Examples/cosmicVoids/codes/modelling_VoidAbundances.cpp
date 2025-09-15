@@ -3,7 +3,7 @@
 // extracting constraints on the cosmological parameters of the model
 // ==================================================================
 
-#include "Cosmology.h"
+#include "LCDM.h"
 #include "Catalogue.h"
 #include "Posterior.h"
 #include "NumberCounts1D_Size.h"
@@ -17,7 +17,7 @@ int main () {
   try {
 
     // --- set the input/output file/directories ---
-    const std::string dir = "../output/";
+    const string dir = "../output/";
     const string file_output_start = "model_starting_values.dat";
     const string file_output_bestfit = "model_bestfit.dat";
 
@@ -27,13 +27,13 @@ int main () {
     // ------------------------------------------
 
     // ASCII void catalogue 
-    std::string file_voids_in = "../input/cleaned_void_catalogue.out";
+    string file_voids_in = "../input/cleaned_void_catalogue.out";
 
-    // std::vector containing the variable name list to read from file
-    std::vector<cbl::catalogue::Var> var_names_voids = {cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_, cbl::catalogue::Var::_Radius_};
+    // vector containing the variable name list to read from file
+    vector<cbl::catalogue::Var> var_names_voids = {cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_, cbl::catalogue::Var::_Radius_};
     
-    // std::vector containing the columns corresponding to each attribute
-    std::vector<int> columns_voids = {1, 2, 3, 4};
+    // vector containing the columns corresponding to each attribute
+    vector<int> columns_voids = {1, 2, 3, 4};
     
     // catalogue constructor
     cbl::catalogue::Catalogue void_catalogue {cbl::catalogue::ObjectType::_Void_, cbl::CoordinateType::_comoving_, var_names_voids, columns_voids, {file_voids_in}, 0};
@@ -65,9 +65,6 @@ int main () {
 
     
     // --- set the model to construct the likelihood ---
-
-    // names of the cosmological model parameters
-    const vector<string> cosmo_parNames = {"sigma8", "Omega_matter"};
     
     // starting values
     double val_s8 = 0.809;
@@ -76,22 +73,21 @@ int main () {
     // set the cosmological parameters
     const double OmegaM = 0.2711;
     const double Omega_b = 0.0451;
-    const double Omega_nu = 0.;
-    const double massless_neutrinos = 3.04;
-    const int massive_neutrinos = 0;
-    const double OmegaL = 0.7289;
     const double Omega_radiation = 0.;
-    const double hh = 0.703;
+    const double little_h = 0.703;
     const double scalar_amp = 2.194e-9;
     const double scalar_pivot = 0.05;
     const double n_s =  0.96;
-    const double w0 = -1.;
-    const double wa = 0.;
-    cbl::cosmology::Cosmology cosmology(OmegaM, Omega_b, Omega_nu, massless_neutrinos, massive_neutrinos, OmegaL, Omega_radiation, hh, scalar_amp, scalar_pivot, n_s, w0, wa);
-    cosmology.set_sigma8(0.809);   
-    const double redshift = 0.00;
+    const double tau = 0.089;
     
-    vector<cbl::cosmology::CosmologicalParameter> ModelCosmoPar = cbl::cosmology::CosmologicalParameterCast(cosmo_parNames);
+    auto cosmology = make_shared<cbl::cosmology::LCDM>(OmegaM, Omega_b, Omega_radiation, little_h, scalar_amp, scalar_pivot, n_s, tau, true);
+    cosmology->set_parameter("sigma8",0.809);
+    
+    const double redshift = 0.00;
+
+    
+    // names of the cosmological model parameters
+    const vector<string> ModelCosmoPar = {"sigma8", "Omega_CDM"};
     
     // set the limits for the cosmological parameters
     const double min_s8 = 0.6, max_s8 = 0.9;
@@ -115,7 +111,7 @@ int main () {
     double val_slp = 0.85676;                  // the slope of the linear relation
     double val_offs = 0.42153;                 // the offset of the linear relation
     double del_vNL = -0.7;                     // the linear underdensity threshold
-    double del_c = cosmology.deltac(redshift); // the linear overdensity threshold 
+    double del_c = cosmology->deltac(redshift); // the linear overdensity threshold 
     model_SF.set_data_model_SF(cosmology, size, redshift, "Vdn", val_beff, val_slp, val_offs, del_vNL, del_c);
     model_SF.set_model_NumberCounts_cosmology(ModelCosmoPar, prior_cosmoPar);
 

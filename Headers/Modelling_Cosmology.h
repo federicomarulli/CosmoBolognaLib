@@ -74,7 +74,7 @@ namespace cbl {
 	std::shared_ptr<cbl::cosmology::Cosmology> m_cosmology;
 
 	/// map with cosmological parameters
-	std::map<cbl::cosmology::CosmologicalParameter, int> m_map_cosmoPar;
+	std::map<std::string, int> m_map_cosmoPar;
 
 	/// the cosmological measurements
 	std::vector<std::string> m_data_type;
@@ -117,7 +117,7 @@ namespace cbl {
 	 *
 	 *  @param cosmology the fiducial cosmology
 	 */
-	void set_fiducial_cosmology (const cbl::cosmology::Cosmology cosmology);
+	void set_fiducial_cosmology (const std::shared_ptr<cosmology::Cosmology>cosmology);
 
 	/**
 	 *  @brief set the fiducial cosmology
@@ -125,7 +125,7 @@ namespace cbl {
 	 *  @return pointer to object of class Cosmology
 	 */
 	std::shared_ptr<cbl::cosmology::Cosmology> fiducial_cosmology ()
-	{ return m_cosmology; }
+	{ return move(m_cosmology); }
 
 	/**
 	 *  @brief set the cosmological parameters
@@ -140,7 +140,7 @@ namespace cbl {
 	 *
 	 *  @param external_dataset external dataset file name
 	 */
-	void set_cosmological_parameters (const std::vector<cbl::cosmology::CosmologicalParameter> cosmoPar_name, const std::vector<cbl::statistics::PriorDistribution> cosmoPar_prior, const std::string distance_prior=par::defaultString, const std::vector<std::string> external_dataset={});
+	void set_cosmological_parameters (const std::vector<std::string> cosmoPar_name, const std::vector<cbl::statistics::PriorDistribution> cosmoPar_prior, const std::string distance_prior=par::defaultString, const std::vector<std::string> external_dataset={});
 
       };
     }

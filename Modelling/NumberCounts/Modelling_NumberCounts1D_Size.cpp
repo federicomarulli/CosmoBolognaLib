@@ -47,7 +47,7 @@ using namespace modelling::numbercounts;
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Size::set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_params, const std::vector<statistics::PriorDistribution> cosmo_param_priors)
+void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Size::set_model_NumberCounts_cosmology (const std::vector<std::string> cosmo_params, const std::vector<statistics::PriorDistribution> cosmo_param_priors)
 {
   m_data_model_SF.Cpar = cosmo_params;
 
@@ -58,7 +58,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Size::set_model_Numb
   vector<string> cosmoPar_string(nParams);
 
   for (size_t i=0; i<nParams; i++)
-    cosmoPar_string[i] = CosmologicalParameter_name(cosmo_params[i]);
+    cosmoPar_string[i] = cosmo_params[i];
 
   // input data used to construct the model
   auto inputs = make_shared<STR_NCSF_data_model>(m_data_model_SF);
@@ -76,7 +76,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Size::set_model_Numb
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Size::set_model_NumberCounts_cosmology_and_bias (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_params, const std::vector<statistics::PriorDistribution> cosmo_param_priors, const std::vector<statistics::PriorDistribution> bias_priors)
+void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Size::set_model_NumberCounts_cosmology_and_bias (const std::vector<std::string> cosmo_params, const std::vector<statistics::PriorDistribution> cosmo_param_priors, const std::vector<statistics::PriorDistribution> bias_priors)
 {
   // set the model parameters
   const size_t nParams = cosmo_params.size()+3;
@@ -87,9 +87,10 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Size::set_model_Numb
   vector<string> Par_name(nParams);
   vector<statistics::PriorDistribution> priors(nParams);
   
-  for (size_t i=0; i<cosmo_params.size(); i++){
-    Par_name[i] = CosmologicalParameter_name(cosmo_params[i]);
-    priors[i] = cosmo_param_priors[i];}
+  for (size_t i=0; i<cosmo_params.size(); i++) {
+    Par_name[i] = cosmo_params[i];
+    priors[i] = cosmo_param_priors[i];
+  }
 
   Par_name[nParams-3] = "b_eff";
   priors[nParams-3] = bias_priors[0];

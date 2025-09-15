@@ -338,6 +338,18 @@ namespace cbl {
 	 */
 	void write (const std::string dir, const std::string file) const override;
 
+	/**
+	 *  @brief write the measured three-point correlation
+	 *  @param dir output directory
+	 *  @param file output file
+	 *  @param connected 0 &rarr; write the reducted 3pt correlation
+	 *  function; 1 &rarr; write both the reduced and connected 3pt
+	 *  correlation function
+	 */
+	void write (const std::string dir, const std::string file, const bool connected) const override {
+	  ThreePointCorrelation::write(dir, file, connected);
+	}
+	
         /**
          *  @brief write the measured three-point correlation covariance
          *  @param dir output directory

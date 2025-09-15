@@ -52,7 +52,7 @@ namespace cbl {
      */
     class Mock : public Halo {
 
-    private :
+    private:
 
       /// generic variable of the mock object
       double m_generic; 
@@ -71,17 +71,6 @@ namespace cbl {
        */
       Mock ()
 	: Halo(), m_generic(par::defaultDouble) {}
-	
-      /**
-       * @brief function that allows copying private variables of the class 
-       * when an object of class Catalogue is copied
-       * 
-       * @return a shared pointer to the Object
-       *
-       */
-      std::shared_ptr<Object> getShared() {
-        return std::make_shared<Mock>(*this);
-      }
 
       /**
        *  @brief constructor that uses comoving coordinates
@@ -115,8 +104,8 @@ namespace cbl {
        *
        *  
        */
-      Mock (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
-	: Halo(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
+      Mock (const glob::comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
+      : Halo(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
 
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -125,7 +114,7 @@ namespace cbl {
        *  @param coord structure containing the comoving coordinates
        *  {x, y, z}
        *
-       *  @param cosm object of class Cosmology, used to estimate
+       *  @param cosmology object of class Cosmology, used to estimate
        *  comoving distances
        *
        *  @param z1_guess minimum prior on the redshift
@@ -158,8 +147,8 @@ namespace cbl {
        *
        *  
        */
-      Mock (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
-	: Halo(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
+      Mock (const glob::comovingCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
+      : Halo(coord, cosmology, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -193,8 +182,8 @@ namespace cbl {
        *
        *  
        */
-      Mock (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
-	: Halo(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
+      Mock (const glob::observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
+      : Halo(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -231,8 +220,8 @@ namespace cbl {
        *
        *  
        */
-      Mock (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
-	: Halo(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
+      Mock (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
+      : Halo(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -242,8 +231,8 @@ namespace cbl {
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -268,11 +257,9 @@ namespace cbl {
        *  @param mass the mock mass
        *
        *  @param generic the mock generic variable
-       *
-       *  
        */
-      Mock (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
-	: Halo(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
+      Mock (const glob::observedCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
+      : Halo(coord, cosmology, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -283,7 +270,8 @@ namespace cbl {
        *
        *  @param inputUnits the units of the input coordinates
        *
-       *  @param cosm object of class Cosmology, used to estimate comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -308,11 +296,9 @@ namespace cbl {
        *  @param mass the mock mass
        *
        *  @param generic the mock generic variable
-       *
-       *  
        */
-      Mock (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
-	: Halo(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
+      Mock (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
+      : Halo(coord, inputUnits, cosmology, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
 
       /**
        *  @brief constructor that uses both comoving and observed coordinates
@@ -356,7 +342,7 @@ namespace cbl {
        *  
        */
       Mock (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double vx=par::defaultDouble, const double vy=par::defaultDouble, const double vz=par::defaultDouble, const double mass=par::defaultDouble, const double generic=par::defaultDouble) 
-	: Halo(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
+      : Halo(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement, vx, vy, vz, mass), m_generic(generic) {}
       
       /**
        *  @brief default destructor
@@ -370,6 +356,17 @@ namespace cbl {
        *  @name Member functions used to get the private members 
        */
       ///@{
+	
+      /**
+       * @brief function that allows copying private variables of the class 
+       * when an object of class Catalogue is copied
+       * 
+       * @return a shared pointer to the Object
+       */
+      std::shared_ptr<Object> ptrObject() override
+      {
+        return std::make_shared<Mock>(*this);
+      }
     
       /**
        *  @brief get the private member \e m_generic

@@ -195,7 +195,6 @@ namespace cbl {
 
       /**
        *  @brief default destructor
-       *  
        */
       virtual ~Pair () = default;
     

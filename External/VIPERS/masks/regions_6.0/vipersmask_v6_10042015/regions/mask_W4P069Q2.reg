@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileKPmbGK.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(332.154151,1.935245,332.268241,1.935657,332.267961,2.057590,332.264621,2.062083,332.254101,2.068159,332.166611,2.068186,332.156781,2.062228,332.153901,2.057584) # color=red dash=1

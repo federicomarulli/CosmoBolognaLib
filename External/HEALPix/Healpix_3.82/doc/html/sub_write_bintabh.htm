@@ -1,0 +1,279 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>write_bintabh*</TITLE>
+<META NAME="description" CONTENT="write_bintabh*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_write_dbintab.htm">
+<LINK REL="previous" HREF="sub_write_bintab.htm">
+<LINK REL="next" HREF="sub_write_dbintab.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_write_bintab.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_write_dbintab.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html531"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_write_bintab.htm">write_bintab*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_write_dbintab.htm">write_dbintab</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION11200"></A>
+<A ID="sub:write_bintabh"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">write_bintabh</SPAN></div><hr>
+<H3>This routine is designed to write large (or huge) arrays into a binary table
+extension of a FITS file. The user can
+choose to write the array piece by piece. This is designed to deal with Time
+Ordered Data set (tod).</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/fitstools.F90"><strong>src/f90/mod/fitstools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">write_bintabh</SPAN>(
+<A HREF="#sub:write_bintabh:tod">tod</A>, <A HREF="#sub:write_bintabh:npix">npix</A>, <A HREF="#sub:write_bintabh:ntod">ntod</A>, <A HREF="#sub:write_bintabh:header">header</A>, <A HREF="#sub:write_bintabh:nlheader">nlheader</A>, <A HREF="#sub:write_bintabh:filename">filename</A>, <i><font color="#224422">[<A HREF="#sub:write_bintabh:extno">extno</A>, <A HREF="#sub:write_bintabh:firstpix">firstpix</A>, <A HREF="#sub:write_bintabh:repeat">repeat</A>]</font></i>
+)</h3></blockquote>
+Arguments appearing in <i><font color="#224422">italic</font></i> are
+optional.
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:225px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">
+tod<A ID="sub:write_bintabh:tod"></A>(0:npix-1,1:ntod)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">The map or tod
+  to write to the FITS file. It will be written in the file at the location
+                   corresponding to pixels (or time samples)
+                   <SPAN style="font-family:monospace">firstpix</SPAN> to <SPAN style="font-family:monospace">firtpix + npix</SPAN> -1.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">npix<A ID="sub:write_bintabh:npix"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">Number of pixels or time samples in the map or TOD. See Note below.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">ntod<A ID="sub:write_bintabh:ntod"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">Number of maps or tods to be written. Each of them will be in a different column of the FITS binary table.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">header<A ID="sub:write_bintabh:header"></A>(LEN=80) (1:nlheader)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">The header for the FITS file.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">nlheader<A ID="sub:write_bintabh:nlheader"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">number of header lines to write to the file.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">filename<A ID="sub:write_bintabh:filename"></A>(LEN=<kbd>filenamelen</kbd>)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">The array is written into a FITS file with this filename.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px"><i><font color="#224422">extno<A ID="sub:write_bintabh:extno"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">extension number in which to write the data (0
+                   based).  <b>default:</b>0</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px"><i><font color="#224422">firstpix<A ID="sub:write_bintabh:firstpix"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">0 Location in the FITS file of the first
+                   pixel (or time sample) to be written (0 based). <b>default:</b>
+                   0. See Note below.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px"><i><font color="#224422">repeat<A ID="sub:write_bintabh:repeat"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">Length of the element vector used in the binary
+                   table. <b>default:</b>1024 if <SPAN style="font-family:monospace">npix</SPAN> <!-- MATH
+ $\propto 1024$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img305.png"
+ ALT="$\propto 1024$"></SPAN>; 12000 if
+                   <SPAN style="font-family:monospace">npix</SPAN> <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.16ex; " SRC="sub_img306.png"
+ ALT="$&gt; 12000$"></SPAN> and 1 otherwise. <BR>
+Choosing a large <SPAN style="font-family:monospace">repeat</SPAN> for multi-column tables (<SPAN style="font-family:monospace">ntod</SPAN> <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.16ex; " SRC="sub_img151.png"
+ ALT="$&gt;1$"></SPAN>) generally
+                   speeds up the I/O. It also helps bringing the number of rows
+                   of the table under <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.10ex; " SRC="sub_img203.png"
+ ALT="$2^{31}$"></SPAN>, which is a hard limit of
+                   cfitsio. <BR>
+If the number of samples or pixels of each map or TOD is not a multiple of 
+		<SPAN style="font-family:monospace">repeat</SPAN>, then the last element vector will be padded with sentinel values 
+<A HREF="sub_healpix_types_module.htm#sub:healpix_types:hpx_sbadval"><SPAN style="font-family:monospace">HPX_SBADVAL</SPAN></A> or
+<A HREF="sub_healpix_types_module.htm#sub:healpix_types:hpx_dbadval"><SPAN style="font-family:monospace">HPX_DBADVAL</SPAN></A>.</TD>
+</TR>
+</TABLE>
+<B>Note :</B> Indices and number of data elements larger than
+                   <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.10ex; " SRC="sub_img203.png"
+ ALT="$2^{31}$"></SPAN> are only accessible in FITS files on computers with 64 bit
+                   enabled compilers and with some specific compilation options of
+                   cfitsio (see cfitsio documentation).
+
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use <A HREF="sub_healpix_types_module.htm#sub:healpix_types">healpix_types</A> 
+<BR>
+use fitstools, only : <SPAN CLASS="colordoc">write_bintabh</SPAN>
+<BR>
+character(len=80), dimension(1:128) :: hdr 
+<BR>
+real(SP), dimension(0:49,1) :: tod 
+<BR>
+character(len=<A HREF="sub_healpix_types_module.htm#sub:healpix_types:filenamelen">FILENAMELEN</A>) :: fname='tod.fits' 
+<BR>
+hdr(:) = ' ' 
+<BR>
+tod(:,1) = 1. 
+<BR>
+call <SPAN CLASS="colordoc">write_bintabh</SPAN>(tod, 50_i8b, 1, hdr, 128, fname, firstpix=0_i8b, repeat=10)  
+<BR>
+tod = tod * 3. 
+<BR>
+call <SPAN CLASS="colordoc">write_bintabh</SPAN>(tod, 20_i8b, 1, hdr, 128, fname, firstpix=40_i8b)</div>
+<blockquote>
+Writes into the FITS file `tod.fits' a 1 column binary table, where the first 40
+data samples have the value <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.10ex; " SRC="sub_img307.png"
+ ALT="$1.$"></SPAN> and the next 20 have the value <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img308.png"
+ ALT="$3.$"></SPAN> (Note that
+in this example the
+second call to <SPAN CLASS="colordoc">write_bintabh</SPAN> overwrites some of the pixels written by the first call). The samples will be
+written in element vectors of length 10. The header for the FITS file is given in the
+string array <SPAN style="font-family:monospace">hdr</SPAN> and its number of lines is 128. 
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">write_bintabh</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">fitstools</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B>printerror</B>
+<DD>routine for printing FITS error messages.
+  <DT>
+<B><SPAN  CLASS="textbf">cfitsio</SPAN></B>
+<DD>library for FITS file handling.		
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">write_bintabh</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_input_tod.htm#sub:input_tod">input_tod*</A></B>
+<DD>routine that reads a file created by <SPAN CLASS="colordoc">write_bintabh</SPAN>. 
+  <DT>
+<B><A HREF="sub_input_map.htm#sub:input_map">input_map</A>,
+  <A HREF="sub_read_bintab.htm#sub:read_bintab">read_bintab</A></B>
+<DD>routines to read <strong>HEALPix</strong> sky map,
+  <DT>
+<B><A HREF="sub_write_minimal_header.htm#sub:write_minimal_header">write_minimal_header</A></B>
+<DD>routine to write minimal FITS header
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_write_bintab.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_write_dbintab.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html531"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_write_bintab.htm">write_bintab*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_write_dbintab.htm">write_dbintab</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

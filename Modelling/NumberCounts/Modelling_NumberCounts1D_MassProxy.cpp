@@ -47,7 +47,81 @@ using namespace modelling::numbercounts;
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts1D_MassProxy::set_model_NumberCounts_cosmology (const std::string scalrel_z_evo, const std::string z_error_type, const std::string proxy_error_type, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution z_bias_prior, const statistics::PriorDistribution proxy_bias_prior, const statistics::PriorDistribution z_error_prior, const statistics::PriorDistribution proxy_error_prior, const std::vector<statistics::PriorDistribution> Plambda_prior)
+void cbl::modelling::numbercounts::Modelling_NumberCounts1D_MassProxy::set_model_NumberCounts_cosmology_classic (const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior)
+{
+  m_data_model.Cpar = cosmo_param;
+
+  const size_t nParams = cosmo_param.size()+8;
+
+  vector<statistics::ParameterType> Par_type(nParams, statistics::ParameterType::_Base_);
+  vector<string> Par_string(nParams);
+  std::vector<statistics::PriorDistribution> param_prior (nParams);
+
+  // Set the names and priors of the cosmological parameters
+  for (size_t i=0; i<cosmo_param.size(); i++) {
+    Par_string[i] = cosmo_param[i];
+    param_prior[i] = cosmo_param_prior[i];
+  }
+
+  // Set the names and priors for the mass-observable relation parameters, and for P(lambda|z)
+  Par_string[cosmo_param.size()] = "alpha";
+  param_prior[cosmo_param.size()] = alpha_prior;
+  Par_string[cosmo_param.size()+1] = "beta";
+  param_prior[cosmo_param.size()+1] = beta_prior;
+  Par_string[cosmo_param.size()+2] = "gamma";
+  param_prior[cosmo_param.size()+2] = gamma_prior;
+  Par_string[cosmo_param.size()+3] = "scatter0";
+  param_prior[cosmo_param.size()+3] = scatter0_prior;
+  Par_string[cosmo_param.size()+4] = "scatterM";
+  param_prior[cosmo_param.size()+4] = scatterM_prior;
+  Par_string[cosmo_param.size()+5] = "scatterM_exponent";
+  param_prior[cosmo_param.size()+5] = scatterM_exponent_prior;
+  Par_string[cosmo_param.size()+6] = "scatterz";
+  param_prior[cosmo_param.size()+6] = scatterz_prior;
+  Par_string[cosmo_param.size()+7] = "scatterz_exponent";
+  param_prior[cosmo_param.size()+7] = scatterz_exponent_prior;
+
+  // Set the scaling relation object
+  (m_data_model.scaling_relation)->set_model_MassObservableRelation_cosmology (m_data_model.z_evo, cosmo_param, cosmo_param_prior, alpha_prior, beta_prior, gamma_prior, scatter0_prior, scatterM_prior, scatterM_exponent_prior, scatterz_prior, scatterz_exponent_prior);
+
+  // input data used to construct the model
+  m_data_model.response_fact = [] (const double Mass, const double Sigma, const double redshift, const double D_N, const std::string model_bias, const double Delta, const std::string method_SS, std::shared_ptr<void> cosmo) { (void)Mass; (void)Sigma; (void)redshift; (void)D_N; (void)model_bias; (void)Delta; (void)method_SS; (void)cosmo; return 1.; };
+  
+  auto inputs = make_shared<STR_NC_data_model>(m_data_model);
+
+  // input data used to construct the response function factor
+  m_data_model_SSC = m_data_model;
+  
+  m_data_model_SSC.response_fact = [] (const double Mass, const double Sigma, const double redshift, const double D_N, const std::string model_bias, const double Delta, const std::string method_SS, std::shared_ptr<void> cosmo) {
+    auto cosmology = std::static_pointer_cast<cbl::cosmology::Cosmology>(cosmo);
+    cbl::cosmology::Bias biasobj(cosmology);
+    return biasobj.bias_halo(Mass, Sigma, redshift, D_N, model_bias, false, "test", "Linear", Delta, -1, -1, 1.e-4, 100, 1.e-2, method_SS, cbl::par::defaultString, false);
+  };
+  
+  auto inputs2 = make_shared<STR_NC_data_model>(m_data_model_SSC);
+
+  // set prior
+  m_set_prior(param_prior);
+
+  // construct the model
+  switch (m_HistogramType) {
+    
+  case (glob::HistogramType::_N_V_):
+    m_model = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_proxy_classic, nParams, Par_type, Par_string, inputs));
+    m_response_func = make_shared<statistics::Model1D>(statistics::Model1D(&number_counts_proxy_classic, nParams, Par_type, Par_string, inputs2));
+    break;
+    
+  default:
+    ErrorCBL("Only counts can be modelled! Set _N_V_ as the histogram type.", "set_model_NumberCounts_cosmology", "Modelling_NumberCounts1D_MassProxy.cpp");
+    
+  }
+}
+
+
+// ===========================================================================================
+
+
+void cbl::modelling::numbercounts::Modelling_NumberCounts1D_MassProxy::set_model_NumberCounts_cosmology (const std::string scalrel_z_evo, const std::string z_error_type, const std::string proxy_error_type, const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution z_bias_prior, const statistics::PriorDistribution proxy_bias_prior, const statistics::PriorDistribution z_error_prior, const statistics::PriorDistribution proxy_error_prior, const std::vector<statistics::PriorDistribution> Plambda_prior)
 {
   if (Plambda_prior.size() != 3)
     cbl::ErrorCBL("Plambda_prior must have size = 3.","set_model_NumberCounts_cosmology","Modelling_NumberCounts1D_MassProxy.cpp");
@@ -62,7 +136,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_MassProxy::set_model
 
   // Set the names and priors of the cosmological parameters
   for (size_t i=0; i<cosmo_param.size(); i++) {
-    Par_string[i] = CosmologicalParameter_name(cosmo_param[i]);
+    Par_string[i] = cosmo_param[i];
     param_prior[i] = cosmo_param_prior[i];
   }
 
@@ -98,11 +172,21 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_MassProxy::set_model
   Par_string[cosmo_param.size()+14] = "Plambda_c";
   param_prior[cosmo_param.size()+14] = Plambda_prior[2];
 
-  // Set the functional form for the redshift evolution in the scaling relation 
+  // Set the functional form for the redshift evolution in the scaling relation
+  
   if (scalrel_z_evo == "E_z")
-    m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo) {cbl::cosmology::Cosmology cosmology = *std::static_pointer_cast<cbl::cosmology::Cosmology>(cosmo); return cosmology.HH(z)/cosmology.HH(z_piv);};
+    m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo)
+      {
+	auto cosmology = std::static_pointer_cast<cbl::cosmology::Cosmology>(cosmo);
+	return cosmology->Hubble(z)/cosmology->Hubble(z_piv);
+      };
+  
   else if (scalrel_z_evo == "direct")
-    m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo) {(void)cosmo; return (1+z)/(1+z_piv);};
+    m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo)
+      {
+	(void)cosmo; return (1+z)/(1+z_piv);
+      };
+  
   else
     cbl::ErrorCBL("Error in the input parameter scalrel_z_evo: no such a possibility for f(z)!","set_model_NumberCounts_cosmology","Modelling_NumberCounts1D_MassProxy.cpp");
 
@@ -127,12 +211,15 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_MassProxy::set_model
   auto inputs = make_shared<STR_NC_data_model>(m_data_model);
 
   // input data used to construct the response function factor
-  m_data_model.response_fact = [] (const double Mass, const double Sigma, const double redshift, const double D_N, const std::string model_bias, const double Delta, const std::string method_SS, std::shared_ptr<void> cosmo) {
-				 cbl::cosmology::Cosmology cosmology = *std::static_pointer_cast<cbl::cosmology::Cosmology>(cosmo);
-				 return cosmology.bias_halo(Mass, Sigma, redshift, D_N, model_bias, false, "test", "Linear", Delta, -1, -1, 1.e-4, 100, 1.e-2, method_SS, cbl::par::defaultString, false);
-			       };
+  m_data_model_SSC = m_data_model;
   
-  auto inputs2 = make_shared<STR_NC_data_model>(m_data_model);
+  m_data_model_SSC.response_fact = [] (const double Mass, const double Sigma, const double redshift, const double D_N, const std::string model_bias, const double Delta, const std::string method_SS, std::shared_ptr<void> cosmo) {
+    auto cosmology = std::static_pointer_cast<cbl::cosmology::Cosmology>(cosmo);
+    cbl::cosmology::Bias biasobj(cosmology);
+    return biasobj.bias_halo(Mass, Sigma, redshift, D_N, model_bias, false, "test", "Linear", Delta, -1, -1, 1.e-4, 100, 1.e-2, method_SS, cbl::par::defaultString, false);
+  };
+  
+  auto inputs2 = make_shared<STR_NC_data_model>(m_data_model_SSC);
 
   // set prior
   m_set_prior(param_prior);

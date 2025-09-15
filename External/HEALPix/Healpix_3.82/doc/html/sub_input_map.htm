@@ -1,0 +1,273 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>input_map*</TITLE>
+<META NAME="description" CONTENT="input_map*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_input_tod.htm">
+<LINK REL="previous" HREF="sub_in_ring.htm">
+<LINK REL="next" HREF="sub_input_tod.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_in_ring.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_input_tod.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html397"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_in_ring.htm">in_ring</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_input_tod.htm">input_tod*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4500"></A>
+<A ID="sub:input_map"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">input_map*</SPAN></div><hr>
+<H3>This routine reads a <strong>HEALPix</strong> map from a FITS file. This can deal with full sky
+as well as cut sky maps, but always outputs a full sky map (with possibly many empty pixels).</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/fitstools.F90"><strong>src/f90/mod/fitstools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">input_map*</SPAN>(
+<A HREF="#sub:input_map:filename">filename</A>, <A HREF="#sub:input_map:map">map</A>, <A HREF="#sub:input_map:npixtot">npixtot</A>, <A HREF="#sub:input_map:nmaps">nmaps</A><i><font color="#224422">[, <A HREF="#sub:input_map:fmissval">fmissval</A>, <A HREF="#sub:input_map:header">header</A>, <A HREF="#sub:input_map:units">units</A>, <A HREF="#sub:input_map:extno">extno</A>, <A HREF="#sub:input_map:ignore_polcconv">ignore_polcconv</A>]</font></i>
+)</h3></blockquote>
+Arguments appearing in <i><font color="#224422">italic</font></i> are
+optional.
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">i/o</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:250px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+filename<A ID="sub:input_map:filename"></A>(len=<kbd>filenamelen</kbd>)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">FITS file to be read from,
+                   containing a full sky or cut sky map</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">map<A ID="sub:input_map:map"></A>(0:npixtot-1,1:nmaps)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">full sky map(s) constructed
+                   from the data present in the file, missing pixels are filled
+                   with fmissval</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">npixtot<A ID="sub:input_map:npixtot"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B/ I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">number of pixels in the full sky map</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">nmaps<A ID="sub:input_map:nmaps"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">number of maps in the file</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+<i><font color="#224422">fmissval<A ID="sub:input_map:fmissval"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">value to be given to missing pixels,
+<b>default:</b>0</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">header<A ID="sub:input_map:header"></A></font></i>(LEN=80)(1:)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">FITS extension header</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">units<A ID="sub:input_map:units"></A></font></i>(LEN=20)(1:nmaps)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">maps units</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">extno<A ID="sub:input_map:extno"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">extension number to read the data from
+                   (0 based).<b>default:</b>0 (the first extension is read)</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">ignore_polccconv<A ID="sub:input_map:ignore_polcconv"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">LGT</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">by default 
+	(<SPAN  CLASS="texttt">ignore_polcconv=.false.</SPAN>) the output of this routine depends on the value of the FITS keyword
+	<SPAN  CLASS="texttt">POLCCONV</SPAN> found in <A HREF="#sub:input_map:filename">filename</A>, as described in 
+	the <A HREF="./intro_HEALPix_conventions.htm#intro:polcconv">note on POLCCONV</A> in <A ID="tex2html24"
+  HREF="intro.htm">The <strong>HEALPix</strong> Primer</A>. 
+
+Setting <SPAN  CLASS="texttt">ignore_polcconv=.true.</SPAN> will force input_map to ignore that keyword.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use pix_tools, only: nside2npix 
+<BR>
+use fitstools, only: getsize_fits, input_map 
+<BR>...
+<BR>
+npixtot = getsize_fits('map.fits',nmaps=nmaps, nside=nside) 
+<BR>
+npix = nside2npix(nside) 
+<BR>
+allocate(map(0:npix-1,1:nmaps)) 
+<BR>
+call input_map('map.fits', map, npix, nmaps, fmissval=0.)  
+<BR></div>
+<blockquote>
+Reads into <SPAN style="font-family:monospace">map</SPAN> the content of the FITS file 'map.fits'.
+If there are
+missing pixels in the input file (ie, having value <SPAN style="font-family:monospace">NaN</SPAN> (Not of Number),
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.29ex; " SRC="sub_img202.png"
+ ALT="$\pm$"></SPAN> <SPAN style="font-family:monospace">Infinity</SPAN> or matching the FITS keyword <SPAN style="font-family:monospace">BAD_DATA</SPAN>) they will
+take on output the value provided in optional <SPAN style="font-family:monospace">fmissval</SPAN> (here 0, which also
+is its default value).
+</blockquote>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">input_map*</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">fitstools</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B>printerror</B>
+<DD>routine for printing FITS error messages.
+  <DT>
+<B><A HREF="sub_read_bintab.htm#sub:read_bintab">read_bintab</A></B>
+<DD>routine to read a binary table
+  from a FITS file
+  <DT>
+<B><A HREF="sub_read_fits_cut4.htm#sub:read_fits_cut4">read_fits_cut4</A></B>
+<DD>routine to read cut sky
+  map from a FITS file
+  <DT>
+<B><A HREF="sub_read_fits_partial.htm#sub:read_fits_partial">read_fits_partial</A></B>
+<DD>routine to read a partial sky
+  map from a FITS file
+  <DT>
+<B><SPAN  CLASS="textbf">cfitsio</SPAN></B>
+<DD>library for FITS file handling.
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">input_map*</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>anafast</B>
+<DD>executable that reads a <strong>HEALPix</strong> map and analyses it. 
+  <DT>
+<B>synfast</B>
+<DD>executable that generate full sky <strong>HEALPix</strong> maps
+  <DT>
+<B><A HREF="sub_getsize_fits.htm#sub:getsize_fits">getsize_fits</A></B>
+<DD>subroutine to know the size of a FITS file.
+  <DT>
+<B><A HREF="sub_output_map.htm#sub:output_map">output_map</A></B>
+<DD>subroutine to write a FITS file
+  from a <strong>HEALPix</strong> map
+  <DT>
+<B><A HREF="sub_write_bintabh.htm#sub:write_bintabh">write_bintabh</A></B>
+<DD>subroutine to write a large
+  array into a FITS file piece by piece
+  <DT>
+<B><A HREF="sub_input_tod.htm#sub:input_tod">input_tod*</A></B>
+<DD>subroutine to read an arbitrary subsection of
+  a large binary table
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_in_ring.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_input_tod.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html397"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_in_ring.htm">in_ring</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_input_tod.htm">input_tod*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

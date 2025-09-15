@@ -1,15 +1,15 @@
 c-----------------------------------------------------------------------
-c © A J S Hamilton 2001
+c ï¿½ A J S Hamilton 2001
 c-----------------------------------------------------------------------
       subroutine findtop(a,na,iord,nb)
       integer na,nb,iord(nb)
-      real*10 a(na)
+      real*16 a(na)
 c
 c        local (automatic) variables
       integer i,ia,ib,it,n,ja
       logical order
 c *
-c * Find nb elements of real*10 a having the largest value.
+c * Find nb elements of real*16 a having the largest value.
 c * Returns index iord of these elements, ordered so iord(1) corresponds
 c * to element a(iord(1)) having largest value.
 c * If nb .gt. na, last nb-na elements of iord are undefined.
@@ -23,13 +23,13 @@ c
 c-----------------------------------------------------------------------
       subroutine findbot(a,na,iord,nb)
       integer na,nb,iord(nb)
-      real*10 a(na)
+      real*16 a(na)
 c
 c        local (automatic) variables
       integer i,ia,ib,it,n,ja
       logical order
 c *
-c * Find nb elements of real*10 a having the smallest value.
+c * Find nb elements of real*16 a having the smallest value.
 c * Returns index iord of these elements, ordered so iord(1) corresponds
 c * to element a(iord(1)) having smallest value.
 c * If nb .gt. na, last nb-na elements of iord are undefined.
@@ -43,7 +43,7 @@ c
 c-----------------------------------------------------------------------
       subroutine findtpa(a,na,iord,nb)
       integer na,nb,iord(nb)
-      real*10 a(na)
+      real*16 a(na)
 c
 c        intrinsics
       intrinsic abs
@@ -51,7 +51,7 @@ c        local (automatic) variables
       integer i,ia,ib,it,n,ja
       logical order
 c *
-c * Find nb elements of real*10 a having the largest absolute value.
+c * Find nb elements of real*16 a having the largest absolute value.
 c * Returns index iord of these elements, ordered so iord(1) corresponds
 c * to element a(iord(1)) having largest absolute value.
 c * If nb .gt. na, last nb-na elements of iord are undefined.
@@ -66,7 +66,7 @@ c
 c-----------------------------------------------------------------------
       subroutine findbta(a,na,iord,nb)
       integer na,nb,iord(nb)
-      real*10 a(na)
+      real*16 a(na)
 c
 c        intrinsics
       intrinsic abs
@@ -74,7 +74,7 @@ c        local (automatic) variables
       integer i,ia,ib,it,n,ja
       logical order
 c *
-c * Find nb elements of real*10 a having the smallest absolute value.
+c * Find nb elements of real*16 a having the smallest absolute value.
 c * Returns index iord of these elements, ordered so iord(1) corresponds
 c * to element a(iord(1)) having smallest absolute value.
 c * If nb .gt. na, last nb-na elements of iord are undefined.

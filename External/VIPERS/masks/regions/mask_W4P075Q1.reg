@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: data/W4P075/W4P075Q1.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(333.86945,1.941041,333.91506,1.940575,333.95508,1.939861,333.96186,1.943519,333.96187,2.061506,333.9588,2.066041,333.94926,2.06861,333.92637,2.06838,333.85414,2.068141,333.84442,2.057705,333.84519,1.940028) # color=red dash=1

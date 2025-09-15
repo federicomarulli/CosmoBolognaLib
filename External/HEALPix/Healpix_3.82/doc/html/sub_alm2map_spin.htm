@@ -1,0 +1,525 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>alm2map_spin*</TITLE>
+<META NAME="description" CONTENT="alm2map_spin*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_alms2fits.htm">
+<LINK REL="previous" HREF="sub_alm2map_der.htm">
+<LINK REL="next" HREF="sub_alms2fits.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_alm2map_der.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_alms2fits.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html327"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_alm2map_der.htm">alm2map_der*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_alms2fits.htm">alms2fits*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION1000"></A>
+<A ID="sub:alm2map_spin"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">alm2map_spin*</SPAN></div><hr>
+<H3>This routine produces the maps of arbitrary spin <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img77.png"
+ ALT="$s$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.29ex; " SRC="sub_img78.png"
+ ALT="$-s$"></SPAN> given their alm
+coefficients.
+A (complex) map <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img79.png"
+ ALT="$S$"></SPAN> of spin <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img77.png"
+ ALT="$s$"></SPAN> is a linear combination of the spin weighted harmonics <!-- MATH
+ ${_s}Y_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img76.png"
+ ALT="$\ {_s}Y_{\ell m}$"></SPAN>
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:alm2map_spin_a"></A><!-- MATH
+ \begin{equation}
+{_s}S(p) = \sum_{\ell m} {_s}a_{\ell m}\ \ {_s}Y_{\ell m}(p)
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 4.37ex; vertical-align: -2.66ex; " SRC="sub_img80.png"
+ ALT="$\displaystyle {_s}S(p) = \sum_{\ell m} {_s}a_{\ell m}\ \ {_s}Y_{\ell m}(p)$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">3</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+for <!-- MATH
+ $\ell \ge |m|, \ell \ge |s|$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img81.png"
+ ALT="$\ell \ge \vert m\vert, \ell \ge \vert s\vert$"></SPAN>,
+and is such that <!-- MATH
+ ${_s}S^* = {_{-s}}S$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.61ex; " SRC="sub_img82.png"
+ ALT="${_s}S^* = {_{-s}}S$"></SPAN>.
+<BR>
+The 
+<A ID="tex2html18"
+  HREF="https://en.wikipedia.org/wiki/Spin-weighted_spherical_harmonics#Calculating">usual phase convention for the spin weighted harmonics</A>
+is
+<!-- MATH
+ ${_s}Y_{\ell m}^* = (-1)^{s+m} {_{-s}}Y_{\ell -m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.68ex; " SRC="sub_img83.png"
+ ALT="${_s}Y_{\ell m}^* = (-1)^{s+m} {_{-s}}Y_{\ell -m}$"></SPAN>
+and therefore 
+<!-- MATH
+ ${_s}a_{\ell m}^* = (-1)^{s+m} {_{-s}}a_{\ell -m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.68ex; " SRC="sub_img84.png"
+ ALT="${_s}a_{\ell m}^* = (-1)^{s+m} {_{-s}}a_{\ell -m}$"></SPAN>.
+<br><br><SPAN CLASS="colordoc">alm2map_spin*</SPAN> expects the alm coefficients to be provided as
+	<P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.68ex; vertical-align: -0.85ex; " SRC="sub_img85.png"
+ ALT="$\displaystyle {_{\vert s\vert}}a^{+}_{\ell m}$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.85ex; " SRC="sub_img86.png"
+ ALT="$\displaystyle = - ( {_{\vert s\vert}}a_{\ell m} + (-1)^s {_{-\vert s\vert}}a_{\ell m} )/2,$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="eq:alm2map_spin_b">(<SPAN CLASS="arabic">4</SPAN>)</A></TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.21ex; vertical-align: -0.85ex; " SRC="sub_img87.png"
+ ALT="$\displaystyle {_{\vert s\vert}}a^{-}_{\ell m}$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.85ex; " SRC="sub_img88.png"
+ ALT="$\displaystyle = - ( {_{\vert s\vert}}a_{\ell m} - (-1)^s {_{-\vert s\vert}}a_{\ell m} )/(2i),$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">5</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+for <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.41ex; " SRC="sub_img89.png"
+ ALT="$m\ge 0$"></SPAN>, knowing that, just as for spin 0 maps, the
+coefficients for <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.16ex; " SRC="sub_img90.png"
+ ALT="$m&lt;0$"></SPAN> are given by 
+<P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.68ex; vertical-align: -0.85ex; " SRC="sub_img91.png"
+ ALT="$\displaystyle {_{\vert s\vert}}a^{+}_{\ell-m}$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.68ex; vertical-align: -0.85ex; " SRC="sub_img92.png"
+ ALT="$\displaystyle = (-1)^m {_{\vert s\vert}}a^{+*}_{\ell m},$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="eq:alm2map_spin_c">(<SPAN CLASS="arabic">6</SPAN>)</A></TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.21ex; vertical-align: -0.85ex; " SRC="sub_img93.png"
+ ALT="$\displaystyle {_{\vert s\vert}}a^{-}_{\ell-m}$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.85ex; " SRC="sub_img94.png"
+ ALT="$\displaystyle = (-1)^m {_{\vert s\vert}}a^{-*}_{\ell m}.$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">7</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+The two (real) maps produced by <SPAN CLASS="colordoc">alm2map_spin*</SPAN> are defined respectively as
+<P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.68ex; vertical-align: -0.85ex; " SRC="sub_img95.png"
+ ALT="$\displaystyle {_{\vert s\vert}}S^+$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.85ex; " SRC="sub_img96.png"
+ ALT="$\displaystyle = ({_{\vert s\vert}}S + {_{-\vert s\vert}}S)/2,$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="eq:alm2map_spin_d">(<SPAN CLASS="arabic">8</SPAN>)</A></TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.85ex; " SRC="sub_img97.png"
+ ALT="$\displaystyle {_{\vert s\vert}}S^-$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.85ex; " SRC="sub_img98.png"
+ ALT="$\displaystyle = ({_{\vert s\vert}}S - {_{-\vert s\vert}}S)/(2i).$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">9</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+With these definitions, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.45ex; " SRC="sub_img99.png"
+ ALT="${_2}a^{+}$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.63ex; vertical-align: -0.45ex; " SRC="sub_img100.png"
+ ALT="${_2}a^{-}$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.45ex; " SRC="sub_img101.png"
+ ALT="${_2}S^+$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.98ex; vertical-align: -0.45ex; " SRC="sub_img102.png"
+ ALT="${_2}S^-$"></SPAN>
+match <strong>HEALPix</strong> polarization <!-- MATH
+ $a^E, a^B, Q$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.55ex; " SRC="sub_img103.png"
+ ALT="$a^E, a^B, Q$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img104.png"
+ ALT="$U$"></SPAN> respectively. <SPAN  CLASS="textbf">However</SPAN>, for
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img11.png"
+ ALT="$s=0$"></SPAN>, <!-- MATH
+ $\ _{0}a^+_{\ell m} = -a^T_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.68ex; " SRC="sub_img105.png"
+ ALT="$\ _{0}a^+_{\ell m} = -a^T_{\ell m}$"></SPAN>, <!-- MATH
+ $\ _{0}a^-_{\ell m} = 0$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.21ex; vertical-align: -0.68ex; " SRC="sub_img106.png"
+ ALT="$\ _{0}a^-_{\ell m} = 0$"></SPAN>, <!-- MATH
+ $\ {_0}S^+ = T$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.16ex; vertical-align: -0.45ex; " SRC="sub_img107.png"
+ ALT="$\ {_0}S^+ = T$"></SPAN>, <!-- MATH
+ $\ {_0}S^- = 0.$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img108.png"
+ ALT="$\ {_0}S^- = 0.$"></SPAN>
+<br><br>When dealing only with scalar quantities, like temperature or intensity maps, having a spin <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img11.png"
+ ALT="$s=0$"></SPAN>, it is
+highly recommended, and much more memory-efficient, to use directly the routine <A HREF="sub_alm2map.htm#sub:alm2map">alm2map</A>, rather then setting <A HREF="#sub:alm2map_spin:spin"><SPAN  CLASS="texttt">spin</SPAN></A><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img109.png"
+ ALT="$=0$"></SPAN> in <SPAN CLASS="colordoc">alm2map_spin*</SPAN>.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/alm_tools.F90"><strong>src/f90/mod/alm_tools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">alm2map_spin*</SPAN>(
+<A HREF="#sub:alm2map_spin:nsmax">nsmax</A>, <A HREF="#sub:alm2map_spin:nlmax">nlmax</A>, <A HREF="#sub:alm2map_spin:nmmax">nmmax</A>, <A HREF="#sub:alm2map_spin:spin">spin</A>, <A HREF="#sub:alm2map_spin:alm">alm</A>, <A HREF="#sub:alm2map_spin:map">map</A>[, <A HREF="#sub:alm2map_spin:zbounds">zbounds</A>=]
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">
+nsmax<A ID="sub:alm2map_spin:nsmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">the <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> value of the map to synthesize.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">nlmax<A ID="sub:alm2map_spin:nlmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">the maximum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img33.png"
+ ALT="$\ell$"></SPAN> value used for the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">nmmax<A ID="sub:alm2map_spin:nmmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">the maximum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img34.png"
+ ALT="$m$"></SPAN> value used for the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">spin<A ID="sub:alm2map_spin:spin"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">spin <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img77.png"
+ ALT="$s$"></SPAN> of the maps to be generated (only its absolute value
+is relevant).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">alm<A ID="sub:alm2map_spin:alm"></A>(1:2, 0:nlmax, 0:nmmax)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SPC/ DPC</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">The <!-- MATH
+ ${_{|s|}}a^+_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.68ex; vertical-align: -0.85ex; " SRC="sub_img110.png"
+ ALT="${_{\vert s\vert}}a^+_{\ell m}$"></SPAN> and <!-- MATH
+ ${_{|s|}}a^-_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.21ex; vertical-align: -0.85ex; " SRC="sub_img111.png"
+ ALT="${_{\vert s\vert}}a^-_{\ell m}$"></SPAN> values to make the map
+                   from.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">map<A ID="sub:alm2map_spin:map"></A>(0:12*nsmax**2-1, 1:2)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px"><!-- MATH
+ ${_{|s|}}S^+$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.85ex; " SRC="sub_img112.png"
+ ALT="${_{\vert s\vert}}S^+$"></SPAN> and <!-- MATH
+ ${_{|s|}}S^-$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.85ex; " SRC="sub_img113.png"
+ ALT="${_{\vert s\vert}}S^-$"></SPAN> output maps</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">zbounds<A ID="sub:alm2map_spin:zbounds"></A>(1:2), OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">section of the sphere on which to perform the map synthesis, expressed in terms of <!-- MATH
+ $z=\sin(\mathrm{latitude}) = \cos(\theta).$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img60.png"
+ ALT="$z=\sin(\mathrm{latitude}) =
+\cos(\theta).$"></SPAN> If zbounds(1)<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.28ex; vertical-align: -0.16ex; " SRC="sub_img61.png"
+ ALT="$&lt;$"></SPAN>zbounds(2), it is
+performed <EM>on</EM> the strip zbounds(1)<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.28ex; vertical-align: -0.16ex; " SRC="sub_img62.png"
+ ALT="$&lt;z&lt;$"></SPAN>zbounds(2); if not,
+it is performed <EM>outside</EM> the strip
+zbounds(2)<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.41ex; " SRC="sub_img63.png"
+ ALT="$\le z \le$"></SPAN>zbounds(1). If absent, the whole map is processed.
+</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use healpix_types 
+<BR>
+use pix_tools, only : nside2npix 
+<BR>
+use alm_tools, only : alm2map_spin 
+<BR>
+integer(I4B) :: nside, lmax, mmax, npix, spin
+<BR>
+real(SP), dimension(:,:), allocatable :: map 
+<BR>
+complex(SPC), dimension(:,:,:), allocatable :: alm 
+<BR>...
+<BR>
+nside=256 ; lmax=512 ; mmax=lmax ; spin=4
+<BR>
+npix=nside2npix(nside)
+<BR>
+allocate(alm(1:2,0:lmax,0:mmax))
+<BR>
+allocate(map(0:npix-1,1:2))
+<BR>...
+<BR>
+call alm2map_spin(nside, lmax, mmax, spin, alm, map)  
+<BR></div>
+<blockquote>
+Make spin-4 maps from the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> passed in alm. The maps have <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> of 256, and are constructed from <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> values up to 512 in <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img33.png"
+ ALT="$\ell$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img34.png"
+ ALT="$m$"></SPAN>.
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">alm2map_spin*</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><A HREF="sub_ring_synthesis.htm#sub:ring_synthesis">ring_synthesis</A></B>
+<DD>Performs FFT over <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img34.png"
+ ALT="$m$"></SPAN> for synthesis of the rings.
+  <DT>
+<B>compute_lam_mm, get_pixel_layout, </B>
+<DD><DT>
+<B>gen_lamfac_der, gen_mfac, gen_mfac_spin, do_lam_lm_spin, </B>
+<DD><DT>
+<B>gen_recfac, gen_recfac_spin, init_rescale, l_min_ylm</B>
+<DD>Ancillary routines used
+  for <!-- MATH
+ $Y_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img65.png"
+ ALT="$Y_{\ell m}$"></SPAN> recursion
+  <DT>
+<B><SPAN  CLASS="textbf">misc_utils</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B><A HREF="sub_assert_assert_alloc_assert_.htm#sub:assert">assert_alloc</A></B>
+<DD>routine to print error message, when an array can not be
+  allocated properly
+  </DL>
+Note: Starting with <A HREF="sub_Older_Changes.htm#sub:new3p80">version 3.80</A>, some <SPAN style="font-family:monospace">libsharp</SPAN> routines will be called for any <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img114.png"
+ ALT="$\vert s\vert$"></SPAN> value.
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">alm2map_spin*</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_alm2map.htm#sub:alm2map">alm2map</A></B>
+<DD>routine generating maps of temperature
+   and polarisation from their  <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>
+   <DT>
+<B><A HREF="sub_alm2map_der.htm#sub:alm2map_der">alm2map_der</A></B>
+<DD>routine generating maps of temperature
+   and polarisation, and their spatial derivatives, from their  <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>
+   <DT>
+<B><A HREF="sub_map2alm_spin.htm#sub:map2alm_spin">map2alm_spin</A></B>
+<DD>routine performing the inverse transform
+   of alm2map.
+  <DT>
+<B><A HREF="sub_create_alm.htm#sub:create_alm">create_alm</A></B>
+<DD>routine to generate randomly
+  distributed <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients according to a given power spectrum
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_alm2map_der.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_alms2fits.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html327"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_alm2map_der.htm">alm2map_der*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_alms2fits.htm">alms2fits*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

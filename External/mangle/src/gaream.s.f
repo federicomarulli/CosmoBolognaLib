@@ -1,16 +1,16 @@
 c-----------------------------------------------------------------------
-c © A J S Hamilton 2001
+c ï¿½ A J S Hamilton 2001
 c-----------------------------------------------------------------------
       subroutine gaream(area,areat,rp,cm,np,tol,verb,npg,npp,
      *  cmimin,cmimax,phi,iord,ldegen)
       integer np,verb,npg,npp,iord(np)
       logical ldegen
-      real*10 area,areat,rp(3,np),cm(np),tol,cmimin,cmimax,phi(2,np)
+      real*16 area,areat,rp(3,np),cm(np),tol,cmimin,cmimax,phi(2,np)
 c
 c        parameters
       include 'pi.par'
-      real*10 TWOPI
-      parameter (TWOPI=2._10*PI)
+      real*16 TWOPI
+      parameter (TWOPI=2._16*PI)
 c        intrinsics
       intrinsic abs
 c *
@@ -29,19 +29,19 @@ c        sphere
       if (np.eq.npg) then
         if (cm(npg).le.abs(cmimin)) then
 c        region excludes sphere
-          if (cmimin.ge.0._10) then
-            area=0._10
+          if (cmimin.ge.0._16) then
+            area=0._16
 c        region encloses sphere
-          elseif (cmimin.lt.0._10) then
+          elseif (cmimin.lt.0._16) then
             area=TWOPI*cm(npg)
           endif
         elseif (cm(npg).ge.abs(cmimax)) then
 c        sphere encloses region
-          if (cmimax.ge.0._10) then
+          if (cmimax.ge.0._16) then
             area=areat
 c        sphere and region enclose each other
-          elseif (cmimax.lt.0._10) then
-            area=areat-TWOPI*(2._10-cm(npg))
+          elseif (cmimax.lt.0._16) then
+            area=areat-TWOPI*(2._16-cm(npg))
           endif
 c        sphere intersects boundary of region
         else
@@ -51,40 +51,40 @@ c        annulus
       elseif (np.eq.npp) then
 c        region is null
         if (cm(npg).le.-cm(npp)) then
-          area=0._10
+          area=0._16
         elseif (cm(npg).le.abs(cmimin)) then
 c        region excludes annulus
-          if (cmimin.ge.0._10) then
-            area=0._10
+          if (cmimin.ge.0._16) then
+            area=0._16
 c        region encloses annulus
-          elseif (cmimin.lt.0._10) then
+          elseif (cmimin.lt.0._16) then
             area=TWOPI*(cm(npg)+cm(npp))
           endif
         elseif (-cm(npp).ge.abs(cmimax)) then
 c        annulus encloses region
-          if (cmimax.ge.0._10) then
-            area=0._10
+          if (cmimax.ge.0._16) then
+            area=0._16
 c        annulus and region enclose each other
-          elseif (cmimax.lt.0._10) then
+          elseif (cmimax.lt.0._16) then
             area=TWOPI*(cm(npg)+cm(npp))
           endif
         elseif (cm(npg).ge.abs(cmimax)
      *    .and.-cm(npp).le.abs(cmimin)) then
-          if (cmimin.ge.0._10) then
+          if (cmimin.ge.0._16) then
 c        annulus contains region
-            if (cmimax.ge.0._10) then
+            if (cmimax.ge.0._16) then
               area=areat
 c        outer ring of annulus and region enclose each other
-            elseif (cmimax.lt.0._10) then
-              area=areat-TWOPI*(2._10-cm(npg))
+            elseif (cmimax.lt.0._16) then
+              area=areat-TWOPI*(2._16-cm(npg))
             endif
-          elseif (cmimin.lt.0._10) then
+          elseif (cmimin.lt.0._16) then
 c        inner ring of annulus and region enclose each other
-            if (cmimax.ge.0._10) then
-              area=areat-TWOPI*(2._10+cm(npp))
+            if (cmimax.ge.0._16) then
+              area=areat-TWOPI*(2._16+cm(npp))
 c        annulus and region enclose each other
-            elseif (cmimax.lt.0._10) then
-              area=areat-TWOPI*(2._10-cm(npg)-cm(npp))
+            elseif (cmimax.lt.0._16) then
+              area=areat-TWOPI*(2._16-cm(npg)-cm(npp))
             endif
           endif
 c        annulus intersects boundary of region

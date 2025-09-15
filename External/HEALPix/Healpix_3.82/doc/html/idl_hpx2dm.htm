@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>hpx2dm</TITLE>
+<META NAME="description" CONTENT="hpx2dm">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_hpx2gs.htm">
+<LINK REL="previous" HREF="idl_help_st.htm">
+<LINK REL="next" HREF="idl_hpx2gs.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_help_st.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_hpx2gs.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html373"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_help_st.htm">help_st</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_hpx2gs.htm">hpx2gs</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION3200"></A>
+<A ID="idl:hpx2dm"></A>
+<BR>
+ 
+</H1>
+
+<P>
+
+<P>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">hpx2dm</SPAN></div><hr>
+<H3>This IDL facility provides a means to turn a <strong>HEALPix</strong>  data set
+into a DomeMaster
+compliant image (azimuthal equidistant projection of the half-sphere
+in a PNG or lossless JPEG file) that can be projected on a planetarium.
+See eg 
+<A ID="tex2html46"
+  HREF="http://fulldome.ryanwyatt.net/fulldome_domemasterSpec_v05.pdf">http://fulldome.ryanwyatt.net/fulldome_domemasterSpec_v05.pdf</A>
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/visu/hpx2dm.pro"><strong>src/idl/visu/hpx2dm.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+<SPAN CLASS="colordoc">hpx2dm</SPAN>, 
+<A HREF="#idl:hpx2dm:file">File</A>, 
+[ <A HREF="#idl:hpx2dm:select">Select</A>, ]
+[ <A HREF="#idl:hpx2dm:help">/HELP</A>, 
+<A HREF="#idl:hpx2dm:jpeg">JPEG=</A>, 
+<A HREF="#idl:hpx2dm:png">PNG=</A>, 
+<A HREF="#idl:hpx2dm:preview">PREVIEW=</A>, 
+<A HREF="#idl:hpx2dm:pxsize">PXSIZE=</A>, 
++ <A HREF="#idl:hpx2dm:other_keywords">most of azeqview keywords</A><SPAN CLASS="MATH"><IMG
+ STYLE="height: 0.23ex; vertical-align: -0.10ex; " SRC="idl_img6.png"
+ ALT="$\ldots$"></SPAN>
+]
+
+</h3>
+
+<P>
+
+<hr>
+<H2>QUALIFIERS</H2>
+<BR>
+<TABLE class="PAD  BORDER" style="">
+<TR><TD CLASS="LEFT TOP"  style="width:60px">File<A ID="idl:hpx2dm:file"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:425px">Required
+<BR>
+name of a FITS file containing 
+               the <strong>HEALPix</strong>  map in an extension or in the image field, <BR><EM>or</EM>    name of an <EM>online</EM> variable (either array or
+structure) containing the <strong>HEALPix</strong>  map (See note below);
+<BR>
+if Save is set   :    name of an IDL saveset file containing
+               the <strong>HEALPix</strong>  map stored under the variable  <SPAN style="font-family:monospace">data</SPAN> <BR><b> (default : none)</b></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:60px">Select<A ID="idl:hpx2dm:select"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:425px">Optional
+<BR>
+column of the BIN FITS table to be plotted, can be either  <BR>&ndash; a name : value given in TTYPEi of the FITS file <BR>
+NOT case sensitive and can be truncated, <BR>(only letters, digits and underscore are valid) <BR>&ndash; an integer        : number i of the column
+                            containing the data, starting with 1 (also valid if
+		  <SPAN style="font-family:monospace">File</SPAN> is an online array) <BR><b>default:</b>1 for full sky maps, 'SIGNAL' column for FITS files
+		  containing cut sky maps</TD>
+</TR>
+</TABLE>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>JPEG=<A ID="idl:hpx2dm:jpeg"></A></B>
+<DD>name of the output <EM>lossless</EM>
+JPEG file
+<DT>
+<B>PNG=<A ID="idl:hpx2dm:png"></A></B>
+<DD>name of the output PNG file
+
+<P>
+<DT>
+<B>/PREVIEW<A ID="idl:hpx2dm:preview"></A></B>
+<DD>if set, the output JPEG or PNG
+file will be previewed
+
+<P>
+<DT>
+<B>/HELP<A ID="idl:hpx2dm:help"></A></B>
+<DD>Prints out the documentation header 
+
+<P>
+<DT>
+<B>PXSIZE=<A ID="idl:hpx2dm:pxsize"></A></B>
+<DD>number of pixels in each
+dimension of the square output image
+
+<P>
+<DT>
+<B><A ID="idl:hpx2dm:other_keywords"></A><A HREF="idl_mollview.htm#idl:mollview:asinh">/ASINH</A>, </B>
+<DD><DT>
+<B><A HREF="idl_mollview.htm#idl:mollview:colt">COLT</A>=,
+<A HREF="idl_mollview.htm#idl:mollview:coord">COORD</A>=,
+<A HREF="idl_mollview.htm#idl:mollview:factor">FACTOR</A>=,
+<A HREF="idl_mollview.htm#idl:mollview:flip">/FLIP</A>,
+<A HREF="idl_mollview.htm#idl:mollview:hbound">HBOUND</A>=,</B>
+<DD><DT>
+<B><A HREF="idl_mollview.htm#idl:mollview:hist_equal">/HIST_EQUAL</A>,
+<A HREF="idl_mollview.htm#idl:mollview:log">/LOG</A>,
+<A HREF="idl_mollview.htm#idl:mollview:max">MAX</A>=,
+<A HREF="idl_mollview.htm#idl:mollview:min">MIN</A>=, <A HREF="idl_mollview.htm#idl:mollview:nested">/NESTED</A>,
+<A HREF="idl_mollview.htm#idl:mollview:offset">OFFSET</A>=, </B>
+<DD><DT>
+<B>/QUADCUBE,
+<A HREF="idl_mollview.htm#idl:mollview:rot">ROT</A>=,
+<A HREF="idl_mollview.htm#idl:mollview:save">SAVE</A>=,
+<A HREF="idl_mollview.htm#idl:mollview:silent">/SILENT</A>, </B>
+<DD><DT>
+<B><A HREF="idl_mollview.htm#idl:mollview:truecolors">TRUECOLORS</A>=</B>
+<DD>those keywords have the same meaning as in
+<A HREF="idl_azeqview.htm#idl:azeqview">azeqview</A> and 
+<A HREF="idl_mollview.htm#idl:mollview">mollview</A>
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">hpx2dm</SPAN> reads in a <strong>HEALPix</strong> sky map in FITS format or from a memory array
+and generates a PNG or JPEG file containing a DomeMaster compliant map
+(azimuthal equidistant projection of the half-sky).
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">hpx2dm</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="idl_azeqview.htm#idl:azeqview">azeqview</A></B>
+<DD>performs Azimuthal Equidistant
+projection required by <SPAN CLASS="colordoc">hpx2dm</SPAN>.
+  <DT>
+<B><A HREF="idl_hpx2gs.htm#idl:hpx2gs">hpx2gs</A></B>
+<DD>turns Healpix maps into GoogleEarth,
+GoogleSky or Oculus VR compatible images
+  </DL>
+
+<P>
+
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_help_st.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_hpx2gs.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html373"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_help_st.htm">help_st</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_hpx2gs.htm">hpx2gs</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

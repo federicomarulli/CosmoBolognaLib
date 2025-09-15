@@ -42,9 +42,9 @@ using namespace cbl;
 // ============================================================================
 
 
-void cbl::reconstruction_fourier_space (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool random_RSD, const cosmology::Cosmology cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type)
+void cbl::reconstruction_Fourier_space (const catalogue::Catalogue data, const catalogue::Catalogue random, const bool random_RSD, const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const double redshift, const double bias, const double cell_size, const double smoothing_radius, const int interpolation_type)
 {
-  double ff = cosmology.linear_growth_rate(redshift);
+  double ff = cosmology->linear_growth_rate(redshift);
   double beta = ff/bias;
   
   //double rsd_term = 3*ff/(7+3*ff);

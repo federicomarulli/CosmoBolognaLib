@@ -1,0 +1,411 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>Geometric and Algebraic Properties of HEALPix </TITLE>
+<META NAME="description" CONTENT="Geometric and Algebraic Properties of HEALPix ">
+<META NAME="keywords" CONTENT="intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="intro.css">
+
+<LINK REL="next" HREF="intro_HEALPix_Software_Package.htm">
+<LINK REL="previous" HREF="intro_Discretisation_Functions_on.htm">
+<LINK REL="next" HREF="intro_HEALPix_Software_Package.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="intro_Discretisation_Functions_on.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_HEALPix_Software_Package.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html103"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_Discretisation_Functions_on.htm">Discretisation of Functions on the Sphere</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_HEALPix_Software_Package.htm">The HEALPix Software Package</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A ID="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A ID="tex2html105"
+  HREF="intro_Geometric_Algebraic_Propert.htm#SECTION410">RING and NESTED numbering schemes</A>
+<LI><A ID="tex2html106"
+  HREF="intro_Geometric_Algebraic_Propert.htm#SECTION420">The Unique Identifier scheme</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A ID="SECTION400">
+Geometric and Algebraic Properties of <strong>HEALPix</strong> </A>
+</H1>
+
+<P>
+<strong>HEALPix</strong> is a genuinely curvilinear partition of the sphere into exactly equal area
+quadrilaterals of varying shape. The base-resolution comprises twelve pixels in three
+rings around the poles and equator. 
+
+<P>
+The resolution of the grid is expressed by the parameter <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img9.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> which defines the number
+of divisions along the side of a base-resolution pixel that is needed to reach a desired
+high-resolution partition.
+
+<P>
+All pixel centers are placed on <!-- MATH
+ $4\times N_{\mathrm{side}}-1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img10.png"
+ ALT="$4\times N_{\mathrm{side}}-1$"></SPAN> 
+rings of constant latitude, 
+and are equidistant in azimuth
+(on each ring). All iso-latitude rings located between the upper and lower corners of
+the equatorial base-resolution pixels, the equatorial zone, 
+are divided into the same number of pixels: 
+<!-- MATH
+ $N_{\mathrm{eq}}= 4\times N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.75ex; " SRC="intro_img11.png"
+ ALT="$N_{\mathrm{eq}}= 4\times N_{\mathrm{side}}$"></SPAN>. The remaining rings are located within the
+polar cap regions and contain a varying number of pixels, increasing 
+from ring to ring with increasing distance
+from the poles by one pixel within each quadrant. 
+
+<P>
+Pixel boundaries are non-geodesic and take the very simple 
+forms <!-- MATH
+ $\cos \theta = a \pm b \cdot \phi$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img12.png"
+ ALT="$\cos \theta = a \pm b \cdot \phi $"></SPAN> in the equatorial zone 
+(<!-- MATH
+ $|\cos \theta| \le 2/3$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img13.png"
+ ALT="$\vert\cos \theta\vert \le 2/3$"></SPAN>), 
+and <!-- MATH
+ $\cos \theta = a + b / \phi^2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="intro_img14.png"
+ ALT="$\cos \theta = a + b / \phi^2 $"></SPAN>, or
+  <!-- MATH
+ $\cos \theta = a + b / (\pi/2 - \phi) ^2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="intro_img15.png"
+ ALT="$\cos \theta = a + b / (\pi/2 - \phi) ^2 $"></SPAN>,
+in the polar caps, with <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img16.png"
+ ALT="$\theta$"></SPAN> being the co-latitude, and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img17.png"
+ ALT="$\phi$"></SPAN> the longitude.
+This allows one to explicitly check by simple analytical integration the 
+exact area equality among pixels (<A
+ HREF="intro_Bibliography.htm#gorskihealpix05">G&#243;rski et&nbsp;al., 2005</A>),
+and to compute efficiently more complex objects, 
+e.g. the Fourier transforms of individual pixels.
+
+<P>
+
+<DIV class="CENTER"><A ID="fig:Numbering"></A><A ID="1051"></A>
+<TABLE>
+<CAPTION class="BOTTOM"><STRONG>Figure 3:</STRONG>
+Cylindrical projection of the <strong>HEALPix</strong> division of a
+sphere and two natural pixel numbering schemes (RING and NESTED) 
+allowed by <strong>HEALPix</strong>. Both numbering schemes map the two dimensional 
+distribution
+of discrete area elements on a sphere into the one dimensional, 
+integer pixel number array,
+which is essential for computations involving data sets with very 
+large total pixel numbers.
+From top to bottom:
+Panel one (resolution parameter <!-- MATH
+ $N_{\mathrm{side}}= 2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img18.png"
+ ALT="$N_{\mathrm{side}}= 2$"></SPAN>) and panel two (<!-- MATH
+ $N_{\mathrm{side}}= 4$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img19.png"
+ ALT="$N_{\mathrm{side}}= 4$"></SPAN>)
+show the RING scheme for pixel numbering, with the pixel number winding 
+down from north to south pole through the consecutive isolatitude rings.
+Panel three (resolution parameter <!-- MATH
+ $N_{\mathrm{side}}= 2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img18.png"
+ ALT="$N_{\mathrm{side}}= 2$"></SPAN>) and panel four (<!-- MATH
+ $N_{\mathrm{side}}= 4$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img19.png"
+ ALT="$N_{\mathrm{side}}= 4$"></SPAN>)
+show the NESTED scheme for pixel numbering within which the pixel number grows
+with consecutive hierarchical subdivisions on a tree structure seeded by 
+the twelve 
+base-resolution pixels. 
+</CAPTION>
+<TR><TD>
+<DIV CLASS="centerline" ID="par4176" ALIGN="CENTER">
+<IMG
+  WIDTH="627" HEIGHT="908" STYLE=""
+ SRC="./introf2.png"
+ ALT="Image introf2"></DIV>
+
+<P></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<H2><A ID="SECTION410">
+RING and NESTED numbering schemes</A>
+</H2>
+Specific geometrical properties allow <strong>HEALPix</strong> to support two different
+numbering schemes for the pixels, as illustrated in Figure&nbsp;<A HREF="#fig:Numbering">3</A>. 
+
+<P>
+First, in the RING scheme, 
+one can simply count the pixels moving down from the north 
+to the south pole along each
+iso-latitude ring. It is in the RING scheme that Fourier transforms 
+with spherical harmonics
+are easy to implement.
+
+<P>
+Second, in the NESTED scheme, one can arrange the pixel indices 
+in  twelve tree structures, corresponding to base-resolution pixels.
+Each of those is organised as shown in Fig.&nbsp;<A HREF="intro_Discretisation_Functions_on.htm#fig:quadtree">1</A>. This can easily be implemented
+since, due to the simple 
+description of pixel boundaries, the analytical mapping of the <strong>HEALPix</strong> 
+base-resolution elements (curvilinear
+quadrilaterals) into a [0,1]<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.17ex; vertical-align: -0.29ex; " SRC="intro_img20.png"
+ ALT="$\times$"></SPAN>[0,1] square exists.
+This tree structure allows one to implement efficiently all
+applications involving  nearest-neighbour searches
+(<A
+ HREF="intro_Bibliography.htm#whg">Wandelt, Hivon &amp; G&#243;rski, 1998</A>),
+and also allows for an immediate
+construction of the fast Haar wavelet transform on <strong>HEALPix</strong>. 
+
+<P>
+
+<H2><A ID="SECTION420"></A>
+<A ID="intro:unique"></A>
+<BR>
+The Unique Identifier scheme
+</H2>
+As exposed above, a <strong>HEALPix</strong> pixel is identified by three variables:
+its numbering scheme (RING or NESTED), 
+its resolution or size parameter <!-- MATH
+ $N_{\mathrm{side}}= 2^k$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.45ex; " SRC="intro_img21.png"
+ ALT="$N_{\mathrm{side}}= 2^k$"></SPAN> (where <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img22.png"
+ ALT="$k$"></SPAN> is a integer sometimes called 'order'),
+and its index <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="intro_img23.png"
+ ALT="$p$"></SPAN> lying in <!-- MATH
+ $[0, 12N_{\mathrm{side}}^2-1]$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.68ex; " SRC="intro_img24.png"
+ ALT="$[0, 12N_{\mathrm{side}}^2-1]$"></SPAN>.
+Since some applications require to process simultaneously pixels of different resolutions, it is possible
+to merge the resolution <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img9.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> and index <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="intro_img23.png"
+ ALT="$p$"></SPAN> into a single unique number <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="intro_img25.png"
+ ALT="$u$"></SPAN>
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:nest2uniq"></A><!-- MATH
+ \begin{equation}
+u = p + 4 N_{\mathrm{side}}^2,
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.67ex; " SRC="intro_img26.png"
+ ALT="$\displaystyle u = p + 4 N_{\mathrm{side}}^2,$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">1</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+so that all pixels with <!-- MATH
+ $N_{\mathrm{side}}=1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img27.png"
+ ALT="$N_{\mathrm{side}}=1$"></SPAN> have the unique indices 4 to 15, 
+those with <!-- MATH
+ $N_{\mathrm{side}}=2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img18.png"
+ ALT="$N_{\mathrm{side}}= 2$"></SPAN> are in the range 16 to 63, and so on (<A
+ HREF="intro_Bibliography.htm#rh15">Reinecke &amp; Hivon, 2015</A>), 
+thus simplifying the handling of data with heteregenous <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img9.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN>.
+Splitting the unique index <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="intro_img25.png"
+ ALT="$u$"></SPAN> into its original <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img9.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="intro_img23.png"
+ ALT="$p$"></SPAN> is as simple as
+<P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img28.png"
+ ALT="$\displaystyle N_{\mathrm{side}}$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.55ex; " SRC="intro_img29.png"
+ ALT="$\displaystyle = 2^{\mathrm{floor}\left( \log_2(u/4)/2 \right)},$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="eq:ring2nest_a">(<SPAN CLASS="arabic">2</SPAN>)</A></TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="intro_img30.png"
+ ALT="$\displaystyle p$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.67ex; " SRC="intro_img31.png"
+ ALT="$\displaystyle = u - 4 N_{\mathrm{side}}^2,$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="eq:ring2nest_b">(<SPAN CLASS="arabic">3</SPAN>)</A></TD></TR>
+</TABLE></DIV>
+<P></P>
+giving immediate access to the usual pixel based tools.
+
+<P>
+This unique indexing could in principle be applied to both the RING and NESTED schemes, 
+even though the latter appears more relevant for a hierarchical description 
+of data with variable resolutions: since, as noted previously, a pixel with NESTED index <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="intro_img23.png"
+ ALT="$p$"></SPAN> 
+at resolution <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img9.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> is subdivided in four pixels with index <!-- MATH
+ $4p,\, 4p+1,\, 4p+2,\, 4p+3$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.55ex; " SRC="intro_img32.png"
+ ALT="$4p,\, 4p+1,\, 4p+2,\, 4p+3$"></SPAN> 
+at resolution <!-- MATH
+ $2N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img33.png"
+ ALT="$2N_{\mathrm{side}}$"></SPAN>, Eq.&nbsp;(<A HREF="#eq:nest2uniq">1</A>) shows that
+a pixel with Nested-based unique identifier <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="intro_img25.png"
+ ALT="$u$"></SPAN> is subdivided in four smaller pixels 
+whose unique identifiers are <!-- MATH
+ $4u,\, 4u+1,\, 4u+2,\, 4u+3$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.55ex; " SRC="intro_img34.png"
+ ALT="$4u,\, 4u+1,\, 4u+2,\, 4u+3$"></SPAN>.
+This Nested-based Unique identification is for instance the basis of the <SPAN  CLASS="texttt">NUNIQ</SPAN> storage scheme used for Multi-Order Coverage map (MOC) description of astronomical datasets proposed for virtual observatories (<A
+ HREF="intro_Bibliography.htm#moc">Boch et&nbsp;al., 2014</A>).
+
+<P>
+Routines implementing Eqs&nbsp;(<A HREF="#eq:nest2uniq">1</A>) and (<A HREF="#eq:ring2nest_a">2</A>, <A HREF="#eq:ring2nest_b">3</A>) in various languages have been available since release 3.30.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="intro_Discretisation_Functions_on.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_HEALPix_Software_Package.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html103"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_Discretisation_Functions_on.htm">Discretisation of Functions on the Sphere</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_HEALPix_Software_Package.htm">The HEALPix Software Package</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

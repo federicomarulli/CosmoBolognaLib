@@ -1,0 +1,435 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>ialteralm</TITLE>
+<META NAME="description" CONTENT="ialteralm">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_ianafast.htm">
+<LINK REL="previous" HREF="idl_hpx2gs.htm">
+<LINK REL="next" HREF="idl_ianafast.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_hpx2gs.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_ianafast.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html377"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_hpx2gs.htm">hpx2gs</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_ianafast.htm">ianafast</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION3400"></A>
+<A ID="idl:ialteralm"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">ialteralm</SPAN></div><hr>
+<H3>This IDL facility provides an interface to F90 '<A HREF="./fac_alteralm.htm#fac:alteralm">alteralm</A>' facility. 
+This program can be used to modify a set of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> spherical harmonics
+  coefficients, as those extracted by <A HREF="idl_ianafast.htm#idl:ianafast">ianafast</A> or 
+  simulated by <A HREF="idl_isynfast.htm#idl:isynfast">isynfast</A>, before
+  they are used as constraints on a isynfast run. Currently the alterations
+  possible are 
+<UL>
+<LI>rotation (using Wigner matrices) of the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> from the input
+    coordinate system to any other standard astrophysical coordinate system. The
+    resulting <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> can be used with e.g. synfast to generate a map in the
+    new coordinate system.
+</LI>
+<LI>removal of the pixel and beam window functions of the input
+  <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> (corresponding to the pixel size and beam shape of the map from which
+  they were extracted) and implementation of an arbitrary pixel and beam window
+  function. 
+ <BR>
+<DIV ALIGN="CENTER"><A ID="eq:alteralm"></A>
+<!-- MATH
+ \begin{eqnarray}
+a_{\ell m}^\mathrm{OUT} = a_{\ell m}^\mathrm{IN}
+ \frac{B^\mathrm{OUT}(\ell) P^\mathrm{OUT}(\ell)}{B^\mathrm{IN}(\ell) 
+ P^\mathrm{IN}(\ell)},
+\end{eqnarray}
+ -->
+<SPAN CLASS="MATH">
+<TABLE CELLPADDING="0" ALIGN="CENTER" WIDTH="100%">
+<TR VALIGN="MIDDLE"><TD NOWRAP WIDTH="46%" ALIGN="RIGHT"><IMG
+ STYLE="height: 5.65ex; vertical-align: -2.27ex; " SRC="idl_img70.png"
+ ALT="$\displaystyle a_{\ell m}^\mathrm{OUT} = a_{\ell m}^\mathrm{IN}
+\frac{B^\mathrm{OUT}(\ell) P^\mathrm{OUT}(\ell)}{B^\mathrm{IN}(\ell)
+P^\mathrm{IN}(\ell)},$"></TD>
+<TD>&nbsp;</TD>
+<TD>&nbsp;</TD>
+<TD CLASS="eqno" WIDTH="8%" ALIGN="RIGHT">
+(<SPAN CLASS="arabic">6</SPAN>)</TD></TR>
+</TABLE>
+</SPAN></DIV>
+<BR CLEAR="ALL"><P></P>
+where <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img71.png"
+ ALT="$P(\ell)$"></SPAN> is the pixel window function, and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img2.png"
+ ALT="$B(\ell)$"></SPAN> is the beam window
+ function (assuming a circular beam) or any other <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN> space filter (eg,
+ Wiener filter). For an infinitely small pixel (or beam) one would have <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img72.png"
+ ALT="$P(\ell) =
+1$"></SPAN> (resp. <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img73.png"
+ ALT="$B(\ell) = 1$"></SPAN>) for any <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN>.
+</LI>
+</UL>
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/interfaces/ialteralm.pro"><strong>src/idl/interfaces/ialteralm.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+IALTERALM, 
+<A HREF="#idl:ialteralm:alm_in">alm_in</A>,  
+<A HREF="#idl:ialteralm:alm_out">alm_out</A>, [
+<A HREF="#idl:ialteralm:beam_file_in">beam_file_in</A>,
+<A HREF="#idl:ialteralm:beam_file_out">beam_file_out</A>,
+<A HREF="#idl:ialteralm:binpath">binpath=</A>,
+<A HREF="#idl:ialteralm:coord_in">coord_in</A>,
+<A HREF="#idl:ialteralm:coord_out">coord_out</A>,
+<A HREF="#idl:ialteralm:epoch_in">epoch_in</A>,
+<A HREF="#idl:ialteralm:epoch_out">epoch_out</A>,
+<A HREF="#idl:ialteralm:fwhm_arcmin_in">fwhm_arcmin_in</A>,
+<A HREF="#idl:ialteralm:fwhm_arcmin_out">fwhm_arcmin_out</A>,
+<A HREF="#idl:ialteralm:help">/help</A>,
+<A HREF="#idl:ialteralm:keep_tmp_files">keep_tmp_files=</A>, 
+<A HREF="#idl:ialteralm:lmax_out">lmax_out</A>,
+<A HREF="#idl:ialteralm:nlmax_out">nlmax_out</A>,
+<A HREF="#idl:ialteralm:nside_in">nside_in</A>,
+<A HREF="#idl:ialteralm:nside_out">nside_out</A>,
+<A HREF="#idl:ialteralm:nsmax_in">nsmax_in</A>,
+<A HREF="#idl:ialteralm:nsmax_out">nsmax_out</A>,
+<A HREF="#idl:ialteralm:silent">/silent</A>,
+<A HREF="#idl:ialteralm:tmpdir">tmpdir=</A>,
+<A HREF="#idl:ialteralm:windowfile_in">windowfile_in</A>,
+<A HREF="#idl:ialteralm:winfiledir_in">winfiledir_in</A>,
+<A HREF="#idl:ialteralm:windowfile_out">windowfile_out</A>,
+<A HREF="#idl:ialteralm:winfiledir_out">winfiledir_out</A>
+]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>alm_in</B>
+<DD><A ID="idl:ialteralm:alm_in"></A> required input: input <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN>, must be a FITS file
+   <DT>
+<B>alm_out</B>
+<DD><A ID="idl:ialteralm:alm_out"></A> required output: output <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN>, must be a FITS file
+
+<P>
+</DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>binpath=</B>
+<DD><A ID="idl:ialteralm:binpath"></A> full path to back-end routine <b>default:</b>$HEXE/alteralm, then $HEALPIX/bin/alteralm
+<BR>              &ndash; a binpath starting with / (or <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img74.png"
+ ALT="$\backslash$"></SPAN>), <SPAN CLASS="MATH">&nbsp;</SPAN> or $ is interpreted as absolute
+<BR>              &ndash; a binpath starting with ./ is interpreted as relative to current directory
+<BR>              &ndash; all other binpaths are relative to $HEALPIX
+
+<P>
+<DT>
+<B>beam_file_in=</B>
+<DD><A ID="idl:ialteralm:beam_file_in"></A> Beam window function of input <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN>,
+                 either a FITS file or an array 
+		(see <A HREF="./fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:beamfiles">&rdquo;Beam window function files&rdquo;</A> section
+		in the <A ID="tex2html51"
+  HREF="facilities.htm"><strong>HEALPix</strong> Fortran Facilities document</A>). 
+
+If present, will override
+	<A HREF="#idl:ialteralm:fwhm_arcmin_in"><SPAN style="font-family:monospace">fwhm_arcmin_in</SPAN></A>
+                 <b>default:</b>value of BEAM_LEG  keyword read from
+	<A HREF="#idl:ialteralm:alm_in"><SPAN style="font-family:monospace">alm_in</SPAN></A>
+
+<P>
+<DT>
+<B>beam_file_out=</B>
+<DD><A ID="idl:ialteralm:beam_file_out"></A> Beam window function of output alm, 
+                 either a FITS file or an array (see <A HREF="#idl:ialteralm:beam_file_in"><SPAN style="font-family:monospace">beam_file_in</SPAN></A>. 
+		If present and non-empty, will override
+	<A HREF="#idl:ialteralm:fwhm_arcmin_out"><SPAN style="font-family:monospace">fwhm_arcmin_out</SPAN></A>
+                 <b>default:</b>&rdquo; (empty string, no beam window applied)
+
+<P>
+<DT>
+<B>coord_in=</B>
+<DD><A ID="idl:ialteralm:coord_in"></A> Astrophysical coordinates system used to compute input <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN>.
+                 Case-insensitive single letter code.
+                 Valid choices are 'g','G' = Galactic, 'e','E' = Ecliptic,
+                 'c','q','C','Q' = Celestial/eQuatorial.
+                 <b>default:</b>value of COORDSYS keyword read from
+	<A HREF="#idl:ialteralm:alm_in"><SPAN style="font-family:monospace">alm_in</SPAN></A>
+
+<P>
+<DT>
+<B>coord_out=</B>
+<DD><A ID="idl:ialteralm:coord_out"></A> Astrophysical coordinates system of output alm.
+                  <b>default:</b> <A HREF="#idl:ialteralm:coord_in"><SPAN style="font-family:monospace">coord_in</SPAN></A> 
+
+<P>
+<DT>
+<B>epoch_in=</B>
+<DD><A ID="idl:ialteralm:epoch_in"></A> Astronomical epoch of input coordinates 
+(<A HREF="#idl:ialteralm:coord_in"><SPAN style="font-family:monospace">coord_in</SPAN></A>)
+                 <b>default:</b>2000.0
+ <DT>
+<B>epoch_out=</B>
+<DD><A ID="idl:ialteralm:epoch_out"></A> Astronomical epoch of output coordinates 
+(<A HREF="#idl:ialteralm:coord_out"><SPAN style="font-family:monospace">coord_out</SPAN></A>)
+                 <b>default:</b>same as <A HREF="#idl:ialteralm:epoch_in"><SPAN style="font-family:monospace">epoch_in</SPAN></A>
+
+<P>
+<DT>
+<B>fwhm_arcmin_in=</B>
+<DD><A ID="idl:ialteralm:fwhm_arcmin_in"></A> Full Width
+Half-Maximum in arcmin of Gaussian beam applied to map from which are obtained
+input <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN>.
+<BR>           <b>default:</b>value of FWHM keyword in <A HREF="#idl:ialteralm:alm_in"><SPAN style="font-family:monospace">alm_in</SPAN></A>
+
+<P>
+<DT>
+<B>fwhm_arcmin_out=</B>
+<DD><A ID="idl:ialteralm:fwhm_arcmin_out"></A> FWHM in
+arcmin to be applied to output alm.
+<BR><b>default:</b><A HREF="#idl:ialteralm:fwhm_arcmin_in"><SPAN style="font-family:monospace">fwhm_arcmin_in</SPAN></A>
+
+<P>
+<DT>
+<B>/help</B>
+<DD><A ID="idl:ialteralm:help"></A> if set, prints extended help
+<DT>
+<B>/keep_tmp_files</B>
+<DD><A ID="idl:ialteralm:keep_tmp_files"></A> if set,
+temporary files are not discarded at the end of the run
+
+<P>
+<DT>
+<B>lmax_out=, nlmax_out=</B>
+<DD><A ID="idl:ialteralm:lmax_out"></A><A ID="idl:ialteralm:nlmax_out"></A> maximum multipole of output alm
+
+<P>
+<DT>
+<B>nside_in=, nsmax_in=</B>
+<DD><A ID="idl:ialteralm:nside_in"></A><A ID="idl:ialteralm:nsmax_in"></A>HEALPix resolution parameter of map
+                  from which were computed input <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN>
+                   <b>default:</b>determined from <A HREF="#idl:ialteralm:alm_in"><SPAN style="font-family:monospace">alm_in</SPAN></A>
+
+<P>
+<DT>
+<B>nside_out=,nsmax_out=</B>
+<DD><A ID="idl:ialteralm:nside_out"></A><A ID="idl:ialteralm:nsmax_out"></A>HEALPix resolution parameter Nside whose
+                  window function will be applied to output alm.
+<BR>
+Could be set to 0 for infinitely small pixels (no window)
+                   <b>default:</b>same as input <A HREF="#idl:ialteralm:nsmax_in"><SPAN style="font-family:monospace">nsmax_in</SPAN></A>
+
+<P>
+<DT>
+<B>/silent</B>
+<DD><A ID="idl:ialteralm:silent"></A> if set, works silently
+
+<P>
+<DT>
+<B>tmpdir=</B>
+<DD><A ID="idl:ialteralm:tmpdir"></A> directory in which are written temporary files 
+<b>default:</b>IDL_TMPDIR (see IDL documentation)
+
+<P>
+<DT>
+<B>windowfile_in=</B>
+<DD><A ID="idl:ialteralm:windowfile_in"></A>FITS file containing pixel window for <A HREF="#idl:ialteralm:nside_in">nside_in</A>
+        <b>default:</b>determined automatically by back-end routine.
+      Do not set this keyword unless you really know what you are doing
+
+<P>
+<DT>
+<B>winfiledir_in=</B>
+<DD><A ID="idl:ialteralm:winfiledir_in"></A>directory where <A HREF="#idl:ialteralm:windowfile_in">windowfile_in</A> is to be found 
+        <b>default:</b>determined automatically by back-end routine.
+      Do not set this keyword unless you really know what you are doing
+
+<P>
+<DT>
+<B>windowfile_out=</B>
+<DD><A ID="idl:ialteralm:windowfile_out"></A>FITS file containing pixel window for <A HREF="#idl:ialteralm:nside_out">nside_out</A>
+        <b>default:</b>determined automatically by back-end routine.
+      Do not set this keyword unless you really know what you are doing
+
+<P>
+<DT>
+<B>winfiledir_out=</B>
+<DD><A ID="idl:ialteralm:winfiledir_out"></A>directory where <A HREF="#idl:ialteralm:windowfile_out">windowfile_out</A> is to be found 
+        <b>default:</b>determined automatically by back-end routine.
+      Do not set this keyword unless you really know what you are doing
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">ialteralm</SPAN> is an interface to '<A HREF="./fac_alteralm.htm#fac:alteralm">alteralm</A>' F90 facility. It
+requires some disk space on which to write the parameter file and the other
+temporary files. Most data can be provided/generated as an external FITS
+file, or as a memory array.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">ialteralm</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">ialteralm</SPAN>.
+    <DT>
+<B>alteralm</B>
+<DD>F90 facility called by <SPAN CLASS="colordoc">ialteralm</SPAN>.
+<DT>
+<B><A HREF="idl_ianafast.htm#idl:ianafast">ianafast</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_anafast.htm#fac:anafast">anafast</A> and C++ anafast_cxx
+    <DT>
+<B><A HREF="idl_iprocess_mask.htm#idl:iprocess_mask">iprocess_mask</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_process_mask.htm#fac:process_mask">process_mask</A>
+    <DT>
+<B><A HREF="idl_ismoothing.htm#idl:ismoothing">ismoothing</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_smoothing.htm#fac:smoothing">smoothing</A>
+    <DT>
+<B><A HREF="idl_isynfast.htm#idl:isynfast">isynfast</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_synfast.htm#fac:synfast">synfast</A>
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">ialteralm, <A HREF="idl_init_healpix_healpix_system.htm#idl:init_healpix">!healpix.path.test</A>+'alm.fits', '/tmp/alm_equat.fits', $</TD>
+</TR>
+<TR><TD CLASS="LEFT">coord_in='g',coord_out='q'</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="idl_isynfast.htm#idl:isynfast">isynfast</A>, 0, alm_in='/tmp/alm_equat.fits', '/tmp/map_equat.fits'</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="idl_mollview.htm#idl:mollview">mollview</A>,'/tmp/map_equat.fits',1</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="idl_mollview.htm#idl:mollview">mollview</A>,'/tmp/map_equat.fits',2</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+  This example script reads the test (polarised) <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> located in <SPAN style="font-family:monospace">$HEALPIX/test/alm.fits</SPAN> and rotates them from Galactic to Equatorial
+  coordinates, it then synthetizes a map out of those,
+  and finally plots its I and Q Stokes components (in Equatorial coordinates)
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_hpx2gs.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_ianafast.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html377"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_hpx2gs.htm">hpx2gs</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_ianafast.htm">ianafast</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

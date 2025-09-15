@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: data/W1P145/W1P145Q2.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(33.89979,-5.204991,33.914885,-5.205083,33.91866,-5.206279,33.999454,-5.206216,34.005984,-5.203703,34.006241,-5.171926,34.005866,-5.085715,34.004695,-5.081166,33.995166,-5.074898,33.89962,-5.075228,33.893321,-5.07788,33.89061,-5.081204,33.890584,-5.20369) # color=red dash=1

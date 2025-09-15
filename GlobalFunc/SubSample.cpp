@@ -54,7 +54,7 @@ void cbl::set_ObjectRegion_Tiles_Redshift (catalogue::Catalogue &data, catalogue
     if (data.isSetVar(i, catalogue::Var::_Region_) == false)
       ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the data catalogue is not set.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
     if (data.var(i, catalogue::Var::_Region_) < 0)
-      ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the data catalogue is <0. The tile numbers must be all the integers between 0 and N, where N is the highest tile number.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+      ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the data catalogue is <0. The tile numbers must be positive integers.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
 
   }
   
@@ -63,13 +63,13 @@ void cbl::set_ObjectRegion_Tiles_Redshift (catalogue::Catalogue &data, catalogue
     if (random.isSetVar(i, catalogue::Var::_Region_) == false)
       ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the random catalogue is not set.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
     if (random.var(i, catalogue::Var::_Region_) < 0)
-      ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the random catalogue is <0. The tile numbers must be all the integers between 0 and N, where N is the highest tile number.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
+      ErrorCBL("The tile number for the object "+cbl::conv(i,cbl::par::fINT)+" in the random catalogue is <0. The tile numbers must be positive integers.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
 
   }
 
   // Re-set the region numbers, so that they become
   // all the integers between 0 and N, where N is the
-  // highest number among the regions
+  // number of data regions minus 1
 
   std::vector<long int> observedRegions (data.nObjects(), -1);
   std::vector<long int> randomRegions (random.nObjects(), -1);
@@ -102,43 +102,33 @@ void cbl::set_ObjectRegion_Tiles_Redshift (catalogue::Catalogue &data, catalogue
     
   }
 
-  for (size_t i=0; i<random.nObjects(); i++)
+  // Account for the random objects falling outside the data regions.
+  // Such random objects are re-assigned to existing data regions.
+
+  int N_reassigned = 0;
+  value = 0;
+  for (size_t i=0; i<random.nObjects(); i++) {
     
     if (ok_random_tile[i] == false) {
-      
-      const long int new_value = cbl::Max(randomRegions)+1;
-      
-      for (size_t j=0; j<random.nObjects(); j++)
-	if (random.region(j) == random.region(i)) {
-	  randomRegions[j] = new_value;
-	  ok_random_tile[j] = true;
-	}
-    }
 
-  // If the number of random regions is higher
-  // than the number of data regions, remove the
-  // random objects in excess
-  
-  if (cbl::Max(randomRegions) > cbl::Max(observedRegions)) {
+      randomRegions[i] = value;
+      N_reassigned ++;
 
-    const int original_nObj = random.nObjects();
-    
-    for (int i=0; i<original_nObj; i++) {
-
-      const int idx = original_nObj-1-i;
-      
-      if ((int)(randomRegions[idx]) > (int)(cbl::Max(observedRegions))) {
-	random.remove_object(idx);
-	randomRegions.erase(randomRegions.begin()+idx);
-      }
+      if (value == cbl::Max(observedRegions))
+	value = 0;
+      else
+	value ++;
       
     }
   }
+  coutCBL << "The regions of " << N_reassigned << " random objects (the total number of random objects is " << random.nObjects() << "), falling outside the data regions, have been re-assigned." << endl;
 
   // Divide the samples in redshift sub-regions, by separating
   // the objects in the same tile but in different redshift regions.
 
   if (nz > 1) {
+
+    ErrorCBL("Work in progress. The case with nz>1 needs to be checked.", "set_ObjectRegion_Tiles_Redshift", "GlobalFunc/SubSample.cpp");
   
     const double zMin = data.Min(catalogue::Var::_Redshift_);
     const double Cell_z = (data.Max(catalogue::Var::_Redshift_)-zMin)/nz;
@@ -167,7 +157,7 @@ void cbl::set_ObjectRegion_Tiles_Redshift (catalogue::Catalogue &data, catalogue
     
     }
 
-    // Reassign the regions to the random objects
+    // Reassign the regions of the random objects
     
     std::vector<long int> dummy_randomRegions = randomRegions;
   
@@ -177,7 +167,7 @@ void cbl::set_ObjectRegion_Tiles_Redshift (catalogue::Catalogue &data, catalogue
     }
 
     // It might happen that, given a tile, no objects lie in
-    // the first redshift bin. In this way, indices are lost.
+    // a redshift bin. In this way, indices are lost.
     // In the loop below we recover such indices, i.e. we
     // "fill the gaps" by changing the existing indices.
 
@@ -220,6 +210,8 @@ void cbl::set_ObjectRegion_Tiles_Redshift (catalogue::Catalogue &data, catalogue
   // Set the regions
   const int nRegions_data = (int)((cbl::different_elements(observedRegions)).size());
   const int nRegions_random = (int)((cbl::different_elements(randomRegions)).size());
+
+  coutCBL << "Assigning " << nRegions_data << " regions..." << endl;
   
   data.set_region(observedRegions, nRegions_data);
   random.set_region(randomRegions, nRegions_random);

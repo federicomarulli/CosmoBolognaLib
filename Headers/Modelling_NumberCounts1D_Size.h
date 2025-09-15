@@ -114,19 +114,19 @@ namespace cbl {
 	///@{
 
 	/**
-	 *  @brief set the cosmological parameters used to model the 
+	 *  @brief set the cosmological parameters used to model the
 	 *  size function
 	 *
 	 *  the model has N cosmological parameters
 	 *
-	 *  @param cosmo_params vector of enums containing cosmological
-	 *  parameters
+	 *  @param cosmo_params vector of enums containing
+	 *  cosmological parameters
 	 *
 	 *  @param cosmo_param_priors vector containing the priors for
 	 *  the cosmological parameters
 	 * 
 	 */
-	void set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_params={}, const std::vector<statistics::PriorDistribution> cosmo_param_priors={});
+	void set_model_NumberCounts_cosmology (const std::vector<std::string> cosmo_params={}, const std::vector<statistics::PriorDistribution> cosmo_param_priors={});
 
 	///@{
 
@@ -140,18 +140,16 @@ namespace cbl {
 	 *  value of the bias computed inside cosmic voids (see
 	 *  Contarini et al. 2019)
 	 *
-	 *  @param cosmo_params vector of enums containing cosmological
-	 *  parameters
+	 *  @param cosmo_params vector of enums containing
+	 *  cosmological parameters
 	 *
 	 *  @param cosmo_param_priors vector containing the priors for
 	 *  the cosmological parameters
 	 *
 	 *  @param bias_priors the priors of the effective bias,
 	 *  b_slope and b_offset
-	 *
-	 *  
 	 */
-	void set_model_NumberCounts_cosmology_and_bias (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_params={}, const std::vector<statistics::PriorDistribution> cosmo_param_priors={}, const std::vector<statistics::PriorDistribution> bias_priors={});
+	void set_model_NumberCounts_cosmology_and_bias (const std::vector<std::string> cosmo_params={}, const std::vector<statistics::PriorDistribution> cosmo_param_priors={}, const std::vector<statistics::PriorDistribution> bias_priors={});
 
 	///@}
 

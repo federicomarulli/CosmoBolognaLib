@@ -43,8 +43,7 @@ using namespace random;
 
 
 double cbl::glob::Distribution::m_percentile_integrator (const double xx)
-{
-  function<double(double)> f_moment = [this] (double x) {return this->operator()(x);};
+{ function<double(double)> f_moment = [this] (double x) {return this->operator()(x);};
   return wrapper::gsl::GSL_integrate_cquad(f_moment, m_xmin, xx, 1.e-4);
 }
 
@@ -142,13 +141,14 @@ cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distrib
 
 
 cbl::glob::Distribution::Distribution (const cbl::glob::DistributionType distributionType, const std::vector<double> var, const std::vector<double> dist, const int nbin, const std::string interpolationType, const int seed) 
-{
+{  
   if (distributionType == glob::DistributionType::_Discrete_)
   {
     vector<double> vv, dd, edd;
-    get_distribution(vv, dd, edd, var, dist, nbin);
 
+    get_distribution(vv, dd, edd, var, dist, nbin);
     set_binned_distribution(vv, dd, interpolationType, seed);
+
   }
   else if (distributionType == glob::DistributionType::_Interpolated_)
   {
@@ -334,13 +334,14 @@ void cbl::glob::Distribution::set_custom_distribution (const distribution_func f
 
 
 void cbl::glob::Distribution::set_binned_distribution (const std::vector<double> var, const std::vector<double> dist, const std::string interpolationType, const int seed)
-{
+{ 
   m_distributionType = glob::DistributionType::_Interpolated_;
 
   if (var.size()==0)
     ErrorCBL("the input vector is empty", "set_binned_distribution", "Distribution.cpp");
 
   set_limits(Min(var), Max(var));
+
   m_distribution_random = make_shared<DistributionRandomNumbers> (DistributionRandomNumbers(var, dist, interpolationType, seed));
 
   glob::STR_distribution_probability parameters;
@@ -581,10 +582,17 @@ void cbl::glob::Distribution::get_distribution (vector<double> &xx, vector<doubl
 {
   if (xx.size()>0 || fx.size()>0 || FF.size()<=0 || nbin<=0) ErrorCBL("the following conditions have to be satisfied: xx.size()<=0, fx.size()<=0, FF.size()>0 and nbin>0. The values recived are instead: xx.size() = "+cbl::conv(xx.size(), par::fINT)+", fx.size() = "+cbl::conv(fx.size(), par::fINT)+", FF.size() = "+cbl::conv(FF.size(), par::fINT)+" and nbin = "+cbl::conv(nbin, par::fINT)+"!", "get_distribution", "Distribution.cpp");
 
-  double minFF = (V1>cbl::par::defaultDouble) ? V1 : Min(FF)*0.9999;
-  double maxFF = (V2>cbl::par::defaultDouble) ? V2 : Max(FF)*1.0001;
-
+  double minFF,maxFF;
+  if (Max(FF)<0.) {
+    minFF = (V1>cbl::par::defaultDouble) ? V1 : Min(FF)*1.0001;
+    maxFF = (V2>cbl::par::defaultDouble) ? V2 : Max(FF)*0.9999;
+  }
   
+  else {
+    minFF = (V1>cbl::par::defaultDouble) ? V1 : Min(FF)*0.9999;
+    maxFF = (V2>cbl::par::defaultDouble) ? V2 : Max(FF)*1.0001;
+  }
+ 
   // using GSL to create the histogram 
 
   gsl_histogram *histo = gsl_histogram_alloc(nbin);
@@ -612,6 +620,7 @@ void cbl::glob::Distribution::get_distribution (vector<double> &xx, vector<doubl
     double val = gsl_histogram_get(histo, i);
     
     if (linear) xx.push_back(0.5*(x1+x2));
+   
     else xx.push_back(pow(10., 0.5*(log10(x1)+log10(x2))));
 
     if (bin_type) {

@@ -1,0 +1,223 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>median_filter </TITLE>
+<META NAME="description" CONTENT="median_filter ">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_mollcursor.htm">
+<LINK REL="previous" HREF="idl_lm2index.htm">
+<LINK REL="next" HREF="idl_mollcursor.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_lm2index.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_mollcursor.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html393"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_lm2index.htm">lm2index</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_mollcursor.htm">mollcursor</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4200"></A>
+<A ID="idl:median_filter"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">median_filter </SPAN></div><hr>
+<H3>This IDL facility allows the median filtering of a Healpix map.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/toolkit/median_filter.pro"><strong>src/idl/toolkit/median_filter.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+MEDIAN_FILTER (<A HREF="#idl:median_filter:InputMap">InputMap</A>, <A HREF="#idl:median_filter:Radius">Radius</A>, <A HREF="#idl:median_filter:MedianMap">MedianMap</A>[,<A HREF="#idl:median_filter:ORDERING">ORDERING=</A>, <A HREF="#idl:median_filter:RING">/RING</A>, <A HREF="#idl:median_filter:NESTED">/NESTED</A>, <A HREF="#idl:median_filter:FILL_HOLES">/FILL_HOLES</A>, <A HREF="#idl:median_filter:DEGREES">/DEGREES</A>, <A HREF="#idl:median_filter:ARCMIN">/ARCMIN</A>])
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>InputMap</B>
+<DD><A ID="idl:median_filter:InputMap"></A> (IN)
+	either an IDL array containing a full sky Healpix map to filter ('online' usage), 
+        or the name of an external FITS file containing a full sky or cut sky map
+
+<P>
+<DT>
+<B>Radius</B>
+<DD><A ID="idl:median_filter:Radius"></A> (IN)
+	  radius of the disk on which the median is computed.
+            It is in Radians, unless <SPAN style="font-family:monospace">/DEGREES</SPAN> or <SPAN style="font-family:monospace">/ARCMIN</SPAN> are set
+
+<P>
+<DT>
+<B>MedianMap</B>
+<DD><A ID="idl:median_filter:MedianMap"></A> (OUT)
+	   either an IDL variable containing on output the filtered map,
+        or the name of an external FITS file to contain the map. Should be of
+	   same type of <SPAN style="font-family:monospace">InputMap</SPAN>. Flagged pixels (ie, having the value
+	   <SPAN style="font-family:monospace">!healpix.bad_value</SPAN>) are left unchanged, unless <SPAN style="font-family:monospace">/FILL_HOLES</SPAN> is set.
+
+<P>
+</DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>/ARCMIN</B>
+<DD><A ID="idl:median_filter:ARCMIN"></A> If set, <SPAN style="font-family:monospace">Radius</SPAN> is in arcmin rather than radians
+
+<P>
+<DT>
+<B>/DEGREES</B>
+<DD><A ID="idl:median_filter:DEGREES"></A> If set, <SPAN style="font-family:monospace">Radius</SPAN> is in degrees rather than radians
+
+<P>
+<DT>
+<B>/FILL_HOLES</B>
+<DD><A ID="idl:median_filter:FILL_HOLES"></A> If set, flagged pixels are replaced with the
+	median of the valid pixels found within a distance <SPAN style="font-family:monospace">Radius</SPAN>. If
+	there are any.
+
+<P>
+<DT>
+<B>/NESTED</B>
+<DD><A ID="idl:median_filter:NESTED"></A> Same as ORDERING='NESTED'
+
+<P>
+<DT>
+<B>ORDERING=</B>
+<DD><A ID="idl:median_filter:ORDERING"></A>	  Healpix map ordering, should be either 'RING' or 'NESTED'. Only
+	  applies to 'online' usage.
+
+<P>
+<DT>
+<B>/RING</B>
+<DD><A ID="idl:median_filter:RING"></A> Same as ORDERING='RING'
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+median_filter allows the median filtering of a Healpix map. Each pixel
+  of the output map is the median value of the input  map pixels found within a disc of given
+  radius centered on that pixel. Flagged
+  pixels can be either left unchanged or 'filled in' with that same scheme. 
+<BR>
+If the map is polarized, each of the three Stokes components is filtered
+  separately. 
+<BR>
+The input and output can either be arrays or FITS files, but they to be both
+  arrays or both FITS files.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">median_filter </SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run median_filter </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">median_filter  ('map.fits', 10., /arcmin, 'med.fits')</TD>
+</TR>
+</TABLE></div>
+<blockquote>Writes in 'med.fits' the median filtered map of 'map.fits' using a disc radius
+  of 10 arcmin</blockquote>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">map =  randomn(seed, nside2npix(256))</TD>
+</TR>
+<TR><TD CLASS="LEFT">median_filter  (map, 0.5, /deg, med)</TD>
+</TR>
+</TABLE></div>
+<blockquote>Returns in <SPAN style="font-family:monospace">med</SPAN> the median filtered map of <SPAN style="font-family:monospace">map</SPAN> using a disc radius
+  of 0.5 degrees</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_lm2index.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_mollcursor.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html393"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_lm2index.htm">lm2index</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_mollcursor.htm">mollcursor</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,199 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>mpi_alm2map_simple*</TITLE>
+<META NAME="description" CONTENT="mpi_alm2map_simple*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_mpi_alm2map_slave.htm">
+<LINK REL="previous" HREF="sub_mpi_alm2map.htm">
+<LINK REL="next" HREF="sub_mpi_alm2map_slave.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_mpi_alm2map.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_mpi_alm2map_slave.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html421"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_mpi_alm2map.htm">mpi_alm2map*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_mpi_alm2map_slave.htm">mpi_alm2map_slave</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION5700"></A>
+<A ID="sub:mpi_alm2map_simple"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">mpi_alm2map_simple*</SPAN></div><hr>
+<H3>This subroutine provides a simplified (one-line) interface to the MPI version of
+alm2map. It supports both temperature and polarization inputs in both
+single and double precision. It must only be run by all nodes in
+the MPI communicator.  </H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/mpi_alm_tools.f90"><strong>src/f90/mod/mpi_alm_tools.f90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">mpi_alm2map_simple*</SPAN>(
+<A HREF="#sub:mpi_alm2map_simple:comm">comm</A>, <A HREF="#sub:mpi_alm2map_simple:alms">alms</A>, <A HREF="#sub:mpi_alm2map_simple:map">map</A>
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">
+comm<A ID="sub:mpi_alm2map_simple:comm"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">MPI communicator.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">alms<A ID="sub:mpi_alm2map_simple:alms"></A>(1:nmaps,0:lmax,0:nmax)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SPC or DPC</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">Input alms. If
+nmaps=1, only temperature information is included; if nmaps=3,
+polarization information is included</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">map<A ID="sub:mpi_alm2map_simple:map"></A>(0:npix,1:nmaps)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP or DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">Output map. nmaps must match 
+that of the input alms array.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"> call mpi_alm2map_simple(comm, map, alms)
+<BR></div>
+<blockquote>
+This example executes a parallel map2alm operation through the
+one-line interface. Although all processors must supply allocated
+arrays to the routine, only the root processor's information will be
+used as input, and only the root processor's alms will be complete
+after execution. 
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">mpi_alm2map_simple*</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">alm_tools</SPAN></B>
+<DD>module
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">mpi_alm2map_simple*</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_mpi_cleanup_alm_tools.htm#sub:mpi_cleanup_alm_tools">mpi_cleanup_alm_tools</A></B>
+<DD>Frees memory that is allocated by the current routine. 
+   <DT>
+<B><A HREF="sub_mpi_initialize_alm_tools.htm#sub:mpi_initialize_alm_tools">mpi_initialize_alm_tools</A></B>
+<DD>Allocates memory and defines variables for the mpi_alm_tools module. 
+  <DT>
+<B><A HREF="sub_mpi_alm2map.htm#sub:mpi_alm2map">mpi_alm2map</A></B>
+<DD>Routine for executing a parallel inverse spherical harmonics transform (root processor interface)
+  <DT>
+<B><A HREF="sub_mpi_alm2map_slave.htm#sub:mpi_alm2map_slave">mpi_alm2map_slave</A></B>
+<DD>Routine for executing a parallel inverse spherical harmonics transform (slave processor interface)
+  <DT>
+<B><A HREF="sub_mpi_map2alm.htm#sub:mpi_map2alm">mpi_map2alm</A></B>
+<DD>Routine for executing a parallel spherical harmonics transform (root processor interface)
+  <DT>
+<B><A HREF="sub_mpi_map2alm_slave.htm#sub:mpi_map2alm_slave">mpi_map2alm_slave</A></B>
+<DD>Routine for executing a parallel spherical harmonics transform (slave processor interface)
+  <DT>
+<B><A HREF="sub_mpi_map2alm_simple.htm#sub:mpi_map2alm_simple">mpi_map2alm_simple</A></B>
+<DD>One-line interface to the parallel spherical harmonics transform 
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_mpi_alm2map.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_mpi_alm2map_slave.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html421"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_mpi_alm2map.htm">mpi_alm2map*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_mpi_alm2map_slave.htm">mpi_alm2map_slave</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

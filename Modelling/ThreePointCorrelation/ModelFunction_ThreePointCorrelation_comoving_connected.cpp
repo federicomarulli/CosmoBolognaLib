@@ -53,16 +53,20 @@ std::vector<double> cbl::modelling::threept::zeta_RSD (const std::vector<double>
 
   // input likelihood parameters
 
-  // bias
+  // bias parameters
   double b1 = parameter[0];
   double b2 = parameter[1];
   double bt = parameter[2];
 
-  //beta
+  // beta = f/b1
   double beta = parameter[3];
 
-  vector<double> model = pp->cosmology->zeta_RSD (pp->r1, pp->r2, theta.size(), b1, b2, bt, beta, pp->rr, pp->kk, pp->Pk_matter, false, pp->max_ll, pp->use_k);
+  cosmology::ThreePointCorrelation three_point_correlation(pp->cosmology);
+  
+  vector<double> model = three_point_correlation.zeta_RSD(pp->r1, pp->r2, theta.size(), b1, b2, bt, beta, pp->rr, pp->kk, pp->Pk_matter, false, pp->max_ll, pp->use_k);
+  
   return model;
+
   /*
   double theta_binSize = 1./theta.size();
 
@@ -76,5 +80,5 @@ std::vector<double> cbl::modelling::threept::zeta_RSD (const std::vector<double>
 
   return zeta;
   */
-  //return pp->cosmology->zeta_RSD (pp->r1, pp->r2, theta.size(), b1, b2, bt, beta, pp->rr, pp->kk, pp->Pk_matter, false, pp->max_ll, pp->use_k);
+  //return pp->three_point_correlation->zeta_RSD(pp->r1, pp->r2, theta.size(), b1, b2, bt, beta, pp->rr, pp->kk, pp->Pk_matter, false, pp->max_ll, pp->use_k);
 }

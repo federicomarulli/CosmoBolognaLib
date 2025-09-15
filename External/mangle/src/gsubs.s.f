@@ -1,9 +1,9 @@
 c-----------------------------------------------------------------------
-c © A J S Hamilton 2001
+c ï¿½ A J S Hamilton 2001
 c-----------------------------------------------------------------------
       integer function gzeroar(cm,np)
       integer np
-      real*10 cm(np)
+      real*16 cm(np)
 c
 c        local (automatic) variables
       integer i
@@ -16,8 +16,8 @@ c Return value: 0 if area is zero because one circle is null,
 c               1 otherwise
 c
       do i=1,np
-        if (cm(i).eq.0._10) goto 200
-        if (cm(i).le.-2._10) goto 200
+        if (cm(i).eq.0._16) goto 200
+        if (cm(i).le.-2._16) goto 200
       enddo
       gzeroar=1
       return
@@ -29,10 +29,10 @@ c
 c
 c-----------------------------------------------------------------------
       subroutine gaxisi(rp,xi,yi)
-      real*10 rp(3),xi(3),yi(3)
+      real*16 rp(3),xi(3),yi(3)
 c
 c        local (automatic) variables
-      real*10 sx
+      real*16 sx
 c *
 c * Cartesian axes with z-axis along rp.
 c *
@@ -40,18 +40,18 @@ c  Input: rp
 c Output: xi, yi forming right-handed orthonormal system with rp
 c
       sx=rp(1)**2+rp(3)**2
-      if (sx.gt..5_10) then
+      if (sx.gt..5_16) then
         sx=sqrt(sx)
 c        xi in direction y x rp (= x direction if rp is along z)
         xi(1)=rp(3)/sx
-        xi(2)=0._10
+        xi(2)=0._16
         xi(3)=-rp(1)/sx
       else
         sx=sqrt(rp(1)**2+rp(2)**2)
 c        xi in direction rp x z
         xi(1)=rp(2)/sx
         xi(2)=-rp(1)/sx
-        xi(3)=0._10
+        xi(3)=0._16
       endif
 c        yi in direction rp x xi (= y direction if rp is along z)
       yi(1)=xi(3)*rp(2)-xi(2)*rp(3)
@@ -63,10 +63,10 @@ c
 c
 c-----------------------------------------------------------------------
       subroutine gaxisii(rpi,rp,xi,yi)
-      real*10 rpi(3),rp(3),xi(3),yi(3)
+      real*16 rpi(3),rp(3),xi(3),yi(3)
 c
 c        local (automatic) variables
-      real*10 ri,sik
+      real*16 ri,sik
 c *
 c * Cartesian axes with z-axis along rp, x-axis towards rpi.
 c *
@@ -83,7 +83,7 @@ c        project yi orthogonal to rp, to avoid problems near yi=0
       yi(2)=yi(2)-ri*rp(2)
       yi(3)=yi(3)-ri*rp(3)
       sik=yi(1)**2+yi(2)**2+yi(3)**2
-      if (sik.gt.0._10) then
+      if (sik.gt.0._16) then
 c        sik = sin th(ik)
         sik=sqrt(sik)
         yi(1)=yi(1)/sik
@@ -92,15 +92,15 @@ c        sik = sin th(ik)
 c        rpi is same/opposite direction to rp: set yi along z x rp
       else
         ri=sqrt(rp(1)**2+rp(2)**2)
-        if (ri.gt.0._10) then
+        if (ri.gt.0._16) then
           yi(1)=-rp(2)/ri
           yi(2)=rp(1)/ri
-          yi(3)=0._10
+          yi(3)=0._16
 c        if rp is also along z-axis, set yi along y-axis
         else
-          yi(1)=0._10
-          yi(2)=1._10
-          yi(3)=0._10
+          yi(1)=0._16
+          yi(2)=1._16
+          yi(3)=0._16
         endif
       endif
 c        xi in direction yi x rp
@@ -114,13 +114,13 @@ c
 c-----------------------------------------------------------------------
       subroutine gphij(rp,cm,np,i,rpi,scmi,cmi,xi,yi,big,tol,ni,phi)
       integer np,i,scmi,ni
-      real*10 rp(3,np),cm(np),rpi(3),cmi,xi(3),yi(3),big,tol,phi(2,np)
+      real*16 rp(3,np),cm(np),rpi(3),cmi,xi(3),yi(3),big,tol,phi(2,np)
 c
 c        intrinsics
       intrinsic abs
 c        local (automatic) variables
       integer j
-      real*10 bi,bj,cmij,cmj,d,dc,xj,yj
+      real*16 bi,bj,cmij,cmj,d,dc,xj,yj
 c *
 c * angles phi about z-axis rp(i) of intersection of i & j circles
 c * phi = big means no intersection
@@ -154,20 +154,20 @@ c--------find intersection of i circle with each j circle in turn
 c        skip self
         if (j.eq.i) goto 150
 c        cm(j).ge.2 means include whole sphere, so no intersection
-        if (cm(j).ge.2._10) goto 150
+        if (cm(j).ge.2._16) goto 150
 c        cmij = 2 sin^2[th(ij)/2] = 1-cos th(ij)
         cmij=((rpi(1)-rp(1,j))**2+(rpi(2)-rp(2,j))**2
-     *    +(rpi(3)-rp(3,j))**2)/2._10
+     *    +(rpi(3)-rp(3,j))**2)/2._16
 c        cmj = 1-cos th(j)
 c        bj = cj-ci*cij
 c        d = 1-ci^2-cj^2-cij^2+2*ci*cj*cij
 c        dph = atan(sqrt(d)/bj) is angle from rp(j) to intersection
         cmj=abs(cm(j))
-        bj=(cmi-cmj)+cmij*(1._10-cmi)
-        d=-(cmi-cmj)**2+cmij*(2._10*((cmi+cmj)-cmi*cmj)-cmij)
+        bj=(cmi-cmj)+cmij*(1._16-cmi)
+        d=-(cmi-cmj)**2+cmij*(2._16*((cmi+cmj)-cmi*cmj)-cmij)
 c        if i and j circles are angle e apart at closest approach, then
 c        d approx 2 sin th(i) sin th(j) sin th(ij) * e for small e
-        dc=2._10*sqrt(cmi*cmj*cmij*(2._10-cmi)*(2._10-cmj)*(2._10-cmij))
+        dc=2._16*sqrt(cmi*cmj*cmij*(2._16-cmi)*(2._16-cmj)*(2._16-cmij))
 c........positive d means i and j circles intersect
 c        if i and j circles are <= tol apart, treat d as zero
         if (d.gt.tol*dc) then
@@ -179,11 +179,11 @@ c        order intersection angles so segment from first to second angle
 c        is inside j circle
 c Notice order of evaluation of RHS of phi(1,j) and phi(2,j) is same;
 c this ensures that gcc evaluates identically for identical arguments.
-          if (cm(j).ge.0._10) then
+          if (cm(j).ge.0._16) then
 c        phi(1,j)=ph-dph , phi(2,j)=ph+dph
             phi(1,j)=atan2(yj*bj-xj*d,xj*bj+yj*d)
             phi(2,j)=atan2(yj*bj+xj*d,xj*bj-yj*d)
-          elseif (cm(j).lt.0._10) then
+          elseif (cm(j).lt.0._16) then
 c        phi(1,j)=ph+dph , phi(2,j)=ph-dph
             phi(2,j)=atan2(yj*bj-xj*d,xj*bj+yj*d)
             phi(1,j)=atan2(yj*bj+xj*d,xj*bj-yj*d)
@@ -194,40 +194,40 @@ c........zero d means i and j circles just touch;
 c        negative d means i and j circles don't intersect
         else
 c        bi = ci-cj*cij
-          bi=(cmj-cmi)+cmij*(1._10-cmj)
+          bi=(cmj-cmi)+cmij*(1._16-cmj)
 c. . . . bi=0 means i and j circles coincide, implying also bj=0 and d=0
 c        but test both bi and bj to guard against numerics
-          if (bi.eq.0._10.or.bj.eq.0._10) then
+          if (bi.eq.0._16.or.bj.eq.0._16) then
 c        null intersection of areas:
 c        rp(i) and rp(j) point in same direction
-            if (cmij.lt.1._10) then
+            if (cmij.lt.1._16) then
 c        cm(i) and cm(j) have opposite sign
-              if ((scmi.ge.0.and.cm(j).lt.0._10)
-     *          .or.(scmi.lt.0.and.cm(j).ge.0._10)) goto 220
+              if ((scmi.ge.0.and.cm(j).lt.0._16)
+     *          .or.(scmi.lt.0.and.cm(j).ge.0._16)) goto 220
 c        rp(i) and rp(j) point in opposite directions
-            elseif (cmij.gt.1._10) then
+            elseif (cmij.gt.1._16) then
 c        cm(i) and cm(j) have same sign
-              if ((scmi.ge.0.and.cm(j).ge.0._10)
-     *          .or.(scmi.lt.0.and.cm(j).lt.0._10)) goto 220
+              if ((scmi.ge.0.and.cm(j).ge.0._16)
+     *          .or.(scmi.lt.0.and.cm(j).lt.0._16)) goto 220
             endif
 c        only do later of the two degenerate circles
             if (i.lt.j) goto 210
 c. . . . i circle does not coincide with j circle
           else
 c. . . . i circle is outside j circle
-            if ((cm(j).ge.0._10.and.bj.gt.0._10)
-     *        .or.(cm(j).lt.0._10.and.bj.lt.0._10)) then
+            if ((cm(j).ge.0._16.and.bj.gt.0._16)
+     *        .or.(cm(j).lt.0._16.and.bj.lt.0._16)) then
 c        j circle also outside i circle means null intersection area
-              if ((scmi.ge.0.and.bi.gt.0._10)
-     *          .or.(scmi.lt.0.and.bi.lt.0._10)) goto 220
+              if ((scmi.ge.0.and.bi.gt.0._16)
+     *          .or.(scmi.lt.0.and.bi.lt.0._16)) goto 220
 c        skip i circle since it's entirely outside j circle
               goto 210
             endif
 c. . . . i circle is inside j circle, and just touches it
             if (d.ge.-tol*dc) then
 c. . . . j circle is also inside i circle, and just touches it
-              if ((scmi.ge.0.and.bi.lt.0._10)
-     *          .or.(scmi.lt.0.and.bi.gt.0._10)) then
+              if ((scmi.ge.0.and.bi.lt.0._16)
+     *          .or.(scmi.lt.0.and.bi.gt.0._16)) then
 c        ph = atan(yj/xj) is angle from xi to rp(j)
                 xj=xi(1)*rp(1,j)+xi(2)*rp(2,j)+xi(3)*rp(3,j)
                 yj=yi(1)*rp(1,j)+yi(2)*rp(2,j)+yi(3)*rp(3,j)
@@ -257,7 +257,7 @@ c
 c-----------------------------------------------------------------------
       subroutine ggpij(np,gp,i,big,phi)
       integer np,gp(np),i
-      real*10 big,phi(2,np)
+      real*16 big,phi(2,np)
 c
 c        local (automatic) variables
       integer j
@@ -322,18 +322,18 @@ c-----------------------------------------------------------------------
      *  phi,iord,jml,jmu,jpl,jpu,nphbv,jm,jp,km,kp,phm,php,ph,dph)
       integer np,npb,npc,i,scmi,ni,iord(2*np),
      *  jml,jmu,jpl,jpu,nphbv,jm(nphbv),jp(nphbv),km(nphbv),kp(nphbv)
-      real*10 rp(3,np),cm(np),rpi(3),cmi,tol,phi(2,np),phm,php,ph,dph
+      real*16 rp(3,np),cm(np),rpi(3),cmi,tol,phi(2,np),phm,php,ph,dph
 c
 c        parameters
       include 'pi.par'
-      real*10 TWOPI
-      parameter (TWOPI=2._10*PI)
+      real*16 TWOPI
+      parameter (TWOPI=2._16*PI)
 c        intrinsics
       intrinsic abs
 c        local (automatic) variables
       integer iphbv,j,jj,k,kk
       logical ismax
-      real*10 bik,cmik,cmk,d,psi,psim(2),dphc,si
+      real*16 bik,cmik,cmk,d,psi,psim(2),dphc,si
 c        local variables to be saved
       integer jl,ju
       save jl,ju
@@ -397,13 +397,13 @@ c        done
         if (jpl.eq.jl+ni) goto 220
       endif
 c        sin th(i)
-      si=sqrt(cmi*(2._10-cmi))
+      si=sqrt(cmi*(2._16-cmi))
 c        dphc = azimuthal angle corresponding to great circle angle tol
       if (tol.gt.PI) goto 300
-      dphc=sin(tol/2._10)/si
+      dphc=sin(tol/2._16)/si
 c        abort if tol/2 exceeds th(i)
-      if (dphc.gt.1._10) goto 300
-      dphc=2._10*asin(dphc)
+      if (dphc.gt.1._16) goto 300
+      dphc=2._16*asin(dphc)
 c--------first segment: jml <= 1 <= jmu < jpl <= jpu < jml+ni
       if (jpl.eq.0) then
 c        lower point: jml to jmu are all at the same azimuth phi
@@ -417,7 +417,7 @@ c        lower and upper angles of segment
           phm=phi(1+mod(iord(j)+1,2),km(1))
           php=phi(1+mod(iord(jp(1))+1,2),kp(1))
           dph=php-phm
-          if (dph.lt.0._10) dph=dph+TWOPI
+          if (dph.lt.0._16) dph=dph+TWOPI
           if (dph.gt.dphc) goto 110
         enddo
   110   continue
@@ -430,7 +430,7 @@ c        lower and upper angles of segment
           phm=phi(1+mod(iord(j)+1,2),km(1))
           php=phi(1+mod(iord(jp(1))+1,2),kp(1))
           dph=php-phm
-          if (dph.lt.0._10) dph=dph+TWOPI
+          if (dph.lt.0._16) dph=dph+TWOPI
           if (dph.gt.dphc) goto 120
           jml=j
         enddo
@@ -457,7 +457,7 @@ c        lower and upper angles of segment
             phm=phi(1+mod(iord(j)+1,2),km(1))
             php=phi(1+mod(iord(jp(1))+1,2),kp(1))
             dph=php-phm
-            if (dph.lt.0._10) dph=dph+TWOPI
+            if (dph.lt.0._16) dph=dph+TWOPI
             if (dph.gt.dphc) goto 130
           enddo
   130     continue
@@ -482,7 +482,7 @@ c        lower and upper angles of segment
           phm=phi(1+mod(iord(j)+1,2),km(1))
           php=phi(1+mod(iord(jp(1))+1,2),kp(1))
           dph=php-phm
-          if (dph.lt.0._10) dph=dph+TWOPI
+          if (dph.lt.0._16) dph=dph+TWOPI
           if (dph.gt.dphc) goto 140
         enddo
   140   continue
@@ -498,7 +498,7 @@ c        lower and upper angles of segment
           phm=phi(1+mod(iord(jm(1))+1,2),km(1))
           php=phi(1+mod(iord(jp(1))+1,2),kp(1))
           dph=php-phm
-          if (dph.lt.0._10) dph=dph+TWOPI
+          if (dph.lt.0._16) dph=dph+TWOPI
           if (dph.gt.dphc) goto 150
         enddo
   150   continue
@@ -588,7 +588,7 @@ c........point at lower limit is one with largest exterior angle psi
         endif
       else
         do iphbv=1,nphbv
-          psim(iphbv)=-1._10-2._10*tol
+          psim(iphbv)=-1._16-2._16*tol
         enddo
         if (nphbv.eq.2) then
           do iphbv=1,nphbv
@@ -604,17 +604,17 @@ c        lower angle is a lower limit
             cmk=abs(cm(kk))
 c        cmik = 1-cos th(ik)
             cmik=((rpi(1)-rp(1,kk))**2+(rpi(2)-rp(2,kk))**2
-     *        +(rpi(3)-rp(3,kk))**2)/2._10
+     *        +(rpi(3)-rp(3,kk))**2)/2._16
 c        bik = cik-ci*ck
 c        d = 1-ci^2-ck^2-cik^2+2*ci*ck*cik
 c        cos psi = bik/(si*sk)
 c        sin psi = sqrt(d)/(si*sk)
 c        psi = atan(sqrt(d)/bik) is exterior angle at intersection
             bik=(cmi+cmk)-cmi*cmk-cmik
-            d=-(cmi-cmk)**2+cmik*(2._10*((cmi+cmk)-cmi*cmk)-cmik)
-            if (d.lt.0._10) d=0._10
-            if ((scmi.ge.0.and.cm(kk).lt.0._10)
-     *        .or.(scmi.lt.0.and.cm(kk).ge.0._10)) bik=-bik
+            d=-(cmi-cmk)**2+cmik*(2._16*((cmi+cmk)-cmi*cmk)-cmik)
+            if (d.lt.0._16) d=0._16
+            if ((scmi.ge.0.and.cm(kk).lt.0._16)
+     *        .or.(scmi.lt.0.and.cm(kk).ge.0._16)) bik=-bik
             do iphbv=1,nphbv
               if (iphbv.eq.2) bik=-bik
               psi=atan2(sqrt(d),bik)
@@ -632,8 +632,8 @@ c        choose largest exterior angle psi
                 if (psi.gt.psim(iphbv)+tol) then
                   ismax=.true.
                 elseif (psi.ge.psim(iphbv)-tol) then
-                  if (cm(kk).ge.0._10) then
-                    if (cm(km(iphbv)).ge.0._10) then
+                  if (cm(kk).ge.0._16) then
+                    if (cm(km(iphbv)).ge.0._16) then
 c        only do tighter of two circles with same exterior angle
                       if (cm(kk).lt.cm(km(iphbv))) then
                         ismax=.true.
@@ -643,15 +643,15 @@ c        or later of two degenerate circles
                         ismax=.true.
                       endif
                     else
-                      if (cm(kk)-1._10.lt.cm(km(iphbv))+1._10) then
+                      if (cm(kk)-1._16.lt.cm(km(iphbv))+1._16) then
                         ismax=.true.
-                      elseif (cm(kk)-1._10.eq.cm(km(iphbv))+1._10
+                      elseif (cm(kk)-1._16.eq.cm(km(iphbv))+1._16
      *                  .and.kk.gt.km(iphbv)) then
                         ismax=.true.
                       endif
                     endif
                   else
-                    if (cm(km(iphbv)).lt.0._10) then
+                    if (cm(km(iphbv)).lt.0._16) then
                       if (cm(kk).lt.cm(km(iphbv))) then
                         ismax=.true.
                       elseif (cm(kk).eq.cm(km(iphbv))
@@ -659,9 +659,9 @@ c        or later of two degenerate circles
                         ismax=.true.
                       endif
                     else
-                      if (cm(kk)+1._10.lt.cm(km(iphbv))-1._10) then
+                      if (cm(kk)+1._16.lt.cm(km(iphbv))-1._16) then
                         ismax=.true.
-                      elseif (cm(kk)+1._10.eq.cm(km(iphbv))-1._10
+                      elseif (cm(kk)+1._16.eq.cm(km(iphbv))-1._16
      *                  .and.kk.gt.km(iphbv)) then
                         ismax=.true.
                       endif
@@ -702,7 +702,7 @@ c........point at upper limit is one with largest exterior angle psi
         endif
       else
         do iphbv=1,nphbv
-          psim(iphbv)=-1._10-2._10*tol
+          psim(iphbv)=-1._16-2._16*tol
         enddo
         if (nphbv.eq.2) then
           do iphbv=1,nphbv
@@ -718,17 +718,17 @@ c        upper angle is an upper limit
             cmk=abs(cm(kk))
 c        cmik = 1-cos th(ik)
             cmik=((rpi(1)-rp(1,kk))**2+(rpi(2)-rp(2,kk))**2
-     *        +(rpi(3)-rp(3,kk))**2)/2._10
+     *        +(rpi(3)-rp(3,kk))**2)/2._16
 c        bik = cik-ci*ck
 c        d = 1-ci^2-ck^2-cik^2+2*ci*ck*cik
 c        cos psi = bik/(si*sk)
 c        sin psi = sqrt(d)/(si*sk)
 c        psi = atan(sqrt(d)/bik) is exterior angle at intersection
             bik=(cmi+cmk)-cmi*cmk-cmik
-            d=-(cmi-cmk)**2+cmik*(2._10*((cmi+cmk)-cmi*cmk)-cmik)
-            if (d.lt.0._10) d=0._10
-            if ((scmi.ge.0.and.cm(kk).lt.0._10)
-     *        .or.(scmi.lt.0.and.cm(kk).ge.0._10)) bik=-bik
+            d=-(cmi-cmk)**2+cmik*(2._16*((cmi+cmk)-cmi*cmk)-cmik)
+            if (d.lt.0._16) d=0._16
+            if ((scmi.ge.0.and.cm(kk).lt.0._16)
+     *        .or.(scmi.lt.0.and.cm(kk).ge.0._16)) bik=-bik
             do iphbv=1,nphbv
               if (iphbv.eq.2) bik=-bik
               psi=atan2(sqrt(d),bik)
@@ -746,8 +746,8 @@ c        choose largest exterior angle psi
                 if (psi.gt.psim(iphbv)+tol) then
                   ismax=.true.
                 elseif (psi.ge.psim(iphbv)-tol) then
-                  if (cm(kk).ge.0._10) then
-                    if (cm(kp(iphbv)).ge.0._10) then
+                  if (cm(kk).ge.0._16) then
+                    if (cm(kp(iphbv)).ge.0._16) then
 c        only do tighter of two circles with same exterior angle
                       if (cm(kk).lt.cm(kp(iphbv))) then
                         ismax=.true.
@@ -757,15 +757,15 @@ c        or later of two degenerate circles
                         ismax=.true.
                       endif
                     else
-                      if (cm(kk)-1._10.lt.cm(kp(iphbv))+1._10) then
+                      if (cm(kk)-1._16.lt.cm(kp(iphbv))+1._16) then
                         ismax=.true.
-                      elseif (cm(kk)-1._10.eq.cm(kp(iphbv))+1._10
+                      elseif (cm(kk)-1._16.eq.cm(kp(iphbv))+1._16
      *                  .and.kk.gt.kp(iphbv)) then
                         ismax=.true.
                       endif
                     endif
                   else
-                    if (cm(kp(iphbv)).lt.0._10) then
+                    if (cm(kp(iphbv)).lt.0._16) then
                       if (cm(kk).lt.cm(kp(iphbv))) then
                         ismax=.true.
                       elseif (cm(kk).eq.cm(kp(iphbv))
@@ -773,9 +773,9 @@ c        or later of two degenerate circles
                         ismax=.true.
                       endif
                     else
-                      if (cm(kk)+1._10.lt.cm(kp(iphbv))-1._10) then
+                      if (cm(kk)+1._16.lt.cm(kp(iphbv))-1._16) then
                         ismax=.true.
-                      elseif (cm(kk)+1._10.eq.cm(kp(iphbv))-1._10
+                      elseif (cm(kk)+1._16.eq.cm(kp(iphbv))-1._16
      *                  .and.kk.gt.kp(iphbv)) then
                         ismax=.true.
                       endif
@@ -806,13 +806,13 @@ c        circles at upper and lower limits
 c        angular length, centre point of segment
       if (php.gt.phm) then
         dph=php-phm
-        ph=(php+phm)/2._10
+        ph=(php+phm)/2._16
       elseif (php.le.phm) then
-        ph=(php+phm)/2._10
-        if (ph.le.0._10) then
+        ph=(php+phm)/2._16
+        if (ph.le.0._16) then
           ph=ph+PI
           php=php+TWOPI
-        elseif (ph.gt.0._10) then
+        elseif (ph.gt.0._16) then
           ph=ph-PI
           phm=phm-TWOPI
         endif
@@ -839,14 +839,14 @@ c
 c-----------------------------------------------------------------------
       subroutine gvtrail(scmi,np,i,km,kp,vtrail,vik,nvmax,nv,ik,ikchk)
       integer scmi,np,i,km,kp,nvmax,vtrail(nvmax),vik(nvmax,2),nv,ik
-      real*10 ikchk
+      real*16 ikchk
 c
 c        externals
       integer ik2ik
 c     integer ik2i,ik2k
 c        local (automatic) variables
       integer iv,k,l
-      real*10 ikran
+      real*16 ikran
 c *
 c * Record endpoints of edge.
 c *
@@ -1053,8 +1053,8 @@ c
       end
 c
 c-----------------------------------------------------------------------
-      real*10 function cmijf(rpi,rpj)
-      real*10 rpi(3),rpj(3)
+      real*16 function cmijf(rpi,rpj)
+      real*16 rpi(3),rpj(3)
 c *
 c * 1 - cos th(ij)
 c * where th(ij) is angle between unit vectors rpi and rpj.
@@ -1063,7 +1063,7 @@ c * Input: rpi, rpj = unit vectors
 c  Output: cmij = 1 - cos th(ij)
 c
       cmijf=((rpi(1)-rpj(1))**2+(rpi(2)-rpj(2))**2
-     *  +(rpi(3)-rpj(3))**2)/2._10
+     *  +(rpi(3)-rpj(3))**2)/2._16
 c
       return
       end
@@ -1096,16 +1096,16 @@ c
 c-----------------------------------------------------------------------
       subroutine vpermd(x,n,iperm,wk)
       integer n,iperm(n)
-      real*10 x(n),wk(n)
+      real*16 x(n),wk(n)
 c
 c        local (automatic) variables
       integer i,j
 c *
-c * Permutes elements of real*10 array x(n) by permutation iperm(n).
+c * Permutes elements of real*16 array x(n) by permutation iperm(n).
 c *
 c  Input: n = dimension of array x
 c         iperm = array of dimension n specifying permutation of x
-c Input/Output: x = real*10 array of dimension n
+c Input/Output: x = real*16 array of dimension n
 c Work array: wk of dimension n
 c
       do i=1,n
@@ -1121,17 +1121,17 @@ c
 c-----------------------------------------------------------------------
       subroutine vpermdd(x,m,n,iperm,wk)
       integer m,n,iperm(n)
-      real*10 x(m,n),wk(n)
+      real*16 x(m,n),wk(n)
 c
 c        local (automatic) variables
       integer i,j,k
 c *
-c * Permutes each column of real*10 array x(m,n) by permutation iperm(n).
+c * Permutes each column of real*16 array x(m,n) by permutation iperm(n).
 c *
 c  Input: m,n = dimensions of array x
 c         iperm = array of dimension n specifying permutation
 c                 of each column x
-c Input/Output: x = real*10 array of dimension m,n
+c Input/Output: x = real*16 array of dimension m,n
 c Work array: wk of dimension n
 c
       do k=1,m
@@ -1151,19 +1151,19 @@ c-----------------------------------------------------------------------
      *  whole,nbd0m,nbd0p,nbd,nmult,tol)
       integer iarea,np,nbd0m,nbd0p,nbd,nmult
       logical whole
-      real*10 area,rp(3,np),cm(np),tol
+      real*16 area,rp(3,np),cm(np),tol
 c
 c        parameters
       include 'pi.par'
-      real*10 TWOPI
-      parameter (TWOPI=2._10*PI)
+      real*16 TWOPI
+      parameter (TWOPI=2._16*PI)
 c        intrinsics
       intrinsic abs
 c        data variables
-      real*10 areatol
+      real*16 areatol
 c        local (automatic) variables
       integer i,icmmin
-      real*10 cmmin,darea,p
+      real*16 cmmin,darea,p
 c *
 c * Add iarea*2*pi to area.
 c *
@@ -1185,7 +1185,7 @@ c Return value: 0 = ok;
 c               1 = recommend retry with enlarged tol.
 c
 c        ok if area tests not too far outside [0,max]
-      data areatol /1.e-10_10/
+      data areatol /1.e-10_16/
 c
       if (whole) then
         iarea=2
@@ -1205,7 +1205,7 @@ c        add/subtract 2*pi's to area to ensure 0.le.area.lt.2*pi
         iarea=area/TWOPI
         area=area-iarea*TWOPI
 C       if (iarea.ne.0) print *,'area +=',iarea,' * TWOPI =',area
-        if (area.lt.0._10) then
+        if (area.lt.0._16) then
           iarea=iarea+1
           area=area+TWOPI
 C         print *,'area += TWOPI =',area
@@ -1215,21 +1215,21 @@ c        there were near multiple intersections
 c        chances are area just less than 2*pi is actually zero
           if (area.ge.TWOPI-areatol) then
             iarea=iarea-1
-            area=0._10
+            area=0._16
             goto 400
           endif
         endif
 c        check area does not exceed area within any one circle
-        cmmin=2._10
+        cmmin=2._16
         do i=1,np
-          if (cm(i).ge.0._10) then
+          if (cm(i).ge.0._16) then
             if (cm(i).lt.cmmin) then
               cmmin=cm(i)
               icmmin=i
             endif
-          elseif (cm(i).lt.0._10) then
-            if (2._10+cm(i).lt.cmmin) then
-              cmmin=2._10+cm(i)
+          elseif (cm(i).lt.0._16) then
+            if (2._16+cm(i).lt.cmmin) then
+              cmmin=2._16+cm(i)
               icmmin=i
             endif
           endif
@@ -1237,10 +1237,10 @@ c        check area does not exceed area within any one circle
         darea=TWOPI*cmmin
         p=area/darea
 C       print *,'area/area(',icmmin,')=',area,' /',darea,' =',p
-        if (p.gt.1._10) then
+        if (p.gt.1._16) then
 c        check if discrepancy is from numerical roundoff
           if (abs(area-TWOPI).le.areatol) then
-            area=0._10
+            area=0._16
           elseif (area.le.darea+areatol) then
             area=darea
 c        problem is genuine: can happen with nearly kissing circles
@@ -1263,20 +1263,20 @@ c        return with recommendation to retry with enlarged tol
 c
 c-----------------------------------------------------------------------
       subroutine gtol(tol,tolin)
-      real*10 tol,tolin
+      real*16 tol,tolin
 c *
 c * Modify tolerance tol to multiple intersections.
 c * The tolerance tol is changed by successive factors of 2
 c * from the original input tolerance tolin,
 c * see-sawing between smaller and larger values.
 c *
-      if (tolin.le.0._10) then
+      if (tolin.le.0._16) then
 c        write(*,*) 'tolin =', tolin
-        if (tol.le.0._10) then
-          tol=1.e-15_10
+        if (tol.le.0._16) then
+          tol=1.e-15_16
 c          write(*,*) 'tol =', tol
         else
-          tol=tol*4._10
+          tol=tol*4._16
 c          write(*,*) 'tol =', tol
         endif
 c        see-saw tolerance between smaller and larger values
@@ -1284,7 +1284,7 @@ c        see-saw tolerance between smaller and larger values
         if (tol.ge.tolin) then
 c          write(*,*) '(GE) before: TOL=', tol
 c          write(*,*) '(ge) before: tolin=', tolin
-          tol=tolin*tolin/tol/6._10
+          tol=tolin*tolin/tol/6._16
 c          if (tol.gt.0.00001) then
 c            write(*,*) '(ge) after: tol=', tol
 c          endif
@@ -1293,7 +1293,7 @@ c          write(*,*) '(ge) after: tolin=', tolin
 c          write(*,*) '(lt) before: tol=', tol
 c          write(*,*) '(lt) before: tolin=', tolin
           tol=tolin*tolin/tol
-c          if (tol.ge.1.e-5_10) then
+c          if (tol.ge.1.e-5_16) then
 c            write(*,*) '(lt) after: tol=', tol
 c          endif
 c          write(*,*) '(lt) after: tolin=', tolin

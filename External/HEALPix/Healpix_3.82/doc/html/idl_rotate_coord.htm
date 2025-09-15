@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>rotate_coord</TITLE>
+<META NAME="description" CONTENT="rotate_coord">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_same_shape_pixels_nest_same.htm">
+<LINK REL="previous" HREF="idl_reorder.htm">
+<LINK REL="next" HREF="idl_same_shape_pixels_nest_same.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_reorder.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_same_shape_pixels_nest_same.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html445"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_reorder.htm">reorder</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_same_shape_pixels_nest_same.htm">same_shape_pixels_nest &amp; same_shape_pixels_ring</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION6800"></A>
+<A ID="idl:rotate_coord"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">rotate_coord</SPAN></div><hr>
+<H3>This IDL facility provides a means to rotate a set of 3D position
+vectors (and their Stokes parameters <SPAN CLASS="MATH"><I>Q</I></SPAN> and <SPAN CLASS="MATH"><I>U</I></SPAN>) between to astrophysical coordinate systems
+or by an arbitrary rotation.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/misc/rotate_coord.pro"><strong>src/idl/misc/rotate_coord.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+<A HREF="#idl:rotate_coord:outvec">Outvec</A> = rotate_coord(<A HREF="#idl:rotate_coord:invec">Invec</A>  
+[, <A HREF="#idl:rotate_coord:delta_psi">Delta_Psi=</A>, <A HREF="#idl:rotate_coord:euler_matrix">Euler_Matrix=</A>, <A HREF="#idl:rotate_coord:inco">Inco=</A>, <A HREF="#idl:rotate_coord:outco">Outco=</A>, <A HREF="#idl:rotate_coord:stokes_parameters">Stokes_Parameters=</A>, <A HREF="#idl:rotate_coord:free_norm">/free_norm</A>, <A HREF="#idl:rotate_coord:help">/help</A>] )
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>Invec</B>
+<DD><A ID="idl:rotate_coord:invec"></A>      input,  array of size (n,3) : set of 3D position vectors
+<DT>
+<B>Outvec</B>
+<DD><A ID="idl:rotate_coord:outvec"></A>     output, array of size (n,3) : rotated 3D vectors, with the same norms as the input vectors
+<DT>
+<B>Delta_Psi</B>
+<DD><A ID="idl:rotate_coord:delta_psi"></A>       output, vector of size (n) containing the change in azimuth <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.16ex; vertical-align: -0.55ex; " SRC="idl_img115.png"
+ ALT="$\Delta\psi$"></SPAN> in Radians
+	resulting from the rotation 
+       (<A HREF="./intro_HEALPix_conventions.htm#intro:fig:reftqu">measured with respect to the local meridian, from South to East</A>),
+        so that for field of spin <SPAN CLASS="MATH"><I>s</I></SPAN> the output <SPAN CLASS="MATH"><I>Q</I>',<I>U</I>'</SPAN> is related to the input <SPAN CLASS="MATH"><I>Q</I>,<I>U</I></SPAN> via
+                  <!-- MATH
+ $Q' = Q \cos (s\Delta\psi)  -  U \sin (s\Delta\psi),\$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img116.png"
+ ALT="$Q' = Q \cos (s\Delta\psi) - U \sin (s\Delta\psi),\ $"></SPAN>
+                  <!-- MATH
+ $U' = U \cos (s\Delta\psi)  +  Q \sin (s\Delta\psi),$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img117.png"
+ ALT="$U' = U \cos (s\Delta\psi) + Q \sin (s\Delta\psi), $"></SPAN>
+       with <SPAN CLASS="MATH"><I>s</I>=2</SPAN> for polarization Stokes parameters 
+(for which the specific <A HREF="#idl:rotate_coord:stokes_parameters">Stokes_Parameters</A> is also available).
+<DT>
+<B>Euler_Matrix=</B>
+<DD><A ID="idl:rotate_coord:euler_matrix"></A>       input, array of size (3,3). Euler Matrix
+       describing the rotation to apply to vectors.
+       <b>default:</b>identity : no rotation.
+<BR>
+Can <SPAN  CLASS="textit">not</SPAN> be used together with a change in coordinates.
+<DT>
+<B>Inco=</B>
+<DD><A ID="idl:rotate_coord:inco"></A>       input, character string (either 'Q' or 'C': equatorial,
+    'G': galactic or 'E': ecliptic) describing the input coordinate system 
+<DT>
+<B>Outco=</B>
+<DD><A ID="idl:rotate_coord:outco"></A>        input, character string (see above) describing the output
+          coordinate system.
+<BR>
+Can not be used together with <A HREF="#idl:rotate_coord:euler_matrix">Euler_Matrix</A>
+<DT>
+<B>Stokes_Parameters=</B>
+<DD><A ID="idl:rotate_coord:stokes_parameters"></A>       input and output, array of size (n, 2) :
+      values of the <SPAN CLASS="MATH"><I>Q</I></SPAN> and <SPAN CLASS="MATH"><I>U</I></SPAN> Stokes parameters on the sphere for each of
+      the input position vector. <A HREF="./intro_HEALPix_conventions.htm#intro:fig:reftqu"><SPAN CLASS="MATH"><I>Q</I></SPAN> and <SPAN CLASS="MATH"><I>U</I></SPAN> are defined wrt the local
+      meridian and parallel</A> and are therefore transformed in a
+      non-trivial way in case of rotation
+</DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>/free_norm</B>
+<DD><A ID="idl:rotate_coord:free_norm"></A> if set 
+         (and <A HREF="#idl:rotate_coord:stokes_parameters">Stokes_Parameters</A> and/or 
+         <A HREF="#idl:rotate_coord:delta_psi">Delta_Psi</A> are present)
+        the input (and output) coordinate vectors are <SPAN  CLASS="textit">not</SPAN> assumed to be normalized to 1.
+        Using this option is therefore safer, but 20 to 30% slower.
+        (Note that 3D vectors produced by 
+        <A HREF="idl_ang2vec.htm#idl:ang2vec"><SPAN  CLASS="texttt">ang2vec</SPAN></A>, 
+	<A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools"><SPAN  CLASS="texttt">pix2vec_nest</SPAN></A> and 
+        <A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools"><SPAN  CLASS="texttt">pix2vec_ring</SPAN></A> <SPAN  CLASS="textit">are</SPAN> properly normalized).
+        Ignored when <A HREF="#idl:rotate_coord:stokes_parameters">Stokes_Parameters</A> and
+         <A HREF="#idl:rotate_coord:delta_psi">Delta_Psi</A> are both absent.
+<DT>
+<B>/help</B>
+<DD><A ID="idl:rotate_coord:help"></A>     if set, the documentation header is printed and the routine exits
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">rotate_coord</SPAN> is a generalisation of the Astro library routine <SPAN style="font-family:monospace">skyconv</SPAN>. It allows
+a rotation of 3D position vectors between two standard astronomic coordinates
+system but also an arbitrary active rotation described by its Euler Matrix.
+It can also compute how the linear polarization Stokes parameters (<SPAN CLASS="MATH"><I>Q</I></SPAN> and <SPAN CLASS="MATH"><I>U</I></SPAN>, 
+expressed in local coordinates system)
+of each input location are affected by the solid body rotation, or equivalently
+it can output the corresponding change in azimuth.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">rotate_coord</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">rotate_coord</SPAN>.
+    <DT>
+<B><A HREF="idl_euler_matrix_new.htm#idl:euler_matrix_new">euler_matrix_new</A></B>
+<DD>constructs the Euler Matrix for a set of
+    three angles and three axes of rotation
+    <DT>
+<B><A HREF="idl_ang2vec.htm#idl:ang2vec"><SPAN  CLASS="texttt">ang2vec</SPAN></A>, <A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools"><SPAN  CLASS="texttt">pix2vec_*</SPAN></A></B>
+<DD>can be used to generate the input 3D vectors
+  </DL>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_reorder.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_same_shape_pixels_nest_same.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html445"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_reorder.htm">reorder</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_same_shape_pixels_nest_same.htm">same_shape_pixels_nest &amp; same_shape_pixels_ring</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

@@ -143,6 +143,7 @@ static const std::function<double(double)> default_func = nullptr;
 
 %template(SizetVector) std::vector<size_t>;
 %template(IntVector) std::vector<int>;
+%template(UIntVector) std::vector<unsigned int>;
 %template(LongVector) std::vector<long>;
 %template(DoubleVector) std::vector<double>;
 %template(StringVector) std::vector<std::string>;

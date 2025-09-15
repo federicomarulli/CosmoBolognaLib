@@ -71,10 +71,7 @@ namespace cbl {
       /// host halo
       _HostHalo_,
       
-      // chain Mesh cell
-      _ChainMeshCell_
-    
-    };
+          };
 
     /**
      * @brief return a vector containing the
@@ -83,7 +80,7 @@ namespace cbl {
      * ObjectType names
      */
     inline std::vector<std::string> ObjectTypeNames ()
-    { return {"Random", "Mock", "Halo", "Galaxy", "Cluster", "Void", "HostHalo", "ChainMeshCell"}; }
+    { return {"Random", "Mock", "Halo", "Galaxy", "Cluster", "Void", "HostHalo"}; }
 
     /**
      * @brief cast an enum of type ObjectType
@@ -126,8 +123,8 @@ namespace cbl {
      *
      *  @brief The class Object
      *
-     *  This class is used to handle objects of type <EM> object
-     *  </EM>
+     *  This abstract class is used to define the interface of the
+     *  derived classes used to manage extra-galactic objects
      */
     class Object {
 
@@ -203,16 +200,7 @@ namespace cbl {
        *  
        */
       Object () = default;
-      
-       /**
-       *  @brief specific constructor for ChainMeshCell
-       *       
-       *  @param ID the object ID
-       *  
-       */
-      Object (const int ID) 
-  : m_ID(ID) {}
-      
+            
       /**
        *  @brief constructor that uses comoving coordinates
        *
@@ -240,7 +228,7 @@ namespace cbl {
        *  @param sn signal-to-noise
        *  
        */
-      Object (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+      Object (const glob::comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
 	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_ra(par::defaultDouble), m_dec(par::defaultDouble), m_redshift(par::defaultDouble), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn) {}
     
       /**
@@ -250,8 +238,8 @@ namespace cbl {
        *  @param coord structure containing the comoving coordinates
        *  {x, y, z}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param z1_guess minimum prior on the redshift
        *
@@ -278,12 +266,12 @@ namespace cbl {
        *  @param sn signal-to-noise
        *  
        */
-      Object (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
-	: m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn)
-	{
-	  cbl::polar_coord(m_xx, m_yy, m_zz, m_ra, m_dec, m_dc);
-	  m_redshift = cosm.Redshift(m_dc, z1_guess, z2_guess);
-	}
+      Object (const glob::comovingCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+      : m_xx(coord.xx), m_yy(coord.yy), m_zz(coord.zz), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn)
+      {
+	cbl::polar_coord(m_xx, m_yy, m_zz, m_ra, m_dec, m_dc);
+	m_redshift = cosmology->Redshift(m_dc, z1_guess, z2_guess);
+      }
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -310,9 +298,8 @@ namespace cbl {
        *  @param redshiftMax maximum redshift
        *
        *  @param sn signal-to-noise
-       *  
        */
-      Object (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+      Object (const glob::observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
 	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn) {}
       
       /**
@@ -345,7 +332,7 @@ namespace cbl {
        *  @param sn signal-to-noise
        *  
        */
-      Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+      Object (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
 	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn) {}
       
       /**
@@ -356,8 +343,8 @@ namespace cbl {
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -380,12 +367,12 @@ namespace cbl {
        *  @param sn signal-to-noise
        *  
        */
-      Object (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+      Object (const glob::observedCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
 	: m_ra(coord.ra), m_dec(coord.dec), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn)
-	{ 
-	  m_dc = cosm.D_C(m_redshift); 
-	  cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
-	}
+      {
+	m_dc = cosmology->D_C(m_redshift);
+	cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
+      }
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -396,8 +383,8 @@ namespace cbl {
        *
        *  @param inputUnits the units of the input coordinates
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -420,12 +407,12 @@ namespace cbl {
        *  @param sn signal-to-noise
        *  
        */
-      Object (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
-	: m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn)
-	{ 
-	  m_dc = cosm.D_C(m_redshift);
-	  cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
-	}
+      Object (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
+      : m_ra(radians(coord.ra, inputUnits)), m_dec(radians(coord.dec, inputUnits)), m_redshift(coord.redshift), m_dc(par::defaultDouble), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn)
+      { 
+	m_dc = cosmology->D_C(m_redshift);
+	cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
+      }
 
       /**
        *  @brief constructor that uses both comoving and observed
@@ -451,18 +438,6 @@ namespace cbl {
       Object (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble) 
       : m_xx(xx), m_yy(yy), m_zz(zz), m_ra(ra), m_dec(dec), m_redshift(redshift), m_dc(sqrt(xx*xx+yy*yy+zz*zz)), m_weight(weight), m_region(region), m_ID(ID), m_field(field), m_x_displacement(x_displacement), m_y_displacement(y_displacement), m_z_displacement(z_displacement), m_redshiftMin(redshiftMin), m_redshiftMax(redshiftMax), m_sn(sn)
       {}   
-
-
-      /**
-       * @brief function that allows copying private variables of the class 
-       * when an object of class Catalogue is copied
-       * 
-       * @return a shared pointer to the Object
-       *
-       */
-      virtual std::shared_ptr<Object> getShared() {
-        return std::make_shared<Object>(*this);
-      }
 
       /**
        *  @brief default destructor
@@ -514,7 +489,7 @@ namespace cbl {
        * 
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const glob::comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
       
       /**
        *  @brief static factory used to construct objects of any type,
@@ -527,8 +502,8 @@ namespace cbl {
        *  @param coord structure containing the comoving coordinates
        *  {x, y, z}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param z1_guess minimum prior on the redshift
        *
@@ -550,7 +525,7 @@ namespace cbl {
        *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const glob::comovingCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -578,7 +553,7 @@ namespace cbl {
        *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const glob::observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -608,7 +583,7 @@ namespace cbl {
        *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -621,8 +596,8 @@ namespace cbl {
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -640,7 +615,7 @@ namespace cbl {
        *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const glob::observedCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -655,8 +630,8 @@ namespace cbl {
        * 
        *  @param inputUnits the units of the input coordinates
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -674,7 +649,7 @@ namespace cbl {
        *
        *  @return object of a given type
        */
-      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
+      static std::shared_ptr<Object> Create (const ObjectType ObjectType, const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
 
       /**
        *  @brief static factory used to construct objects of any kind,
@@ -714,28 +689,22 @@ namespace cbl {
        *
        */
       static std::shared_ptr<Object> Create (const ObjectType ObjectType, const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble);
-
-
-      /**
-       *  @brief static factory used to construct objects of ChainMeshCell type
-       * 
-       *  @param ID the object ID
-       *
-       *  @param part the particles in the cell
-       *
-       *  @param nearCells the cells near the object, sorted for distance
-       *
-       *  @return object of a given type
-       *
-       */
-      static std::shared_ptr<Object> Create (const int ID=par::defaultInt, const std::vector<unsigned int> part={}, std::vector<std::vector<unsigned int>> nearCells={});
-      ///@}
-
     
       /**
        *  @name Member functions used to get the protected members
        */
       ///@{
+      
+      /**
+       * @brief function that allows copying private variables of the
+       * class when an object of class Catalogue is copied
+       * 
+       * @return a shared pointer to the Object
+       */
+      virtual std::shared_ptr<Object> ptrObject ()
+      {
+        return std::make_shared<Object>(*this);
+      }
       
       /**
        *  @brief get the member \e m_xx
@@ -848,10 +817,10 @@ namespace cbl {
        *  @return the field where the object has been observed
        */
       std::string field () const
-	{
-	  if (!cbl::isSet(m_field)) ErrorCBL("the m_field variable is not defined!", "field", "Object.h");
-	  return m_field;
-	}
+      {
+	if (!cbl::isSet(m_field)) ErrorCBL("the m_field variable is not defined!", "field", "Object.h");
+	return m_field;
+      }
 
       /**
        *   @brief get the member \e m_x_displacement
@@ -879,11 +848,11 @@ namespace cbl {
        *  @return a vector containing the object coordinates
        */
       std::vector<double> coords () const
-	{
-	  if (!cbl::isSet(m_xx) || !cbl::isSet(m_yy) || !cbl::isSet(m_zz))
-	    ErrorCBL("one or more of the m_xx, m_yy, m_zz variables is not defined!", "coords", "Object.h");
-	  return {m_xx, m_yy, m_zz};
-	}
+      {
+	if (!cbl::isSet(m_xx) || !cbl::isSet(m_yy) || !cbl::isSet(m_zz))
+	  ErrorCBL("one or more of the m_xx, m_yy, m_zz variables is not defined!", "coords", "Object.h");
+	return {m_xx, m_yy, m_zz};
+      }
     
       /**
        *  @brief get the member \e m_vx
@@ -966,6 +935,14 @@ namespace cbl {
        */
       virtual double magnitudeI () const
       { return cbl::ErrorCBL("", "magnitudeI", "Object.h"); }  
+      
+      /**
+       *  @brief get the member \e m_magnitudeZ
+       *  @return the z magnitude of the derived object, or an error
+       *  message if the derived object does not have this member
+       */
+      virtual double magnitudeZ () const
+      { return cbl::ErrorCBL("", "magnitudeZ", "Object.h"); }  
       
       /**
        *  @brief get the member \e m_odds
@@ -1231,22 +1208,7 @@ namespace cbl {
       virtual std::vector<std::shared_ptr<Object>> satellites () const
       { cbl::ErrorCBL("", "satellites", "Object.h"); return {}; }
 
-      /**
-       *  @brief get the virtual member \e m_part, member of ChainMeshCell
-       *  @return the particles on the selected cell, or an
-       *  error message if the derived object does not have this member
-       */
-      virtual std::vector<unsigned int> part () const
-      { return {}; }
-
-      /**
-       *  @brief get the virtual member \e m_nearCells, member of ChainMeshCell
-       *  @return the cells near the selected one (sorted for distance), or an
-       *  error message if the derived object does not have this member
-       */
-      virtual std::vector<std::vector<unsigned int>> nearCells () const  
-      { return {}; }
-      ///@}
+            ///@}
 
     
       /**
@@ -1339,11 +1301,11 @@ namespace cbl {
        *  cbl::catalogue::Object::set_redshift update the coordinates
        *  according to the redshift value
        */
-      void set_redshift (const double redshift, const cosmology::Cosmology cosmology, const bool update_coordinates=true)
+      void set_redshift (const double redshift, const std::shared_ptr<cosmology::Cosmology> cosmology, const bool update_coordinates=true)
       {
 	m_redshift = redshift;
 	if (update_coordinates) {
-	  m_dc = cosmology.D_C(m_redshift); 
+	  m_dc = cosmology->D_C(m_redshift); 
 	  cbl::cartesian_coord(m_ra, m_dec, m_dc, m_xx, m_yy, m_zz);
 	}
       }
@@ -1555,6 +1517,13 @@ namespace cbl {
        */
       virtual void set_magnitudeI (const double magnitudeI)
       { (void)magnitudeI; cbl::ErrorCBL("", "set_magnitudeI", "Object.h"); }  
+      
+      /**
+       *  @brief set the member \e m_magnitudeZ
+       *  @param magnitudeZ the z magnitude
+       */
+      virtual void set_magnitudeZ (const double magnitudeZ)
+      { (void)magnitudeZ; cbl::ErrorCBL("", "set_magnitudeZ", "Object.h"); } 
 
       /**
        *  @brief set the private member Galaxy::m_SFR
@@ -1745,22 +1714,6 @@ namespace cbl {
        */
       virtual void set_satellites (const std::vector<std::shared_ptr<Object>> satellites)
       {	(void)satellites; cbl::ErrorCBL("", "set_satellites", "Object.h"); }
-
-      /**
-       *  @brief set the virtual private member \em m_part (member of
-       *  ChainMeshCell)
-       *  @param part the vector to be replaced to the particles vector
-       */
-      virtual void set_part (const std::vector<unsigned int> part)
-      {	(void)part; cbl::ErrorCBL("", "set_part", "Object.h"); }
-
-      /**
-       *  @brief set the virtual private member \em m_nearCells
-       *  (member of ChainMeshCell)
-       *  @param nearCells the matrix of near cells to be set 
-       */
-      virtual void set_nearCells (const std::vector<std::vector<unsigned int>> nearCells)
-      {	(void)nearCells; cbl::ErrorCBL("", "set_nearCells", "Object.h"); }
       
       ///@}
 
@@ -2058,6 +2011,16 @@ namespace cbl {
        */
       virtual bool isSet_magnitudeI ()
       { return cbl::ErrorCBL("", "isSet_magnitudeI", "Object.h"); }  
+      
+      /**
+       *  @brief check if the member \e m_magnitudeZ is set
+       *  
+       *  @return true if the z magnitude is set; false otherwise, or an
+       *  error message if the derived object does not have this
+       *  member
+       */
+      virtual bool isSet_magnitudeZ ()
+      { return cbl::ErrorCBL("", "isSet_magnitudeZ", "Object.h"); }  
 
       /**
        *  @brief check if the member \em m_SFR is set

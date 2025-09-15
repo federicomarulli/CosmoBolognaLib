@@ -1,0 +1,341 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>alter_alm*</TITLE>
+<META NAME="description" CONTENT="alter_alm*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_ang2vec.htm">
+<LINK REL="previous" HREF="sub_alms2fits.htm">
+<LINK REL="next" HREF="sub_ang2vec.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_alms2fits.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_ang2vec.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html331"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_alms2fits.htm">alms2fits*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_ang2vec.htm">ang2vec</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION1200"></A>
+<A ID="sub:alter_alm"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">alter_alm*</SPAN></div><hr>
+<H3>This routine modifies scalar (and tensor) <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> by multiplying them by a beam window
+  function described by a FWHM (in the case of a gaussian beam) or read from an external
+  file (in the more general case of a circular beam)  <!-- MATH
+ $a_{\ell m}
+  \longrightarrow a_{\ell m} b(\ell)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img119.png"
+ ALT="$a_{\ell m}
+\longrightarrow a_{\ell m} b(\ell) $"></SPAN> . It can also be used to
+  multiply the  <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> by an arbitray function of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img33.png"
+ ALT="$\ell$"></SPAN>.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/alm_tools.F90"><strong>src/f90/mod/alm_tools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">alter_alm*</SPAN>(
+<A HREF="#sub:alter_alm:nsmax">nsmax</A>, <A HREF="#sub:alter_alm:nlmax">nlmax</A>, <A HREF="#sub:alter_alm:nmmax">nmmax</A>, <A HREF="#sub:alter_alm:fwhm_arcmin">fwhm_arcmin</A>, <A HREF="#sub:alter_alm:alm_TGC">alm_TGC</A>[, <A HREF="#sub:alter_alm:beam_file">beam_file</A>, <A HREF="#sub:alter_alm:window">window</A>]
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:180px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:45px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:180px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:180px">
+nsmax<A ID="sub:alter_alm:nsmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px"><!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> resolution parameter of the map associated with the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>
+                   considered. Currently has no effect on the routine.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:180px">nlmax<A ID="sub:alter_alm:nlmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">maximum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img33.png"
+ ALT="$\ell$"></SPAN> value for the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:180px">nmmax<A ID="sub:alter_alm:nmmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">maximum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img34.png"
+ ALT="$m$"></SPAN> value for the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:180px">fwhm_arcmin<A ID="sub:alter_alm:fwhm_arcmin"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">fwhm size of the gaussian beam in arcminutes.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:180px">alm_TGC<A ID="sub:alter_alm:alm_TGC"></A>(1:p,0:nlmax,0:nmmax)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SPC/ DPC</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">INOUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">complex <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> values
+                   to be altered.  The first index here runs from 1:1 for
+                   temperature only, and 1:3 for polarisation. In the latter
+                   case,  1=T, 2=E, 3=B.</TD>
+</TR>
+</TABLE>
+<TABLE class="PAD  BORDER" style="">
+<TR><TD CLASS="LEFT TOP"  style="width:180px">beam_file<A ID="sub:alter_alm:beam_file"></A>(LEN=<kbd>filenamelen</kbd>) (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">name of the file
+                   containing the (non necessarily gaussian) window function
+                   <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img120.png"
+ ALT="$B_\ell$"></SPAN> of a circular beam. If present, it will override
+                   the argument <SPAN style="font-family:monospace">fwhm_arcmin</SPAN>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:180px">window<A ID="sub:alter_alm:window"></A>(0:nlw,1:d) (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:45px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">arbitrary window by which to multiply the
+                   <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>. If present, it overrides both <SPAN style="font-family:monospace">fwhm_arcmin</SPAN>
+                   and <SPAN style="font-family:monospace">beam_file</SPAN>. If nlw <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.28ex; vertical-align: -0.16ex; " SRC="sub_img61.png"
+ ALT="$&lt;$"></SPAN> nlmax, the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> with
+                   <!-- MATH
+ $\ell \in \{$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img121.png"
+ ALT="$\ell \in \{$"></SPAN>nlw+1,nlmax<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img122.png"
+ ALT="$\}$"></SPAN> are set to 0, and a warning is issued. If <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="sub_img123.png"
+ ALT="$d&lt;p$"></SPAN> the
+                   window for temperature is replicated for polarisation.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">call alter_alm(64, 128, 128, 1, 5.0, alm_TGC)  
+<BR></div>
+<blockquote>
+Alters scalar and tensor <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> of a map with <!-- MATH
+ $N_{\mathrm{side}}=64$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img124.png"
+ ALT="$N_{\mathrm{side}}=64$"></SPAN>, 
+ <!-- MATH
+ $\ell_{\mathrm{max}}=m_{\mathrm{max}}= 128$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img125.png"
+ ALT="$\ell_{\mathrm{max}}=m_{\mathrm{max}}= 128$"></SPAN> by multiplying them by the beam window function of a
+gaussian beam with FWHM = 5 arcmin.
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">alter_alm*</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">alm_tools</SPAN></B>
+<DD>module, containing:
+	<DT>
+<B><A HREF="sub_generate_beam.htm#sub:generate_beam">generate_beam</A></B>
+<DD>routine to generate beam window function
+	<DT>
+<B><A HREF="sub_pixel_window.htm#sub:pixel_window">pixel_window</A></B>
+<DD>routine to generate pixel window function
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">alter_alm*</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_create_alm.htm#sub:create_alm">create_alm</A></B>
+<DD>Routine to create <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients.
+  <DT>
+<B><A HREF="sub_rotate_alm.htm#sub:rotate_alm">rotate_alm</A></B>
+<DD>Routine to rotate <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>
+  coefficients between 2 different arbitrary coordinate systems.
+  <DT>
+<B><A HREF="sub_map2alm.htm#sub:map2alm">map2alm</A></B>
+<DD>Routines to analyze a <strong>HEALPix</strong> sky map into its <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>
+  coefficients.
+  <DT>
+<B><A HREF="sub_alm2map.htm#sub:alm2map">alm2map</A></B>
+<DD>Routines to synthetize a <strong>HEALPix</strong> sky map from its <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>
+  coefficients.
+  <DT>
+<B><A HREF="sub_alms2fits.htm#sub:alms2fits">alms2fits</A>, <A HREF="sub_dump_alms.htm#sub:dump_alms">dump_alms</A></B>
+<DD>Routines to save a set of <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> in a FITS file.  
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_alms2fits.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_ang2vec.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html331"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_alms2fits.htm">alms2fits*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_ang2vec.htm">ang2vec</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

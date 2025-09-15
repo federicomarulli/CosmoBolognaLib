@@ -19,9 +19,7 @@
 %shared_ptr(cbl::catalogue::Cluster);
 %shared_ptr(cbl::catalogue::Void);
 %shared_ptr(cbl::catalogue::HostHalo);
-%shared_ptr(cbl::catalogue::ChainMeshCell);
 %shared_ptr(cbl::catalogue::Catalogue);
-%shared_ptr(cbl::catalogue::CatalogueChainMesh);
 
 %feature("director") cbl::catalogue::MaskObject;
 
@@ -34,6 +32,18 @@
 #include "LikelihoodParameters.h"
 #include "TaperedCovarianceMatrix.h"
 #include "Cosmology.h"
+#include "LCDM.h"
+#include "kLCDM.h"
+#include "w0CDM.h"
+#include "kw0CDM.h"
+#include "w0waCDM.h"
+#include "kw0waCDM.h"
+#include "LnuCDM.h"
+#include "kLnuCDM.h"
+#include "w0nuCDM.h"
+#include "kw0nuCDM.h"
+#include "w0wanuCDM.h"
+#include "kw0wanuCDM.h" 
  
 #include "Object.h"
 #include "RandomObject.h"
@@ -45,8 +55,6 @@
 #include "ChainMesh_Catalogue.h"
 #include "Void.h"
 #include "HostHalo.h"
-#include "ChainMeshCell.h"
-#include "CatalogueChainMesh.h"
 %}
 
 %include "Object.h"
@@ -59,8 +67,6 @@
 %include "ChainMesh_Catalogue.h"
 %include "Void.h"
 %include "HostHalo.h"
-%include "ChainMeshCell.h"
-%include "CatalogueChainMesh.h"
 
 %template(RandomObjVector) std::vector<cbl::catalogue::RandomObject>;
 %template(MockVector) std::vector<cbl::catalogue::Mock>;
@@ -69,8 +75,8 @@
 %template(ClusterVector) std::vector<cbl::catalogue::Cluster>;
 %template(VoidVector) std::vector<cbl::catalogue::Void>;
 %template(HostHaloVector) std::vector<cbl::catalogue::HostHalo>;
-%template(ChainMeshCellVector) std::vector<cbl::catalogue::ChainMeshCell>;
 %template(VarVector) std::vector<enum cbl::catalogue::Var>;
+%template(CatalogueVector) std::vector<cbl::catalogue::Catalogue>;
 
 %extend cbl::catalogue::Catalogue
 {  
@@ -81,7 +87,6 @@
   %template(add_object) add_object< Cluster >;
   %template(add_object) add_object< Void >;
   %template(add_object) add_object< HostHalo >;
-  %template(add_object) add_object< ChainMeshCell >;
   %template(add_objects) add_objects< RandomObject >;
   %template(add_objects) add_objects< Mock >;
   %template(add_objects) add_objects< Halo >;
@@ -89,8 +94,7 @@
   %template(add_objects) add_objects< Cluster >;
   %template(add_objects) add_objects< Void >;
   %template(add_objects) add_objects< HostHalo >;
-  %template(add_objects) add_objects< ChainMeshCell >;
-  
+    
   %template(replace_objects) replace_objects< RandomObject >;
   %template(replace_objects) replace_objects< Mock >;
   %template(replace_objects) replace_objects< Halo >;
@@ -98,9 +102,8 @@
   %template(replace_objects) replace_objects< Cluster >;
   %template(replace_objects) replace_objects< Void >;
   %template(replace_objects) replace_objects< HostHalo >;
-  %template(replace_objects) replace_objects< ChainMeshCell >;
   std::shared_ptr<cbl::catalogue::Object> __getitem__(const size_t i)
-    {
-      return (*self)[i];
-    }
+  {
+    return (*self)[i];
+  }
 }

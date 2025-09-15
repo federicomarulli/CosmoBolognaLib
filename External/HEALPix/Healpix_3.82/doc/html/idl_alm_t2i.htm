@@ -1,0 +1,240 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>alm_t2i</TITLE>
+<META NAME="description" CONTENT="alm_t2i">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_alm2fits.htm">
+<LINK REL="previous" HREF="idl_alm_i2t.htm">
+<LINK REL="next" HREF="idl_alm2fits.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_alm_i2t.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_alm2fits.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html323"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_alm_i2t.htm">alm_i2t</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_alm2fits.htm">alm2fits</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION700"></A>
+<A ID="idl:alm_t2i"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">alm_t2i</SPAN></div><hr>
+<H3>This IDL facility turns a tabular (real or complex) a(l,m) array into an
+indexed list of alm that can be written into a FITS file with <A HREF="idl_alm2fits.htm#idl:alm2fits">alm2fits</A></H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/misc/alm_t2i.pro"><strong>src/idl/misc/alm_t2i.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+<SPAN CLASS="colordoc">alm_t2i</SPAN>, <A HREF="#idl:alm_t2i:alm_table">Alm_table</A>,
+<A HREF="#idl:alm_t2i:index">Index</A>, 
+<A HREF="#idl:alm_t2i:alm_vec">Alm_vec</A>,
+[<A HREF="#idl:alm_t2i:help">HELP=</A>,
+<A HREF="#idl:alm_t2i:mfirst">MFIRST=</A>])
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>Alm_table</B>
+<DD><A ID="idl:alm_t2i:alm_table"></A>Input real or complex array, containing all the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.16ex; vertical-align: -0.67ex; " SRC="idl_img14.png"
+ ALT="$a^s_{\ell m}$"></SPAN> for <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN>
+         in [0,<!-- MATH
+ $\ell_{\mathrm{max}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="idl_img16.png"
+ ALT="$\ell_{\mathrm{max}}$"></SPAN>] and <SPAN CLASS="MATH"><I>m</I></SPAN> in [0,<!-- MATH
+ $m_{\mathrm{max}}$
+ -->
+<SPAN CLASS="MATH"><I>m</I><SUB>max</SUB></SPAN>] 
+(and <SPAN CLASS="MATH"><I>s</I></SPAN> in [0,<!-- MATH
+ $s_{\mathrm{max}}$
+ -->
+<SPAN CLASS="MATH"><I>s</I><SUB>max</SUB></SPAN>] if applicable)
+<BR>
+if REAL    it has 3 (or 4) dimensions,
+<BR>
+if COMPLEX is has 2 (or 3) dimensions
+
+<P>
+<DT>
+<B>Index</B>
+<DD><A ID="idl:alm_t2i:index"></A>Output integer vector of size ni containing the index <SPAN CLASS="MATH"><I>i</I></SPAN> of the 
+            of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients, related to <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img9.png"
+ ALT="$\{\ell,m\}$"></SPAN> by 
+             <!-- MATH
+ $i = \ell^2 + \ell + m + 1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.28ex; " SRC="idl_img10.png"
+ ALT="$i = \ell^2 + \ell + m + 1$"></SPAN>
+    <DT>
+<B>Alm_vec</B>
+<DD><A ID="idl:alm_t2i:alm_vec"></A>Output array of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients, with dimension (ni, 2 [,<!-- MATH
+ $s_{\mathrm{max}}+1$
+ -->
+<SPAN CLASS="MATH"><I>s</I><SUB>max</SUB>+1</SPAN>])
+     where
+<BR>
+ni   = number of <SPAN CLASS="MATH"><I>i</I></SPAN> indices
+<BR>
+2 for real and imaginary parts of alm coefficients
+<BR>           <!-- MATH
+ $s_{\mathrm{max}}+1$
+ -->
+<SPAN CLASS="MATH"><I>s</I><SUB>max</SUB>+1</SPAN> = number of signals (usually 1 for any of T E B
+                  or 3 for T,E,B together)
+</DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>HELP=</B>
+<DD><A ID="idl:alm_t2i:help"></A>if set, prints out the help header and exits
+    <DT>
+<B>MFIRST=</B>
+<DD><A ID="idl:alm_t2i:mfirst"></A>if set, the input array is a(m,l) instead of a(l,m)
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">alm_t2i</SPAN> turns a real or complex tabular array of a(l,m) (or a(m,l) if 
+<A HREF="#idl:alm_t2i:mfirst"><SPAN  CLASS="texttt">MFIRST</SPAN></A> is
+set) into a real list of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> (with the real and imaginary parts separated)
+and its index <!-- MATH
+ $i=\ell^2+\ell+m+1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.28ex; " SRC="idl_img10.png"
+ ALT="$i = \ell^2 + \ell + m + 1$"></SPAN>. The unphysical <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.16ex; " SRC="idl_img17.png"
+ ALT="$m&gt;\ell$"></SPAN> elements of the input
+table are dropped from the output list.
+
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">alm_t2i</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">alm_t2i</SPAN>.
+    <DT>
+<B><A HREF="idl_alm_i2t.htm#idl:alm_i2t">alm_i2t</A></B>
+<DD>this function is complementary to
+<SPAN CLASS="colordoc">alm_t2i</SPAN> and
+turns an indexed list of alm (as generated by
+<A HREF="idl_fits2alm.htm#idl:fits2alm">fits2alm</A>) into a tabular (real or complex) a(l,m) array
+for easier manipulation
+  <DT>
+<B><A HREF="idl_alm2fits.htm#idl:alm2fits">alm2fits</A>, <A HREF="idl_fits2alm.htm#idl:fits2alm">fits2alm</A></B>
+<DD>routines to read and write <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> indexed lists from and to FITS files.
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"></div>
+<blockquote>See <A HREF="idl_alm_i2t.htm#idl:alm_i2t:example">alm_i2t example</A>
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_alm_i2t.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_alm2fits.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html323"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_alm_i2t.htm">alm_i2t</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_alm2fits.htm">alm2fits</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

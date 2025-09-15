@@ -1,0 +1,54 @@
+# Parameter file for sky_ng_sim_bin
+# Healpix resolution parameter - must be a power of 2
+nsmax = 32 
+# Number of bins
+nbins = 2
+# Overall maximum multipole value
+nlmax = 64
+# l range for bin 1
+nlmax_1 = 32
+nlmin_1 = 0
+
+nlmax_2 = 64
+nlmin_2 = 33
+
+#Input power spectrum
+infile = cl.fits
+
+outfile = !ng_sim_bin.fits
+
+#Set plot to .FALSE. if you want program to run
+#completely non-interactively
+plot = .TRUE.
+
+#pdf_choice is 1 if using SHO pdf
+#2 if using powers of Gaussian
+pdf_choice = 2
+
+#Random number seed
+idum_1 = 1234
+idum_2 = 65654
+
+#Example paramaters for powers of Gaussian
+
+npower_1 = 1
+npower_2 = 4
+
+
+#Example parameters for SHO
+# Order of highest non-zero alpha
+na_1 = 3
+na_2 = 3
+
+sigma0_1 = 1.0
+sigma0_2 = 1.0
+
+#Values of alpha for bin 1
+alpha_1_1 = 0
+alpha_2_1 = 0
+alpha_3_1 = 0.27
+
+#Values for bin 2
+alpha_1_2 = 0
+alpha_2_2 = 0
+alpha_3_2 = 0.15

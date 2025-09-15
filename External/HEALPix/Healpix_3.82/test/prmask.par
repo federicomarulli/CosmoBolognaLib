@@ -1,0 +1,10 @@
+# HEALPix 3.82
+# parameter file for process_mask
+# This parameter file is used by "make test".
+
+mask_file = mask.fits
+# hole_min_size = 0
+# hole_min_surf_arcmin2 = 0.0
+# filled_file = ''
+distance_file = !test_distmask.fits
+

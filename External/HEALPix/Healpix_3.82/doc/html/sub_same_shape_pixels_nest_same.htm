@@ -1,0 +1,328 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>same_shape_pixels_nest, same_shape_pixels_ring</TITLE>
+<META NAME="description" CONTENT="same_shape_pixels_nest, same_shape_pixels_ring">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_scan_directories.htm">
+<LINK REL="previous" HREF="sub_rotate_alm.htm">
+<LINK REL="next" HREF="sub_scan_directories.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_rotate_alm.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_scan_directories.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html503"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_rotate_alm.htm">rotate_alm*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_scan_directories.htm">scan_directories</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION9800"></A>
+<A ID="sub:same_shape_pixels_xxx"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">same_shape_pixels_nest, same_shape_pixels_ring</SPAN></div><hr>
+<H3>These routines provide the ordered list of all <strong>HEALPix</strong> pixels having the same shape
+  as a given template, for a resolution parameter <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN>. Depending on the
+  template considered the number of such pixels is either 8, 16, 4<!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> or
+  8<!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN>.
+<br><br>The template pixels are all located in the Northern Hemisphere, or on the
+ Equator.
+They are chosen to have their center located at
+<BR>
+<DIV CLASS="mathdisplay"><A ID="eq:same_shape_pixel_xxx"></A><!-- MATH
+ \begin{eqnarray}
+z=\cos(\theta)\ge 2/3 \mycomma0< \phi \leq \pi/2,   \nonumber \\%[Nside*(Nside+2)/4]
+     2/3 > z \geq 0 \mycomma\phi=0, \quad{\rm or}\quad  \phi=\frac{\pi}{4N_{\mathrm{side}}}.  %\nonumber %[Nside]
+\end{eqnarray}
+ -->
+<TABLE CELLPADDING="0" ALIGN="CENTER" WIDTH="100%">
+<TR VALIGN="MIDDLE"><TD NOWRAP WIDTH="50%" ALIGN="RIGHT"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img290.png"
+ ALT="$\displaystyle z=\cos(\theta)\ge 2/3 \mycomma0&lt; \phi \leq \pi/2,$"></TD>
+<TD>&nbsp;</TD>
+<TD>&nbsp;</TD>
+<TD CLASS="eqno" style="width:10px" ALIGN="RIGHT">
+&nbsp;</TD></TR>
+<TR VALIGN="MIDDLE"><TD NOWRAP WIDTH="50%" ALIGN="RIGHT"><IMG
+ STYLE="height: 2.86ex; vertical-align: -1.16ex; " SRC="sub_img291.png"
+ ALT="$\displaystyle %[Nside*(Nside+2)/4]
+2/3 &gt; z \geq 0 \mycomma\phi=0, \quad{\rm or}\quad \phi=\frac{\pi}{4N_{\mathrm{side}}}. %\nonumber %[Nside]
+$"></TD>
+<TD>&nbsp;</TD>
+<TD>&nbsp;</TD>
+<TD CLASS="eqno" style="width:10px" ALIGN="RIGHT">
+(<SPAN CLASS="arabic">23</SPAN>)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL">
+
+ They are numbered continuously from 0, starting at the North Pole, with the index
+ increasing in <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="sub_img197.png"
+ ALT="$\phi$"></SPAN>, and then increasing for decreasing <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img259.png"
+ ALT="$z$"></SPAN>.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/pix_tools.F90"><strong>src/f90/mod/pix_tools.F90</strong></a>&nbsp;  
+
+<P>
+
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">same_shape_pixels_nest, same_shape_pixels_ring</SPAN>(
+<A HREF="#sub:same_shape_pixels_xxx:nside">nside</A>, 
+ <A HREF="#sub:same_shape_pixels_xxx:template">template</A>
+[,&nbsp;<A HREF="#sub:same_shape_pixels_xxx:list">list</A>, 
+ <A HREF="#sub:same_shape_pixels_xxx:reflexion">reflexion</A>, 
+ <A HREF="#sub:same_shape_pixels_xxx:nrep">nrep</A>]
+)</h3></blockquote>
+
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">same_shape_pixels_nest, same_shape_pixels_ring</SPAN>(
+<A HREF="#sub:same_shape_pixels_xxx:nside">nside</A>, 
+ <A HREF="#sub:same_shape_pixels_xxx:template">template</A>
+[,&nbsp;<A HREF="#sub:same_shape_pixels_xxx:list">list</A>, 
+ <A HREF="#sub:same_shape_pixels_xxx:reflexion">reflexion</A>, 
+ <A HREF="#sub:same_shape_pixels_xxx:nrep">nrep</A>]
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:140px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:235px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">
+nside<A ID="sub:same_shape_pixels_xxx:nside"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">the <strong>HEALPix</strong> <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> parameter.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">template<A ID="sub:same_shape_pixels_xxx:template"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B/ I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">identification number of the
+                   template pixel (the numbering
+                   scheme of the pixel templates is the same for both routines).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">list(0:nrep-1)<A ID="sub:same_shape_pixels_xxx:list"></A> OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B/ I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">pointer containing the ordered list of NESTED/RING scheme
+                   identification numbers (in {0,<!-- MATH
+ $12N_{\mathrm{side}}^2-1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img233.png"
+ ALT="$12N_{\mathrm{side}}^2-1$"></SPAN>})
+  of all pixels having the same shape as the template provided. The routines
+                   will allocate the <SPAN style="font-family:monospace">list</SPAN> array if it is not allocated
+                   upon calling.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">reflexion(0:nrep-1)<A ID="sub:same_shape_pixels_xxx:reflexion"></A> OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">pointer containing the transformation(s) (in
+                   {0, 3}) to
+                   apply to each of the returned pixels to match exactly in
+                   shape and position its respective template. 0: rotation around the polar axis only,
+                   1: rotation + East-West swap (ie, reflexion around meridian),
+                   2: rotation + North-South swap (ie, reflexion around
+                   Equator), 3: rotation + East-West and North-South swaps. The routines
+                   will allocate the <SPAN style="font-family:monospace">list</SPAN> array if it is not allocated
+                   upon calling.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">nrep<A ID="sub:same_shape_pixels_xxx:nrep"></A> OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B/ I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">number of pixels having the same template (either 8, 16, 4<!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> or
+  8<!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN>).</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use <A HREF="sub_healpix_modules_module.htm#sub:healpix_modules">healpix_modules</A> 
+<BR>
+integer, parameter :: IXB = I4B  ! for nside &lt;= 8192
+<BR>!integer, parameter :: IXB = I8B  ! for any valid nside
+<BR>
+integer(I4B):: nside
+<BR>
+integer(IXB):: template, nrep
+<BR>
+integer(I4B), dimension(:), pointer :: listref
+<BR>
+integer(IXB), dimension(:), pointer :: listpix
+<BR>
+<BR>
+allocate(listref(0:0)) ! only the lower bound matters
+<BR>
+allocate(listpix(0:0)) ! only the lower bound matters
+<BR>
+nside = 256
+<BR>
+template = 1234
+<BR>
+call same_shape_pixels_ring(nside, template, list=listpix, reflexion=listref, nrep=nrep) 
+<BR>
+print*,nrep
+<BR>
+print*,listpix(0:nrep-1)
+<BR>
+print*,listref(0:nrep-1)
+<BR></div>
+<blockquote>
+Returns in <SPAN style="font-family:monospace">listpix</SPAN> the RING-scheme index of the all the pixels having
+the same shape as the template #1234 for <!-- MATH
+ $N_{\mathrm{side}}=256$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img152.png"
+ ALT="$N_{\mathrm{side}}=256$"></SPAN>. Upon return <SPAN style="font-family:monospace">listref</SPAN> will
+contain the rotation/reflexions to apply to each pixel returned to match the template,
+and <SPAN style="font-family:monospace">nrep</SPAN> will contain the number of pixels having that same shape (16 in that case).
+Note that some variables (corresponding to arguments <SPAN  CLASS="texttt">template</SPAN>, <SPAN  CLASS="texttt">list</SPAN> and <SPAN  CLASS="texttt">nrep</SPAN>)
+must be of type <SPAN  CLASS="texttt">I8B</SPAN> instead of <SPAN  CLASS="texttt">I4B</SPAN> if <!-- MATH
+ $N_{\mathrm{side}}>8192$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img18.png"
+ ALT="$N_{\mathrm{side}}&gt; 8192$"></SPAN> is to be used.
+</blockquote>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">same_shape_pixels_nest, same_shape_pixels_ring</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_nside2ntemplates.htm#sub:nside2ntemplates">nside2templates</A></B>
+<DD>returns the
+  number of template pixel shapes available for a given <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN>.
+  <DT>
+<B><A HREF="sub_template_pixel_nest_templat.htm#sub:template_pixel_xxx">template_pixel_ring</A></B>
+<DD><DT>
+<B><A HREF="sub_template_pixel_nest_templat.htm#sub:template_pixel_xxx">template_pixel_nest</A></B>
+<DD>return
+  the template shape matching the pixel provided
+  </DL>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_rotate_alm.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_scan_directories.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html503"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_rotate_alm.htm">rotate_alm*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_scan_directories.htm">scan_directories</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

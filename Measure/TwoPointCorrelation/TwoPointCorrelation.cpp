@@ -251,7 +251,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs (const std::shared_pt
     
     
     // parallelized loop
-#pragma omp for schedule(static, 2)
+#pragma omp for schedule(dynamic)
 
     // loop on the objects of the first catalogue    
     for (int i=0; i<nObj; ++i) {
@@ -489,7 +489,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region (const std::sh
     
     
     // parallelized loop
-#pragma omp for schedule(static, 2)
+#pragma omp for schedule(dynamic)
     for (int i=0; i<nObj; ++i) {  
       
       vector<long int> close_objects = ChM.close_objects(cat1->coordinate(i), (cross) ? -1 : i);
@@ -608,7 +608,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_1D (const
       pp_res_thread[i] = move(Pair::Create(pp->pairType(), PairInfo::_standard_, pp->sMin(), pp->sMax(), pp->nbins(), pp->shift(), pp->angularUnits(), pp->angularWeight()));
     
     // parallelized loop
-#pragma omp for schedule(static, 2)
+#pragma omp for schedule(dynamic)
     for (int i=0; i<nObj; ++i) {
 
       vector<long int> close_objects = ChM.close_objects(cat1->coordinate(i), (cross) ? -1 : i);
@@ -697,7 +697,7 @@ void cbl::measure::twopt::TwoPointCorrelation::count_pairs_region_test_2D (const
       pp_res_thread[i] =  move(Pair::Create(pp->pairType(), PairInfo::_standard_, pp->sMin_D1(), pp->sMax_D1(), pp->nbins_D1(), pp->shift_D1(), pp->sMin_D2(), pp->sMax_D2(), pp->nbins_D2(), pp->shift_D2(), pp->angularUnits(), pp->angularWeight()));
     
     // parallelized loop
-#pragma omp for schedule(static, 2)
+#pragma omp for schedule(dynamic)
     for (int i=0; i<nObj; ++i) {
 
       vector<long int> close_objects = ChM.close_objects(cat1->coordinate(i), (cross) ? -1 : i);

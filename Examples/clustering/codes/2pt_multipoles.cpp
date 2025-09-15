@@ -3,8 +3,12 @@
 // function, using the "direct" method and the "integrated" method
 // ========================================================================
 
+#include "LCDM.h"
 #include "TwoPointCorrelation_multipoles_direct.h"
 #include "TwoPointCorrelation_multipoles_integrated.h"
+
+using namespace std;
+
 
 int main () {
 
@@ -14,14 +18,14 @@ int main () {
     // ---------------- use default cosmological parameters ------------
     // -----------------------------------------------------------------
 
-    const cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
 
   
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
   
-    const std::string file_catalogue = "../input/cat.dat";
+    const string file_catalogue = "../input/cat.dat";
 
     const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -40,7 +44,7 @@ int main () {
     // --------------------------------------------------------------------------------------------
 
     // output directory
-    const std::string dir = "../output/";
+    const string dir = "../output/";
 
     // binning parameters and output data
 
@@ -59,7 +63,7 @@ int main () {
 
     // store the output data
   
-    std::string file = "xil_direct.dat";
+    string file = "xil_direct.dat";
 
     TwoP_direct.write(dir, file);
     
@@ -83,7 +87,7 @@ int main () {
   
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

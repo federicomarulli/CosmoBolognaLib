@@ -35,6 +35,7 @@
 
 
 #include "Data1D.h"
+#include "PkXiNonLinear.h"
 #include "ModelFunction_TwoPointCorrelation_wedges.h"
 #include "Modelling_TwoPointCorrelation_wedges.h"
 
@@ -86,6 +87,9 @@ cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::Modelling_TwoPointC
 
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range (const double xmin, const double xmax, const int nWedges)
 {
+  if (m_likelihood != NULL)
+    ErrorCBL("You must set the fit range before the declaration of the likelihood function!", "set_fit_range", "Modelling_TwoPointCorrelation_wedges.cpp");
+  
   vector<vector<double>> fit_range(m_nWedges, vector<double>(2, -1.));
 
   int mp = (0<nWedges && nWedges<m_nWedges) ? nWedges : m_nWedges;
@@ -104,10 +108,16 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range 
 
 void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fit_range (const std::vector<std::vector<double>> fit_range)
 {
+  if (m_likelihood != NULL)
+    ErrorCBL("You must set the fit range before the declaration of the likelihood function!", "set_fit_range", "Modelling_TwoPointCorrelation_wedges.cpp");
+  
   if ((int)fit_range.size()!=m_nWedges)
     ErrorCBL("wrong number of wedges provided, "+conv(fit_range.size(), cbl::par::fINT)+" instead of "+conv(m_nWedges, cbl::par::fINT)+"!", "set_fit_range", "Modelling_TwoPointCorrelation_wedges.cpp");
 
-  m_use_wedge = {false, false};
+  m_use_wedge.resize(2);
+  m_use_wedge[0] = false;
+  m_use_wedge[1] = false;
+  
   
   m_wedges_order.erase(m_wedges_order.begin(), m_wedges_order.end());
 
@@ -143,11 +153,13 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
   m_data_model->nmultipoles = 3;
   m_data_model->nWedges = 2;
 
+  cosmology::PkXi PX(m_data_model->cosmology);
+  
   m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
-  vector<double> Pk = m_data_model->cosmology->Pk_matter(m_data_model->kk, m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+  vector<double> Pk = PX.Pk_matter(m_data_model->kk, m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
   
   if (m_data_model->Pk_mu_model=="dispersion_dewiggled") {
-    vector<double> PkNW = m_data_model->cosmology->Pk_matter(m_data_model->kk, "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+    vector<double> PkNW = PX.Pk_matter(m_data_model->kk, "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
     m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
     m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
 
@@ -157,10 +169,11 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
 
   else if (m_data_model->Pk_mu_model=="dispersion_modecoupling") {
     vector<double> kk_1loop, Pk_1loop;
+    cbl::cosmology::PkXiNonLinear PXN(m_data_model->cosmology);
     for (size_t i=0; i<(size_t)m_data_model->step; i++) {
       if (m_data_model->kk[i]<par::pi) {
 	kk_1loop.push_back(m_data_model->kk[i]);
-	Pk_1loop.push_back(m_data_model->cosmology->Pk_1loop(m_data_model->kk[i], m_data_model->func_Pk, 0,  m_data_model->k_min, 5., m_data_model->prec));
+	Pk_1loop.push_back(PXN.Pk_1loop(m_data_model->kk[i], m_data_model->func_Pk, 0,  m_data_model->k_min, 5., m_data_model->prec));
       }
     }
     m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
@@ -177,7 +190,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
   }
 
   else if (m_data_model->Pk_mu_model=="Scoccimarro_Pezzotta_Gauss" || m_data_model->Pk_mu_model=="Scoccimarro_Pezzotta_Lorentz" || m_data_model->Pk_mu_model=="Scoccimarro_Bel_Gauss" || m_data_model->Pk_mu_model=="Scoccimarro_Bel_Lorentz") {
-    vector<double> Pknonlin = m_data_model->cosmology->Pk_matter(m_data_model->kk, m_data_model->method_Pk, true, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+    vector<double> Pknonlin = PX.Pk_matter(m_data_model->kk, m_data_model->method_Pk, true, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
     m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
     m_data_model->func_Pk_nonlin = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pknonlin, "Spline"));
 
@@ -186,7 +199,8 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
   }
 
   else if (m_data_model->Pk_mu_model=="Scoccimarro_Gauss" || m_data_model->Pk_mu_model=="Scoccimarro_Lorentz") {
-    vector<vector<double>> Pk_terms = m_data_model->cosmology->Pk_TNS_dd_dt_tt(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+    cbl::cosmology::PkXiNonLinear PXN(m_data_model->cosmology);
+    vector<vector<double>> Pk_terms = PXN.Pk_TNS_dd_dt_tt(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
 
     m_data_model->func_Pk_DeltaDelta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[0], "Spline"));
     m_data_model->func_Pk_DeltaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[1], "Spline"));
@@ -198,8 +212,9 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
   }
 
   else if (m_data_model->Pk_mu_model=="TNS_Gauss" || m_data_model->Pk_mu_model=="TNS_Lorentz") {
-    vector<vector<double>> Pk_terms = m_data_model->cosmology->Pk_TNS_dd_dt_tt(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
-    vector<vector<double>> Pk_AB = m_data_model->cosmology->Pk_TNS_AB_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+    cbl::cosmology::PkXiNonLinear PXN(m_data_model->cosmology);
+    vector<vector<double>> Pk_terms = PXN.Pk_TNS_dd_dt_tt(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+    vector<vector<double>> Pk_AB = PXN.Pk_TNS_AB_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
     
     m_data_model->func_Pk_DeltaDelta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[0], "Spline"));
     m_data_model->func_Pk_DeltaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_terms[1], "Spline"));
@@ -240,8 +255,9 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_P
   }
 
   else if (m_data_model->Pk_mu_model=="eTNS_Gauss" || m_data_model->Pk_mu_model=="eTNS_Lorentz") {
-    vector<vector<double>> Pk_AB = m_data_model->cosmology->Pk_TNS_AB_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
-    vector<vector<double>> Pk_eTNS_terms = m_data_model->cosmology->Pk_eTNS_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+    cbl::cosmology::PkXiNonLinear PXN(m_data_model->cosmology);
+    vector<vector<double>> Pk_AB = PXN.Pk_TNS_AB_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
+    vector<vector<double>> Pk_eTNS_terms = PXN.Pk_eTNS_terms_1loop(m_data_model->kk, m_data_model->method_Pk, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec);
 
     m_data_model->func_Pk_DeltaDelta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[0], "Spline"));
     m_data_model->func_Pk_DeltaTheta = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk_eTNS_terms[1], "Spline"));
@@ -320,9 +336,10 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_x
   m_data_model->rr = rad;
   m_data_model->kk = logarithmic_bin_vector(m_data_model->step, max(m_data_model->k_min, 1.e-4), min(m_data_model->k_max, 500.));
 
-  vector<double> Pk =  m_data_model->cosmology->Pk_matter(m_data_model->kk, m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-  vector<double> PkNW =  m_data_model->cosmology->Pk_matter(m_data_model->kk, "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
-
+  cosmology::PkXi PX(m_data_model->cosmology);
+  
+  vector<double> Pk = PX.Pk_matter(m_data_model->kk, m_data_model->method_Pk, false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
+  vector<double> PkNW = PX.Pk_matter(m_data_model->kk, "EisensteinHu", false, m_data_model->redshift, m_data_model->store_output, m_data_model->output_root, m_data_model->norm, m_data_model->k_min, m_data_model->k_max, m_data_model->prec, m_data_model->file_par);
 
   m_data_model->func_Pk = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, Pk, "Spline"));
   m_data_model->func_Pk_NW = make_shared<cbl::glob::FuncGrid>(cbl::glob::FuncGrid(m_data_model->kk, PkNW, "Spline"));
@@ -462,7 +479,7 @@ void cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_model_full
 
   vector<statistics::PriorDistribution> priors = {alpha_perpendicular_prior, alpha_parallel_prior, SigmaNL_perpendicular_prior, SigmaNL_parallel_prior, fsigma8_prior, bsigma8_prior, SigmaS_prior};
 
-  //set the priors
+  // set the priors
   m_set_prior(priors);
   
   // construct the model

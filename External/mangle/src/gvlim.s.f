@@ -1,33 +1,33 @@
 c-----------------------------------------------------------------------
-c © A J S Hamilton 2001
+c ï¿½ A J S Hamilton 2001
 c-----------------------------------------------------------------------
       subroutine gvlim(vmin,vmax,cmvmin,cmvmax,cmpmin,cmpmax,
      *  ipv,gp,ev,nvmax,nv,nev,nev0,
      *  rp,cm,np,rpi,vcirc,tol,phi,iord,wk,iwk,ldegen)
       integer nvmax,ipv(nvmax),np,gp(np),ev(nvmax),nv,nev,nev0,vcirc
       logical ldegen
-      real*10 vmin(3,nvmax),vmax(3,nvmax),cmvmin(nvmax),cmvmax(nvmax),
+      real*16 vmin(3,nvmax),vmax(3,nvmax),cmvmin(nvmax),cmvmax(nvmax),
      *  cmpmin(np),cmpmax(np),rp(3,np),cm(np),rpi(3),tol
 c        work arrays (could be made automatic if compiler supports it)
       integer iord(2*np),iwk(nvmax,4)
-      real*10 phi(2,np),wk(nvmax)
+      real*16 phi(2,np),wk(nvmax)
 c
 c        parameters
       include 'pi.par'
-      real*10 TWOPI
-      parameter (TWOPI=2._10*PI)
+      real*16 TWOPI
+      parameter (TWOPI=2._16*PI)
 c        intrinsics
       intrinsic abs
 c        externals
       integer gsegij,gzeroar
-      real*10 cmijf
+      real*16 cmijf
 c        data variables
-      real*10 big
-c     real*10 dphmin
+      real*16 big
+c     real*16 dphmin
 c        local variables
       integer i,ii,ik,iphi,iseg,iv,j,jm,jml,jmu,jp,jpl,jpu,km,kp,ni,scmi
 C     logical warn
-      real*10 cmi,cmik,dph,ikchk,ph,phin,phif,phm,phmax,phmin,php,
+      real*16 cmi,cmik,dph,ikchk,ph,phin,phif,phm,phmax,phmin,php,
      *  si,sik,tolin,xi(3),xv,yi(3),yv,zv
 c *
 c * Lifted mostly from gvert and gcmlim.
@@ -94,8 +94,8 @@ c Work arrays: phi and iord should be dimensioned at least 2*np.
 c              iwk should be dimensioned at least 4*nvmax.
 c              wk should be dimensioned at least nvmax.
 c
-c     data dphmin /1.e-8_10/
-      data big /1.e6_10/
+c     data dphmin /1.e-8_16/
+      data big /1.e6_16/
 c
 c        input tolerance to multiple intersections
       tolin=tol
@@ -119,7 +119,7 @@ c        initially each circle is its own group
 c        check for zero area because one circle is null
       if (gzeroar(cm,np).eq.0) goto 410
 c        error check on evaluation of vertex terms
-      ikchk=0._10
+      ikchk=0._16
 c        initialise iwk to inadmissible value
       do iv=1,nvmax
         iwk(iv,2)=-1
@@ -130,24 +130,24 @@ c        initialise iwk to inadmissible value
 c--------identify boundary segments around each circle i in turn
       do 280 i=1,np
 c        cm(i).ge.2 means include whole sphere, which is no constraint
-        if (cm(i).ge.2._10) then
-          cmpmin(i)=2._10
-          cmpmax(i)=0._10
+        if (cm(i).ge.2._16) then
+          cmpmin(i)=2._16
+          cmpmax(i)=0._16
           goto 280
         endif
 c        scmi * cmi = 1-cos th(i)
-        if (cm(i).ge.0._10) then
+        if (cm(i).ge.0._16) then
           scmi=1
         else
           scmi=-1
         endif
         cmi=abs(cm(i))
 c        si = sin th(i)
-        si=sqrt(cmi*(2._10-cmi))
+        si=sqrt(cmi*(2._16-cmi))
 c        cmik = 1-cos th(ik), th(ik)=angle twixt rpi & rp(i)
         cmik=cmijf(rpi,rp(1,i))
 c        sik = sin th(ik)
-        sik=sqrt(cmik*(2._10-cmik))
+        sik=sqrt(cmik*(2._16-cmik))
 c........minimum and maximum cm on circle
         cmpmin(i)=cmi+cmik-cmi*cmik-si*sik
         cmpmax(i)=cmi+cmik-cmi*cmik+si*sik
@@ -157,7 +157,7 @@ c........azimuthal angle closest to vector rpi
         xv=xi(1)*rpi(1)+xi(2)*rpi(2)+xi(3)*rpi(3)
         yv=yi(1)*rpi(1)+yi(2)*rpi(2)+yi(3)*rpi(3)
         phin=atan2(yv,xv)
-        if (phin.ge.0._10) then
+        if (phin.ge.0._16) then
           phif=phin-PI
         else
           phif=phin+PI
@@ -183,7 +183,7 @@ c        introduce pretend circle 0
                 ii=0
                 km=i
                 kp=i
-                phm=0._10
+                phm=0._16
                 php=PI
               elseif (j.eq.2) then
                 ii=i
@@ -192,7 +192,7 @@ c        introduce pretend circle 0
                 phm=PI
                 php=TWOPI
               endif
-              ph=(phm+php)/2._10
+              ph=(phm+php)/2._16
               dph=php-phm
               nv=nv+1
               if (nv.le.nvmax) then
@@ -202,7 +202,7 @@ c        phase phin to central point ph
                 iphi=nint((phin-ph)/TWOPI)
                 phin=phin-iphi*TWOPI
                 if (phm.le.phin.and.phin.le.php) then
-                  phmin=0._10
+                  phmin=0._16
                 elseif (phm.gt.phin) then
                   phmin=phm-phin
                 elseif (phin.gt.php) then
@@ -212,7 +212,7 @@ c        phase phif to central point ph
                 iphi=nint((phif-ph)/TWOPI)
                 phif=phif-iphi*TWOPI
                 if (phm.le.phif.and.phif.le.php) then
-                  phmax=0._10
+                  phmax=0._16
                 elseif (phm.gt.phif) then
                   phmax=phm-phif
                 elseif (phif.gt.php) then
@@ -221,14 +221,14 @@ c        phase phif to central point ph
 c        nearest point on edge
                 xv=si*cos(phmin+phin)
                 yv=si*sin(phmin+phin)
-                zv=1._10-cmi
+                zv=1._16-cmi
                 vmin(1,nv)=zv*rp(1,i)+xv*xi(1)+yv*yi(1)
                 vmin(2,nv)=zv*rp(2,i)+xv*xi(2)+yv*yi(2)
                 vmin(3,nv)=zv*rp(3,i)+xv*xi(3)+yv*yi(3)
 c        farthest point on edge
                 xv=si*cos(phmax+phif)
                 yv=si*sin(phmax+phif)
-                zv=1._10-cmi
+                zv=1._16-cmi
                 vmax(1,nv)=zv*rp(1,i)+xv*xi(1)+yv*yi(1)
                 vmax(2,nv)=zv*rp(2,i)+xv*xi(2)+yv*yi(2)
                 vmax(3,nv)=zv*rp(3,i)+xv*xi(3)+yv*yi(3)
@@ -279,7 +279,7 @@ c        phase phin to central point ph
               iphi=nint((phin-ph)/TWOPI)
               phin=phin-iphi*TWOPI
               if (phm.le.phin.and.phin.le.php) then
-                phmin=0._10
+                phmin=0._16
               elseif (phm.gt.phin) then
                 phmin=phm-phin
               elseif (phin.gt.php) then
@@ -289,7 +289,7 @@ c        phase phif to central point ph
               iphi=nint((phif-ph)/TWOPI)
               phif=phif-iphi*TWOPI
               if (phm.le.phif.and.phif.le.php) then
-                phmax=0._10
+                phmax=0._16
               elseif (phm.gt.phif) then
                 phmax=phm-phif
               elseif (phif.gt.php) then
@@ -298,14 +298,14 @@ c        phase phif to central point ph
 c        nearest point on edge
               xv=si*cos(phmin+phin)
               yv=si*sin(phmin+phin)
-              zv=1._10-cmi
+              zv=1._16-cmi
               vmin(1,nv)=zv*rp(1,i)+xv*xi(1)+yv*yi(1)
               vmin(2,nv)=zv*rp(2,i)+xv*xi(2)+yv*yi(2)
               vmin(3,nv)=zv*rp(3,i)+xv*xi(3)+yv*yi(3)
 c        farthest point on edge
               xv=si*cos(phmax+phif)
               yv=si*sin(phmax+phif)
-              zv=1._10-cmi
+              zv=1._16-cmi
               vmax(1,nv)=zv*rp(1,i)+xv*xi(1)+yv*yi(1)
               vmax(2,nv)=zv*rp(2,i)+xv*xi(2)+yv*yi(2)
               vmax(3,nv)=zv*rp(3,i)+xv*xi(3)+yv*yi(3)
@@ -320,7 +320,7 @@ c        do another segment
         endif
   280 continue
 c--------check on whether ik endpoints matched ki endpoints
-      if (ikchk.ne.0._10) then
+      if (ikchk.ne.0._16) then
 c       print *,'*** from gvlim: ikchk=',ikchk,' should be 0'
 C       warn=.true.
         call gtol(tol,tolin)

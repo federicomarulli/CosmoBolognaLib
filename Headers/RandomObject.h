@@ -53,9 +53,22 @@ namespace cbl {
      *  </EM>
      */
     class RandomObject : public Object {
+
+    private:
+
+      /// halo mass
+      double m_mass = par::defaultDouble;
     
-    public :
+      /// halo mass proxy
+      double m_mass_proxy = par::defaultDouble;
     
+    public:
+
+      /**
+       *  @name Constructors/destructors
+       */
+      ///@{
+      
       /**
        *  @brief default constructor
        *  
@@ -82,10 +95,8 @@ namespace cbl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  
        */
-      RandomObject (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+      RandomObject (const glob::comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
 
       /**
@@ -95,8 +106,8 @@ namespace cbl {
        *  @param coord structure containing the comoving coordinates
        *  {x, y, z}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param z1_guess minimum prior on the redshift
        *
@@ -115,11 +126,9 @@ namespace cbl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  
        */
-      RandomObject (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
+      RandomObject (const glob::comovingCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: Object(coord, cosmology, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -140,10 +149,8 @@ namespace cbl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  
        */
-      RandomObject (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+      RandomObject (const glob::observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
       
       /**
@@ -168,10 +175,8 @@ namespace cbl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  
        */
-      RandomObject (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+      RandomObject (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
 	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
       
       /**
@@ -182,8 +187,8 @@ namespace cbl {
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -198,11 +203,9 @@ namespace cbl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  
        */
-      RandomObject (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
+      RandomObject (const glob::observedCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: Object(coord, cosmology, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -213,7 +216,8 @@ namespace cbl {
        *
        *  @param inputUnits the units of the input coordinates
        *
-       *  @param cosm object of class Cosmology, used to estimate comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -228,14 +232,13 @@ namespace cbl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  
        */
-      RandomObject (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
-	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
+      RandomObject (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
+	: Object(coord, inputUnits, cosmology, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
 
       /**
-       *  @brief constructor that uses both comoving and observed coordinates
+       *  @brief constructor that uses both comoving and observed
+       *  coordinates
        *
        *  @param xx comoving coordinate
        *
@@ -262,8 +265,6 @@ namespace cbl {
        *  @param y_displacement the displacement along the y-axis
        *
        *  @param z_displacement the displacement along the z-axis
-       *
-       *  
        */
       RandomObject (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble) 
 	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement) {}
@@ -273,7 +274,88 @@ namespace cbl {
        *  
        */
       ~RandomObject () = default;
+    
+      ///@}
+  
+  
+      /**
+       *  @name Member functions used to get the private members 
+       */
+      ///@{
+	
+      /**
+       * @brief function that allows copying private variables of the class 
+       * when an object of class Catalogue is copied
+       * 
+       * @return a shared pointer to the Object
+       */
+      std::shared_ptr<Object> ptrObject() override
+      {
+        return std::make_shared<RandomObject>(*this);
+      }
+      
+      /**
+       *  @brief get the private member \e m_mass
+       *  @return the mass of the cluster
+       */
+      double mass () const override
+      { return m_mass; }
 
+      /**
+       *  @brief get the private member \e m_mass_proxy
+       *  @return the mass proxy of the cluster
+       */
+      double mass_proxy () const override
+      { return m_mass_proxy; }
+    
+      ///@}
+  
+  
+      /**
+       *  @name Member functions used to set the private members 
+       */
+      ///@{
+      
+      /**
+       *  @brief set the private member \e m_mass
+       *  @param mass the mass of the cluster
+       */
+      void set_mass (const double mass=par::defaultDouble) override
+      { m_mass = mass; }
+      
+      /**
+       *  @brief set the private member \e m_mass_proxy
+       *  @param mass_proxy the mass proxy of the cluster
+       */
+      void set_mass_proxy (const double mass_proxy=par::defaultDouble) override
+      { m_mass_proxy = mass_proxy; }
+      
+      ///@}
+
+
+      /**
+       *  @name Member functions used to check if the private members are set 
+       */
+      ///@{
+    
+      /**
+       *  @brief check if the private member \e m_mass is set
+       *
+       *  @return true if the mass is set; false otherwise
+       */
+      bool isSet_mass () override
+      { return (cbl::isSet(m_mass)) ? true : false; }
+      
+      /**
+       *  @brief check if the private member \e m_mass_proxy is set
+       *  
+       *  @return true if the proxy is set; false otherwise
+       */
+      bool isSet_mass_proxy () override
+      { return (cbl::isSet(m_mass_proxy)) ? true : false; }
+
+      ///@}
+      
     };  
   }
 }

@@ -39,6 +39,7 @@ using namespace std;
 using namespace cbl;
 using namespace catalogue;
 using namespace lognormal;
+using namespace glob;
 
 
 // ============================================================================
@@ -120,10 +121,13 @@ void cbl::lognormal::LogNormal::generate (const int n_lognormal_mocks, const std
     grid[index] += 1./nTot; // grid[index] : the fraction of random objects in the index-th grid cell 
   }
 
-  const double fact = (m_real) ? pow(m_bias, 2) : pow(m_bias, 2)*xi_ratio(m_cosmology.linear_growth_rate(m_redshift, 0.)/m_bias);
+  const double fact = (m_real) ? pow(m_bias, 2) : pow(m_bias, 2)*xi_ratio(m_cosmology->linear_growth_rate(m_redshift, 0.)/m_bias);
     
   vector<double> kG = logarithmic_bin_vector(500, 1.e-4, 1.e2);
-  vector<double> PkG = m_cosmology.Pk_matter(kG, m_method_Pk, m_NL, m_redshift);
+
+  cosmology::PkXi PX(m_cosmology);
+
+  vector<double> PkG = PX.Pk_matter(kG, m_method_Pk, m_NL, m_redshift);
     
   for (size_t i=0; i<kG.size(); i++)
     PkG[i] = fact*PkG[i];

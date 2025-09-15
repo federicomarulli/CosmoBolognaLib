@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>medfiltmap*</TITLE>
+<META NAME="description" CONTENT="medfiltmap*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_median.htm">
+<LINK REL="previous" HREF="sub_maskborder_nest.htm">
+<LINK REL="next" HREF="sub_median.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_maskborder_nest.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_median.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html411"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_maskborder_nest.htm">maskborder_nest</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_median.htm">median*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION5200"></A>
+<A ID="sub:medfiltmap"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">medfiltmap*</SPAN></div><hr>
+<H3>This routine performs the median filtering of a <strong>HEALPix</strong> full sky map for a
+  given neighborhood radius </H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/pix_tools.F90"><strong>src/f90/mod/pix_tools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">medfiltmap*</SPAN>(
+<A HREF="#sub:medfiltmap:in_map">in_map</A>, <A HREF="#sub:medfiltmap:radius">radius</A>, <A HREF="#sub:medfiltmap:med_map">med_map</A>[,&nbsp;<A HREF="#sub:medfiltmap:nest">nest</A>, <A HREF="#sub:medfiltmap:fmissval">fmissval</A>, <A HREF="#sub:medfiltmap:fill_holes">fill_holes</A>]
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:250px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+in_map<A ID="sub:medfiltmap:in_map"></A>(0:npix-1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">Full sky <strong>HEALPix</strong> map to filter. <SPAN style="font-family:monospace">npix</SPAN>
+                   should be valid <strong>HEALPix</strong> pixel number.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">radius<A ID="sub:medfiltmap:radius"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">Radius in RADIANS of the disk on which the median is
+                   computed.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">med_map<A ID="sub:medfiltmap:med_map"></A>(0:npix-1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">Median filtered map: each pixel is the
+                   median of the input map valid neighboring pixels contained
+                   within a distance <SPAN style="font-family:monospace">radius</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">nest<A ID="sub:medfiltmap:nest"></A> OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">set to 1 if the map ordering is NESTED, set to 0 if
+                   it is RING.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">fmissval<A ID="sub:medfiltmap:fmissval"></A> OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">sentinel value given to missing or
+                   non-valid pixels. Default: <SPAN style="font-family:monospace">HPX_SBADVAL</SPAN> or <SPAN style="font-family:monospace">HPX_DBADVAL</SPAN> <!-- MATH
+ $= -1.6375\ 10^{30}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.29ex; " SRC="sub_img226.png"
+ ALT="$= -1.6375\ 10^{30}$"></SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">fill_holes<A ID="sub:medfiltmap:fill_holes"></A> OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">LGT</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">if set to <SPAN style="font-family:monospace">.true.</SPAN> will replace
+                   non-valid pixels by median of neighbors; if set to <SPAN style="font-family:monospace">.false.</SPAN>
+                   will leave non-valid pixels unchanged. Default: <SPAN style="font-family:monospace">.false.</SPAN></TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use healpix_types 
+<BR>
+use pix_tools 
+<BR>... 
+<BR>
+call medfiltmap(map, 0.5*DEG2RAD, med)  
+<BR></div>
+<blockquote>
+Output in <SPAN style="font-family:monospace">med</SPAN> the median filter of <SPAN style="font-family:monospace">map</SPAN>, using a filter radius of 0.5 Deg
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">medfiltmap*</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">statistics</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B><A HREF="sub_median.htm#sub:median">median</A></B>
+<DD>routine to compute the median of a data set		
+  <DT>
+<B><SPAN  CLASS="textbf">pix_tools</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B><A HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm#sub:pix_tools">pix2vec_ring, pix2vec_nest</A></B>
+<DD>routines to find
+  the location of a pixel on the sky
+  <DT>
+<B><A HREF="sub_query_disc.htm#sub:query_disc">query_disc</A></B>
+<DD>routine to find pixels lying
+  within a radius of a given point
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_maskborder_nest.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_median.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html411"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_maskborder_nest.htm">maskborder_nest</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_median.htm">median*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

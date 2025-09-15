@@ -191,8 +191,6 @@ namespace cbl {
        *  @param data vector containing the data
        *
        *  @param covariance matrix containing the covariance
-       *
-       *  
        */
       Data (const DataType dataType, const std::vector<double> data, const std::vector<std::vector<double>> covariance);
 
@@ -380,13 +378,13 @@ namespace cbl {
        *  @param i index
        *  @return the value of the error vector at position i
        */
-      virtual double error (const int i) const { return m_error[i]; }
+      double error (const int i) const { return m_error[i]; }
 
       /**
        *  @brief get standard deviation
        *  @return the standard deviation
        */
-      virtual std::vector<double> error () const { return m_error; }
+      std::vector<double> error () const { return m_error; }
 
       /**
        *  @brief get the value of the data covariance at index i,j
@@ -595,6 +593,15 @@ namespace cbl {
        *  @param error std::vector containing the data standard deviation
        */
       void set_covariance (const std::vector<double> error);
+      
+      /**
+       *  @brief set the interval variable m_covariance, reading from
+       *  an input file
+       *
+       *  @param filename file containing the covariance matrix 
+       *
+       */
+      void set_cov_matrix (const std::string filename);
       
       ///@}
 

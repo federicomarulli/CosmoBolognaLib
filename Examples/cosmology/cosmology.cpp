@@ -1,50 +1,72 @@
-// =============================================
-// Example code: how to set a cosmological model
-// =============================================
+// =============================================================
+// Example code: how to set and use different cosmologica models
+// =============================================================
 
-#include "Cosmology.h"
+#include "Cosmologies.h"
+
+using namespace std;
+
 
 int main () {
 
   try {
+    
+    // ---------------------------------------------------------------------
+    // ----- set various cosmological models, with Planck18 parameters -----
+    // ---------------------------------------------------------------------
 
-    // ------------------------------------------------------
-    // ---------------- using default parameters ------------
-    // ------------------------------------------------------
+    // flat Lambda-cold dark matter model
+    auto LCDM = make_shared<cbl::cosmology::LCDM>("Planck18");
     
-    cbl::cosmology::Cosmology cosmo1;
+    // flat Lambda-cold dark matter model with massive neutrinos
+    auto LnuCDM = make_shared<cbl::cosmology::LnuCDM>("Planck18");
+
+    // flat w-cold dark matter model
+    auto w0CDM = make_shared<cbl::cosmology::w0CDM>("Planck18");
     
+    // non-flat Lambda-cold dark matter model
+    auto kLCDM = make_shared<cbl::cosmology::kLCDM>("Planck18");
+
+    // flat w-cold dark matter model with massive neutrinos
+    auto w0nuCDM = make_shared<cbl::cosmology::w0nuCDM>("Planck18");
     
-    // ---------------------------------------------------------------------------
-    // ---------------- using one of the built-in cosmological models ------------
-    // ---------------------------------------------------------------------------
+    // flat w0wa-cold dark matter model
+    auto w0waCDM = make_shared<cbl::cosmology::w0waCDM>("Planck18");
     
-    cbl::cosmology::Cosmology cosmo2 {cbl::cosmology::CosmologicalModel::_Planck18_};
+    // non-flat Lambda-cold dark matter model with massive neutrinos
+    auto kLnuCDM = make_shared<cbl::cosmology::kLnuCDM>("Planck18");
+
+    // non-flat w-cold dark matter model
+    auto kw0CDM = make_shared<cbl::cosmology::kw0CDM>("Planck18");
+
+    // flat w0wa-cold dark matter model with massive neutrinos
+    auto w0wanuCDM = make_shared<cbl::cosmology::w0wanuCDM>("Planck18");
+
+    // non-flat w-cold dark matter model with massive neutrinos
+    auto kw0nuCDM = make_shared<cbl::cosmology::kw0nuCDM>("Planck18");
+    
+    // non-flat w0wa-cold dark matter 
+    auto kw0waCDM = make_shared<cbl::cosmology::kw0waCDM>("Planck18");
+    
+    // non-flat w0wa-cold dark matter model with massive neutrinos
+    auto kw0wanuCDM = make_shared<cbl::cosmology::kw0wanuCDM>("Planck18");
+
+    // vector containing all the different cosmological models
+    vector<shared_ptr<cbl::cosmology::Cosmology>> cosmology = {LCDM, LnuCDM, w0CDM, kLCDM, w0nuCDM, w0waCDM, kLnuCDM, kw0CDM, w0wanuCDM, kw0nuCDM, kw0waCDM, kw0wanuCDM};
 
     
-    // -----------------------------------------------------------------
-    // ---------------- setting the cosmological parameters ------------
-    // -----------------------------------------------------------------
+    // -------------------------------------------------------------------------------------
+    // ----- print the model names and the values of the cosmological model parameters -----
+    // -------------------------------------------------------------------------------------
 
-    const double OmegaM = 0.25;
-    const double Omega_b = 0.045;
-    const double Omega_nu = 0.;
-    const double massless_neutrinos = 3.04;
-    const int massive_neutrinos = 0; 
-    const double OmegaL = 1.-OmegaM;
-    const double Omega_radiation = 0.;
-    const double hh = 0.73;
-    const double scalar_amp = 2.742e-9;
-    const double scalar_pivot = 0.05;
-    const double n_s = 1;
-    const double wa = 0.;
-    const double w0 = -1.;   
-
-    cbl::cosmology::Cosmology cosmo3 {OmegaM, Omega_b, Omega_nu, massless_neutrinos, massive_neutrinos, OmegaL, Omega_radiation, hh, scalar_amp, scalar_pivot, n_s, w0, wa};
+    for (size_t i=0; i<cosmology.size(); ++i) {
+      cout << endl << cosmology[i]->model() << endl;
+      cosmology[i]->print_parameters();
+    }
     
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 } 

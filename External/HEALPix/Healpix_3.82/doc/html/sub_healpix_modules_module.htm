@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>healpix_modules module</TITLE>
+<META NAME="description" CONTENT="healpix_modules module">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_healpix_types_module.htm">
+<LINK REL="previous" HREF="sub_getsize_fits.htm">
+<LINK REL="next" HREF="sub_healpix_types_module.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_getsize_fits.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_healpix_types_module.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html391"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_getsize_fits.htm">getsize_fits</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_healpix_types_module.htm">healpix_types module</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4200"></A>
+<A ID="sub:healpix_modules"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">healpix_modules</SPAN></div><hr>
+<H3>This module is a meta module containing most of the <strong>HEALPix</strong> modules. It currently includes
+
+<UL>
+<LI><SPAN style="font-family:monospace">alm_tools</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">bit_manipulation</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">coord_v_convert</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">extension</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">fitstools</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">head_fits</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">healpix_fft</SPAN>,
+</LI>
+<LI><A HREF="sub_healpix_types_module.htm#sub:healpix_types"><SPAN style="font-family:monospace">healpix_types</SPAN></A>,
+</LI>
+<LI><SPAN style="font-family:monospace">long_intrinsic</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">mask_tools</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">misc_utils</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">num_rec</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">obsolete</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">paramfile_io</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">pix_tools</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">ran_tools</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">rngmod</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">statistics</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">udgrade_nr</SPAN>,
+</LI>
+<LI><SPAN style="font-family:monospace">utilities</SPAN>.
+</LI>
+</UL>
+<br><br>Note that <SPAN style="font-family:monospace">mpi_alm_tools</SPAN> is not included since it requires the MPI library for compilation.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/healpix_modules.f90"><strong>src/f90/mod/healpix_modules.f90</strong></a>&nbsp;  
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use healpix_modules 
+<BR>
+print*,' pi = ',PI 
+<BR>
+print*,' number of pixels in a Nside=64 map:',nside2npix(64)</div>
+<blockquote>
+Invoking <SPAN style="font-family:monospace">healpix_modules</SPAN> gives access to all <strong>HEALPix</strong> routines and parameters.
+</blockquote>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_getsize_fits.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_healpix_types_module.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html391"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_getsize_fits.htm">getsize_fits</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_healpix_types_module.htm">healpix_types module</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,212 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>neighbours_nest</TITLE>
+<META NAME="description" CONTENT="neighbours_nest">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_nest2uniq.htm">
+<LINK REL="previous" HREF="sub_nArguments.htm">
+<LINK REL="next" HREF="sub_nest2uniq.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_nArguments.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_nest2uniq.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html437"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_nArguments.htm">nArguments</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_nest2uniq.htm">nest2uniq</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION6500"></A>
+<A ID="sub:neighbours_nest"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">neighbours_nest</SPAN></div><hr>
+<H3>This subroutine returns the number and locations (in terms of pixel
+numbers) of the topological neighbours of a central pixel. The pixels
+are ordered in a clockwise sense about the central pixel with the
+southernmost pixel in first element. For the 4 pixels in the southern corners of the
+equatorial faces which have two equally southern neighbours the
+routine returns the southwestern pixel first and proceeds clockwise.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/pix_tools.F90"><strong>src/f90/mod/pix_tools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">neighbours_nest</SPAN>(
+<A HREF="#sub:neighbours_nest:nside">nside</A>, <A HREF="#sub:neighbours_nest:ipix">ipix</A>, <A HREF="#sub:neighbours_nest:list">list</A>, <A HREF="#sub:neighbours_nest:nneigh">nneigh</A>
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">
+nside<A ID="sub:neighbours_nest:nside"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">The <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> parameter of the map.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">ipix<A ID="sub:neighbours_nest:ipix"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B/ I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">The NESTED pixel index of the central pixel.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">list<A ID="sub:neighbours_nest:list"></A>(8)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B/ I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">On exit, the vector of neighbouring pixels. This
+                   contains <SPAN style="font-family:monospace">nneigh</SPAN> relevant elements.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">nneigh<A ID="sub:neighbours_nest:nneigh"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">The number of neighbours (mostly 8, except at
+                   8 sites, where there are only 7 neighbours).</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use pix_tools 
+<BR>
+integer :: nneigh, list(1:8) 
+<BR>
+call neighbours_nest(4, 1, list, nneigh)  
+<BR>
+print*,nneigh 
+<BR>
+print*,list(1:nneigh)</div>
+<blockquote>
+This returns <SPAN style="font-family:monospace">nneigh</SPAN><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img231.png"
+ ALT="$=8$"></SPAN> and a vector <SPAN style="font-family:monospace">list</SPAN>, which contains the pixel
+numbers ( 90,  0,  2,  3,  6,  4,  94,  91).</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">neighbours_nest</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B>mk_xy2pix, mk_pix2xy</B>
+<DD>precomputing arrays for the conversion
+ of NESTED pixel numbers to Cartesian coords in each face.
+ <DT>
+<B>pix2xy_nest, xy2pix_nest</B>
+<DD>Conversion between NESTED pixel numbers to Cartesian coords in each face.
+ <DT>
+<B><SPAN  CLASS="textbf">bit_manipulation</SPAN></B>
+<DD>module, containing:
+ <DT>
+<B>invMSB, invLSB,swapLSBMSB,invswapLSBMSB</B>
+<DD>functions which manipulate the bit vector which
+ represents the NESTED pixel numbers. They correspond to
+ NorthWest&lt;-&gt;SouthEast, SouthWest&lt;-&gt;NorthEast, East&lt;-&gt;West and
+ North-South flips of the diamond faces, respectively.
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">neighbours_nest</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm#sub:pix_tools">pix2ang</A>, <A HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm#sub:pix_tools">ang2pix</A></B>
+<DD>convert between angle and pixel number.
+  <DT>
+<B><A HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm#sub:pix_tools">pix2vec</A>, <A HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm#sub:pix_tools">vec2pix</A></B>
+<DD>convert between a cartesian vector and pixel number.
+  </DL>
+
+<P>
+
+<P>
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_nArguments.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_nest2uniq.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html437"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_nArguments.htm">nArguments</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_nest2uniq.htm">nest2uniq</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

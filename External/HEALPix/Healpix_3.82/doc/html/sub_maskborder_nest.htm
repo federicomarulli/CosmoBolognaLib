@@ -1,0 +1,214 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>maskborder_nest</TITLE>
+<META NAME="description" CONTENT="maskborder_nest">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_medfiltmap.htm">
+<LINK REL="previous" HREF="sub_map2alm_spin.htm">
+<LINK REL="next" HREF="sub_medfiltmap.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_map2alm_spin.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_medfiltmap.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html409"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_map2alm_spin.htm">map2alm_spin*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_medfiltmap.htm">medfiltmap*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION5100"></A>
+<A ID="sub:maskborder_nest"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">maskborder_nest</SPAN></div><hr>
+<H3>For a input binary mask in NESTED ordering, <SPAN CLASS="colordoc">maskborder_nest</SPAN> identifies the pixels
+located on the inner boundary of <EM>invalid</EM> regions
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/mask_tools.F90"><strong>src/f90/mod/mask_tools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">maskborder_nest</SPAN>(
+<A HREF="#sub:maskborder_nest:nside">nside</A>, <A HREF="#sub:maskborder_nest:mask_in">mask_in</A>, <A HREF="#sub:maskborder_nest:mask_out">mask_out</A>, <A HREF="#sub:maskborder_nest:nbordpix">nbordpix</A>, <i><font color="#224422">[ <A HREF="#sub:maskborder_nest:border_value">border_value</A>]</font></i>
+)</h3></blockquote>
+Arguments appearing in <i><font color="#224422">italic</font></i> are
+optional.
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">
+nside<A ID="sub:maskborder_nest:nside"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">The <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> value of the input mask.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">mask_in<A ID="sub:maskborder_nest:mask_in"></A>(0:Npix-1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">Input binary NESTED-ordered mask. Npix = 12*nside*nside</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">mask_out<A ID="sub:maskborder_nest:mask_out"></A>(0:Npix-1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">Output NESTED-ordered mask, in which inner border
+pixels (defined as 0-valued and adjacent to 1-valued pixels) take the value 2
+(or <SPAN style="font-family:monospace">border_value</SPAN>). Can be the same
+array as mask_in.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">nbordpix<A ID="sub:maskborder_nest:nbordpix"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">Number of border pixels found</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px"><i><font color="#224422">border_value<A ID="sub:maskborder_nest:border_value"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">value to be given to border pixels in
+output mask. <b>default:</b>2.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use healpix_types 
+<BR>
+use healpix_modules 
+<BR>...
+<BR>
+call <SPAN CLASS="colordoc">maskborder_nest</SPAN>(nside, mask_in, mask_in, nbordpix)  
+<BR></div>
+<blockquote>For a binary input mask <SPAN style="font-family:monospace">mask_in</SPAN>, it will look for border pixels and output
+their number in <SPAN style="font-family:monospace">nborpix</SPAN>. In this example the <SPAN style="font-family:monospace">mask_in</SPAN> will be
+modified so that border pixels take value 2 on output.
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">maskborder_nest</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">mask_tools</SPAN></B>
+<DD>mask processing module (see related routines below)
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">maskborder_nest</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_dist2holes_nest.htm#sub:dist2holes_nest">dist2holes_nest</A></B>
+<DD>angular distance to
+closest invalid pixel of the given mask
+	<DT>
+<B><A HREF="sub_fill_holes_nest.htm#sub:fill_holes_nest">fill_holes_nest</A></B>
+<DD>turn to <EM>valid</EM> all
+pixels located in 'holes' containing fewer pixels than the given threshold
+	<DT>
+<B><A HREF="#sub:maskborder_nest">maskborder_nest</A></B>
+<DD>identify inner
+boundary pixels of 'holes' for given mask
+	<DT>
+<B><A HREF="sub_size_holes_nest.htm#sub:size_holes_nest">size_holes_nest</A></B>
+<DD>returns size (in
+pixels) of holes found in input mask
+
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_map2alm_spin.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_medfiltmap.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html409"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_map2alm_spin.htm">map2alm_spin*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_medfiltmap.htm">medfiltmap*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

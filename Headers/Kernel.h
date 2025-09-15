@@ -77,12 +77,6 @@
  *  the Cholesky decomposition
  */
 /**
- *  @example distances.cpp  
- *
- *  This example shows how to convert redshifts into comoving
- *  distances
- */
-/**
  *  @example integration_cuba.cpp 
  *
  *  This example shows how to use the wrapper for CUBA multidimensiona
@@ -116,12 +110,18 @@
  *  This example shows how to set a cosmological model
  */
 /**
- *  @example fsigma8.cpp
+ *  @example distances.cpp  
+ *
+ *  This example shows how to convert redshifts into comoving
+ *  distances
+ */
+/**
+ *  @example model_cosmology.cpp
  *
  *  This example shows how to estimate f*sigma8(z=1)
  */
 /**
- *  @example Pk_dynamical_DE.cpp
+ *  @example growth_rate.cpp
  *
  *  This example shows how to compute the matter power spectrum and
  *  growth rate
@@ -133,9 +133,81 @@
  *  CAMB and CLASS at different redshifts
  */
 /**
- *  @example model_cosmology.cpp
+ *  @example velocities.cpp
+ *
+ *  This example shows how to create an object of the class Velocities
+ *  and how to use one of its functions
+ */
+/**
+ *  @example three_point_correlation.cpp 
+ * 
+ *  This example shows how to create an object of the class
+ *  ThreePointFunction and how to use one of its functions
+ */
+/**
+ *  @example size_function.cpp 
+ * 
+ *  This example shows how to create an object of the class
+ *  SizeFunction and how to use one of its functions
+ */
+/**
+ *  @example ng.cpp 
+ * 
+ *  This example shows how to create an object of the class NG and how
+ *  to use one of its functions
+ */
+/**
+ *  @example bias.cpp 
+ * 
+ *  This example shows how to create an object of the class Bias 
+ *  and how to use one of its functions
+ */
+/**
+ *  @example mass_function.cpp 
+ * 
+ *  This example shows how to create an object of the class MassFunction
+ *  and how to use one of its functions
+ */
+/**
+ *  @example fsigma8.cpp
  *
  *  This example shows how to estimate f*sigma8(z=1)
+ */
+/**
+ *  @example bao.cpp 
+ * 
+ *  This example shows how to create an object of the class BAO 
+ *  and how to use one of its functions
+ */
+/**
+ *  @example mass_growth.cpp 
+ * 
+ *  This example shows how to create an object of the class MassGrowth
+ *  and how to use one of its functions
+ */
+/**
+ *  @example Pk_DeltaDelta.cpp 
+ * 
+ *  This example shows how to create an object of the class
+ *  PkXiNonLinear and how to use one of its functions
+ */
+/**
+ *  @example xi0_Kaiser.cpp 
+ * 
+ *  This example shows how to create an object of the class PkXizSpace
+ *  and how to use one of its functions
+ */
+/**
+ *  @example sigma.cpp 
+ * 
+ *  This example shows how to create an object of the class Sigma and
+ *  how to use one of its functions
+ */
+/**
+ *  @example xi_matter.cpp 
+ * 
+ *  This example shows how to create an object of the class PkXi
+ *  and how to use one of its functions
  */
 /**
  *  @example prior.cpp
@@ -177,144 +249,233 @@
  *  catalogue
  */
 /**
- * @example 2pt_monopole.cpp 
+ *  @example 2pt_monopole.cpp 
  *
- * This example shows how to measure the monopole of the two-point
- * correlation function
+ *  This example shows how to measure the monopole of the two-point
+ *  correlation function
  */
 /**
- * @example 2pt_monopole_errors.cpp 
+ *  @example 2pt_monopole_errors.cpp 
  *
- * This example shows how to measure the monopole of the two-point
- * correlation function and estimate the errors with different methods
+ *  This example shows how to measure the monopole of the two-point
+ *  correlation function and estimate the errors with different methods
  */
 /**
- * @example 2pt_multipoles.cpp 
+ *  @example 2pt_multipoles.cpp 
  *
- * This example shows how to measure the multipoles of the two-point
- * correlation function using the "direct" and "integrated" method.
+ *  This example shows how to measure the multipoles of the two-point
+ *  correlation function using the "direct" and "integrated" method.
  */
 /**
- * @example 2pt_2D.cpp 
+ *  @example 2pt_2D.cpp 
  *
- * This example shows how to measure the 2D two-point correlation
- * function
+ *  This example shows how to measure the 2D two-point correlation
+ *  function
  */
 /**
- * @example 2pt_projected.cpp 
+ *  @example 2pt_projected.cpp 
  *
- * This example shows how to measure the projected two-point
- * correlation function
+ *  This example shows how to measure the projected two-point
+ *  correlation function
  */
 /**
- * @example 2pt_angular.cpp 
+ *  @example 2pt_angular.cpp 
  *
- * This example shows how to measure the angular two-point correlation
- * function
+ *  This example shows how to measure the angular two-point correlation
+ *  function
  */
 /**
- * @example 3pt.cpp 
+ *  @example power_spectrum_angular.cpp
  *
- * This example shows how to measure the three-point correlation
- * function
+ *  This example shows how to measure the angular 
+ *  power spectrum 
  */
 /**
- * @example 3pt_multipoles.cpp 
+ *  @example 3pt.cpp 
  *
- * This example shows how to measure the three-point correlation
- * function legendre coefficients
+ *  This example shows how to measure the three-point correlation
+ *  function
  */
 /**
- * @example model_2pt_monopole_BAO.cpp
+ *  @example 3pt_multipoles.cpp 
  *
- * This example shows how to model baryon acoustic oscillations in the
- * monopole of the two-point correlation function
+ *  This example shows how to measure the three-point correlation
+ *  function legendre coefficients
  */
 /**
- * @example model_2pt_monopole_RSD.cpp
+ *  @example model_2pt_monopole_BAO.cpp
  *
- * This example shows how to model redshift-space distortions in the
- * monopole of the two-point correlation function
+ *  This example shows how to model baryon acoustic oscillations in
+ *  the monopole of the two-point correlation function
  */
 /**
- * @example model_2pt_projected.cpp
+ *  @example model_2pt_monopole_RSD.cpp
  *
- * This example shows how to model the projected two-point correlation
- * function to constrain the linear bias
+ *  This example shows how to model redshift-space distortions in the
+ *  monopole of the two-point correlation function
  */
 /**
- * @example model_2pt_2D.cpp
+ *  @example model_2pt_projected.cpp
  *
- * This example shows how to model the 2D two-point correlation
- * function in redshift space
+ *  This example shows how to model the projected two-point
+ *  correlation function to constrain the linear bias
  */
 /**
- * @example model_2pt_multipoles.cpp
+ *  @example model_2pt_2D.cpp
  *
- * This example shows how to model the multipoles of the two-point
- * correlation function in redshift space
+ *  This example shows how to model the 2D two-point correlation
+ *  function in redshift space
  */
 /**
- * @example model_3pt.cpp
+ *  @example model_2pt_multipoles.cpp
  *
- * This example shows how to model the reduced 
- * three-point correlation function
+ *  This example shows how to model the multipoles of the two-point
+ *  correlation function in redshift space
  */
 /**
- * @example power_spectrum_angular.cpp
+ *  @example model_3pt.cpp
  *
- * This example shows how to measure the angular 
- * power spectrum 
- */
- /**
- * @example model_power_spectrum_angular.cpp
- *
- * This example shows how to model the angular 
- * power spectrum 
+ *  This example shows how to model the reduced 
+ *  three-point correlation function
  */
 /**
- * @example readParameterFile.cpp
+ *  @example model_power_spectrum_angular.cpp
  *
- * This example shows how to read parameters from a standard *.ini
- * file
+ *  This example shows how to model the angular 
+ *  power spectrum 
  */
 /**
- * @example numberCounts.cpp
+ *  @example model_power_spectrum_multipoles.cpp
  *
- * This example shows how to how to measure the number counts of a catalogue
+ *  This example shows how to how to model the multipoles of the power
+ *  spectrum
+*/
+/**
+ *  @example readParameterFile.cpp
+ *
+ *  This example shows how to read parameters from a standard *.ini
+ *  file
  */
 /**
- * @example numberCounts_errors.cpp
+ *  @example numberCounts.cpp
  *
- * This example shows how to how to measure the number counts of a
- * catalogue, computing Poissonian errors
+ *  This example shows how to how to measure the number counts of a catalogue
  */
 /**
- * @example sizeFunction.cpp
+ *  @example numberCounts_errors.cpp
  *
- * This example shows how to compute the theoretical size function of
- * cosmic voids
+ *  This example shows how to how to measure the number counts of a
+ *  catalogue, computing Poissonian errors
  */
 /**
- * @example cleanVoidCatalogue.cpp
+ *  @example cleanVoidCatalogue.cpp
  *
- * This example shows how to clean a cosmic void catalogue, in order
- * to extract cosmological constraints from void counting
+ *  This example shows how to clean a cosmic void catalogue, in order
+ *  to extract cosmological constraints from void counting
  */
 /**
- * @example modelling_VoidAbundances.cpp
+ *  @example modelling_VoidAbundances.cpp
  *
- * This example shows how to measure and model the void size function,
- * extracting constraints on the cosmological parameters of the model
+ *  This example shows how to measure and model the void size function,
+ *  extracting constraints on the cosmological parameters of the model
+ */
+/**
+ *  @example xi_CAMB_emulator.cpp
+ *
+ *  This example shows how to how to compute the matter two-point
+ *  correlation function with an emulator
+ */
+/**
+ *  @example meshGridTest.cpp
+ *
+ *  This example shows how to generate a mesh grid, with different
+ *  methods
  */
 /** @example table.py
  *
  *  This example shows how read and write files in a Table object 
  */
+/**
+ *  @example cosmology.py
+ *
+ *  This example shows how to set a cosmological model
+ */
 /** @example distances.py
  *
  *  This example shows how to convert redshifts into comoving
  *  distances 
+ */
+/**
+ *  @example velocities.py 
+ * 
+ *  This example shows how to create an object of the class ThreePointFunction 
+ *  and how to use one of its functions, in .py file
+ */
+/**
+ *  @example three_point_correlation.py 
+ * 
+ *  This example shows how to create an object of the class ThreePointFunction 
+ *  and how to use one of its functions, in .py file
+ */
+/**
+ *  @example size_function.py 
+ * 
+ *  This example shows how to create an object of the class SizeFunction 
+ *  and how to use one of its functions, in .py file
+ */
+/**
+ *  @example ng.py 
+ * 
+ *  This example shows how to create an object of the class NG 
+ *  and how to use one of its functions, in .py file
+ */
+/**
+ *  @example bias.py 
+ * 
+ *  This example shows how to create an object of the class Bias 
+ *  and how to use one of its functions, in .py file
+ */
+/**
+ *  @example mass_function.py 
+ * 
+ *  This example shows how to create an object of the class MassFunction 
+ *  and how to use one of its functions, in .py file
+ */
+/**
+ *  @example bao.py 
+ * 
+ *  This example shows how to create an object of the class Bao 
+ *  and how to use one of its functions, in .py file
+ */
+/**
+ *  @example mass_growth.py 
+ * 
+ *  This example shows how to create an object of the class MassGrowth
+ *  and how to use one of its functions
+ */
+/**
+ *  @example Pk_DeltaDelta.py 
+ * 
+ *  This example shows how to create an object of the class
+ *  PkXiNonLinear and how to use one of its functions
+ */
+/**
+ *  @example xi0_Kaiser.py 
+ * 
+ *  This example shows how to create an object of the class PkXizSpace
+ *  and how to use one of its functions
+ */
+/**
+ *  @example sigma.py 
+ * 
+ *  This example shows how to create an object of the class Sigma and
+ *  how to use one of its functions
+ */
+/**
+ *  @example xi_matter.py 
+ * 
+ *  This example shows how to create an object of the class PkXi
+ *  and how to use one of its functions
  */
 /**
  *  @example funcgrid_bspline.py
@@ -341,13 +502,7 @@
  *  @example fft_fftlog.py
  *
  *  This example shows how to computes the discrete Fourier
- * of a logarithmically spaced periodic sequence using the FFTlog libraries
- */
-/**
- * @example sizeFunction.py
- *
- * This example shows how to compute the theoretical size function of
- * cosmic voids
+ *  of a logarithmically spaced periodic sequence using the FFTlog libraries
  */
 /**
  *  @example prior.py
@@ -378,23 +533,35 @@
  *  correlation function
  */
 /**
- * @example 3pt.py
+ *  @example 3pt.py
  *
- * This example shows how to measure the three-point correlation
- * function
+ *  This example shows how to measure the three-point correlation
+ *  function
  */
 /**
- * @example cleanVoidCatalogue.py
+ *  @example cleanVoidCatalogue.py
  *
  *  This example shows how to clean a cosmic void catalogue, making
  *  use of a parameter file, in order to extract cosmological
  *  constraints from void counting
  */
 /**
- * @example parameter_file.py
+ *  @example parameter_file.py
  *
  *  This example shows how to read, use and edit a parameter
  *  file
+ */
+/**
+ *  @example xi_CAMB_emulator.py
+ *
+ *  This example shows how to how to compute the matter two-point
+ *  correlation function with an emulator
+ */
+/**
+ *  @example meshGridTest.py
+ *
+ *  This example shows how how to create a mesh grid of a catalogue of
+ *  objects
  */
 /**
  *  @example covarianceMatrix.ipynb
@@ -405,7 +572,6 @@
  *  To see the notebook, click here: <a
  *  href="https://github.com/federicomarulli/CosmoBolognaLib/blob/master/Examples/data/covarianceMatrix.ipynb">
  *  notebook</a>
- *
  */
 /**
  *  @example analyzeChains.ipynb 
@@ -424,6 +590,24 @@
  *
  *  To see the notebook, click here: <a
  *  href="https://github.com/federicomarulli/CosmoBolognaLib/blob/master/Examples/statistics/codes/combinedPosterior.ipynb">
+ *  notebook</a>
+ */
+
+/**
+ *  @example comparisonHOD.ipynb
+ *  
+ *  This \b notebook shows how to: 1. Calculate the volume of an HOD
+ *  catalogue given a cosmology. 2. Compare the stellar mass function
+ *  (SMF) measured from a HOD populated galaxy catalogue with the
+ *  SDSS-DR3 SMF (Panter et al. 2007). The galaxy catalogue is
+ *  constructed assuming the Moster et al. (2010) HOD model, with a
+ *  mass threshold of 1010 Msun/ℎ. Alternatively, it would be also
+ *  possible to adopt the Zehavi et al. 2005, or 2011 HOD models.
+ *  3. Plot the galaxy distribution of the most populated halo in the
+ *  HOD catalogue.
+ *
+ *  To see the notebook, click here: <a
+ *  href="https://github.com/federicomarulli/CosmoBolognaLib/blob/master/Examples/HOD/codes/comparisonHOD.ipynb">
  *  notebook</a>
  */
 /**
@@ -482,11 +666,11 @@ namespace cbl {
    */
   enum class Dim {
     
-		  /// 1D, used e.g. for 1D pairs, in angular or comoving separations
-		  _1D_,
+    /// 1D, used e.g. for 1D pairs, in angular or comoving separations
+    _1D_,
     
-		  /// 2D pair, used e.g. for 2D pairs, in Cartesian or polar coordinates
-		  _2D_
+    /// 2D pair, used e.g. for 2D pairs, in Cartesian or polar coordinates
+    _2D_
     
   };
 
@@ -504,14 +688,14 @@ namespace cbl {
    */
   enum class BinType { 
 
-		      /// linear binning
-		      _linear_,
+    /// linear binning
+    _linear_,
       
-		      /// logarithmic binning
-		      _logarithmic_,
+    /// logarithmic binning
+    _logarithmic_,
 
-		      /// custom binning
-		      _custom_
+    /// custom binning
+    _custom_
       
   };
 
@@ -561,17 +745,17 @@ namespace cbl {
    */
   enum class CoordinateUnits {
 
-			      /// angle in radians
-			      _radians_,
+    /// angle in radians
+    _radians_,
     
-			      /// angle in degrees
-			      _degrees_,
+    /// angle in degrees
+    _degrees_,
 
-			      /// angle in arcseconds
-			      _arcseconds_,
+    /// angle in arcseconds
+    _arcseconds_,
 
-			      /// angle in arcminutes
-			      _arcminutes_
+    /// angle in arcminutes
+    _arcminutes_
     
   };
   
@@ -623,11 +807,11 @@ namespace cbl {
    */
   enum class CoordinateType {
 
-			     /// comoving coordinates (x, y, z)
-			     _comoving_,
+    /// comoving coordinates (x, y, z)
+    _comoving_,
     
-			     /// observed coordinates (R.A., Dec, redshift)
-			     _observed_
+    /// observed coordinates (R.A., Dec, redshift)
+    _observed_
     
   };
 
@@ -671,9 +855,11 @@ namespace cbl {
    */
   inline std::vector<CoordinateType> CoordinateTypeCast (const std::vector<std::string> coordinateTypeNames) { return castFromNames<CoordinateType>(coordinateTypeNames, CoordinateTypeNames()); }
 
-  struct comovingCoordinates { double xx; double yy; double zz; };
-  struct observedCoordinates { double ra; double dec; double redshift; };
-
+  namespace glob {
+    struct comovingCoordinates { double xx; double yy; double zz; };
+    struct observedCoordinates { double ra; double dec; double redshift; };
+  }
+  
   /// Eigen 3D std::vector
   typedef Eigen::Matrix<double, 3, 1> Vector3D;
 
@@ -854,7 +1040,7 @@ namespace cbl {
     return is;
   }
   
-   /**
+  /**
    *  @brief check if the values of a [unsigned int] std::vector have already
    *  been set
    *
@@ -872,7 +1058,7 @@ namespace cbl {
     return is;
   }
   
-   /**
+  /**
    *  @brief check if the values of a [unsigned int] std::vector<std::vector> have already
    *  been set
    *
@@ -887,9 +1073,9 @@ namespace cbl {
     size_t ind = 0;
     size_t i=0;
     while (is && i<vect.size()) {
-    	while (is && ind<vect[i].size()) 
-     		if (vect[i][ind++]<par::defaultInt*1.000001) is = false;
-     	i++;
+      while (is && ind<vect[i].size()) 
+	if (vect[i][ind++]<par::defaultInt*1.000001) is = false;
+      i++;
     }
     return is;
   }

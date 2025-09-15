@@ -37,59 +37,51 @@
 // ======================================================================================
 
 
-cbl::cosmology::SuperSampleCovariance::SuperSampleCovariance (cbl::cosmology::Cosmology cosm, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<double> redshift_edges, const double area, const std::string method_Pk, const double delta_z, const double precision, const bool NL, const bool store_output)
+cbl::cosmology::SuperSampleCovariance::SuperSampleCovariance (std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const std::vector<std::string> cosmo_param, const std::string method_Pk, const double precision, const bool NL, const bool store_output)
+  : m_cosmology(std::move(cosmology))
 {
-  m_cosmo = std::make_shared<cosmology::Cosmology>(cosm);
-  m_cosmo->set_unit(false); // force physical units
+  m_cosmology->set_unit(false); // force physical units
   
   m_cosmo_param = cosmo_param;
   m_method_Pk = method_Pk;
   m_NL = NL;
   m_store_output = store_output;
   
+  m_precision = precision;
+
+  m_isFullSky = true;
+}
+
+
+// ======================================================================================
+
+
+cbl::cosmology::SuperSampleCovariance::SuperSampleCovariance (std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const std::vector<double> Cl_mask, const std::vector<std::string> cosmo_param, const std::string method_Pk, const double precision, const bool NL, const bool store_output)
+  : m_cosmology(std::move(cosmology))
+{
+  m_cosmology->set_unit(false); // force physical units
+  
+  m_cosmo_param = cosmo_param;
+  m_method_Pk = method_Pk;
+  m_NL = NL;
+  m_store_output = store_output;
+  
+  m_precision = precision;
+
+  m_Cl_mask = Cl_mask;
+  m_isFullSky = false;
+}
+
+
+// ======================================================================================
+
+
+void cbl::cosmology::SuperSampleCovariance::set_topHat_window (const std::vector<double> redshift_edges, const double delta_z)
+{
   m_nbins = (int)(redshift_edges.size()-1);
-  m_area = area * pow(cbl::par::pi/180,2);
-  m_precision = precision;
-  
-  m_compute_topHat_window(delta_z, redshift_edges);
-
-  if (m_nbins != (int)(m_response_func.size()))
-    cbl::ErrorCBL("Different number of redshift bins and input models!","set_SSC","SuperSampleCovariance");
-}
-
-
-// ======================================================================================
-
-
-cbl::cosmology::SuperSampleCovariance::SuperSampleCovariance (cbl::cosmology::Cosmology cosm, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const double area, const std::vector<double> W_mean, const std::vector<double> W_std, const std::string method_Pk, const double delta_z, const double precision, const bool NL, const bool store_output)
-{
-  m_cosmo = std::make_shared<cosmology::Cosmology>(cosm);
-  m_cosmo->set_unit(false); // force physical units
-  
-  m_cosmo_param = cosmo_param;
-  m_method_Pk = method_Pk;
-  m_NL = NL;
-  m_store_output = store_output;
-  
-  m_nbins = (int)(W_mean.size());
-  m_area = area * pow(cbl::par::pi/180,2);
-  m_precision = precision;
-  
-  m_compute_gaussian_window(delta_z, W_mean, W_std);
-
-  if (m_nbins != (int)(m_response_func.size()))
-    cbl::ErrorCBL("Different number of redshift bins and input models!","set_SSC","SuperSampleCovariance");
-}
-
-
-// ======================================================================================
-
-
-void cbl::cosmology::SuperSampleCovariance::m_compute_topHat_window (const double delta_z, const std::vector<double> redshift_edges)
-{
   m_nsteps = (int)((redshift_edges[redshift_edges.size()-1]-redshift_edges[0])/delta_z + 1);
   if (m_nsteps < m_nbins)
-    cbl::ErrorCBL("m_nsteps can not be lower than the number of redshift bins!","m_compute_topHat_window","SuperSampleCovariance");
+    cbl::ErrorCBL("m_nsteps can not be lower than the number of redshift bins!", "m_compute_topHat_window", "SuperSampleCovariance.cpp");
 
   m_redshifts.resize(m_nsteps);
   m_windows.resize(m_nbins);
@@ -105,14 +97,17 @@ void cbl::cosmology::SuperSampleCovariance::m_compute_topHat_window (const doubl
 	m_windows[i][j] = 1/Delta_z;
     }
   }
+
+  m_isSet_window = true;
 }
 
 
 // ======================================================================================
 
 
-void cbl::cosmology::SuperSampleCovariance::m_compute_gaussian_window (const double delta_z, const std::vector<double> W_mean, const std::vector<double> W_std)
+void cbl::cosmology::SuperSampleCovariance::set_gaussian_window (const std::vector<double> W_mean, const std::vector<double> W_std, const double delta_z)
 {
+  m_nbins = (int)(W_mean.size());
   double max_z = W_mean[W_mean.size()-1]+3.5*W_std[W_mean.size()-1];
   double min_z = W_mean[0]-3.5*W_std[0];
   
@@ -129,35 +124,41 @@ void cbl::cosmology::SuperSampleCovariance::m_compute_gaussian_window (const dou
       m_windows[i][j] = exp( - (m_redshifts[j] - W_mean[i]) * (m_redshifts[j] - W_mean[i]) / (2*W_std[i]*W_std[i]) ) / sqrt(2*cbl::par::pi*W_std[i]*W_std[i]);
     }
   }
+
+  m_isSet_window = true;
 }
 
 
 // ======================================================================================
 
 
-std::vector<std::vector<double>> cbl::cosmology::SuperSampleCovariance::m_compute_Sij (cbl::cosmology::Cosmology cosmo) const
+std::vector<std::vector<double>> cbl::cosmology::SuperSampleCovariance::m_compute_Sij () const
 {
-  // Compute comoving distances, volumes, growth factor
+  if (m_isSet_window == false)
+    cbl::ErrorCBL("The window function is not set!", "m_compute_Sij", "SuperSampleCovariance.cpp");
+  
+  // compute comoving distances, volumes, growth factor
   std::vector<double> comov_dist(m_nsteps), dV(m_nsteps), growthf(m_nsteps);
-  for (int i=0; i<m_nsteps; i++){
-    comov_dist[i] = cosmo.D_C(m_redshifts[i]);
-    dV[i] = comov_dist[i] * comov_dist[i] * cosmo.D_H() * cosmo.EE_inv(m_redshifts[i]); // D_H()*EE_inv(z) is the D_C normalized derivative
-    growthf[i] = cosmo.DN(m_redshifts[i]); // normalized scale-independent growth factor
+  
+  for (int i=0; i<m_nsteps; i++) {
+    comov_dist[i] = m_cosmology->D_C(m_redshifts[i]);
+    dV[i] = comov_dist[i] * comov_dist[i] * m_cosmology->D_H() / m_cosmology->EE(m_redshifts[i]); // D_H()*m_EE_inv(z) is the D_C normalized derivative
+    growthf[i] = m_cosmology->DN(m_redshifts[i]); // normalized scale-independent growth factor
   }
   
   // Compute normalizations
   std::vector<double> Inorm(m_nbins);
   std::vector<std::vector<double>> integrand (m_nbins,std::vector<double>(m_nsteps));
-  for (int i=0; i<m_nbins; i++){
-    for (int s=0; s<m_nsteps; s++){
-      integrand[i][s] = dV[s] * m_windows[i][s] * m_windows[i][s] / 1.e10;
+  for (int i=0; i<m_nbins; i++) {
+    for (int s=0; s<m_nsteps; s++) {
+      integrand[i][s] = dV[s] * m_windows[i][s] / 1.e10;
     }
     cbl::glob::FuncGrid integ(m_redshifts, integrand[i], "Spline");
     Inorm[i] = integ.integrate_cquad(m_redshifts[0], m_redshifts[m_redshifts.size()-1]) * 1.e10;
   }
 
-  // Compute U(k)
-  const double h = cosmo.hh();
+  // Compute the quantities used to derive U(k)
+  const double h = m_cosmology->little_h();
   const double keq = 0.02/h; // Equality matter radiation in 1/Mpc (more or less)
   const double klogwidth = 10; // Factor of width of the integration range. 10 seems ok
   double max_comov_dist = comov_dist[comov_dist.size()-1];
@@ -183,55 +184,140 @@ std::vector<std::vector<double>> cbl::cosmology::SuperSampleCovariance::m_comput
     logk[i]=logkmin+i*(logkmax-logkmin)/(nk-1);
     kk[i]=exp(logk[i]);
   }
+
+  PkXi PX(m_cosmology);
   
-  std::vector<double> Pk_new = cosmo.Pk_matter(kk, "EisensteinHu", m_NL, 0., m_store_output, "test", -1, 1.e-4, 100., 1.e-2, cbl::par::defaultString, false);
-  std::vector<std::vector<double>> Uarr(m_nbins, std::vector<double>(logk.size()));
+  std::vector<double> Pk = PX.Pk_matter(kk, m_method_Pk, m_NL, 0., m_store_output, "test", -1, 1.e-4, 100., 1.e-2, cbl::par::defaultString, false);
+  
   std::vector<double> kr(m_nsteps);
-  std::vector<std::vector<double>> integrand2(m_nbins, std::vector<double>(m_nsteps));  
-  for (int i=0; i<m_nbins; i++) {
-    for (size_t j=0; j<logk.size(); j++) {
-      for (size_t s=0; s<m_redshifts.size(); s++) {
-	kr[s] = kk[j]*comov_dist[s];
-	integrand2[i][s] = dV[s] * m_windows[i][s] * m_windows[i][s] * growthf[s] * sin(kr[s]) / kr[s] / 1.e10;
+  
+  if (m_isFullSky) {
+  
+    // Compute U(k)
+    std::vector<std::vector<double>> Uarr(m_nbins, std::vector<double>(logk.size()));
+    std::vector<std::vector<double>> integrand2(m_nbins, std::vector<double>(m_nsteps));  
+    for (int i=0; i<m_nbins; i++) {
+      for (size_t j=0; j<logk.size(); j++) {
+	for (size_t s=0; s<m_redshifts.size(); s++) {
+	  kr[s] = kk[j]*comov_dist[s];
+	  integrand2[i][s] = dV[s] * m_windows[i][s] * growthf[s] * gsl_sf_bessel_jl(0, kr[s]) / 1.e10;
+	}
+	cbl::glob::FuncGrid integ(m_redshifts, integrand2[i], "Spline");
+	Uarr[i][j] = integ.integrate_cquad(m_redshifts[0], m_redshifts[m_redshifts.size()-1]) * 1.e10;
       }
-      cbl::glob::FuncGrid integ(m_redshifts, integrand2[i], "Spline");
-      Uarr[i][j] = integ.integrate_cquad(m_redshifts[0], m_redshifts[m_redshifts.size()-1]) * 1.e10;
     }
+  
+    // Compute S_ij
+    std::vector<std::vector<double>> Cl_zero(m_nbins,std::vector<double>(m_nbins));
+    std::vector<std::vector<double>> U1(m_nbins, std::vector<double>(logk.size()));
+    std::vector<std::vector<double>> U2(m_nbins, std::vector<double>(logk.size()));
+    std::vector<std::vector<double>> integrand3(m_nbins, std::vector<double>(logk.size()));
+    for (int i=0; i<m_nbins; i++){
+      for (size_t j=0; j<logk.size(); j++){
+	U1[i][j] = Uarr[i][j]/Inorm[i];
+      }
+      for (int k=i; k<m_nbins; k++){
+	for (size_t j=0; j<logk.size(); j++){
+	  U2[k][j] = Uarr[k][j]/Inorm[k];
+	  integrand3[k][j] = kk[j] * kk[j] * Pk[j] * U1[i][j] * U2[k][j] * 1.e10;
+	}
+	cbl::glob::FuncGrid integ(kk, integrand3[k], "Spline");
+	Cl_zero[i][k] = 2. / cbl::par::pi * integ.integrate_cquad(kk[0], kk[kk.size()-1]) / 1.e10;
+      }
+    }
+
+    // Fill by symmetry
+    for (int i=0; i<m_nbins; i++){
+      for (int j=0; j<m_nbins; j++){
+	Cl_zero[i][j] = Cl_zero[std::min(i,j)][std::max(i,j)];
+      }
+    }
+
+    // Derive S_ij
+    std::vector<std::vector<double>> Sij(m_nbins, std::vector<double>(m_nbins));
+    for (int i=0; i<m_nbins; i++){
+      for (int j=0; j<m_nbins; j++){
+	Sij[i][j] = Cl_zero[i][j] / (4. * cbl::par::pi);
+      }
+    }  
+
+    return Sij;
+
+  } else {
+
+    // Find the optimal maximum l
+    std::vector<double> summand(m_Cl_mask.size(), 0);
+    double var_target = 0.;
+    for (size_t l=0; l<m_Cl_mask.size(); l++) {
+      summand[l] = (2. * l + 1.) / (4. * cbl::par::pi) * m_Cl_mask[l];
+      var_target += summand[l];
+    }
+
+    int l_max = 0;
+    double var_est = summand[0];
+    while ( (std::abs(var_est - var_target) / var_target > 0.05) && (l_max < double(m_Cl_mask.size())) ) {
+      l_max ++;
+      var_est += summand[l_max];
+    }
+
+    l_max = std::min(l_max, int(m_Cl_mask.size()));
+
+    // Compute U(k)
+    std::vector<std::vector<std::vector<double>>> Uarr(m_nbins, std::vector<std::vector<double>>(logk.size(), std::vector<double>(m_Cl_mask.size())));
+    std::vector<std::vector<std::vector<double>>> integrand2(m_nbins, std::vector<std::vector<double>>(m_Cl_mask.size(), std::vector<double>(m_nsteps)));  
+    for (int i=0; i<m_nbins; i++) {
+      for (size_t j=0; j<logk.size(); j++) {
+	for (int l=0; l<l_max; l++) {
+	  for (size_t s=0; s<m_redshifts.size(); s++) {
+	    kr[s] = kk[j]*comov_dist[s];
+	    integrand2[i][l][s] = dV[s] * m_windows[i][s] * growthf[s] * gsl_sf_bessel_jl(l, kr[s]) / 1.e10;
+	  }
+	  cbl::glob::FuncGrid integ(m_redshifts, integrand2[i][l], "Spline");
+	  Uarr[i][j][l] = integ.integrate_cquad(m_redshifts[0], m_redshifts[m_redshifts.size()-1]) * 1.e10;
+	}
+      }      
+    }
+
+    // Compute S_ij
+    std::vector<std::vector<std::vector<double>>> Cl(m_nbins,std::vector<std::vector<double>>(m_nbins, std::vector<double>(m_Cl_mask.size())));
+    std::vector<std::vector<std::vector<double>>> U1(m_nbins, std::vector<std::vector<double>>(logk.size(), std::vector<double>(m_Cl_mask.size())));
+    std::vector<std::vector<std::vector<double>>> U2(m_nbins, std::vector<std::vector<double>>(logk.size(), std::vector<double>(m_Cl_mask.size())));
+    std::vector<std::vector<std::vector<double>>> integrand3(m_nbins, std::vector<std::vector<double>>(m_Cl_mask.size(), std::vector<double>(logk.size())));
+    for (int l=0; l<l_max; l++) {
+      for (int i=0; i<m_nbins; i++) {
+	for (size_t j=0; j<logk.size(); j++) {
+	  U1[i][j][l] = Uarr[i][j][l]/Inorm[i];
+	}
+	for (int k=i; k<m_nbins; k++){
+	  for (size_t j=0; j<logk.size(); j++){
+	    U2[k][j][l] = Uarr[k][j][l]/Inorm[k];
+	    integrand3[k][l][j] = kk[j] * kk[j] * Pk[j] * U1[i][j][l] * U2[k][j][l] * 1.e10;
+	  }
+	  cbl::glob::FuncGrid integ(kk, integrand3[k][l], "Spline");
+	  Cl[i][k][l] = 2. / cbl::par::pi * integ.integrate_cquad(kk[0], kk[kk.size()-1]) / 1.e10;
+	}
+      }
+
+      // Fill by symmetry
+      for (int i=0; i<m_nbins; i++){
+	for (int j=0; j<m_nbins; j++){
+	  Cl[i][j][l] = Cl[std::min(i,j)][std::max(i,j)][l];
+	}
+      }      
+    }
+
+    // Derive S_ij
+    const double f_sky = sqrt(m_Cl_mask[0] / (4. * cbl::par::pi));
+    std::vector<std::vector<double>> Sij(m_nbins, std::vector<double>(m_nbins, 0.));
+    for (int i=0; i<m_nbins; i++)
+      for (int j=0; j<m_nbins; j++)
+	for (int l=0; l<l_max; l++)
+	  Sij[i][j] += (2 * l + 1.) * m_Cl_mask[l] * Cl[i][j][l] / (16. * cbl::par::pi * cbl::par::pi * f_sky * f_sky);
+
+    return Sij;
+    
   }
   
-  // Compute S_ij
-  std::vector<std::vector<double>> Cl_zero(m_nbins,std::vector<double>(m_nbins));
-  std::vector<std::vector<double>> U1(m_nbins, std::vector<double>(logk.size()));
-  std::vector<std::vector<double>> U2(m_nbins, std::vector<double>(logk.size()));
-  std::vector<std::vector<double>> integrand3(m_nbins, std::vector<double>(logk.size()));
-  for (int i=0; i<m_nbins; i++){
-    for (size_t j=0; j<logk.size(); j++){
-      U1[i][j] = Uarr[i][j]/Inorm[i];
-    }
-    for (int k=i; k<m_nbins; k++){
-      for (size_t j=0; j<logk.size(); j++){
-	U2[k][j] = Uarr[k][j]/Inorm[k];
-	integrand3[k][j] = kk[j] * kk[j] * Pk_new[j] * U1[i][j] * U2[k][j] * 1.e10;
-      }
-      cbl::glob::FuncGrid integ(kk, integrand3[k], "Spline");
-      Cl_zero[i][k] = 2/cbl::par::pi * integ.integrate_cquad(kk[0], kk[kk.size()-1]) / 1.e10;
-    }
-  }
-
-  // Fill by symmetry
-  for (int i=0; i<m_nbins; i++){
-    for (int j=0; j<m_nbins; j++){
-      Cl_zero[i][j] = Cl_zero[std::min(i,j)][std::max(i,j)];
-    }
-  }
-  std::vector<std::vector<double>> Sij(m_nbins, std::vector<double>(m_nbins));
-  for (int i=0; i<m_nbins; i++){
-    for (int j=0; j<m_nbins; j++){
-      Sij[i][j] = Cl_zero[i][j] / m_area; // S_ij is given by dividing Cl_zero/4pi by the fraction of the sky, i.e. Area(steradians)/4pi
-    }
-  }  
-
-  return Sij;
 }
 
 
@@ -241,13 +327,13 @@ std::vector<std::vector<double>> cbl::cosmology::SuperSampleCovariance::m_comput
 std::vector<std::vector<double>> cbl::cosmology::SuperSampleCovariance::operator () (std::vector<double> &parameter) const
 {
   // Redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *m_cosmo;
+  std::shared_ptr<cbl::cosmology::Cosmology> cosmo(move(m_cosmology));
 
   // Set the cosmological parameters
   for (size_t i=0; i<m_cosmo_param.size(); ++i)
-    cosmo.set_parameter(m_cosmo_param[i], parameter[i]);
+    cosmo->set_parameter(m_cosmo_param[i], parameter[i]);
 
-  std::vector<std::vector<double>> Sij = m_compute_Sij(cosmo);
+  std::vector<std::vector<double>> Sij = m_compute_Sij();
   
   return Sij;
 }
@@ -258,6 +344,9 @@ std::vector<std::vector<double>> cbl::cosmology::SuperSampleCovariance::operator
 
 std::vector<std::vector<double>> cbl::cosmology::SuperSampleCovariance::get_window_function ()
 {
+  if (m_isSet_window == false)
+    cbl::ErrorCBL("The window function is not set!", "get_window_function", "SuperSampleCovariance.cpp");
+  
   return m_windows;
 }
 
@@ -268,6 +357,9 @@ std::vector<std::vector<double>> cbl::cosmology::SuperSampleCovariance::get_wind
 
 void cbl::cosmology::SuperSampleCovariance::write_window_function (const std::string dir, const std::string file)
 {
+  if (m_isSet_window == false)
+    cbl::ErrorCBL("The window function is not set!", "write_window_function", "SuperSampleCovariance.cpp");
+  
   // Create the directory
   std::string mkdir = "mkdir -p "+dir; if (system(mkdir.c_str())) {}
   
@@ -296,7 +388,7 @@ void cbl::cosmology::SuperSampleCovariance::write_window_function (const std::st
 void cbl::cosmology::SuperSampleCovariance::write_Sij (const std::string dir, const std::string file)
 {
   // Compute S_ij using the cosmology given in input to set_SSC
-  std::vector<std::vector<double>> Sij = m_compute_Sij(*m_cosmo);
+  std::vector<std::vector<double>> Sij = m_compute_Sij();
 
   // Create the directory
   std::string mkdir = "mkdir -p "+dir; if (system(mkdir.c_str())) {}

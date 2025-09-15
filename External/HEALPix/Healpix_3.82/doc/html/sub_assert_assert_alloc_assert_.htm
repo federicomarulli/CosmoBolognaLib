@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>assert, assert_alloc, assert_directory_present, assert_present, fatal_error</TITLE>
+<META NAME="description" CONTENT="assert, assert_alloc, assert_directory_present, assert_present, fatal_error">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_brag_openmp.htm">
+<LINK REL="previous" HREF="sub_apply_mask.htm">
+<LINK REL="next" HREF="sub_brag_openmp.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_apply_mask.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_brag_openmp.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html339"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_apply_mask.htm">apply_mask</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_brag_openmp.htm">brag_openmp</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION1600"></A>
+<A ID="sub:assert"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">assert,assert_alloc, assert_directory_present,&nbsp;<SPAN CLASS="MATH"><IMG
+ STYLE="height: 0.23ex; vertical-align: -0.10ex; " SRC="sub_img1.png"
+ ALT="$\ldots $"></SPAN></SPAN></div><hr>
+<H3>The Fortran90 module misc_utils contains a few routines to test an assertion and return an error
+  message if it is false.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/misc_utils.F90"><strong>src/f90/mod/misc_utils.F90</strong></a>&nbsp;  
+
+<P>
+
+<SPAN CLASS="LARGE"><SPAN  CLASS="textbf">SUBROUTINES: </SPAN></SPAN>
+<BR>
+<SPAN style="font-family:monospace">call assert(test [, msg, errcode])</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">if <SPAN style="font-family:monospace">test</SPAN> is true, proceeds with normal code execution. If
+                        <SPAN style="font-family:monospace">test</SPAN> is false, issues a standard error message
+                        (unless <SPAN style="font-family:monospace">msg</SPAN> is provided) and stops the code execution with the status
+                        <SPAN style="font-family:monospace">errcode</SPAN> (or 1 by default).</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<P>
+<SPAN style="font-family:monospace">call assert_alloc(status, code, array)</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">if <SPAN style="font-family:monospace">status</SPAN> is 0, proceeds with normal code execution. If
+                        not, issues an error message indicating a problem during memory allocation
+                        of 
+                        <SPAN style="font-family:monospace">array</SPAN> in program <SPAN style="font-family:monospace">code</SPAN>, and stops the code execution.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<P>
+<SPAN style="font-family:monospace">call assert_directory_present(directory)</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">issues an error message and stops the code execution if
+                        the directory named <SPAN style="font-family:monospace">directory</SPAN> can not be found</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<P>
+<SPAN style="font-family:monospace">call assert_not_present(filename)</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">issues an error message and stops the code execution if
+                        a file with name <SPAN style="font-family:monospace">filename</SPAN> already exists.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<P>
+<SPAN style="font-family:monospace">call assert_present(filename)</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">issues an error message and stops the code execution if
+                        the file named <SPAN style="font-family:monospace">filename</SPAN> can not be found.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<P>
+<SPAN style="font-family:monospace">call fatal_error([msg])</SPAN> 
+
+<P>
+<SPAN style="font-family:monospace">call fatal_error</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">issue an (optional user defined) error message and stop the code execution.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<P>
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:235px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+test</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">LGT</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">result of a logical test</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">msg OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">character string describing nature of error</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">errorcode OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">error status given to code interruption</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">status</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">value of the <SPAN style="font-family:monospace">stat</SPAN> flag returned by the F90 <SPAN style="font-family:monospace">allocate</SPAN> command</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">code</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">name of program or code in which allocation is made</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">array</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">name of array allocated</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">directory</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">directory name (contains a '/')</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">filename</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">file name</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">program my_code 
+<BR>
+use misc_utils 
+<BR>
+real, allocatable, dimension(:) :: vector
+<BR>
+integer :: status 
+<BR>
+real :: a = -1. 
+<BR>
+<BR>
+allocate(vector(12345),stat=status) 
+<BR>
+call assert_alloc(status, 'my_code', 'vector') 
+<BR>
+<BR>
+call assert_directory_present('/home') 
+<BR>
+<BR>
+call assert(a &gt; 0., 'a is NEGATIVE !!!') 
+<BR>
+<BR>
+end program my_code
+<BR></div>
+<blockquote> Will issue a error message and stops the code if <SPAN style="font-family:monospace">vector</SPAN> can not be allocated, will stop the
+  code if '/home' is not found, and will stop the code and complain loudly about it 
+because <SPAN style="font-family:monospace">a</SPAN> is actually negative.
+</blockquote>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_apply_mask.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_brag_openmp.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html339"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_apply_mask.htm">apply_mask</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_brag_openmp.htm">brag_openmp</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

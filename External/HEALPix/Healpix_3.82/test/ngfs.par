@@ -1,0 +1,26 @@
+# HEALPix 3.82
+# parameter file for sky_ng_sims
+# This parameter file is used by "make test".
+
+nsmax = 128
+
+nlmax =          256
+
+infile = cl.fits
+
+outfile = !test_ngfs.fits
+
+fwhm_arcmin = 30.
+
+beam_file = ''
+
+# pdf_choice = 1 (SHO) or 2  (power of gaussian)
+pdf_choice =            1
+
+iseed = 1
+
+sigma0 =    1.000000
+na =            3
+alpha_1 =   0.0000000E+00
+alpha_2 =   0.0000000E+00
+alpha_3 =   0.2000000E+00

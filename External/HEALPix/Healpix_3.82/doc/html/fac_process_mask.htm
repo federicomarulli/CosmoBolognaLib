@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>process_mask</TITLE>
+<META NAME="description" CONTENT="process_mask">
+<META NAME="keywords" CONTENT="facilities">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="facilities.css">
+
+<LINK REL="next" HREF="fac_sky_ng_sim.htm">
+<LINK REL="previous" HREF="fac_plmgen.htm">
+<LINK REL="next" HREF="fac_sky_ng_sim.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="fac_plmgen.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="fac_HEALPix_F90_facilities.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_sky_ng_sim.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html139"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="fac_plmgen.htm">plmgen</A>
+
+<strong>Up:</strong> <A
+ HREF="fac_HEALPix_F90_facilities.htm">HEALPix/F90 facilities</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_sky_ng_sim.htm">sky_ng_sim</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION1100"></A>
+<A ID="fac:process_mask"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">process_mask</SPAN></div><hr>
+<H3>This code can be used to modify a binary mask by removing small clusters of bad
+or invalid pixels (hereafter 'holes') and by computing the distance of each
+valid pixel to the closest invalid one, with the purpose of, for instance,
+defining a new apodized mask</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/process_mask/process_mask.F90"><strong>src/f90/process_mask/process_mask.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>%
+process_mask [parameter_file]
+</h3></blockquote>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>mask_file = </B>
+<DD><A ID="fac:process_mask:mask_file"></A>Input binary mask FITS file
+<DT>
+<B>hole_min_size = </B>
+<DD><A ID="fac:process_mask:hole_min_size"></A>Minimal size (in pixels) of invalid regions to be kept
+       (can be used together with hole_min_surf_arcmin2 below, the result will
+be the largest of the two). <b>default:</b>0
+<DT>
+<B>hole_min_surf_arcmin2 = </B>
+<DD>Minimal surface area (in arcmin2) of invalid regions to be kept
+       (can be used together with hole_min_size above,
+        the result will be the largest of the two). <b>default:</b>0.0
+<DT>
+<B>filled_file = </B>
+<DD>Optional output FITS file to contain mask with
+filled-in small holes (as defined above). <b>default:</b>&rdquo;, no output file
+<DT>
+<B>distance_file = </B>
+<DD><A ID="fac:process_mask:distance_file"></A>Optional output FITS file to contain angular distance
+(in radians) from valid pixel to the closest invalid one. <b>default:</b>&rdquo;, no output file
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+For a given input binary mask, in which pixels have either value 0 (=invalid) or 1 (=valid),
+this code produces a map containing for each valid pixel,
+its distance (in Radians, measured between pixel centers) to the closest invalid pixel.
+<br><br>This distance map can then be used to define an apodized mask.
+<br><br>Two pixels are considered adjacent if they have at least <EM>one point</EM> in common 
+(eg, a pixel corner or a pixel side).
+<br><br>It is possible to treat small holes (=cluster of adjacent invalid pixels) as valid,
+by specifying a minimal number of pixels and/or minimal surface area (whichever is the largest),
+and the resulting new mask can be output.
+<br><br>The output FITS files have the same ordering as the input mask
+(even though the processing is done in NESTED ordering).
+<br><br><SPAN CLASS="FOOTNOTESIZE">The algorithmic complexity of the distance calculation is expected to scale like <!-- MATH
+ $\propto N_{\mathrm{pix}}^p
+\propto N_{\mathrm{side}}^{2p}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.97ex; vertical-align: -0.91ex; " SRC="fac_img64.png"
+ ALT="$\propto N_{\mathrm{pix}}^p
+\propto N_{\mathrm{side}}^{2p}$"></SPAN> with <SPAN CLASS="MATH"><I>p</I></SPAN> in <SPAN CLASS="MATH">[1.5,2]</SPAN> depending on the mask topology, even
+though the code has been optimized to reduce the number of calculations by a
+factor <SPAN CLASS="MATH">10<SUP><i>2</i></SUP></SPAN> to <SPAN CLASS="MATH">10<SUP><i>3</i></SUP></SPAN> compared to a naive implementation, and the most
+computationally intensive loops are parallelized with OpenMP.
+On a 3.06GHz Intel Core 2 Duo, the distances on a <A ID="tex2html20"
+  HREF="https://lambda.gsfc.nasa.gov/product/map/dr4/masks_get.cfm"><!-- MATH
+ $N_{\mathrm{side}}=512$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB>=512</SPAN> Galactic + Point sources mask</A>
+can be computed in a few
+seconds, while a similar <!-- MATH
+ $N_{\mathrm{side}}=2048$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB>=2048</SPAN> mask takes a minute or less to process.
+For totally arbitrary masks though, the return times can be multiplied by as
+much as 10.</SPAN>
+<br><br>
+</blockquote>
+
+<P>
+<hr><H2>SUPPORT    </H2><H3>This section lists those routines and facilities (including those <i>external</i> to the <b>HEALPix</b> distribution) which can assist in the utilisation of <b><SPAN CLASS="colordoc">process_mask</SPAN></b>.</H3>
+  <DL COMPACT><DT>
+<B><A HREF="./idl_mollview.htm#idl:mollview">mollview</A></B>
+<DD>IDL routine to view the input and output masks and the angular
+distance map.
+<DT>
+<B>mask_tools</B>
+<DD>F90 module containing the routines   
+	<A HREF="./sub_dist2holes_nest.htm#sub:dist2holes_nest"><SPAN style="font-family:monospace">dist2holes_nest</SPAN></A>,
+	<A HREF="./sub_fill_holes_nest.htm#sub:fill_holes_nest"><SPAN style="font-family:monospace">fill_holes_nest</SPAN></A>,
+	<A HREF="./sub_maskborder_nest.htm#sub:maskborder_nest"><SPAN style="font-family:monospace">maskborder_nest</SPAN></A>,
+	<A HREF="./sub_size_holes_nest.htm#sub:size_holes_nest"><SPAN style="font-family:monospace">size_holes_nest</SPAN></A>
+used in <SPAN CLASS="colordoc">process_mask</SPAN> and
+described in the <A ID="tex2html21"
+  HREF="subroutines.htm">&rdquo;Fortran Subroutines&rdquo;</A>
+document
+  </DL>
+
+<P>
+<hr><H2>EXAMPLE # 1:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">process_mask</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+process_mask runs in interactive mode, self-explanatory.
+</blockquote>
+
+<P>
+<hr><H2>EXAMPLE # 2:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">process_mask  filename</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>When `filename' is present, process_mask enters the non-interactive mode and parses
+its inputs from the file `filename'. This has the following
+structure: the first entry is a qualifier which announces to the parser
+which input immediately follows. If this input is omitted in the
+input file, the parser assumes the default value.
+If the equality sign is omitted, then the parser ignores the entry.
+In this way comments may also be included in the file.
+In this example, the file contains the following qualifiers:
+<BR>
+<kbd><A HREF="#fac:process_mask:mask_file">mask_file</A>= wmap_temperature_analysis_mask_r9_5yr_v3.fits</kbd><br>
+<kbd><A HREF="#fac:process_mask:hole_min_size">hole_min_size</A>=    100</kbd><br>
+<kbd><A HREF="#fac:process_mask:distance_file">distance_file</A>= !/tmp/dist_wmap.fits</kbd><br>
+process_mask computes the distance in Radians from each valid pixel to the closest invalid
+pixel for WMAP-5 mask 'wmap_temperature_analysis_mask_r9_5yr_v3.fits', ignoring
+the holes containing fewer than 100 pixels, and outputs the result in '/tmp/dist_wmap.fits'.</blockquote>
+
+<P>
+<hr><H2>RELEASE NOTES</H2><blockquote>
+  <DL COMPACT><DD>&#9632;  (Initial release <strong>HEALPix</strong> 3.00)
+</DL>
+</blockquote>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="fac_plmgen.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="fac_HEALPix_F90_facilities.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_sky_ng_sim.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html139"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="fac_plmgen.htm">plmgen</A>
+
+<strong>Up:</strong> <A
+ HREF="fac_HEALPix_F90_facilities.htm">HEALPix/F90 facilities</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_sky_ng_sim.htm">sky_ng_sim</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,24 +1,24 @@
 c-----------------------------------------------------------------------
-c © A J S Hamilton 2001
+c ï¿½ A J S Hamilton 2001
 c-----------------------------------------------------------------------
       subroutine gphi(angle,rp,cm,np,rpi,cmi,tol,phi,iord)
       integer np
-      real*10 angle,rp(3,np),cm(np),rpi(3),cmi,tol
+      real*16 angle,rp(3,np),cm(np),rpi(3),cmi,tol
 c        work arrays (could be automatic if compiler supports it)
       integer iord(2*np)
-      real*10 phi(2,np)
+      real*16 phi(2,np)
 c
 c        parameters
       include 'pi.par'
-      real*10 TWOPI
-      parameter (TWOPI=2._10*PI)
+      real*16 TWOPI
+      parameter (TWOPI=2._16*PI)
 c        externals
       integer gsegij,gzeroar
 c        data variables
-      real*10 angtol,big
+      real*16 angtol,big
 c        local variables
       integer i,iseg,j,jm,jml,jmu,jp,jpl,jpu,km,kp,ni,scmi
-      real*10 dph,p,ph,phm,php,xi(3),yi(3)
+      real*16 dph,p,ph,phm,php,xi(3),yi(3)
 c *
 c * Angle along circle about unit direction rpi satisfying
 c *    1 - r.rpi = cmi
@@ -39,15 +39,15 @@ c Output: angle
 c Work arrays: phi and iord should be dimensioned at least 2*np
 c
 c        set azimuthal angle of non-intersection to big
-      data big /1.e6_10/
+      data big /1.e6_16/
 c        ok if angle tests not too far outside [0,max]
-      data angtol /1.e-10_10/
+      data angtol /1.e-10_16/
 c
 c        initialise angle to zero
-      angle=0._10
+      angle=0._16
 c        check for null circle
-      if (cmi.lt.0._10) goto 410
-      if (cmi.gt.2._10) goto 410
+      if (cmi.lt.0._16) goto 410
+      if (cmi.gt.2._16) goto 410
 c        check for zero angle because one circle is null
       if (gzeroar(cm,np).eq.0) goto 410
       scmi=1
@@ -89,11 +89,11 @@ c        do another segment
 c........check angle is between 0 and 2*pi
       p=angle/TWOPI
 c     print *,rpi(1),rpi(2),rpi(3),'angle/(2*pi) =',p
-      if (p.lt.0._10) then
+      if (p.lt.0._16) then
         write (*,'(" *** from gphi: angle/(2*pi) = ",g24.16,
      *    " should be >= 0")') p
         goto 420
-      elseif (p.gt.1._10) then
+      elseif (p.gt.1._16) then
 c        check if discrepancy is from numerical roundoff
         if (angle.le.TWOPI+angtol) then
           angle=TWOPI

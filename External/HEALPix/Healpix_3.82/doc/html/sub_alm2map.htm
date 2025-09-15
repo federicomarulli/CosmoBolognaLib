@@ -1,0 +1,429 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>alm2map*</TITLE>
+<META NAME="description" CONTENT="alm2map*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_alm2map_der.htm">
+<LINK REL="previous" HREF="sub_alm2cl.htm">
+<LINK REL="next" HREF="sub_alm2map_der.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_alm2cl.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_alm2map_der.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html323"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_alm2cl.htm">alm2cl*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_alm2map_der.htm">alm2map_der*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION800"></A>
+<A ID="sub:alm2map"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">alm2map*</SPAN></div><hr>
+<H3>This routine is a wrapper to 10 other routines: alm2map_sc_X,
+  alm2map_sc_pre_X, alm2map_pol_X, alm2map_pol_pre1_X,
+  alm2map_pol_pre2_X, where X stands for either s or d. These routines
+  synthesize a <strong>HEALPix</strong> <EM>RING ordered</EM> temperature map (and if specified, polarisation maps) 
+from input <!-- MATH
+ $a_{\ell m}^T$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img55.png"
+ ALT="$a_{\ell m}^T$"></SPAN> (and if specified <!-- MATH
+ $a_{\ell m}^E$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img56.png"
+ ALT="$a_{\ell m}^E$"></SPAN> and <!-- MATH
+ $a_{\ell m}^B$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img57.png"
+ ALT="$a_{\ell m}^B$"></SPAN>) values. 
+The different routines are called dependent on what parameters are passed. 
+Some routines synthesize maps with or without precomputed harmonics (note that
+since <strong>HEALPix</strong> v2.20 precomputed harmonics most likely won't speed up computation)
+and some with or without polarisation.
+The routines accept both single and double precision arrays for alm_TGC and
+  map_TQU. The precision of these arrays should match.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/alm_tools.F90"><strong>src/f90/mod/alm_tools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">alm2map*</SPAN>(
+<A HREF="#sub:alm2map:nsmax">nsmax</A>, <A HREF="#sub:alm2map:nlmax">nlmax</A>, <A HREF="#sub:alm2map:nmmax">nmmax</A>, <A HREF="#sub:alm2map:alm_TGC">alm_TGC</A>, <A HREF="#sub:alm2map:map_TQU">map_TQU</A>[, <A HREF="#sub:alm2map:plm">plm</A>=<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img58.png"
+ ALT="$\vert$"></SPAN> <A HREF="#sub:alm2map:zbounds">zbounds</A>=]
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">
+nsmax<A ID="sub:alm2map:nsmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> value of the map to synthesize.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">nlmax<A ID="sub:alm2map:nlmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the maximum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img33.png"
+ ALT="$\ell$"></SPAN> value used for the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">nmmax<A ID="sub:alm2map:nmmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the maximum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img34.png"
+ ALT="$m$"></SPAN> value used for the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">alm_TGC<A ID="sub:alm2map:alm_TGC"></A>(1:p, 0:nlmax, 0:nmmax)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SPC or DPC</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">The <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> values to make
+                   the map from. <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="sub_img35.png"
+ ALT="$p$"></SPAN> is 3 or 1 depending on wether polarisation is
+                   respectively included or not. In the former case, the first
+                   index runs from 1 to 3 corresponding to (T,E,B).</TD>
+</TR>
+</TABLE>
+
+<P>
+<TABLE class="PAD  BORDER" style="">
+<TR><TD CLASS="LEFT TOP"  style="width:200px">map_TQU<A ID="sub:alm2map:map_TQU"></A>(0:12*nsmax**2-1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP or DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">if only a temperature map is
+to be synthesized, the map-array should be passed with this rank.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">map_TQU(0:12*nsmax**2-1, 1:3)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP or DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">if both temperature an 
+polarisation maps are to be synthesized, the map array should have this rank, 
+where the second index is (1,2,3) corresponding to (T,Q,U).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">plm<A ID="sub:alm2map:plm"></A>(0:n_plm-1), OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">If this optional matrix is passed with
+this rank, precomputed <!-- MATH
+ $P_{\ell m}(\theta)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img59.png"
+ ALT="$P_{\ell m}(\theta)$"></SPAN> are used instead of recursion. (
+n_plm = nsmax*(nmmax+1)*(2*nlmax-nmmax+2).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">plm(0:n_plm-1,1:3), OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">If this optional matrix is 
+passed with this rank, precomputed <!-- MATH
+ $P_{\ell m}(\theta)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img59.png"
+ ALT="$P_{\ell m}(\theta)$"></SPAN> AND precomputed tensor
+harmonics are used instead of recursion. (n_plm =
+nsmax*(nmmax+1)*(2*nlmax-nmmax+2).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">zbounds<A ID="sub:alm2map:zbounds"></A>(1:2), OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">section of the sphere on which to perform the map synthesis, expressed in terms of <!-- MATH
+ $z=\sin(\mathrm{latitude}) =
+                   \cos(\theta).$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img60.png"
+ ALT="$z=\sin(\mathrm{latitude}) =
+\cos(\theta).$"></SPAN> If zbounds(1)<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.28ex; vertical-align: -0.16ex; " SRC="sub_img61.png"
+ ALT="$&lt;$"></SPAN>zbounds(2), it is
+performed <EM>on</EM> the strip zbounds(1)<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.28ex; vertical-align: -0.16ex; " SRC="sub_img62.png"
+ ALT="$&lt;z&lt;$"></SPAN>zbounds(2); if not,
+it is performed <EM>outside</EM> the strip
+zbounds(2)<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.41ex; " SRC="sub_img63.png"
+ ALT="$\le z \le$"></SPAN>zbounds(1). If absent, the whole map is processed.
+Currently, <A HREF="#sub:alm2map:zbounds">zbounds</A> and <A HREF="#sub:alm2map:plm">plm</A> can not be used together.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use healpix_types 
+<BR>
+use pix_tools, only : nside2npix 
+<BR>
+use alm_tools, only : alm2map 
+<BR>
+integer(I4B) :: nside, lmax, mmax, npix 
+<BR>
+real(SP), dimension(:,:), allocatable :: map 
+<BR>
+complex(SPC), dimension(:,:,:), allocatable :: alm 
+<BR>
+real(DP), dimension(1:2) :: zrange 
+<BR>...
+<BR>
+nside=256 ; lmax=512 ; mmax=lmax
+<BR>
+npix=nside2npix(nside)
+<BR>
+allocate(alm(1:3,0:lmax,0:mmax))
+<BR>
+allocate(map(0:npix-1,1:3))
+<BR>...
+<BR>
+zrange =(/ 0.0_dp, 0.5_dp /) 
+<BR>
+call alm2map(nside, lmax, mmax, alm, map, zbounds=zrange)  
+<BR></div>
+<blockquote>
+Make temperature and polarisation maps from the scalar and tensor <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>
+passed in alm. The maps have <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> of 256, and are constructed from
+<!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> values up to 512 in <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img33.png"
+ ALT="$\ell$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img34.png"
+ ALT="$m$"></SPAN>. In order to save time, 
+the maps are only generated on the range <!-- MATH
+ $0 < z < 0.5$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.16ex; " SRC="sub_img64.png"
+ ALT="$0 &lt; z &lt; 0.5$"></SPAN> (leaving the other pixels to 0) 
+even though the input <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>
+are those of a full sky map.
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">alm2map*</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><A HREF="sub_ring_synthesis.htm#sub:ring_synthesis">ring_synthesis</A></B>
+<DD>Performs FFT over <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img34.png"
+ ALT="$m$"></SPAN> for synthesis of the rings.
+  <DT>
+<B>compute_lam_mm, get_pixel_layout, </B>
+<DD><DT>
+<B>gen_lamfac,gen_mfac, gen_normpol, </B>
+<DD><DT>
+<B>gen_recfac, init_rescale, l_min_ylm</B>
+<DD>Ancillary routines used
+  for <!-- MATH
+ $Y_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img65.png"
+ ALT="$Y_{\ell m}$"></SPAN> recursion
+  <DT>
+<B><SPAN  CLASS="textbf">misc_utils</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B><A HREF="sub_assert_assert_alloc_assert_.htm#sub:assert">assert_alloc</A></B>
+<DD>routine to print error message, when an array can not be
+  allocated properly
+  </DL>
+Note: Starting with <A HREF="sub_Older_Changes.htm#sub:new3p10">version 3.10</A>, <SPAN style="font-family:monospace">libsharp</SPAN> routines will be called when precomputed <!-- MATH
+ $P_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img16.png"
+ ALT="$P_{\ell m}$"></SPAN> are not provided.
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">alm2map*</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_alm2map_der.htm#sub:alm2map_der">alm2map_der</A></B>
+<DD>routine generating a map and
+   its derivatives from its <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>
+   <DT>
+<B><A HREF="sub_alm2map_spin.htm#sub:alm2map_spin">alm2map_spin</A></B>
+<DD>routine generating maps of
+arbitrary spin from their  <!-- MATH
+ ${_s}a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img66.png"
+ ALT="${_s}a_{\ell m}$"></SPAN>
+  <DT>
+<B>smoothing</B>
+<DD>executable using <SPAN CLASS="colordoc">alm2map*</SPAN> to smooth maps
+  <DT>
+<B>synfast</B>
+<DD>executable using <SPAN CLASS="colordoc">alm2map*</SPAN> to synthesize maps.
+  <DT>
+<B><A HREF="sub_map2alm.htm#sub:map2alm">map2alm</A></B>
+<DD>routine performing the inverse transform
+  of <SPAN CLASS="colordoc">alm2map*</SPAN>.
+  <DT>
+<B><A HREF="sub_create_alm.htm#sub:create_alm">create_alm</A></B>
+<DD>routine to generate randomly
+  distributed <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients according to a given power spectrum
+  <DT>
+<B><A HREF="sub_pixel_window.htm#sub:pixel_window">pixel_window</A>,
+<A HREF="sub_generate_beam.htm#sub:generate_beam">generate_beam</A></B>
+<DD>return the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img33.png"
+ ALT="$\ell$"></SPAN>-space <strong>HEALPix</strong> -pixel and beam window function respectively
+  <DT>
+<B><A HREF="sub_alter_alm.htm#sub:alter_alm">alter_alm</A></B>
+<DD>modifies <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> to emulate effect
+of real space filtering
+  </DL>
+
+<P>
+
+<P>
+
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_alm2cl.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_alm2map_der.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html323"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_alm2cl.htm">alm2cl*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_alm2map_der.htm">alm2map_der*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

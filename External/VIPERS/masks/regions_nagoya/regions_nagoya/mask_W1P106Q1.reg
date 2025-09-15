@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: /tmp/fileWGMYm7.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(32.70574,-4.901107,32.806671,-4.901516,32.814444,-4.898805,32.814421,-4.785374,32.811906,-4.780931,32.805278,-4.774254,32.714077,-4.774259,32.708576,-4.7745809,32.69704,-4.784819,32.697465,-4.903317) # color=red dash=1

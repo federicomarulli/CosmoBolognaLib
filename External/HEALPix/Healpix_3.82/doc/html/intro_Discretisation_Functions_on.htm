@@ -1,0 +1,307 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>Discretisation of Functions on the Sphere</TITLE>
+<META NAME="description" CONTENT="Discretisation of Functions on the Sphere">
+<META NAME="keywords" CONTENT="intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="intro.css">
+
+<LINK REL="next" HREF="intro_Geometric_Algebraic_Propert.htm">
+<LINK REL="previous" HREF="intro_Introduction.htm">
+<LINK REL="next" HREF="intro_Geometric_Algebraic_Propert.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="intro_Introduction.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_Geometric_Algebraic_Propert.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html101"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_Introduction.htm">Introduction</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_Geometric_Algebraic_Propert.htm">Geometric and Algebraic Properties of HEALPix</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION300">
+Discretisation of Functions on the Sphere for 
+High Resolution Applications:
+a Motivation for <strong>HEALPix</strong> </A>
+</H1>
+
+<P>
+Numerical analysis of functions on the sphere involves 
+(1) a class of mathematical operations, whose objects are 
+(2) discretised maps, i.e. quantizations of arbitrary functions 
+according to a
+chosen tessellation (exhaustive partition of the sphere into 
+finite area elements). Hereafter we mostly specialise our discussion 
+to CMB related applications of
+<strong>HEALPix</strong>, 
+but all our statements hold true generally for any relevant 
+deterministic and random functions on the sphere.
+
+<P>
+Considering point (1):
+Standard operations of numerical analysis which one might wish to
+execute on the sphere include
+convolutions with local and global kernels, 
+Fourier analysis with spherical harmonics
+and power spectrum estimation,
+wavelet decomposition, nearest-neighbour searches, topological
+analysis, including searches for extrema or zero-crossings, 
+computing Minkowski functionals,
+extraction of patches and
+finite differencing for solving partial
+differential equations.
+Some of these operations become prohibitively slow  
+if the sampling of functions on the sphere, and the related structure of 
+the discrete data set, are not designed carefully. 
+
+<P>
+Regarding point (2): 
+Typically, a whole sky map rendered by a CMB experiment contains 
+(<I>i</I>) signals coming from the sky,
+which are by design strongly band-width limited (in the sense of 
+spatial Fourier
+decomposition) by the instrument's angular response 
+function, and 
+(<I>ii</I>) a projection into the elements of a discrete map, or pixels,
+of the observing instrument's noise; this pixel noise should be random,
+and white, at least near the discretisation scale, with a band-width 
+significantly exceeding that of all the signals. 
+
+<P>
+With these considerations in mind we propose the following list of 
+desiderata 
+for the mathematical structure of discretised full sky maps:
+
+<P>
+<SPAN  CLASS="textbf">1. Hierarchical structure of the data base</SPAN>. This is recognised as 
+essential for very large data bases, and was  postulated 
+in construction
+of the Quadrilateralized Spherical Cube 
+(or quad-sphere, see 
+<kbd><A ID="tex2html4"
+  HREF="https://lambda.gsfc.nasa.gov/product/cobe/skymap_info_new.cfm">https://lambda.gsfc.nasa.gov/product/cobe/skymap_info_new.cfm</A></kbd>),
+which was used for the
+<I>COBE</I> data. An  argument in favour of this 
+proposition
+states that the data elements  
+which are nearby in a multi-dimensional configuration space 
+(here, on the surface of 
+a sphere), are also nearby in the tree structure of the data base, hence
+the near-neighbour searches are conducted optimally in the data storage medium
+or computer RAM.
+This property, especially when implemented with a small number of base
+resolution elements, 
+facilitates various topological methods of analysis, 
+and allows easy construction
+of wavelet transforms on quadrilateral (and also triangular) grids. 
+Figure&nbsp;<A HREF="#fig:quadtree">1</A> shows how a hierarchical partition with 
+quadrilateral structure naturally allows for a binary vector indexing
+of the data base.
+
+<P>
+
+<DIV class="CENTER"><A ID="fig:quadtree"></A><A ID="1044"></A>
+<TABLE>
+<CAPTION class="BOTTOM"><STRONG>Figure 1:</STRONG>
+Quadrilateral tree pixel numbering. 
+The coarsely pixelated coordinate patch on
+the left consists 
+of four pixels. Two bits suffice to label the pixels. 
+To increase the resolution, every 
+pixel splits into 
+4 daughter pixels shown on the right. These daughters inherit the pixel
+index of their 
+parent (boxed) and acquire 
+two new bits to give the new pixel index. 
+Several such curvilinearly mapped coordinate patches 
+(12 in the case of <strong>HEALPix</strong>, and 6 in the case of the <I>COBE</I> quad-sphere) 
+are joined at the boundaries to cover
+the sphere. All pixels indices carry a prefix (here omitted for clarity) 
+which identifies which base-resolution pixel they belong to.</CAPTION>
+<TR><TD>
+<DIV CLASS="centerline" ID="par4142" ALIGN="CENTER">
+<IMG
+  WIDTH="717" HEIGHT="280" STYLE=""
+ SRC="./quad_tree.png"
+ ALT="Image quad_tree"></DIV>
+
+<P></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+<SPAN  CLASS="textbf">2. Equal areas of discrete elements of partition</SPAN>. This is advantageous 
+because (<I>i</I>)
+white noise generated by the  signal receiver 
+gets integrated exactly into
+white noise in the pixel space, and 
+(<I>ii</I>) sky signals are sampled without regional dependence, except for 
+the dependence on pixel shapes, which is unavoidable with tessellations of the 
+sphere. 
+Hence, as much as possible given the experimental details, the pixel
+size should be made sufficiently small compared to the 
+instrument's resolution to avoid any excessive, and pixel shape dependent, 
+signal smoothing.
+
+<P>
+<SPAN  CLASS="textbf">3. Iso-Latitude distribution of discrete area elements on a sphere</SPAN>.  
+This property
+is critical for computational speed of all operations involving evaluation of 
+spherical
+harmonics. Since the associated Legendre polynomial components of
+spherical harmonics are evaluated via
+slow recursions, and 
+can not be simply handled in an analogous way to the trigonometric Fast Fourier Transform, 
+any deviations in the sampling grid from an iso-latitude
+distribution result in a prohibitive loss of computational performance
+with the growing number of sampling points, or increasing map resolution.
+It is precisely this property that the <I>COBE</I> quad-sphere is lacking,
+and this renders it impractical for applications to high resolution data.
+
+<P>
+A number of tessellations 
+have been  used for discretisation and analysis 
+of functions on the sphere (for example, see  
+<A
+ HREF="intro_Bibliography.htm#drhea">Driscoll &amp; Healy (1994)</A>,
+<A
+ HREF="intro_Bibliography.htm#munavi">Muciaccia, Natoli &amp; Vittorio (1998)</A>, <A
+ HREF="intro_Bibliography.htm#glesp">Doroshkevich et&nbsp;al. (2005)</A> &mdash; rectangular grids,
+<A
+ HREF="intro_Bibliography.htm#baum">Baumgardner &amp; Frederickson (1985)</A>,  <A
+ HREF="intro_Bibliography.htm#teg">Tegmark (1996)</A> &mdash; icosahedral grids,
+<A
+ HREF="intro_Bibliography.htm#mathint">Saff &amp; Kuijlaars (1997)</A>,  <A
+ HREF="intro_Bibliography.htm#crtu">Crittenden &amp; Turok (1998)</A> &mdash;  `igloo' grids,
+and <A
+ HREF="intro_Bibliography.htm#szalay">Szalay &amp; Brunner (1998)</A>  &mdash; a triangular grid), but none 
+satisfies simultaneously all three stated requirements. 
+
+<P>
+All three requirements formulated above are satisfied by construction with the
+Hierarchical Equal Area, iso-Latitude Pixelation (<strong>HEALPix</strong>) 
+of the sphere, which is shown in Figure&nbsp;<A HREF="#fig:HEALPIX">2</A>.
+A more detailed description of
+<strong>HEALPix</strong>, its motivations, and applications can be found in <A
+ HREF="intro_Bibliography.htm#gorskihealpix05">G&#243;rski et&nbsp;al. (2005)</A>.
+
+<P>
+
+<DIV class="CENTER"><A ID="fig:HEALPIX"></A><A ID="1134"></A>
+<TABLE>
+<CAPTION class="BOTTOM"><STRONG>Figure 2:</STRONG>
+Orthographic view of <strong>HEALPix</strong> partition of the sphere. 
+Overplot of equator and  meridians illustrates the octahedral symmetry of  
+<strong>HEALPix</strong>. 
+Light-gray shading shows one of the eight (four north, and four south) 
+identical polar 
+base-resolution pixels. 
+Dark-gray shading shows one of the four identical equatorial 
+base-resolution pixels. 
+Moving clockwise from the upper left 
+panel the grid is hierarchically subdivided with 
+the grid resolution parameter equal to 
+<!-- MATH
+ $N_{\mathrm{side}}=$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img6.png"
+ ALT="$N_{\mathrm{side}}=$"></SPAN> 1, 2, 4, 8, 
+and the total number of pixels  equal to 
+<!-- MATH
+ $N_{\mathrm{pix}}= 12 \times N_{\mathrm{side}}^2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.75ex; " SRC="intro_img7.png"
+ ALT="$N_{\mathrm{pix}}= 12 \times N_{\mathrm{side}}^2$"></SPAN> = 12, 48, 192, 768. 
+All pixel centers are located on <!-- MATH
+ $N_{\mathrm{ring}} = 4 \times N_{\mathrm{side}}- 1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.75ex; " SRC="intro_img8.png"
+ ALT="$N_{\mathrm{ring}} = 4 \times N_{\mathrm{side}}- 1$"></SPAN> rings of 
+constant latitude.
+Within each panel the areas of all pixels are identical.</CAPTION>
+<TR><TD>
+<DIV CLASS="centerline" ID="par4146" ALIGN="CENTER">
+<IMG
+  WIDTH="587" HEIGHT="582" STYLE=""
+ SRC="./introf1.png"
+ ALT="Image introf1"></DIV>
+
+<P></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="intro_Introduction.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_Geometric_Algebraic_Propert.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html101"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_Introduction.htm">Introduction</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_Geometric_Algebraic_Propert.htm">Geometric and Algebraic Properties of HEALPix</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

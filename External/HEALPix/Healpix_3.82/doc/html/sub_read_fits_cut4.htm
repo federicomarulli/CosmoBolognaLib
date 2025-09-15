@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>read_fits_cut4</TITLE>
+<META NAME="description" CONTENT="read_fits_cut4">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_read_fits_partial.htm">
+<LINK REL="previous" HREF="sub_read_dbintab.htm">
+<LINK REL="next" HREF="sub_read_fits_partial.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_read_dbintab.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_read_fits_partial.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html485"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_read_dbintab.htm">read_dbintab</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_read_fits_partial.htm">read_fits_partial</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION8900"></A>
+<A ID="sub:read_fits_cut4"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">read_fits_cut4</SPAN></div><hr>
+<H3>This routine reads a cut sky <strong>HEALPix</strong> map from a FITS file. The format used for the
+FITS file follows the one used for Boomerang98 and is adapted from COBE/DMR</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/fitstools.F90"><strong>src/f90/mod/fitstools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">read_fits_cut4</SPAN>(
+<A HREF="#sub:read_fits_cut4:filename">filename</A>, <A HREF="#sub:read_fits_cut4:np">np</A>, <A HREF="#sub:read_fits_cut4:pixel">pixel</A>, <i><font color="#224422">[<A HREF="#sub:read_fits_cut4:signal">signal</A>, <A HREF="#sub:read_fits_cut4:n_obs">n_obs</A>, <A HREF="#sub:read_fits_cut4:serror">serror</A>, <A HREF="#sub:read_fits_cut4:header">header</A>, <A HREF="#sub:read_fits_cut4:units">units</A>, <A HREF="#sub:read_fits_cut4:extno">extno</A>]</font></i>
+)</h3></blockquote>
+Arguments appearing in <i><font color="#224422">italic</font></i> are
+optional.
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&amp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:250px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+filename<A ID="sub:read_fits_cut4:filename"></A>(LEN=<kbd>filenamelen</kbd>)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">FITS file to be read from,
+                   containing a cut sky map</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">np<A ID="sub:read_fits_cut4:np"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">number of pixels to be read from the file</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">pixel<A ID="sub:read_fits_cut4:pixel"></A>(0:np-1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">index of observed (or valid) pixels</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">signal<A ID="sub:read_fits_cut4:signal"></A></font></i>(0:np-1)(OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">value of signal in each observed pixel</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">n_obs<A ID="sub:read_fits_cut4:n_obs"></A></font></i>(0:np-1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">number of observation per pixel</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">serror<A ID="sub:read_fits_cut4:serror"></A></font></i>(0:np-1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px"><EM>rms</EM> of signal in pixel. (For white noise,
+                   this would be <!-- MATH
+ $\propto 1/\sqrt{{\rm n\_obs}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.68ex; " SRC="sub_img267.png"
+ ALT="$\propto 1/\sqrt{{\rm n\_obs}}$"></SPAN>)</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">header<A ID="sub:read_fits_cut4:header"></A></font></i>(LEN=80)(1:)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">FITS extension header</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">units<A ID="sub:read_fits_cut4:units"></A></font></i>(LEN=20)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">maps units (applies only to
+                   Signal and Serror, which are assumed to have the same units)</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">extno<A ID="sub:read_fits_cut4:extno"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">extension number (0 based) for which map
+             is read. Default = 0 (first extension).</TD>
+</TR>
+</TABLE>
+
+<P>
+
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">read_fits_cut4</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">fitstools</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B>printerror</B>
+<DD>routine for printing FITS error messages.
+  <DT>
+<B><SPAN  CLASS="textbf">cfitsio</SPAN></B>
+<DD>library for FITS file handling.		
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">read_fits_cut4</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>anafast</B>
+<DD>executable that reads a <strong>HEALPix</strong> map and analyses it. 
+  <DT>
+<B>synfast</B>
+<DD>executable that generate full sky <strong>HEALPix</strong> maps
+  <DT>
+<B><A HREF="sub_getsize_fits.htm#sub:getsize_fits">getsize_fits</A></B>
+<DD>routine to know the size of a FITS file and its type (eg, full sky vs cut sky)
+  <DT>
+<B><A HREF="sub_input_map.htm#sub:input_map">input_map</A></B>
+<DD>all purpose routine to input a map of any kind from a FITS file
+  <DT>
+<B><A HREF="sub_output_map.htm#sub:output_map">output_map</A></B>
+<DD>subroutine to write a FITS file from a <strong>HEALPix</strong> map
+  <DT>
+<B><A HREF="sub_write_fits_cut4.htm#sub:write_fits_cut4">write_fits_cut4</A></B>
+<DD>subroutine to write a cut sky map into a FITS file
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_read_dbintab.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_read_fits_partial.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html485"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_read_dbintab.htm">read_dbintab</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_read_fits_partial.htm">read_fits_partial</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>ud_grade</TITLE>
+<META NAME="description" CONTENT="ud_grade">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_unfold_weights.htm">
+<LINK REL="previous" HREF="idl_template_pixel_nest_templat.htm">
+<LINK REL="next" HREF="idl_unfold_weights.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_template_pixel_nest_templat.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_unfold_weights.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html451"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_template_pixel_nest_templat.htm">template_pixel_nest &amp; template_pixel_ring</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_unfold_weights.htm">unfold_weights</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION7100"></A>
+<A ID="idl:ud_grade"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">ud_grade</SPAN></div><hr>
+<H3>This IDL facility provides a means to upgrade/degrade or reorder a full
+sky or cut-sky <strong>HEALPix</strong> map contained in a FITS file or loaded in memory.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/toolkit/ud_grade.pro"><strong>src/idl/toolkit/ud_grade.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+UD_GRADE, 
+<A HREF="#idl:ud_grade:map_in">Map_in</A>, 
+<A HREF="#idl:ud_grade:map_out">Map_out</A> [, 
+<A HREF="#idl:ud_grade:bad_data">BAD_DATA</A>=, 
+<A HREF="#idl:ud_grade:help">HELP</A>=, 
+<A HREF="#idl:ud_grade:nside_out">NSIDE_OUT</A>=, 
+<A HREF="#idl:ud_grade:order_in">ORDER_IN</A>=, 
+<A HREF="#idl:ud_grade:order_out">ORDER_OUT</A>=, 
+<A HREF="#idl:ud_grade:pessimistic">/PESSIMISTIC</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>Map_in</B>
+<DD><A ID="idl:ud_grade:map_in"></A> input map: either a character
+string with the name of a FITS file containing a full-sky or cut-sky Healpix
+data set, 
+      or a memory vector (real, integer, ...) containing a <EM>full sky</EM> data
+      set.
+    <DT>
+<B>Map_out</B>
+<DD><A ID="idl:ud_grade:map_out"></A> reordered map: if map_in was a filename, map_out should be
+    a filename, otherwise map_out should point to a memory array
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>BAD_DATA =</B>
+<DD><A ID="idl:ud_grade:bad_data"></A>flag value of missing pixels.
+          <b>default:</b><SPAN style="font-family:monospace">!healpix.bad_value</SPAN> <!-- MATH
+ $\equiv -1.6375\ 10^{30}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.29ex; " SRC="idl_img114.png"
+ ALT="$\equiv -1.6375\ 10^{30}$"></SPAN>.
+    <DT>
+<B>/HELP</B>
+<DD><A ID="idl:ud_grade:help"></A>if set, the documentation header is printed out and the code exits
+    <DT>
+<B>NSIDE_OUT =</B>
+<DD><A ID="idl:ud_grade:nside_out"></A>output resolution parameter, can be
+    larger or smaller than the input one (scalar integer).
+	 <b>default:</b>same as input: map unchanged or simply reordered
+    <DT>
+<B>ORDER_IN =</B>
+<DD><A ID="idl:ud_grade:order_in"></A>input map ordering (either 'RING' or 'NESTED')
+	<b>default:</b>same as the input FITS keyword ORDERING if applicable.
+    <DT>
+<B>ORDER_OUT =</B>
+<DD><A ID="idl:ud_grade:order_out"></A>output map ordering (either 'RING' or 'NESTED')
+	<b>default:</b>same as ORDER_IN.
+    <DT>
+<B>/PESSIMISTIC</B>
+<DD><A ID="idl:ud_grade:pessimistic"></A><IMG
+ STYLE="height: 21.86ex; vertical-align: -10.43ex; " SRC="idl_img122.png"
+ ALT="$\textstyle \parbox{0.5\hsize}{if set, during {\bf degradation} each big pixel c...
+...ast one good pixel
+is considered as good (optimistic)
+default = 0 (:not set)}$"></DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+ud_grade can upgrade/degrade a <strong>HEALPix</strong> map using the hierarchical
+properties of <strong>HEALPix</strong>. It can also reorder a sky map (from NEST to RING and
+vice-versa). It operates on FITS files as well as on memory variables. Cut-sky
+operations are only accessible via FITS files.
+The degradation/upgradation is done assuming an
+intensive quantity (like temperature) that does not scale with surface area. 
+In case of degradation a big pixel that contains at least one bad small pixel is
+considered as bad itself. When operating on FITS files, the header information
+from the input file that is not directly related the ordering/resolution is
+copied unchanged into the output file.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">ud_grade</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run ud_grade.
+    <DT>
+<B><A HREF="idl_reorder.htm#idl:reorder">reorder</A></B>
+<DD>reorder a full sky Healpix map.
+  </DL>
+
+<P>
+<hr><H2>EXAMPLE # 1:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">ud_grade,  'map_512.fits', 'map_256.fits', nside_out = 256</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+ud_grade reads the FITS file map_512.fits (that allegedly contains a map with
+NSIDE=512), and write in the FITS file map_256.fits a map degraded to resolution 256, with
+the same ordering.
+</blockquote>
+<hr><H2>EXAMPLE # 2:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">ud_grade,  'map_512.fits', 'map_Nest256.fits', nside_out = 256, $</TD>
+</TR>
+<TR><TD CLASS="LEFT">order_out = 'NESTED'</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+ud_grade reads the FITS file map_512.fits (that allegedly contains a map with
+NSIDE=512), 
+and writes in the FITS file map_Nest256.fits a map degraded to resolution 256,
+with NESTED ordering.
+</blockquote>
+<hr><H2>EXAMPLE # 3:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT"><A HREF="idl_read_fits_map.htm#idl:read_fits_map">read_fits_map</A>, 'map_Nest256.fits', mymap</TD>
+</TR>
+<TR><TD CLASS="LEFT">ud_grade,  mymap, mymap2, nside_out = 1024, order_in='NESTED', order_out='RING'</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+mymap is IDL variable containing a <strong>HEALPix</strong> NESTED-ordered map with resolution nside=256.
+ud_grade upgrades this map to a resolution of 1024, reorder it to RING and write
+it in the IDL vector mymap2.
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_template_pixel_nest_templat.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_unfold_weights.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html451"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_template_pixel_nest_templat.htm">template_pixel_nest &amp; template_pixel_ring</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_unfold_weights.htm">unfold_weights</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

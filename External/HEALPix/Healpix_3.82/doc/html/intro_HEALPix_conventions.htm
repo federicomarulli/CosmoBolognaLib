@@ -1,0 +1,1936 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>HEALPix conventions</TITLE>
+<META NAME="description" CONTENT="HEALPix conventions">
+<META NAME="keywords" CONTENT="intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="intro.css">
+
+<LINK REL="next" HREF="intro_Pixel_window_functions.htm">
+<LINK REL="previous" HREF="intro_HEALPix_Software_Package.htm">
+<LINK REL="next" HREF="intro_Pixel_window_functions.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="intro_HEALPix_Software_Package.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_Pixel_window_functions.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html111"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_HEALPix_Software_Package.htm">The HEALPix Software Package</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_Pixel_window_functions.htm">Pixel window functions</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A ID="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A ID="tex2html113"
+  HREF="intro_HEALPix_conventions.htm#SECTION610">Angular power spectrum conventions</A>
+<LI><A ID="tex2html114"
+  HREF="intro_HEALPix_conventions.htm#SECTION620"><strong>HEALPix</strong> and Boltzmann codes</A>
+<UL>
+<LI><A ID="tex2html115"
+  HREF="intro_HEALPix_conventions.htm#SECTION621">CMBFAST</A>
+<LI><A ID="tex2html116"
+  HREF="intro_HEALPix_conventions.htm#SECTION622">CAMB and CLASS</A>
+</UL>
+<BR>
+<LI><A ID="tex2html117"
+  HREF="intro_HEALPix_conventions.htm#SECTION630">Polarisation convention</A>
+<UL>
+<LI><A ID="tex2html118"
+  HREF="intro_HEALPix_conventions.htm#SECTION631">Internal convention</A>
+<LI><A ID="tex2html119"
+  HREF="intro_HEALPix_conventions.htm#SECTION632">Relation to previous releases</A>
+<LI><A ID="tex2html120"
+  HREF="intro_HEALPix_conventions.htm#SECTION633">Relation with IAU convention</A>
+<LI><A ID="tex2html121"
+  HREF="intro_HEALPix_conventions.htm#SECTION634">How <strong>HEALPix</strong> deals with these discrepancies: <SPAN  CLASS="texttt">POLCCONV</SPAN> keyword</A>
+</UL>
+<BR>
+<LI><A ID="tex2html122"
+  HREF="intro_HEALPix_conventions.htm#SECTION640">Spherical harmonic conventions</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A ID="SECTION600"></A>
+<A ID="sec:conventions"></A>
+<BR>
+<strong>HEALPix</strong> conventions
+</H1>A bandlimited function <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img35.png"
+ ALT="$f$"></SPAN> on the sphere can
+be expanded in spherical harmonics, <!-- MATH
+ $Y_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img36.png"
+ ALT="$Y_{\ell m}$"></SPAN>,
+as
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:alms"></A><!-- MATH
+ \begin{equation}
+f({ \gamma}) = \sum_{\ell =0}^{\ell_{\mathrm{max}}}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),%%%  f({ \gamma})&\myequal&\sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 6.06ex; vertical-align: -2.66ex; " SRC="intro_img37.png"
+ ALT="$\displaystyle f({ \gamma}) = \sum_{\ell =0}^{\ell_{\mathrm{max}}}\sum_{m}a_{\el...
+... \gamma})&amp;\myequal&amp;\sum_{\ell =0}^{\lmax}\sum_{m}a_{\ell m}Y_{\ell m}(\gamma),
+$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">4</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+where <!-- MATH
+ ${{\gamma}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.55ex; " SRC="intro_img38.png"
+ ALT="${{\gamma}}$"></SPAN> denotes a unit vector pointing at polar angle <!-- MATH
+ $\theta\in[0,\pi]$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img39.png"
+ ALT="$\theta\in[0,\pi]$"></SPAN> and
+azimuth <!-- MATH
+ $\phi\in[0,2\pi)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img40.png"
+ ALT="$\phi\in[0,2\pi)$"></SPAN>. Here we have assumed that there is insignificant signal power in modes
+with <!-- MATH
+ $\ell>\ell_{\mathrm{max}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img41.png"
+ ALT="$\ell&gt;\ell_{\mathrm{max}}$"></SPAN> and introduce the  notation that all sums over <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="intro_img42.png"
+ ALT="$m$"></SPAN> run from
+<!-- MATH
+ $-\ell_{\mathrm{max}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img43.png"
+ ALT="$-\ell_{\mathrm{max}}$"></SPAN> to <!-- MATH
+ $\ell_{\mathrm{max}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img44.png"
+ ALT="$\ell_{\mathrm{max}}$"></SPAN> but all quantities with index <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img45.png"
+ ALT="${\ell m}$"></SPAN> vanish
+for <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.16ex; " SRC="intro_img46.png"
+ ALT="$m&gt;\ell$"></SPAN>. Our conventions for <!-- MATH
+ $Y_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img36.png"
+ ALT="$Y_{\ell m}$"></SPAN> are defined in subsection
+<A HREF="#sphericalstuff">A.4</A> below.
+The spherical harmomics coefficients are then
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:alms_def"></A><!-- MATH
+ \begin{equation}
+a_{\ell m} \equiv \int d\gamma Y^\ast_{\ell m}(\gamma) f(\gamma),
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 4.31ex; vertical-align: -1.67ex; " SRC="intro_img47.png"
+ ALT="$\displaystyle a_{\ell m} \equiv \int d\gamma Y^\ast_{\ell m}(\gamma) f(\gamma),$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">5</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+where, the integral is done over the whole sphere, 
+and the superscript star denotes complex  conjugation.
+
+<P>
+Pixelating <!-- MATH
+ $f({\gamma})$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img48.png"
+ ALT="$f({\gamma})$"></SPAN> corresponds to sampling it at <!-- MATH
+ $N_{\mathrm{pix}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.75ex; " SRC="intro_img5.png"
+ ALT="$N_{\mathrm{pix}}$"></SPAN>
+ locations <!-- MATH
+ $\gamma_{p}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.75ex; vertical-align: -0.75ex; " SRC="intro_img49.png"
+ ALT="$\gamma_{p}$"></SPAN>, <!-- MATH
+ $p\in[0,N_{\mathrm{pix}}-1]$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.75ex; " SRC="intro_img50.png"
+ ALT="$p\in[0,N_{\mathrm{pix}}-1]$"></SPAN>. The sample
+function values <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.75ex; " SRC="intro_img51.png"
+ ALT="$f_p$"></SPAN> can then be used  
+to estimate  <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="intro_img52.png"
+ ALT="$a_{\ell m}$"></SPAN>.
+A straightforward estimator is
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:hata"></A><!-- MATH
+ \begin{equation}
+\hat{a}_{\ell m} = \frac{4\pi}{N_{\mathrm{pix}}}\sum_{p=0}^{N_{\mathrm{pix}}-1}
+  Y^\ast_{\ell m}(\gamma_p) f(\gamma_p),
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 6.47ex; vertical-align: -2.88ex; " SRC="intro_img53.png"
+ ALT="$\displaystyle \hat{a}_{\ell m} = \frac{4\pi}{N_{\mathrm{pix}}}\sum_{p=0}^{N_{\mathrm{pix}}-1}
+Y^\ast_{\ell m}(\gamma_p) f(\gamma_p),$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">6</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+where an equal weight was assumed for each pixel. This
+zeroth order estimator, as well as  higher order  estimators, are implemented in various
+Fortran90, C++, IDL, and python facilities included in the package, 
+such as <A HREF="./fac_anafast.htm#fac:anafast"><SPAN  CLASS="texttt">anafast</SPAN></A> or <SPAN  CLASS="texttt">anafast_cxx</SPAN>.
+
+<P>
+
+<H2><A ID="SECTION610">
+Angular power spectrum conventions</A>
+</H2>
+These <!-- MATH
+ $\hat{a}_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img54.png"
+ ALT="$\hat{a}_{\ell m}$"></SPAN> can be used to compute estimates of the angular power spectrum
+ <!-- MATH
+ $\hat{C}_\ell$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.45ex; " SRC="intro_img55.png"
+ ALT="$\hat{C}_\ell$"></SPAN> as 
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:hatC"></A><!-- MATH
+ \begin{equation}
+\hat{C}_\ell =\frac{1}{2\ell +1}\sum_{m} \vert\hat{a}_{\ell m}\vert^2.
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.30ex; vertical-align: -2.42ex; " SRC="intro_img56.png"
+ ALT="$\displaystyle \hat{C}_\ell =\frac{1}{2\ell +1}\sum_{m} \vert\hat{a}_{\ell m}\vert^2.$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">7</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+Equations (<A HREF="#eq:hata">6</A>) and (<A HREF="#eq:hatC">7</A>) above do not consider the impact of a pixel masking or weighting 
+<!-- MATH
+ $f(\gamma_p) \longrightarrow f(\gamma_p) w(\gamma_p)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.75ex; " SRC="intro_img57.png"
+ ALT="$f(\gamma_p) \longrightarrow f(\gamma_p) w(\gamma_p)$"></SPAN> 
+on the power spectrum estimation of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img35.png"
+ ALT="$f$"></SPAN>, which is described in 
+<A
+ HREF="intro_Bibliography.htm#whg2001">Wandelt, Hivon &amp; G&#243;rski (2001)</A>
+and addressed in
+<A
+ HREF="intro_Bibliography.htm#master">Hivon et&nbsp;al. (2002)</A>, <A
+ HREF="intro_Bibliography.htm#polspice">Chon et&nbsp;al. (2004)</A>, <A
+ HREF="intro_Bibliography.htm#xspect">Tristram et&nbsp;al. (2005)</A>, <A
+ HREF="intro_Bibliography.htm#xfaster">Rocha et&nbsp;al. (2009)</A> and
+<A
+ HREF="intro_Bibliography.htm#planck2015-11">Planck 2015-XI (2015)</A>
+among others.
+
+<P>
+The <strong>HEALPix</strong> package contains the Fortran90 facility 
+<A HREF="./fac_synfast.htm#fac:synfast"><SPAN  CLASS="texttt">synfast</SPAN></A>, 
+which takes as input a power spectrum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img58.png"
+ ALT="$C_\ell$"></SPAN> and generates a realisation of
+<!-- MATH
+ $f(\gamma_p)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.75ex; " SRC="intro_img59.png"
+ ALT="$f(\gamma_p)$"></SPAN>
+on the <strong>HEALPix</strong> grid.  The convention for power spectrum input into
+<SPAN  CLASS="texttt">synfast</SPAN> is straightforward: each <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img58.png"
+ ALT="$C_\ell$"></SPAN> is just the expected
+variance of the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="intro_img52.png"
+ ALT="$a_{\ell m}$"></SPAN> at that <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img60.png"
+ ALT="$\ell$"></SPAN>. 
+
+<P>
+<BLOCKQUOTE>
+<SPAN  CLASS="textbf">Example</SPAN>: The spherical harmonic coefficient <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="intro_img61.png"
+ ALT="$a_{00}$"></SPAN> is the
+integral of the <!-- MATH
+ $f(\gamma)/\sqrt{4 \pi}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.68ex; " SRC="intro_img62.png"
+ ALT="$f(\gamma)/\sqrt{4 \pi}$"></SPAN> over the sphere. To 
+obtain realisations of functions which have <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="intro_img61.png"
+ ALT="$a_{00}$"></SPAN> distributed as a Gaussian
+with zero mean and variance 1, set <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img63.png"
+ ALT="$C_0$"></SPAN> to 1.  The value of the
+synthesised function at each pixel will
+be Gaussian distributed with mean zero and variance <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img64.png"
+ ALT="$1/(4\pi)$"></SPAN>. 
+As required,  the integral of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img65.png"
+ ALT="$f(\gamma)$"></SPAN> over the full <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="intro_img66.png"
+ ALT="$4\pi$"></SPAN>
+solid angle of the sphere has zero mean and variance <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="intro_img66.png"
+ ALT="$4\pi$"></SPAN>. 
+
+</BLOCKQUOTE>
+Note that this definition implies the standard result that the total power
+at the angular wavenumber <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img60.png"
+ ALT="$\ell$"></SPAN> is <!-- MATH
+ $(2\ell+1)C_\ell$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img67.png"
+ ALT="$(2\ell+1)C_\ell$"></SPAN>, because there are
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.81ex; vertical-align: -0.28ex; " SRC="intro_img68.png"
+ ALT="$2\ell+1$"></SPAN> modes for each  <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img60.png"
+ ALT="$\ell$"></SPAN>. 
+
+<P>
+This defines unambiguously how the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img58.png"
+ ALT="$C_\ell$"></SPAN> have to be defined given the
+units of the physical  quantity <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img35.png"
+ ALT="$f$"></SPAN>. In  cosmic
+microwave background research,
+popular choices for simulated maps are 
+
+<UL>
+<LI><!-- MATH
+ $\Delta T/T$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img69.png"
+ ALT="$\Delta T/T $"></SPAN>, a dimensionless quantity measuring relative
+fluctuations about the average CMB temperature.
+</LI>
+<LI>The absolute quantity <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img70.png"
+ ALT="$\Delta T$"></SPAN> in <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.16ex; vertical-align: -0.55ex; " SRC="intro_img71.png"
+ ALT="$\mu K$"></SPAN> or <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.63ex; vertical-align: -0.10ex; " SRC="intro_img72.png"
+ ALT="$K$"></SPAN>.
+</LI>
+</UL>
+
+<P>
+
+<H2><A ID="SECTION620">
+<strong>HEALPix</strong> and Boltzmann codes</A>
+</H2>
+
+<H3><A ID="SECTION621"></A>
+<A ID="subsec:cmbfast"></A>
+<BR>
+CMBFAST
+</H3>
+A widely used  solver of the Boltzmann equations for the computation
+of theoretical predictions of the spectrum of CMB anisotropy used to be CMBFAST
+(<kbd><A ID="tex2html18"
+  HREF="https://lambda.gsfc.nasa.gov/toolbox/tb_cmbfast_ov.cfm">https://lambda.gsfc.nasa.gov/toolbox/tb_cmbfast_ov.cfm</A></kbd>).
+
+<P>
+CMBFAST made its outputs in ASCII files, which instead
+of <!-- MATH
+ $C_{X,\ell}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.27ex; vertical-align: -0.75ex; " SRC="intro_img73.png"
+ ALT="$C_{X,\ell}$"></SPAN> contain quantities defined as
+<P></P>
+<DIV CLASS="mathdisplay"><!-- MATH
+ \begin{equation}
+D_{X,\ell} = \frac{\ell(\ell+1)}{(2\pi)T_{CMB}^2}C_{X,\ell},
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.54ex; vertical-align: -2.27ex; " SRC="intro_img74.png"
+ ALT="$\displaystyle D_{X,\ell} = \frac{\ell(\ell+1)}{(2\pi)T_{CMB}^2}C_{X,\ell},$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">8</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+where <!-- MATH
+ $T_{CMB}=2.726K$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img75.png"
+ ALT="$T_{CMB}=2.726K$"></SPAN> is the temperature of the CMB today and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.63ex; vertical-align: -0.10ex; " SRC="intro_img76.png"
+ ALT="$X$"></SPAN> stands for T,
+E, B or C (see &sect;&nbsp;<A HREF="#subsec:pol">A.3</A>).  
+
+<P>
+The version 4.0 of CMBFAST also created a FITS file containing the power spectra
+<!-- MATH
+ $C_{X,\ell}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.27ex; vertical-align: -0.75ex; " SRC="intro_img73.png"
+ ALT="$C_{X,\ell}$"></SPAN>, designed for interface with <strong>HEALPix</strong>. The spectra for polarization were renormalized to match the
+normalization used in <strong>HEALPix</strong>&nbsp;1.1, which was different from the one used by
+CMBFAST and by <strong>HEALPix</strong>&nbsp;1.2 (see &sect;&nbsp;<A HREF="#subsub:relatoldversion">A.3.2</A> for details).
+
+<P>
+A later version of CMBFAST (4.2, released in Feb. 2003) generated FITS files containing
+<!-- MATH
+ $C_{X,\ell}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.27ex; vertical-align: -0.75ex; " SRC="intro_img73.png"
+ ALT="$C_{X,\ell}$"></SPAN>, with the same convention for polarization as the one used
+internally. It therefore matches the convention adopted by <strong>HEALPix</strong> in its
+version 1.2.
+
+<P>
+For backward compatibility, we provide an IDL code 
+(<A HREF="./idl_convert_oldhpx2cmbfast.htm#idl:convert_oldhpx2cmbfast"><SPAN  CLASS="texttt">convert_oldhpx2cmbfast</SPAN></A>) 
+to change the normalization of existing FITS files created with CMBFAST 4.0. 
+When created with the correct normalization (with CMBFAST 4.2)
+or set to the correct normalization (using <SPAN  CLASS="texttt">convert_oldhpx2cmbfast</SPAN>), the FITS file will include a
+specific keyword (<SPAN  CLASS="texttt">POLNORM = CMBFAST</SPAN>) in their header to identify them.
+The map simulation code 
+<A HREF="./fac_synfast.htm#fac:synfast"><SPAN  CLASS="texttt">synfast</SPAN></A>
+will issue a warning if the input power
+spectrum file does not contain the keyword <SPAN  CLASS="texttt">POLNORM</SPAN>, but no attempt will
+be made to renormalize the power spectrum. If the keyword is present, it will be
+inherited by the simulated map.
+
+<P>
+
+<H3><A ID="SECTION622">
+CAMB and CLASS</A>
+</H3>
+Newer and actively maintained Boltzmann codes currently include 
+<SPAN  CLASS="texttt">camb</SPAN> and <SPAN  CLASS="texttt">class</SPAN>:
+
+<UL>
+<LI><SPAN  CLASS="texttt">camb</SPAN> (<kbd><A ID="tex2html19"
+  HREF="https://camb.info">https://camb.info</A></kbd>) 
+is written in Fortran 90 with a python wrapper, and can optionally output into FITS files 
+the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img77.png"
+ ALT="$C_X(\ell)$"></SPAN> power spectra in [K]<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.05ex; vertical-align: -0.10ex; " SRC="intro_img78.png"
+ ALT="$^2$"></SPAN> in a format directly usable by <strong>HEALPix</strong>;
+<BR></LI>
+<LI><SPAN  CLASS="texttt">class</SPAN> (<kbd><A ID="tex2html20"
+  HREF="http://class-code.net">http://class-code.net</A></kbd>) 
+is written in C and C++, and only outputs <!-- MATH
+ $\frac{\ell(\ell+1)}{2\pi}C_X(\ell)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 3.09ex; vertical-align: -0.90ex; " SRC="intro_img79.png"
+ ALT="$\frac{\ell(\ell+1)}{2\pi}C_X(\ell)$"></SPAN> in plain text files 
+(optionally in [<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.55ex; " SRC="intro_img80.png"
+ ALT="$\mu$"></SPAN>K]<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.05ex; vertical-align: -0.10ex; " SRC="intro_img78.png"
+ ALT="$^2$"></SPAN> and in a order of columns for polarized spectra matching the one of <SPAN  CLASS="texttt">camb</SPAN>).
+</LI>
+</UL>
+Both codes are parallelized for faster computations and provide fine control of the output accuracy.
+
+<P>
+
+<H2><A ID="SECTION630"></A>
+<A ID="subsec:pol"></A>
+<BR>
+Polarisation convention
+</H2>
+
+<P>
+
+<DIV class="CENTER"><A ID="fig:orthpol"></A><A ID="1078"></A>
+<TABLE>
+<CAPTION class="BOTTOM"><STRONG>Figure 4:</STRONG>
+Orthographic projection of a fake full sky for temperature (color
+coded) and polarization (represented by the rods). All the input Spherical
+Harmonics coefficients are set to 0, except for
+<!-- MATH
+ $a_{21}^{TEMP}=\ -\ a_{2-1}^{TEMP}=1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.83ex; " SRC="intro_img81.png"
+ ALT="$a_{21}^{TEMP}=\ -\ a_{2-1}^{TEMP}=1$"></SPAN> and
+<!-- MATH
+ $a_{21}^{GRAD}=\ -\ a_{2-1}^{GRAD}=1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.83ex; " SRC="intro_img82.png"
+ ALT="$a_{21}^{GRAD}=\ -\ a_{2-1}^{GRAD}=1$"></SPAN></CAPTION>
+<TR><TD>
+<DIV CLASS="centerline" ID="par4367" ALIGN="CENTER">
+<IMG
+  WIDTH="720" HEIGHT="450" STYLE=""
+ SRC="./plot_orthpolrot.png"
+ ALT="Image plot_orthpolrot"></DIV>
+ 
+<P></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<H3><A ID="SECTION631">
+Internal convention</A>
+</H3>
+Starting with version 1.20 (released in Feb 2003),<strong>HEALPix</strong> uses the same
+conventions as CMBFAST for the sign and normalization of the polarization power
+spectra, as exposed below (adapted from <A
+ HREF="intro_Bibliography.htm#zalda">Zaldarriaga (1998)</A>). How this relates to
+what was used in previous releases is exposed in&nbsp;<A HREF="#subsub:relatoldversion">A.3.2</A>.
+
+<P>
+<BLOCKQUOTE>
+<SPAN CLASS="FOOTNOTESIZE">The CMB radiation field is described by a <!-- MATH
+ $2\, \times \, 2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.29ex; " SRC="intro_img83.png"
+ ALT="$2\, \times \, 2$"></SPAN> 
+intensity tensor
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.75ex; " SRC="intro_img84.png"
+ ALT="$I_{ij}$"></SPAN>
+(<A
+ HREF="intro_Bibliography.htm#chandra">Chandrasekhar, 1960</A>). The Stokes parameters <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img85.png"
+ ALT="$Q$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img86.png"
+ ALT="$U$"></SPAN> are defined as 
+<!-- MATH
+ $Q=(I_{11}-I_{22})/4$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img87.png"
+ ALT="$Q=(I_{11}-I_{22})/4$"></SPAN> and <!-- MATH
+ $U=I_{12}/2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img88.png"
+ ALT="$U=I_{12}/2$"></SPAN>, while the temperature anisotropy 
+is given by <!-- MATH
+ $T=(I_{11}+I_{22})/4$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img89.png"
+ ALT="$T=(I_{11}+I_{22})/4$"></SPAN>. The fourth Stokes parameter <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img90.png"
+ ALT="$V$"></SPAN> that
+describes circular polarization is not necessary in standard cosmological 
+models because it cannot be generated through the process of Thomson 
+scattering. While the temperature is a scalar quantity <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img85.png"
+ ALT="$Q$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img86.png"
+ ALT="$U$"></SPAN> are
+not. They depend on the direction of observation <!-- MATH
+ $\textbf{n}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.05ex; vertical-align: -0.10ex; " SRC="intro_img91.png"
+ ALT="$\textbf{n}$"></SPAN>
+and on the two axis <!-- MATH
+ $(\textbf{e}_{1}, \textbf{e}_{2})$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img92.png"
+ ALT="$(\textbf{e}_{1}, \textbf{e}_{2})$"></SPAN> 
+perpendicular to <!-- MATH
+ $\textbf{n}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.05ex; vertical-align: -0.10ex; " SRC="intro_img91.png"
+ ALT="$\textbf{n}$"></SPAN> used to define them. If for a given 
+<!-- MATH
+ $\textbf{n}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.05ex; vertical-align: -0.10ex; " SRC="intro_img91.png"
+ ALT="$\textbf{n}$"></SPAN> the axes <!-- MATH
+ $(\textbf{e}_{1}, \textbf{e}_{2})$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img92.png"
+ ALT="$(\textbf{e}_{1}, \textbf{e}_{2})$"></SPAN> are rotated by an angle
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img93.png"
+ ALT="$\psi$"></SPAN> such that 
+<!-- MATH
+ ${\textbf{e}_{1}}^{\prime}=\cos \psi \ {\textbf{e}_{1}}+\sin\psi \ {\textbf{e}_{2}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.21ex; vertical-align: -0.55ex; " SRC="intro_img94.png"
+ ALT="${\textbf{e}_{1}}^{\prime}=\cos \psi \ {\textbf{e}_{1}}+\sin\psi \ {\textbf{e}_{2}} $"></SPAN> 
+and <!-- MATH
+ ${\textbf{e}_{2}}^{\prime}=-\sin \psi \ {\textbf{e}_{1}}+\cos\psi \ {\textbf{e}_{2}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.21ex; vertical-align: -0.55ex; " SRC="intro_img95.png"
+ ALT="${\textbf{e}_{2}}^{\prime}=-\sin \psi \ {\textbf{e}_{1}}+\cos\psi \ {\textbf{e}_{2}} $"></SPAN>
+the Stokes parameters change as
+</SPAN></BLOCKQUOTE><P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.55ex; " SRC="intro_img96.png"
+ ALT="$\displaystyle Q^{\prime}$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img97.png"
+ ALT="$\displaystyle = \cos 2\psi \ Q + \sin 2\psi \ U$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.10ex; " SRC="intro_img98.png"
+ ALT="$\displaystyle U^{\prime}$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img99.png"
+ ALT="$\displaystyle = -\sin 2\psi \ Q + \cos 2\psi \ U$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="QUtrans">(<SPAN CLASS="arabic">9</SPAN>)</A></TD></TR>
+</TABLE></DIV>
+<P></P><BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">
+</SPAN></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">To analyze the CMB temperature on the sky, it is natural to
+expand it in spherical harmonics. These are not appropriate 
+for polarization, because   
+the two combinations <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img100.png"
+ ALT="$Q\pm iU$"></SPAN> are quantities of spin <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.29ex; " SRC="intro_img101.png"
+ ALT="$\pm 2$"></SPAN>
+(<A
+ HREF="intro_Bibliography.htm#goldberg">Goldberg, 1967</A>). They 
+should be expanded in spin-weighted harmonics <!-- MATH
+ $\, _{\pm2}Y_l^m$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.27ex; vertical-align: -0.67ex; " SRC="intro_img102.png"
+ ALT="$\, _{\pm2}Y_l^m$"></SPAN> 
+(<A ID="tex2html123" target="contents"
+  HREF="intro_Bibliography.htm#longspin">Seljak &amp; Zaldarriaga, 1997</A>; <A ID="tex2html124" target="contents"
+  HREF="intro_Bibliography.htm#spinlong">Zaldarriaga&nbsp;&amp;&nbsp;Seljak, 1997</A>),
+</SPAN></BLOCKQUOTE><P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img103.png"
+ ALT="$\displaystyle T(\textbf{n})$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 4.37ex; vertical-align: -2.66ex; " SRC="intro_img104.png"
+ ALT="$\displaystyle = \sum_{lm} a_{T,lm} Y_{lm}(\textbf{n})$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img105.png"
+ ALT="$\displaystyle (Q+iU)(\textbf{n})$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 4.37ex; vertical-align: -2.66ex; " SRC="intro_img106.png"
+ ALT="$\displaystyle = \sum_{lm}
+a_{2,lm}\;_2Y_{lm}(\textbf{n})$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img107.png"
+ ALT="$\displaystyle (Q-iU)(\textbf{n})$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 4.37ex; vertical-align: -2.66ex; " SRC="intro_img108.png"
+ ALT="$\displaystyle = \sum_{lm}
+a_{-2,lm}\;_{-2}Y_{lm}(\textbf{n}).$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="Pexpansion">(<SPAN CLASS="arabic">10</SPAN>)</A></TD></TR>
+</TABLE></DIV>
+<P></P><BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">
+To perform this expansion, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img85.png"
+ ALT="$Q$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img86.png"
+ ALT="$U$"></SPAN> in equation (<A HREF="#Pexpansion">10</A>)
+are measured relative to <!-- MATH
+ $(\textbf{e}_{1}, \textbf{e}_{2})=(\textbf{e}_\theta , \textbf{e}_\phi )$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.75ex; " SRC="intro_img109.png"
+ ALT="$(\textbf{e}_{1}, \textbf{e}_{2})=(\textbf{e}_\theta , \textbf{e}_\phi )$"></SPAN>, the unit vectors of the spherical coordinate system.
+Where <!-- MATH
+ $\textbf{e}_\theta$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="intro_img110.png"
+ ALT="$\textbf{e}_\theta $"></SPAN> is tangent to the local meridian and directed from North
+to South, and <!-- MATH
+ $\textbf{e}_\phi$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.75ex; vertical-align: -0.75ex; " SRC="intro_img111.png"
+ ALT="$\textbf{e}_\phi $"></SPAN> is tangent to the local parallel, and directed from
+West to East.
+The coefficients <!-- MATH
+ $_{\pm 2}a_{lm}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.61ex; " SRC="intro_img112.png"
+ ALT="$_{\pm 2}a_{lm}$"></SPAN> 
+are observable on the sky and their power spectra
+can be 
+predicted for different cosmological models. Instead of <!-- MATH
+ $_{\pm 2}a_{lm}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.61ex; " SRC="intro_img112.png"
+ ALT="$_{\pm 2}a_{lm}$"></SPAN>
+it is convenient
+to use their linear combinations
+</SPAN></BLOCKQUOTE><P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.75ex; " SRC="intro_img113.png"
+ ALT="$\displaystyle a_{E,lm}$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.75ex; " SRC="intro_img114.png"
+ ALT="$\displaystyle = -(a_{2,lm}+a_{-2,lm})/2$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.75ex; " SRC="intro_img115.png"
+ ALT="$\displaystyle a_{B,lm}$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.75ex; " SRC="intro_img116.png"
+ ALT="$\displaystyle = -(a_{2,lm}-a_{-2,lm})/2i,$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">11</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P><BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">
+which transform differently 
+under parity.
+Four power spectra are needed to
+characterize fluctuations in a gaussian theory,
+the autocorrelation between 
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="intro_img117.png"
+ ALT="$T$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="intro_img118.png"
+ ALT="$E$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.63ex; vertical-align: -0.10ex; " SRC="intro_img119.png"
+ ALT="$B$"></SPAN> and the cross correlation of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="intro_img118.png"
+ ALT="$E$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="intro_img117.png"
+ ALT="$T$"></SPAN>.
+Because of parity considerations the cross-correlations
+between <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.63ex; vertical-align: -0.10ex; " SRC="intro_img119.png"
+ ALT="$B$"></SPAN> and the
+other quantities vanish and one is left with
+</SPAN></BLOCKQUOTE><P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.97ex; " SRC="intro_img120.png"
+ ALT="$\displaystyle \langle a_{X,lm}^{*}
+a_{X,lm^\prime}\rangle$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.75ex; " SRC="intro_img121.png"
+ ALT="$\displaystyle = \delta_{m,m^\prime}C_{Xl},$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.97ex; " SRC="intro_img122.png"
+ ALT="$\displaystyle \langle a_{T,lm}^{*}a_{E,lm}\rangle$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.75ex; " SRC="intro_img123.png"
+ ALT="$\displaystyle = \delta_{m,m^\prime}C_{Cl},$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="Cls">(<SPAN CLASS="arabic">12</SPAN>)</A></TD></TR>
+</TABLE></DIV>
+<P></P><BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">
+where
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.63ex; vertical-align: -0.10ex; " SRC="intro_img76.png"
+ ALT="$X$"></SPAN> stands for <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="intro_img117.png"
+ ALT="$T$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="intro_img118.png"
+ ALT="$E$"></SPAN> or <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.63ex; vertical-align: -0.10ex; " SRC="intro_img119.png"
+ ALT="$B$"></SPAN>, <!-- MATH
+ $\langle\cdots \rangle$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img124.png"
+ ALT="$\langle\cdots \rangle$"></SPAN>
+means ensemble average and <!-- MATH
+ $\delta_{i,j}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.75ex; " SRC="intro_img125.png"
+ ALT="$\delta_{i,j}$"></SPAN> is the Kronecker delta.  
+</SPAN></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">We can rewrite 
+equation (<A HREF="#Pexpansion">10</A>) as
+</SPAN></BLOCKQUOTE><P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img103.png"
+ ALT="$\displaystyle T(\textbf{n})$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 4.37ex; vertical-align: -2.66ex; " SRC="intro_img104.png"
+ ALT="$\displaystyle = \sum_{lm} a_{T,lm} Y_{lm}(\textbf{n})$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img126.png"
+ ALT="$\displaystyle Q(\textbf{n})$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 4.37ex; vertical-align: -2.66ex; " SRC="intro_img127.png"
+ ALT="$\displaystyle = -\sum_{lm} a_{E,lm} X_{1,lm}
++i a_{B,lm}X_{2,lm}$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img128.png"
+ ALT="$\displaystyle U(\textbf{n})$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 4.37ex; vertical-align: -2.66ex; " SRC="intro_img129.png"
+ ALT="$\displaystyle = -\sum_{lm} a_{B,lm} X_{1,lm}-i a_{E,lm} X_{2,lm}$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="Pexpansion2">(<SPAN CLASS="arabic">13</SPAN>)</A></TD></TR>
+</TABLE></DIV>
+<P></P><BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">
+where we have introduced
+<!-- MATH
+ $X_{1,lm}(\textbf{n})=(\;_2Y_{lm}+\;_{-2}Y_{lm})/2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.75ex; " SRC="intro_img130.png"
+ ALT="$X_{1,lm}(\textbf{n})=(\;_2Y_{lm}+\;_{-2}Y_{lm})/2$"></SPAN>
+and <!-- MATH
+ $X_{2,lm}(\textbf{n})=(\;_2Y_{lm}-\;_{-2}Y_{lm})/ 2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.75ex; " SRC="intro_img131.png"
+ ALT="$X_{2,lm}(\textbf{n})=(\;_2Y_{lm}-\;_{-2}Y_{lm})/ 2$"></SPAN>.
+They satisfy <!-- MATH
+ $Y^{*}_{lm} = (-1)^m Y_{l-m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.68ex; " SRC="intro_img132.png"
+ ALT="$Y^{*}_{lm} = (-1)^m Y_{l-m}$"></SPAN>, 
+<!-- MATH
+ $X^{*}_{1,lm}=(-1)^m X_{1,l-m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.97ex; " SRC="intro_img133.png"
+ ALT="$X^{*}_{1,lm}=(-1)^m X_{1,l-m}$"></SPAN> and 
+<!-- MATH
+ $X^*_{2,lm}=(-1)^{m+1}X_{2,l-m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.74ex; vertical-align: -0.97ex; " SRC="intro_img134.png"
+ ALT="$X^*_{2,lm}=(-1)^{m+1}X_{2,l-m}$"></SPAN> which
+together with <!-- MATH
+ $a_{T,lm}=(-1)^m a_{T,l-m}^*$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.97ex; " SRC="intro_img135.png"
+ ALT="$a_{T,lm}=(-1)^m a_{T,l-m}^*$"></SPAN>, <!-- MATH
+ $a_{E,lm}=(-1)^m a_{E,l-m}^*$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.97ex; " SRC="intro_img136.png"
+ ALT="$a_{E,lm}=(-1)^m a_{E,l-m}^*$"></SPAN> and
+<!-- MATH
+ $a_{B,lm}=(-1)^m a_{B,l-m}^*$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.97ex; " SRC="intro_img137.png"
+ ALT="$a_{B,lm}=(-1)^m a_{B,l-m}^*$"></SPAN> make <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="intro_img117.png"
+ ALT="$T$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img85.png"
+ ALT="$Q$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img86.png"
+ ALT="$U$"></SPAN> real.
+</SPAN></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">In fact <!-- MATH
+ $X_{1,lm}(\textbf{n})$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.75ex; " SRC="intro_img138.png"
+ ALT="$X_{1,lm}(\textbf{n})$"></SPAN> and <!-- MATH
+ $X_{2,lm}(\textbf{n})$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.75ex; " SRC="intro_img139.png"
+ ALT="$X_{2,lm}(\textbf{n})$"></SPAN> have the form,
+<!-- MATH
+ ${X_{1,lm}(\textbf{n})=\sqrt{(2l+1) / 4\pi} F_{1,lm}(\theta)\ e^{im\phi}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 3.56ex; vertical-align: -1.17ex; " SRC="intro_img140.png"
+ ALT="${X_{1,lm}(\textbf{n})=\sqrt{(2l+1) / 4\pi} F_{1,lm}(\theta)\ e^{im\phi}}$"></SPAN>
+and <!-- MATH
+ ${X_{2,lm}(\textbf{n})=\sqrt{(2l+1) / 4\pi} F_{2,lm}(\theta)\ e^{im\phi}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 3.56ex; vertical-align: -1.17ex; " SRC="intro_img141.png"
+ ALT="${X_{2,lm}(\textbf{n})=\sqrt{(2l+1) / 4\pi} F_{2,lm}(\theta)\ e^{im\phi}}$"></SPAN>, 
+<!-- MATH
+ ${F_{(1,2),lm}(\theta)}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.85ex; " SRC="intro_img142.png"
+ ALT="${F_{(1,2),lm}(\theta)}$"></SPAN> can be calculated in terms of Legendre
+polynomials (<A
+ HREF="intro_Bibliography.htm#kks">Kamionkowski et&nbsp;al., 1997</A>) 
+</SPAN></BLOCKQUOTE><P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.75ex; " SRC="intro_img143.png"
+ ALT="$\displaystyle F_{1,lm}(\theta)$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.83ex; vertical-align: -2.42ex; " SRC="intro_img144.png"
+ ALT="$\displaystyle = N_{lm}
+\left[ -\left({l-m^2 \over \sin^2\theta}
++{1 \over 2}l(l...
+...s \theta)
++(l+m) {\cos \theta \over \sin^2 \theta}
+P_{l-1}^m(\cos\theta)\right]$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.75ex; " SRC="intro_img145.png"
+ ALT="$\displaystyle F_{2,lm}(\theta)$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 4.25ex; vertical-align: -1.69ex; " SRC="intro_img146.png"
+ ALT="$\displaystyle = N_{lm}{m \over
+\sin^2 \theta}
+[ -(l-1)\cos \theta P_l^m(\cos \theta)+(l+m) P_{l-1}^m(\cos\theta)],$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="def:basis">(<SPAN CLASS="arabic">14</SPAN>)</A></TD></TR>
+</TABLE></DIV>
+<P></P><BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">
+where 
+</SPAN></BLOCKQUOTE><P></P>
+<DIV CLASS="mathdisplay"><!-- MATH
+ \begin{equation}
+N_{lm}(\theta) = 2 \sqrt{(l-2)!(l-m)! \over (l+2)!(l+m)!}.
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 7.05ex; vertical-align: -2.81ex; " SRC="intro_img147.png"
+ ALT="$\displaystyle N_{lm}(\theta) = 2 \sqrt{(l-2)!(l-m)! \over (l+2)!(l+m)!}.$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">15</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P><BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">
+Note that <!-- MATH
+ $F_{2,lm}(\theta)=0$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.75ex; " SRC="intro_img148.png"
+ ALT="$F_{2,lm}(\theta)=0$"></SPAN> if <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="intro_img149.png"
+ ALT="$m=0$"></SPAN>, as it  must to make the
+Stokes parameters real.
+</SPAN></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">The correlation functions between 2 points on the sky (noted 1 and 2) separated
+by an angle <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img150.png"
+ ALT="$\beta$"></SPAN> 
+can be calculated using equations (<A HREF="#Cls">12</A>) 
+and (<A HREF="#Pexpansion2">13</A>). However, as pointed out in <A
+ HREF="intro_Bibliography.htm#kks">Kamionkowski et&nbsp;al. (1997)</A>, the
+natural coordinate system to express the correlations is one in which
+<!-- MATH
+ $\textbf{e}_{1}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.40ex; vertical-align: -0.45ex; " SRC="intro_img151.png"
+ ALT="$\textbf{e}_{1}$"></SPAN> vectors at each point are tangent to the great circle
+connecting these 2 points, with the <!-- MATH
+ $\textbf{e}_{2}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.40ex; vertical-align: -0.45ex; " SRC="intro_img152.png"
+ ALT="$\textbf{e}_{2}$"></SPAN> vectors being perpendicular to
+the <!-- MATH
+ $\textbf{e}_{1}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.40ex; vertical-align: -0.45ex; " SRC="intro_img151.png"
+ ALT="$\textbf{e}_{1}$"></SPAN> vectors.  With this choice of reference frames, and using 
+the addition theorem for the spin harmonics (<A
+ HREF="intro_Bibliography.htm#primer">Hu &amp; White, 1997</A>),
+</SPAN></BLOCKQUOTE><P></P>
+<DIV CLASS="mathdisplay"><A ID="addtheo"></A><!-- MATH
+ \begin{equation}
+\sum_m \;_{s_1} Y_{lm}^*(\textbf{n}_1)
+\;_{s_2} Y_{lm}(\textbf{n}_2) = \sqrt{2l+1 \over 4 \pi} 
+\;_{s_2} Y_{l-s_1}(\beta,\psi_1)e^{-is_2\psi_2}  
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 6.12ex; vertical-align: -2.42ex; " SRC="intro_img153.png"
+ ALT="$\displaystyle \sum_m \;_{s_1} Y_{lm}^*(\textbf{n}_1)
+\;_{s_2} Y_{lm}(\textbf{n}_2) = \sqrt{2l+1 \over 4 \pi}
+\;_{s_2} Y_{l-s_1}(\beta,\psi_1)e^{-is_2\psi_2}$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">16</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P><BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">
+</SPAN></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">we have (<A
+ HREF="intro_Bibliography.htm#kks">Kamionkowski et&nbsp;al., 1997</A>)
+</SPAN></BLOCKQUOTE><P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img154.png"
+ ALT="$\displaystyle \langle T_1T_2 \rangle$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.65ex; vertical-align: -2.66ex; " SRC="intro_img155.png"
+ ALT="$\displaystyle = \sum_l {2l+1 \over 4 \pi}
+C_{Tl} P_l(\cos \beta)$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img156.png"
+ ALT="$\displaystyle \langle Q_{r}(1)Q_{r}(2) \rangle$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.65ex; vertical-align: -2.66ex; " SRC="intro_img157.png"
+ ALT="$\displaystyle = \sum_l {2l+1 \over 4 \pi} [C_{El}
+F_{1,l2}(\beta)-C_{Bl} F_{2,l2}(\beta)]$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img158.png"
+ ALT="$\displaystyle \langle U_{r}(1)U_{r}(2) \rangle$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.65ex; vertical-align: -2.66ex; " SRC="intro_img159.png"
+ ALT="$\displaystyle = \sum_l {2l+1 \over 4 \pi}
+[C_{Bl} F_{1,l2}(\beta)-C_{El} F_{2,l2}(\beta) ]$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img160.png"
+ ALT="$\displaystyle \langle T(1)Q_{r}(2)
+\rangle$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.65ex; vertical-align: -2.66ex; " SRC="intro_img161.png"
+ ALT="$\displaystyle = - \sum_l {2l+1 \over 4 \pi} C_{Cl} F_{1,l0}(\beta)$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img162.png"
+ ALT="$\displaystyle \langle T(1)U_{r}(2) \rangle$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="intro_img163.png"
+ ALT="$\displaystyle = 0.$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="QUr">(<SPAN CLASS="arabic">17</SPAN>)</A></TD></TR>
+</TABLE></DIV>
+<P></P><BLOCKQUOTE><SPAN CLASS="FOOTNOTESIZE">
+The subscript <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="intro_img164.png"
+ ALT="$r$"></SPAN> 
+here indicate that the Stokes parameters are measured in this
+particular coordinate system.
+We can use the transformation laws in equation (<A HREF="#QUtrans">9</A>)
+to write <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img165.png"
+ ALT="$(Q,U)$"></SPAN> in terms of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img166.png"
+ ALT="$(Q_r,U_r)$"></SPAN>.
+</SPAN>
+</BLOCKQUOTE><P>
+Using the fact that, when <!-- MATH
+ $\beta \rightarrow 0$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img167.png"
+ ALT="$\beta \rightarrow 0$"></SPAN>, <!-- MATH
+ $P_\ell(\cos\beta) \rightarrow 1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img168.png"
+ ALT="$P_\ell(\cos\beta) \rightarrow 1$"></SPAN> and <!-- MATH
+ $P_\ell^2(\cos
+\beta) \rightarrow \sin^2 \beta \frac{(\ell+2)!}{8 (\ell-2)!}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 3.50ex; vertical-align: -1.28ex; " SRC="intro_img169.png"
+ ALT="$P_\ell^2(\cos
+\beta) \rightarrow \sin^2 \beta \frac{(\ell+2)!}{8 (\ell-2)!}$"></SPAN>, 
+the definitions above imply that the variances of the temperature and
+polarization are related to the power spectra by
+<P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img170.png"
+ ALT="$\displaystyle \langle TT \rangle$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.65ex; vertical-align: -2.66ex; " SRC="intro_img171.png"
+ ALT="$\displaystyle = \sum_\ell {2\ell+1 \over 4 \pi}
+C_{T\ell}$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img172.png"
+ ALT="$\displaystyle \langle QQ \rangle + \langle UU\rangle$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.65ex; vertical-align: -2.66ex; " SRC="intro_img173.png"
+ ALT="$\displaystyle = \sum_l {2\ell+1 \over 4 \pi} \left(C_{E\ell}
++C_{B\ell}\right)$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img174.png"
+ ALT="$\displaystyle \langle TQ\rangle = \langle TU\rangle$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="intro_img163.png"
+ ALT="$\displaystyle = 0.$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="var">(<SPAN CLASS="arabic">18</SPAN>)</A></TD></TR>
+</TABLE></DIV>
+<P></P>
+
+<P>
+It is also worth noting that with these conventions, the cross power <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img175.png"
+ ALT="$C_{C\ell}$"></SPAN>
+for scalar perturbations
+must be positive at low <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img60.png"
+ ALT="$\ell$"></SPAN>, in order to produce <EM>at large scales</EM> a radial pattern of
+polarization around cold temperature spots (and a tangential pattern around hot
+spots) as it is expected from scalar perturbations (<A
+ HREF="intro_Bibliography.htm#crco">Crittenden et&nbsp;al., 1995</A>).
+
+<P>
+Note that Eq.&nbsp;(<A HREF="#Pexpansion2">13</A>) implies that, if the Stokes parameters are
+rotated <EM>everywhere</EM> via
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:rotateQU"></A><!-- MATH
+ \begin{equation}
+\left(\begin{array}{c}
+	Q'\\U'
+\end{array}\right) =
+\left(\begin{array}{c c}
+  	\cos2\psi & \sin2\psi \\
+	-\sin2\psi & \cos2\psi
+\end{array} \right) 
+\left(\begin{array}{c} 
+	Q\\U
+\end{array} \right),%\nonumber
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.83ex; vertical-align: -2.42ex; " SRC="intro_img176.png"
+ ALT="$\displaystyle \left(\begin{array}{c}
+Q'\\ U'
+\end{array}\right) =
+\left(\begin{...
+...end{array} \right)
+\left(\begin{array}{c}
+Q\\ U
+\end{array} \right),%\nonumber
+$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">19</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+then the polarized <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="intro_img52.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients are submittted to the same rotation
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:rotateEB"></A><!-- MATH
+ \begin{equation}
+\left(\begin{array}{c}
+	a_{E,\ell m}'\\a_{B,\ell m}'
+\end{array}\right) = 
+\left(\begin{array}{c c}
+	\cos2\psi & \sin2\psi \\
+	-\sin2\psi & \cos2\psi
+\end{array} \right) 
+\left(\begin{array}{c} 
+	a_{E,\ell m}\\a_{B,\ell m}
+\end{array} \right).%\nonumber
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.83ex; vertical-align: -2.42ex; " SRC="intro_img177.png"
+ ALT="$\displaystyle \left(\begin{array}{c}
+a_{E,\ell m}'\\ a_{B,\ell m}'
+\end{array}\...
+...ft(\begin{array}{c}
+a_{E,\ell m}\\ a_{B,\ell m}
+\end{array} \right).%\nonumber
+$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">20</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+
+<P>
+Finally, with these conventions, a polarization with (<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img178.png"
+ ALT="$Q&gt;0,U=0$"></SPAN>) will be along the
+North&ndash;South axis, and (<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img179.png"
+ ALT="$Q=0,U&gt;0$"></SPAN>) will be along a North-West to South-East axis
+(see Fig.&nbsp;<A HREF="#fig:reftqu">5</A>) 
+<P>
+
+<H3><A ID="SECTION632"></A>
+<A ID="subsub:relatoldversion"></A>
+<BR>
+Relation to previous releases
+</H3>Even though it was stated otherwise in the documention, <strong>HEALPix</strong> used a different
+convention for the polarization in its previous releases. The tensor harmonics approach
+(<A
+ HREF="intro_Bibliography.htm#kks">Kamionkowski et&nbsp;al. (1997)</A>, hereafter KKS) was used, instead of
+the current spin weighted spherical harmonics. These two approaches differ by
+the normalisation and sign of the basis functions used, which in turns change
+the normalisation of the power spectra.
+Table 1 summarizes the relations between the CMB power spectra in the different
+releases. 
+See &sect;&nbsp;<A HREF="#subsec:cmbfast">A.2.1</A> about the interface between <strong>HEALPix</strong> and CMBFAST.
+
+<P>
+<TABLE   STYLE="width:100%;">
+<TR><TD>
+<SPAN CLASS="SPAN">Table 1: Relation between CMB power spectra conventions used in HEALPix, CMBFAST and
+KKS. The power spectra on the same row are equal.</SPAN>
+<TABLE class="PAD  BORDER" style="">
+<TR><TD CLASS="LEFT TOP"  style="width:94px">Component</TD>
+<TD CLASS="CENTER"><strong>HEALPix</strong> <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.41ex; " SRC="intro_img180.png"
+ ALT="$\ge$"></SPAN> 1.2<A ID="tex2html22"
+  HREF="#footmp631"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A></TD>
+<TD CLASS="CENTER">CMBFAST</TD>
+<TD CLASS="CENTER">KKS</TD>
+<TD CLASS="CENTER"><strong>HEALPix</strong> <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.41ex; " SRC="intro_img181.png"
+ ALT="$\le$"></SPAN> 1.1<A ID="tex2html23"
+  HREF="#footmp632"><SUP><SPAN CLASS="arabic">2</SPAN></SUP></A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:94px">Temperature</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $C_{\ell}^{\mathrm{TEMP}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="intro_img182.png"
+ ALT="$C_{\ell}^{\mathrm{TEMP}} $"></SPAN></TD>
+<TD CLASS="CENTER"><!-- MATH
+ $C_{\mathrm{T},\ell}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.27ex; vertical-align: -0.75ex; " SRC="intro_img183.png"
+ ALT="$C_{\mathrm{T},\ell} $"></SPAN></TD>
+<TD CLASS="CENTER"><!-- MATH
+ $C_{\ell}^{\mathrm{T}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="intro_img184.png"
+ ALT="$C_{\ell}^{\mathrm{T}} $"></SPAN></TD>
+<TD CLASS="CENTER"><!-- MATH
+ $C_{\ell}^{\mathrm{TEMP}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="intro_img182.png"
+ ALT="$C_{\ell}^{\mathrm{TEMP}} $"></SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:94px">Electric or Gradient</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $C_{\ell}^{\mathrm{GRAD}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.67ex; " SRC="intro_img185.png"
+ ALT="$C_{\ell}^{\mathrm{GRAD}} $"></SPAN></TD>
+<TD CLASS="CENTER"><!-- MATH
+ $C_{\mathrm{E},\ell}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.27ex; vertical-align: -0.75ex; " SRC="intro_img186.png"
+ ALT="$C_{\mathrm{E},\ell} $"></SPAN></TD>
+<TD CLASS="CENTER"><!-- MATH
+ $2C_{\ell}^{\mathrm{G}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.67ex; " SRC="intro_img187.png"
+ ALT="$2C_{\ell}^{\mathrm{G}} $"></SPAN></TD>
+<TD CLASS="CENTER"><!-- MATH
+ $2C_{\ell}^{\mathrm{GRAD}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.67ex; " SRC="intro_img188.png"
+ ALT="$2C_{\ell}^{\mathrm{GRAD}} $"></SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:94px">Magnetic or Curl</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $C_{\ell}^{\mathrm{CURL}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.67ex; " SRC="intro_img189.png"
+ ALT="$C_{\ell}^{\mathrm{CURL}} $"></SPAN></TD>
+<TD CLASS="CENTER"><!-- MATH
+ $C_{\mathrm{B},\ell}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.27ex; vertical-align: -0.75ex; " SRC="intro_img190.png"
+ ALT="$C_{\mathrm{B},\ell} $"></SPAN></TD>
+<TD CLASS="CENTER"><!-- MATH
+ $2C_{\ell}^{\mathrm{C}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.67ex; " SRC="intro_img191.png"
+ ALT="$2C_{\ell}^{\mathrm{C}} $"></SPAN></TD>
+<TD CLASS="CENTER"><!-- MATH
+ $2C_{\ell}^{\mathrm{CURL}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.67ex; " SRC="intro_img192.png"
+ ALT="$2C_{\ell}^{\mathrm{CURL}} $"></SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:94px">Temp.-Electric cross correlation</TD>
+<TD CLASS="CENTER"><!-- MATH
+ $C_{\ell}^{\mathrm{T-GRAD}}\rule[.3cm]{0cm}{.2cm}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.68ex; vertical-align: -0.68ex; " SRC="intro_img193.png"
+ ALT="$C_{\ell}^{\mathrm{T-GRAD}}\rule[.3cm]{0cm}{.2cm}$"></SPAN></TD>
+<TD CLASS="CENTER"><!-- MATH
+ $C_{\mathrm{C},\ell}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.27ex; vertical-align: -0.75ex; " SRC="intro_img194.png"
+ ALT="$C_{\mathrm{C},\ell} $"></SPAN></TD>
+<TD CLASS="CENTER"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.39ex; vertical-align: -0.43ex; " SRC="intro_img195.png"
+ ALT="$-\sqrt{2}$"></SPAN> <!-- MATH
+ $C_{\ell}^{\mathrm{TG}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.67ex; " SRC="intro_img196.png"
+ ALT="$C_{\ell}^{\mathrm{TG}} $"></SPAN></TD>
+<TD CLASS="CENTER"><!-- MATH
+ $\sqrt{2}C_{\ell}^{\mathrm{T-GRAD}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.68ex; vertical-align: -0.68ex; " SRC="intro_img197.png"
+ ALT="$\sqrt{2}C_{\ell}^{\mathrm{T-GRAD}} $"></SPAN></TD>
+</TR>
+</TABLE></TD></TR>
+<TR CLASS="LEFT">
+<TD><DL>
+<DD><A ID="footmp631"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A> Version 1.2 (Feb 2003) or more recent of <strong>HEALPix</strong> package
+</DD>
+
+<DD><A ID="footmp632"><SUP><SPAN CLASS="arabic">2</SPAN></SUP></A> Version 1.1 or older of <strong>HEALPix</strong> package
+</DD>
+</DL></TD></TR>
+</TABLE>
+
+<P>
+Introducing the matrices 
+<P></P>
+<DIV CLASS="mathdisplay"><!-- MATH
+ \begin{equation}
+M_{\ell m} = \left(
+  \begin{array}{cc}	X_{1,\ell m}  & i X_{2,\ell m} \\
+    -i X_{2,\ell m} & X_{1,\ell m}
+  \end{array}
+  \right) 
+   
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.83ex; " SRC="intro_img198.png"
+ ALT="\begin{displaymath}M_{\ell m} = \left(
+\begin{array}{cc} X_{1,\ell m} &amp; i X_{2,\ell m} \\
+-i X_{2,\ell m} &amp; X_{1,\ell m}
+\end{array}\right)\end{displaymath}"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">21</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+where the basis functions <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.98ex; vertical-align: -0.45ex; " SRC="intro_img199.png"
+ ALT="$X_1$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.98ex; vertical-align: -0.45ex; " SRC="intro_img200.png"
+ ALT="$X_2$"></SPAN> have been defined in
+Eqs.&nbsp;(<A HREF="#def:basis">14</A>) and above,
+the decomposition in spherical harmonics coefficients (<A HREF="#Pexpansion2">13</A>) of a
+given map of the Stokes parameter
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img85.png"
+ ALT="$Q$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img86.png"
+ ALT="$U$"></SPAN> can be written in the case of <strong>HEALPix</strong> 1.2 as
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="QU:12"></A><!-- MATH
+ \begin{equation}
+\phantom{1.2}{
+\left(
+\begin{array}{c} Q \rule[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\\U \rule[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\end{array}
+\right) 
+} = \sum_{\ell m} M_{\ell m} {
+\left( 
+\begin{array}{c} -a_{\ell m}^{\mathrm{GRAD}} \rule[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\\-a_{\ell m}^{\mathrm{CURL}} \rule[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\end{array}
+\right) 
+}.
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 8.16ex; " SRC="intro_img201.png"
+ ALT="\begin{displaymath}\phantom{1.2}{
+\left(
+\begin{array}{c} Q \rule[.3cm]{0cm}{.2c...
+...le[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\end{array}\right)
+}.\end{displaymath}"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">22</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+
+<P>
+For KKS, with the same definition of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.63ex; vertical-align: -0.10ex; " SRC="intro_img202.png"
+ ALT="$M$"></SPAN>, the decomposition reads
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="QU:KKS"></A><!-- MATH
+ \begin{equation}
+{
+\left(
+\begin{array}{c} Q \rule[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\\-U \rule[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\end{array}
+\right) 
+} = \sum_{\ell m} M_{\ell m} {
+\left( 
+\begin{array}{c} \sqrt{2}a_{\mathrm{E},\ell m} \rule[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\\\sqrt{2}a_{\mathrm{B},\ell m} \rule[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\end{array}
+\right) 
+},
+ 
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 8.16ex; " SRC="intro_img203.png"
+ ALT="\begin{displaymath}{
+\left(
+\begin{array}{c} Q \rule[.3cm]{0cm}{.2cm}\rule[-.3cm...
+...le[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\end{array}\right)
+},\end{displaymath}"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">23</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+whereas in <strong>HEALPix</strong> 1.1 it was
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="QU:11"></A><!-- MATH
+ \begin{equation}
+\phantom{1.1}{
+\left(
+\begin{array}{c} Q \rule[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\\U \rule[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\end{array}
+\right) 
+} = \sum_{\ell m} M_{\ell m} {
+\left( 
+\begin{array}{c} -\sqrt{2}a_{\ell m}^{\mathrm{GRAD}} \rule[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\\\sqrt{2}a_{\ell m}^{\mathrm{CURL}} \rule[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\end{array}
+\right) 
+}.
+ 
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 8.16ex; " SRC="intro_img204.png"
+ ALT="\begin{displaymath}\phantom{1.1}{
+\left(
+\begin{array}{c} Q \rule[.3cm]{0cm}{.2c...
+...le[.3cm]{0cm}{.2cm}\rule[-.3cm]{0cm}{.2cm}\end{array}\right)
+}.\end{displaymath}"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">24</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+The difference between KKS and 1.1 was due to an error of sign on one the basis functions.
+
+<P>
+
+<H3><A ID="SECTION633">
+Relation with IAU convention</A>
+</H3>
+In a cartesian referential with axes <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="intro_img205.png"
+ ALT="$x$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="intro_img206.png"
+ ALT="$y$"></SPAN>, the Stokes parameters for
+linear polarisation are defined such that <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img207.png"
+ ALT="$+Q$"></SPAN> is aligned with <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.28ex; " SRC="intro_img208.png"
+ ALT="$+x$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img209.png"
+ ALT="$-Q$"></SPAN> with <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.81ex; vertical-align: -0.55ex; " SRC="intro_img210.png"
+ ALT="$+y$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.81ex; vertical-align: -0.28ex; " SRC="intro_img211.png"
+ ALT="$+U$"></SPAN> with the
+bisectrix of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.28ex; " SRC="intro_img208.png"
+ ALT="$+x$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.81ex; vertical-align: -0.55ex; " SRC="intro_img210.png"
+ ALT="$+y$"></SPAN>. Although this definition is universally accepted, 
+some confusion may still arise from the relation of
+this local cartesian system to the global spherical one, as described below
+(<A
+ HREF="intro_Bibliography.htm#hamakerleahy">Hamaker &amp; Leahy, 2003</A>), and as illustrated in Fig.&nbsp;<A HREF="#fig:reftqu">5</A>. 
+<P>
+
+<DIV class="CENTER"><A ID="fig:reftqu"></A><A ID="intro:fig:reftqu"></A><A ID="1092"></A>
+<TABLE>
+<CAPTION class="BOTTOM"><STRONG>Figure 5:</STRONG>
+Coordinate conventions for <strong>HEALPix</strong> (<EM>lhs</EM> panels) and IAU (<EM>rhs</EM> panels). The
+  upper panels illustrate how the spherical coordinates are measured, and the
+  lower panel how the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img85.png"
+ ALT="$Q$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img86.png"
+ ALT="$U$"></SPAN> Stokes parameters are identified in the
+  tangential plan.
+</CAPTION>
+<TR><TD>
+<DIV CLASS="centerline" ID="par4678" ALIGN="CENTER">
+<IMG
+  WIDTH="600" HEIGHT="520" STYLE=""
+ SRC="./merge_reftqu.png"
+ ALT="Image merge_reftqu"></DIV>
+
+<P></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+The polarization conventions defined by the International Astronomical Union
+(<A
+ HREF="intro_Bibliography.htm#iau74">IAU, 1974</A>) are summarized in <A
+ HREF="intro_Bibliography.htm#hambreg">Hamaker &amp; Bregman (1996)</A>. They define at each point on the
+celestial sphere a cartesian referential with the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="intro_img205.png"
+ ALT="$x$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="intro_img206.png"
+ ALT="$y$"></SPAN> axes pointing
+respectively toward the North and East, and the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="intro_img212.png"
+ ALT="$z$"></SPAN>
+axis along the line of sight pointing toward the observer (ie, inwards) for a
+right-handed system.
+
+<P>
+On the other hand, following the mathematical and CMB litterature tradition,
+<strong>HEALPix</strong> defines a cartesian referential with the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="intro_img205.png"
+ ALT="$x$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="intro_img206.png"
+ ALT="$y$"></SPAN> axes pointing
+respectively toward the <EM>South</EM> and East, and the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="intro_img212.png"
+ ALT="$z$"></SPAN> axis along the line of sight
+pointing away from the observer (ie, <EM>outwards</EM>) for a right-handed
+system. The <EM>Planck</EM> CMB mission follows the same convention (<A
+ HREF="intro_Bibliography.htm#ansari">Ansari et&nbsp;al., 2003</A>).
+
+<P>
+The consequence of this definition discrepency is a change of sign of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img86.png"
+ ALT="$U$"></SPAN>,
+which, if not accounted for, jeopardizes the calculation of the Electric and Magnetic  CMB
+polarisation power spectra.
+
+<P>
+
+<H3><A ID="SECTION634"></A>
+<A ID="intro:polcconv"></A>
+<BR>
+How <strong>HEALPix</strong> deals with these discrepancies: <SPAN  CLASS="texttt">POLCCONV</SPAN> keyword
+</H3>
+The FITS keyword <SPAN  CLASS="texttt">POLCCONV</SPAN> has been introduced in <strong>HEALPix</strong> 2.0 to describe the
+polarisation coordinate convention applied to the data contained in the file. 
+Its value is either <SPAN  CLASS="texttt">'COSMO'</SPAN> for files following the HEALPix/CMB/<EM>Planck</EM> convention 
+(default for sky map synthetized with HEALPix routine <A HREF="./fac_synfast.htm#fac:synfast"><SPAN  CLASS="texttt">synfast</SPAN></A>)
+or <SPAN  CLASS="texttt">'IAU'</SPAN> for those
+following the IAU convention, as defined above. Absence of this keyword is
+interpreted as meaning <SPAN  CLASS="texttt">'COSMO'</SPAN> (as it is the case for WMAP maps).
+
+<P>
+Starting with <strong>HEALPix</strong> 3.40, when dealing with a polarized (full-sky or cut-sky) signal map, 
+<BR>&ndash; the F90 subroutine <A HREF="./sub_input_map.htm#sub:input_map"><SPAN  CLASS="texttt">input_map</SPAN></A> in its default mode, 
+<BR>&ndash; the F90 facilities calling it and dealing with the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.63ex; vertical-align: -0.10ex; " SRC="intro_img213.png"
+ ALT="$I$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img85.png"
+ ALT="$Q$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img86.png"
+ ALT="$U$"></SPAN> Stokes parameters as a whole, <EM>ie</EM>
+<A HREF="./fac_anafast.htm#fac:anafast"><SPAN  CLASS="texttt">anafast</SPAN></A> and
+<A HREF="./fac_smoothing.htm#fac:smoothing"><SPAN  CLASS="texttt">smoothing</SPAN></A>, 
+<BR>&ndash; as well as their IDL wrappers 
+<A HREF="./idl_ianafast.htm#idl:ianafast"><SPAN  CLASS="texttt">ianafast</SPAN></A> and
+<A HREF="./idl_ismoothing.htm#idl:ismoothing"><SPAN  CLASS="texttt">ismoothing</SPAN></A>, 
+<BR>&ndash; the IDL visualisation routines 
+<A HREF="./idl_mollview.htm#idl:mollview"><SPAN  CLASS="texttt">azeqview</SPAN>, <SPAN  CLASS="texttt">cartview</SPAN>, <SPAN  CLASS="texttt">gnomview</SPAN>, <SPAN  CLASS="texttt">mollview</SPAN> and <SPAN  CLASS="texttt">orthview</SPAN></A>
+called with 
+<A HREF="./idl_mollview.htm#idl:mollview:polarization"><SPAN  CLASS="texttt">Polarization=2</SPAN> or <SPAN  CLASS="texttt">3</SPAN></A>,
+<BR>&ndash; and all C++ facilities (and the input routine <SPAN  CLASS="texttt">read_Healpix_map_from_fits</SPAN>)
+<BR>
+will all 
+<BR>&ndash; issue an error message and 
+crash if <SPAN  CLASS="texttt">POLCCONV</SPAN> is explicitely set to a value different from <SPAN  CLASS="texttt">'COSMO'</SPAN> and <SPAN  CLASS="texttt">'IAU'</SPAN>,
+<BR>&ndash; issue a warning (except in C++), and <EM>swap the sign of the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img86.png"
+ ALT="$U$"></SPAN> polarisation</EM> stored into memory if the FITS file being read contains <SPAN  CLASS="texttt">POLCCONV='IAU'</SPAN>, 
+<BR>&ndash; issue a warning (except in C++) if the keyword <SPAN  CLASS="texttt">POLCCONV</SPAN> is totally absent, and then carry on with the original data,
+<BR>&ndash; or work silently with the original data if <SPAN  CLASS="texttt">POLCCONV='COSMO'</SPAN>.
+<BR>
+On the other hand, and as in previous releases, routines treating or showing 
+each of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.63ex; vertical-align: -0.10ex; " SRC="intro_img213.png"
+ ALT="$I$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="intro_img85.png"
+ ALT="$Q$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img86.png"
+ ALT="$U$"></SPAN> fields separately, 
+such as the F90 facilities
+<A HREF="./fac_median_filter.htm#fac:median_filter"><SPAN  CLASS="texttt">median_filter</SPAN></A>,
+<A HREF="./fac_ud_grade.htm#fac:ud_grade"><SPAN  CLASS="texttt">ud_grade</SPAN></A>, or
+<A HREF="./fac_map2gif.htm#fac:map2gif"><SPAN  CLASS="texttt">map2gif</SPAN></A>
+as well as their IDL counterparts
+<A HREF="./idl_median_filter.htm#idl:median_filter"><SPAN  CLASS="texttt">median_filter</SPAN></A>,
+<A HREF="./idl_ud_grade.htm#idl:ud_grade"><SPAN  CLASS="texttt">ud_grade</SPAN></A>, or
+<A HREF="./idl_mollview.htm#idl:mollview"><SPAN  CLASS="texttt">mollview</SPAN> et al</A> run with 
+<A HREF="./idl_mollview.htm#idl:mollview:polarization"><SPAN  CLASS="texttt">Polarization=0</SPAN> or <SPAN  CLASS="texttt">1</SPAN></A> will
+ignore the value of <SPAN  CLASS="texttt">POLCCONV</SPAN> (copying it unchanged into their output files, when applicable) 
+and preserve the sign of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img86.png"
+ ALT="$U$"></SPAN>.
+
+<P>
+Finally, 
+the IDL subroutine 
+<A HREF="./idl_change_polcconv.htm#idl:change_polcconv"><SPAN  CLASS="texttt">change_polcconv.pro</SPAN></A> 
+and the Python facility 
+<A ID="tex2html25"
+  HREF="https://healpix.sourceforge.io/src/3.82/src/python/change_polcconv.py"><SPAN  CLASS="texttt">change_polcconv.py</SPAN></A>
+are 
+provided to add the  <SPAN  CLASS="texttt">POLCCONV</SPAN> keyword or
+change/update its value and swap the sign of the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img86.png"
+ ALT="$U$"></SPAN> Stokes parameter, when applicable, in
+an existing FITS file.
+
+<P>
+
+<H2><A ID="SECTION640"></A>
+<A ID="sphericalstuff"></A>
+<BR>
+Spherical harmonic conventions
+</H2>
+
+<P>
+The Spherical Harmonics are defined as
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:ylm_def"></A><!-- MATH
+ \begin{equation}
+Y_{\ell m}(\theta,\phi) = \lambda_{\ell m}(\cos\theta) e^{{i}
+	m\phi}
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.68ex; " SRC="intro_img214.png"
+ ALT="$\displaystyle Y_{\ell m}(\theta,\phi) = \lambda_{\ell m}(\cos\theta) e^{{i}
+m\phi}$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">25</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+where 
+<P></P>
+<DIV CLASS="mathdisplay"><TABLE CLASS="equation" >
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img215.png"
+ ALT="$\displaystyle \lambda_{\ell m}(x)$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 7.05ex; vertical-align: -2.81ex; " SRC="intro_img216.png"
+ ALT="$\displaystyle = \sqrt{ \frac{2\ell+1}{4\pi}
+\frac{(\ell-m)!}{(\ell+m)!} } P_{\ell m}(x), \quad\textrm{for~}
+m\ge 0$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+<A ID="eq:lam_def">(<SPAN CLASS="arabic">26</SPAN>)</A></TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img217.png"
+ ALT="$\displaystyle \lambda_{\ell m}$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.85ex; " SRC="intro_img218.png"
+ ALT="$\displaystyle = (-1)^m \lambda_{\ell \vert m\vert}, \quad\textrm{for~}
+m &lt; 0,$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+<TR >
+<TD  style="text-align:right;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img217.png"
+ ALT="$\displaystyle \lambda_{\ell m}$"></SPAN></TD>
+<TD  style="text-align:left;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img219.png"
+ ALT="$\displaystyle = 0, \quad\textrm{for}\, \vert m\vert &gt; \ell.$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+&nbsp;&nbsp;&nbsp;</TD></TR>
+</TABLE></DIV>
+<P></P>
+
+<P>
+Introducing <!-- MATH
+ $x\equiv\cos\theta$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img220.png"
+ ALT="$x\equiv\cos\theta$"></SPAN>, the associated Legendre Polynomials <!-- MATH
+ $P_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img221.png"
+ ALT="$P_{\ell m}$"></SPAN> 
+solve the differential equation
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:diff_eq"></A><!-- MATH
+ \begin{equation}
+(1-x^2)\frac{d^2}{dx^2}P_{\ell m} - 2x \frac{d}{dx}P_{\ell m}
+	+ \left(\ell(\ell+1) - \frac{m^2}{1-x^2}\right) P_{\ell m} = 0.
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.83ex; vertical-align: -2.42ex; " SRC="intro_img222.png"
+ ALT="$\displaystyle (1-x^2)\frac{d^2}{dx^2}P_{\ell m} - 2x \frac{d}{dx}P_{\ell m}
++ \left(\ell(\ell+1) - \frac{m^2}{1-x^2}\right) P_{\ell m} = 0.$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">27</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+They are related to the ordinary Legendre Polynomials <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img223.png"
+ ALT="$P_\ell$"></SPAN> by
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:legendreass"></A><!-- MATH
+ \begin{equation}
+P_{\ell m} = (-1)^m (1-x^2)^{m/2} \frac{d^m}{dx^m} P_{\ell}(x),
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 4.84ex; vertical-align: -1.69ex; " SRC="intro_img224.png"
+ ALT="$\displaystyle P_{\ell m} = (-1)^m (1-x^2)^{m/2} \frac{d^m}{dx^m} P_{\ell}(x),$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">28</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+which are given by the Rodrigues formula
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:rodrigues"></A><!-- MATH
+ \begin{equation}
+P_{\ell}(x) = \frac{1}{2^\ell \ell!}\frac{d^\ell}{dx^\ell} (x^2-1)^\ell.
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 5.13ex; vertical-align: -1.69ex; " SRC="intro_img225.png"
+ ALT="$\displaystyle P_{\ell}(x) = \frac{1}{2^\ell \ell!}\frac{d^\ell}{dx^\ell} (x^2-1)^\ell.$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">29</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+
+<P>
+Note that our <!-- MATH
+ $Y_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img36.png"
+ ALT="$Y_{\ell m}$"></SPAN> are identical to those of <A
+ HREF="intro_Bibliography.htm#edmonds">Edmonds (1957)</A>,
+even though our definition of the <!-- MATH
+ $P_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img221.png"
+ ALT="$P_{\ell m}$"></SPAN> differ from his by a factor
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img226.png"
+ ALT="$(-1)^m$"></SPAN> (<I>a.k.a.</I> Condon-Shortley phase).
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="intro_HEALPix_Software_Package.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_Pixel_window_functions.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html111"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_HEALPix_Software_Package.htm">The HEALPix Software Package</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_Pixel_window_functions.htm">Pixel window functions</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

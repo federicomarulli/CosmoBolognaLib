@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>HEALPix/C subroutines</TITLE>
+<META NAME="description" CONTENT="HEALPix/C subroutines">
+<META NAME="keywords" CONTENT="csub">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="csub.css">
+
+<LINK REL="next" HREF="csub_Contents.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev_g.png"> 
+<A
+ HREF="main.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="csub_Contents.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html4"
+  HREF="csub_Contents.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong>Up:</strong> <A
+ HREF="main.htm">Main Page</A>
+
+<strong> Next:</strong> <A
+ HREF="csub_Contents.htm">Contents</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<P>
+
+<A ID="sub:subroutines"></A>
+
+<H1 class="center"><strong>HEALPix</strong> C Subroutines Overview</H1>
+<div id=abstract class="center">This document is an overview of the <strong>HEALPix</strong> C subroutines.</div>
+<P class="center"><STRONG>Eric Hivon, Anthony J.&nbsp;Banday, Matthias Bartelmann, Frode K.&nbsp;Hansen,
+Krzysztof M.&nbsp;G&#243;rski, Martin Reinecke and Benjamin D.&nbsp;Wandelt</STRONG></P>
+<BR><P class="center"><I>Revision: </I>Version 3.82; July 28, 2022</P>
+<P class="center"><A ID="tex2html1"
+  HREF="https://healpix.sourceforge.io">https://healpix.sourceforge.io</A>
+<BR><A ID="tex2html2"
+  HREF="http://healpix.sf.net">http://healpix.sf.net</A></P>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A ID="CHILD_LINKS"></A>
+
+<UL CLASS="ChildLinks">
+<LI><A ID="tex2html6"
+  HREF="csub_Contents.htm">Contents</A>
+<LI><A ID="tex2html7"
+  HREF="csub_Conventions.htm">Conventions</A>
+<LI><A ID="tex2html8"
+  HREF="csub_Compilation_Installation.htm">Compilation and Installation</A>
+<LI><A ID="tex2html9"
+  HREF="csub_Usage.htm">Usage</A>
+<LI><A ID="tex2html10"
+  HREF="csub_Note_on_C_routines.htm">Note on the C routines</A>
+<LI><A ID="tex2html11"
+  HREF="csub_ang2vec.htm">ang2vec</A>
+<LI><A ID="tex2html12"
+  HREF="csub_get_fits_size.htm">get_fits_size</A>
+<LI><A ID="tex2html13"
+  HREF="csub_npix2nside.htm">npix2nside</A>
+<LI><A ID="tex2html14"
+  HREF="csub_nside2npix.htm">nside2npix</A>
+<LI><A ID="tex2html15"
+  HREF="csub_pix2xxx_ang2xxx_vec2xxx_nes.htm">pix2xxx,&nbsp;ang2xxx,&nbsp;vec2xxx,&nbsp;nest2ring,&nbsp;ring2nest</A>
+<LI><A ID="tex2html16"
+  HREF="csub_read_healpix_map.htm">read_healpix_map</A>
+<LI><A ID="tex2html17"
+  HREF="csub_vec2ang.htm">vec2ang</A>
+<LI><A ID="tex2html18"
+  HREF="csub_write_healpix_map.htm">write_healpix_map</A>
+<LI><A ID="tex2html19"
+  HREF="csub_About_this_document.htm">About this document ...</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev_g.png"> 
+<A
+ HREF="main.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="csub_Contents.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html4"
+  HREF="csub_Contents.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong>Up:</strong> <A
+ HREF="main.htm">Main Page</A>
+
+<strong> Next:</strong> <A
+ HREF="csub_Contents.htm">Contents</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

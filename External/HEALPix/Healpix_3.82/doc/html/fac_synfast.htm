@@ -1,0 +1,730 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>synfast</TITLE>
+<META NAME="description" CONTENT="synfast">
+<META NAME="keywords" CONTENT="facilities">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="facilities.css">
+
+<LINK REL="next" HREF="fac_ud_grade.htm">
+<LINK REL="previous" HREF="fac_smoothing.htm">
+<LINK REL="next" HREF="fac_ud_grade.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="fac_smoothing.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="fac_HEALPix_F90_facilities.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_ud_grade.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html145"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="fac_smoothing.htm">smoothing</A>
+
+<strong>Up:</strong> <A
+ HREF="fac_HEALPix_F90_facilities.htm">HEALPix/F90 facilities</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_ud_grade.htm">ud_grade</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION1400"></A>
+<A ID="fac:synfast"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">synfast</SPAN></div><hr>
+<H3>This program can be used to create  <strong>HEALPix</strong> maps (temperature only
+or temperature and polarisation)  computed as realisations 
+of random Gaussian
+fields on a sphere characterized by the user provided 
+theoretical power spectra,
+or as constrained realisations of such fields characterised by the user
+provided <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients and/or power spectra.
+Total operation count scales as
+ <!-- MATH
+ ${\cal {O}}(N_{\mathrm{pix}}^{1/2}\ell_{\mathrm{max}}^2)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 3.21ex; vertical-align: -0.91ex; " SRC="fac_img25.png"
+ ALT="${\cal {O}}(N_{\mathrm{pix}}^{1/2}\ell_{\mathrm{max}}^2 )$"></SPAN> where <!-- MATH
+ $N_{\mathrm{pix}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>pix</SUB></SPAN> is the total number of pixels and 
+<!-- MATH
+ $\ell_{\mathrm{max}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img24.png"
+ ALT="$\ell_{\mathrm{max}}$"></SPAN> is the limiting spherical harmonics order. 
+The map resolution, Gaussian beam FWHM,  
+and random seed for the simulation can be selected by the user.
+Spherical harmonics are either generated using the recurrence relations
+during the execution of spectral synthesis, or  precomputed and read in
+before the synthesis is executed. The latter is no longer recommended since
+it provides no acceleration since the introduction of optimized algorithms
+in <strong>HEALPix</strong> v2.20. </H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/synfast/synfast.f90"><strong>src/f90/synfast/synfast.f90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>%
+synfast [options] [parameter_file]
+</h3></blockquote>
+
+<P>
+<hr><H2>COMMAND LINE OPTIONS</H2> 
+  <DL COMPACT><DT>
+<B><SPAN style="font-family:monospace">-d</SPAN></B>
+<DD><DT>
+<B><SPAN style="font-family:monospace">-</SPAN><SPAN style="font-family:monospace">-</SPAN><SPAN style="font-family:monospace">double</SPAN></B>
+<DD>double precision mode (see 
+<A HREF="fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:ioprec">Notes on double/single precision modes</A>
+)
+    <DT>
+<B><SPAN style="font-family:monospace">-s</SPAN></B>
+<DD><DT>
+<B><SPAN style="font-family:monospace">-</SPAN><SPAN style="font-family:monospace">-</SPAN><SPAN style="font-family:monospace">single</SPAN></B>
+<DD>single precision mode (default)
+  </DL>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>infile = </B>
+<DD><A ID="fac:synfast:infile"></A>Defines the input power spectrum file,
+	(default= cl.fits). Note that <SPAN style="font-family:monospace">infile</SPAN> is now optional :
+    <SPAN CLASS="colordoc">synfast</SPAN> can run even if only <SPAN style="font-family:monospace">almsfile</SPAN> is provided.
+    <DT>
+<B>outfile = </B>
+<DD><A ID="fac:synfast:outfile"></A>Defines the output (RING ordered) map file,
+(default= map.fits). Note that <SPAN style="font-family:monospace">outfile</SPAN> is now optional: if it set to 
+      `' (empty string),  mo map is synthesized but the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> generated can be output.
+    <DT>
+<B>outfile_alms = </B>
+<DD><A ID="fac:synfast:outfile_alms"></A>Defines the FITS file in which to output <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> used
+      for the simulation (default= `')
+     <DT>
+<B>simul_type = </B>
+<DD><A ID="fac:synfast:simul_type"></A>Defines the simulation type, 1=temperature only (1 field),
+       2=temperature+polarisation (3 fields), 3=temperature and its first
+spatial derivatives (3 fields),
+       4=temperature and its first and second spatial derivatives (6 fields), 5=temperature
+       and polarisation, and their first derivatives (9 fields), 6=same as 5
+       plus the second derivatives of (T,Q,U) (18 fields).
+(default= 1).
+    <DT>
+<B>nsmax = </B>
+<DD><A ID="fac:synfast:nsmax"></A>Defines the resolution of the map.
+(default= 32)
+     <DT>
+<B>nlmax = </B>
+<DD><A ID="fac:synfast:nlmax"></A>Defines the maximum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="fac_img5.png"
+ ALT="$\ell$"></SPAN> value 
+to be used in the simulation. WARNING: <!-- MATH
+ $\ell_{\mathrm{max}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img24.png"
+ ALT="$\ell_{\mathrm{max}}$"></SPAN> can not exceed
+the value <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.10ex; " SRC="fac_img65.png"
+ ALT="$4\cdot$"></SPAN> <SPAN style="font-family:monospace">nsmax</SPAN>, because the coefficients of the  average Fourier 
+pixel window functions
+are precomputed and provided up to this limit.
+(default= 64)
+      <DT>
+<B>iseed = </B>
+<DD><A ID="fac:synfast:iseed"></A>Defines the random seed to be used 
+for the generation of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>s from the power spectrum.
+(default= -1)
+    <DT>
+<B>fwhm_arcmin = </B>
+<DD><A ID="fac:synfast:fwhm_arcmin"></A>Defines the FWHM size in arcminutes 
+of the simulated Gaussian beam.
+(default= 420.0)
+<DT>
+<B>beam_file = </B>
+<DD><A ID="fac:synfast:beam_file"></A>Defines the FITS file (see <A HREF="fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:beamfiles">&rdquo;Beam window function files&rdquo; in introduction</A>) describing the
+    Legendre window
+    function of the circular beam to be used for the
+    simulation. If set to an existing file name, it will override the
+    <SPAN style="font-family:monospace">fhwm_arcmin</SPAN> given above. (default=`')
+<DT>
+<B>almsfile = </B>
+<DD><A ID="fac:synfast:almsfile"></A>Defines the input filename for a file
+    containing <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>s for constrained realisations. 
+(default= `'). If <SPAN style="font-family:monospace">apply_windows</SPAN> is <EM>false</EM> 
+those <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>s are used as they are, without being multiplied
+by the beam or pixel window function (with the assumption that they already have the
+    correct window functions). If <SPAN style="font-family:monospace">apply_windows</SPAN> is <EM>true</EM>, the beam and
+    pixel window functions chosen above are applied to the constraining <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> (with the
+    assumption that those are free of beam and pixel window function). The code
+    does not check the validity of these asumptions; if none is true, use the
+    <A HREF="fac_alteralm.htm#fac:alteralm">alteralm</A> facility to modify or remove
+    the window functions contained in the constraining <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>.
+<DT>
+<B>apply_windows = </B>
+<DD><A ID="fac:synfast:apply_windows"></A>Determines how the constraining <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> read from
+     <SPAN style="font-family:monospace">almsfile</SPAN> are
+     treated with respect to window functions; see above for details. 
+     y, yes, t, true, .true. and 1 are considered as <EM>true</EM>, while n, no, f,
+     false, .false. and 0 are considered as <EM>false</EM>, (default = .false.).
+<DT>
+<B>plmfile = </B>
+<DD><A ID="fac:synfast:plmfile"></A>Defines the input  filename for a file
+    containing  precomputed Legendre polynomials <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img49.png"
+ ALT="$P_{\ell m}$"></SPAN>.
+(default= `')
+<DT>
+<B>windowfile = </B>
+<DD><A ID="fac:synfast:windowfile"></A>Defines the input filename  for the pixel
+    smoothing windows 
+(default= pixel_window_n????.fits, see below).
+<DT>
+<B>winfiledir = </B>
+<DD><A ID="fac:synfast:winfiledir"></A>Defines the directory in which windowfile
+    is located (default: see 
+<A HREF="fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:defdir">Notes on default files and directories</A>).
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+Synfast reads the power spectrum from a file in  ascii FITS
+format. This can contain either just the temperature power spectrum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="fac_img81.png"
+ ALT="$C^T_{\ell}$"></SPAN>s or 
+temperature and polarisation power spectra: <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="fac_img81.png"
+ ALT="$C^T_{\ell}$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="fac_img82.png"
+ ALT="$C^E_{\ell}$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="fac_img83.png"
+ ALT="$C^B_{\ell}$"></SPAN>
+and <!-- MATH
+ $C^{T\times E}_{\ell}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.68ex; " SRC="fac_img84.png"
+ ALT="$C^{T\times E}_{\ell}$"></SPAN> (see <A HREF="#fac:synfast:note1">Note 1, below</A>). If <SPAN style="font-family:monospace">simul_type = 2</SPAN> <SPAN CLASS="colordoc">synfast</SPAN> generates 
+Q and U maps as well as the temperature map. The output map(s)
+is (are) saved in a FITS file. 
+The <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img85.png"
+ ALT="$C_{\ell}$"></SPAN>s are used up to the specified 
+<!-- MATH
+ $\ell_{\mathrm{max}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img24.png"
+ ALT="$\ell_{\mathrm{max}}$"></SPAN>, which can not exceed <SPAN CLASS="MATH">4 x </SPAN> nsmax. If <SPAN style="font-family:monospace">simul_type = 3</SPAN> or
+<SPAN style="font-family:monospace">4</SPAN> the first derivatives of the temperature field or the first and second derivatives respectively
+are output as well as the temperature itself: <SPAN CLASS="MATH"><I>T</I>(<I>p</I>)</SPAN>, <!-- MATH
+ $\left({\partial T}/{\partial \theta}, {\partial T}/{\partial \phi}/\sin\theta \right)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="fac_img86.png"
+ ALT="$\left({\partial T}/{\partial \theta}, {\partial T}/{\partial \phi}/\sin\theta \right)
+$"></SPAN>, <!-- MATH
+ $\left({\partial^2 T}/{\partial \theta^2}, {\partial^2 T}/{\partial
+  \theta\partial\phi}/\sin\theta,\right.$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="fac_img87.png"
+ ALT="$\left({\partial^2 T}/{\partial \theta^2}, {\partial^2 T}/{\partial
+\theta\partial\phi}/\sin\theta,\right. $"></SPAN> 
+<!-- MATH
+ $\left.{\partial^2 T}/{\partial \phi^2}/\sin^2\theta \right)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="fac_img88.png"
+ ALT="$\left.{\partial^2 T}/{\partial \phi^2}/\sin^2\theta \right) $"></SPAN>.
+If <SPAN style="font-family:monospace">simul_type = 5</SPAN> or
+<SPAN style="font-family:monospace">6</SPAN> the first derivatives of the (T,Q,U) fields or the first and second derivatives respectively
+are output as well as the field themself: <SPAN CLASS="MATH"><I>T</I>(<I>p</I>)</SPAN>,  <SPAN CLASS="MATH"><I>Q</I>(<I>p</I>)</SPAN>,  <SPAN CLASS="MATH"><I>U</I>(<I>p</I>)</SPAN>,
+<!-- MATH
+ $\left({\partial T}/{\partial \theta}, {\partial Q}/{\partial \theta}, {\partial
+  U}/{\partial \theta}; {\partial T}/{\partial \phi}/\sin\theta, \ldots \right)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="fac_img89.png"
+ ALT="$\left({\partial T}/{\partial \theta}, {\partial Q}/{\partial \theta}, {\partial
+U}/{\partial \theta}; {\partial T}/{\partial \phi}/\sin\theta, \ldots \right)
+$"></SPAN>, <!-- MATH
+ $\left({\partial^2 T}/{\partial \theta^2},\ldots; {\partial^2 T}/{\partial
+  \theta\partial\phi}/\sin\theta,\ldots ;\right.$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="fac_img90.png"
+ ALT="$\left({\partial^2 T}/{\partial \theta^2},\ldots; {\partial^2 T}/{\partial
+\theta\partial\phi}/\sin\theta,\ldots ;\right. $"></SPAN> 
+<!-- MATH
+ $\left.{\partial^2 T}/{\partial \phi^2}/\sin^2\theta \ldots \right)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="fac_img91.png"
+ ALT="$\left.{\partial^2 T}/{\partial \phi^2}/\sin^2\theta \ldots \right) $"></SPAN>
+<br><br>The random sequence seed for generation of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> from the
+power spectrum should be non-zero integer. If 0 is provided, a seed is generated
+randomly by the code, based on the current date and time.
+The map can be convolved with a gaussian beam for which a beamsize can
+be specified, or for an arbitrary <EM>circular</EM> beam for which the
+Legendre transform is provided. The map is automatically convolved with a pixel window
+function. These are stored in FITS files  in
+the <SPAN style="font-family:monospace">healpix/data</SPAN> directory. If <SPAN CLASS="colordoc">synfast</SPAN> is not run in a directory
+which has these files, or from a directory which can reach these files
+by a `<SPAN style="font-family:monospace">../data/</SPAN>' or `<SPAN style="font-family:monospace">./data/</SPAN>' specification, the system
+variable <SPAN style="font-family:monospace">HEALPIX</SPAN> is used to locate the main <strong>HEALPix</strong> directory
+and its <SPAN style="font-family:monospace">data</SPAN> subdirectory is scanned. Failing this, the location of these
+files must be specified (using winfiledir). In the interactive mode this is
+requested only when necessary (see 
+<A HREF="fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:defdir">Notes on default directories</A>
+).
+<br><br>If some of the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> in the simulations are constrained eg. from observations, a FITS file
+with these <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> can be read. This FITS file contains 
+the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> for certain <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="fac_img5.png"
+ ALT="$\ell$"></SPAN> and <SPAN CLASS="MATH"><I>m</I></SPAN> values
+and also the standard deviation for these <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>. The sky
+realisation which <SPAN CLASS="colordoc">synfast</SPAN> produces will be statistically consistent
+with the constraining <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>.
+<br><br>The code can also be used
+to generate a set of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> matching the input power spectra, beam size and
+pixel size with or without actually synthesizing the map. Those <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> can be
+used as an input (constraining <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>) to another <SPAN CLASS="colordoc">synfast</SPAN> run.
+<br><br>
+</blockquote>
+<blockquote>
+Spherical harmonics values in the synthesis are obtained from a
+recurrence on associated Legendre polynomials <!-- MATH
+ $P_{\ell m}(\theta)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="fac_img50.png"
+ ALT="$P_{\ell m}(\theta)$"></SPAN>. 
+This recurrence consumed most of the CPU time used by <SPAN CLASS="colordoc">synfast</SPAN> up to version
+2.15. We have therefore included an option to load precomputed values for the
+<!-- MATH
+ $P_{\ell m}(\theta)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="fac_img50.png"
+ ALT="$P_{\ell m}(\theta)$"></SPAN> from a file generated by the <strong>HEALPix</strong> facility
+<A HREF="fac_plmgen.htm#fac:plmgen">plmgen</A>. Since the introduction of accelerated spherical
+harmonic transforms in <strong>HEALPix</strong> v2.20, this feature is obsolete and should no
+longer be used. 
+
+<P>
+<SPAN CLASS="colordoc">synfast</SPAN> will issue a warning if the input FITS file for the power spectrum does
+not contain the keyword <SPAN style="font-family:monospace">POLNORM</SPAN>. This keyword indicates that the convention
+used for polarization is consistent with CMBFAST (and consistent with <strong>HEALPix</strong> 
+1.2). See the 
+<A ID="tex2html25"
+  HREF="intro.htm"><strong>HEALPix</strong> Primer</A>
+for details on the
+polarization convention and the interface with CMBFAST. If the
+keyword is not found, <EM>no attempt will be made</EM> to renormalize the power
+spectrum. 
+If the keyword is present, it will be inherited by the simulated map.
+
+<P>
+<A ID="fac:synfast:note1"></A><B>Note 1:</B> to allow the generation of maps (and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>) with <!-- MATH
+ $C^{T\times B}_{\ell} \ne 0$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.68ex; " SRC="fac_img92.png"
+ ALT="$C^{T\times B}_{\ell} \ne 0$"></SPAN> and/or <!-- MATH
+ $C^{E\times B}_{\ell} \ne 0$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.62ex; vertical-align: -0.68ex; " SRC="fac_img93.png"
+ ALT="$C^{E\times B}_{\ell} \ne 0$"></SPAN>,
+see the subroutine <A HREF="./sub_create_alm.htm#sub:create_alm"><SPAN style="font-family:monospace">create_alm</SPAN></A>.
+
+</blockquote>
+
+<P>
+<hr><H2>DATASETS</H2>
+<h3>The following datasets are involved in the <b><SPAN CLASS="colordoc">synfast</SPAN></b>
+ processing.</h3>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">Dataset</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">Description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+/data/pixel_window_nxxxx.fits</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">Files containing pixel windows for
+                   various nsmax.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"></TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+</TABLE>
+
+<P>
+<hr><H2>SUPPORT    </H2><H3>This section lists those routines and facilities (including those <i>external</i> to the <b>HEALPix</b> distribution) which can assist in the utilisation of <b><SPAN CLASS="colordoc">synfast</SPAN></b>.</H3>
+<DL COMPACT><DT>
+<B><A HREF="./sub_generate_beam.htm#sub:generate_beam">generate_beam</A></B>
+<DD>This <strong>HEALPix</strong> Fortran
+subroutine generates or reads the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="fac_img19.png"
+ ALT="$B(\ell)$"></SPAN> window function used in <SPAN CLASS="colordoc">synfast</SPAN>
+  <DT>
+<B><A HREF="fac_map2gif.htm#fac:map2gif">map2gif</A></B>
+<DD>This <strong>HEALPix</strong> Fortran facility can be used to visualise the
+  output map of <SPAN CLASS="colordoc">synfast</SPAN>.
+  <DT>
+<B><A HREF="./idl_mollview.htm#idl:mollview">mollview</A></B>
+<DD>This <strong>HEALPix</strong> IDL facility can be used to visualise the
+  output map of <SPAN CLASS="colordoc">synfast</SPAN>.
+  <DT>
+<B><A HREF="fac_alteralm.htm#fac:alteralm">alteralm</A></B>
+<DD>This <strong>HEALPix</strong> Fortran facility can be
+  used to implement the beam and pixel window functions on the constraining
+  <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>s (<SPAN style="font-family:monospace">almsfile</SPAN> file).
+  <DT>
+<B><A HREF="fac_anafast.htm#fac:anafast">anafast</A></B>
+<DD>This <strong>HEALPix</strong> Fortran facility can analyse a <strong>HEALPix</strong> map and 
+     	       save the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img85.png"
+ ALT="$C_{\ell}$"></SPAN>s to be read by <SPAN CLASS="colordoc">synfast</SPAN>.
+  <DT>
+<B><A HREF="fac_plmgen.htm#fac:plmgen">plmgen</A></B>
+<DD>This <strong>HEALPix</strong> Fortran facility can be used to generate precomputed Legendre polynomials.
+
+<P>
+</DL>
+
+<P>
+<hr><H2>EXAMPLE # 1:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">synfast</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+Synfast runs in interactive mode, self-explanatory.
+</blockquote>
+
+<P>
+
+<P>
+<hr><H2>EXAMPLE # 2:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">synfast  filename</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>When 'filename' is present, <SPAN CLASS="colordoc">synfast</SPAN> enters the non-interactive mode and parses
+its inputs from the file 'filename'. This has the following
+structure: the first entry is a qualifier which announces to the parser
+which input immediately follows. If this input is omitted in the
+input file, the parser assumes the default value.
+If the equality sign is omitted, then the parser ignores the entry.
+In this way comments may also be included in the file.
+In this example, the file contains the following qualifiers:
+<BR>
+<kbd><A HREF="#fac:synfast:simul_type">simul_type</A>= 1</kbd><br>
+<kbd><A HREF="#fac:synfast:nsmax">nsmax</A>= 32</kbd><br>
+<kbd><A HREF="#fac:synfast:nlmax">nlmax</A>= 64</kbd><br>
+<kbd><A HREF="#fac:synfast:iseed">iseed</A>= -1</kbd><br>
+<kbd><A HREF="#fac:synfast:fwhm_arcmin">fwhm_arcmin</A>= 420.0</kbd><br>
+<kbd><A HREF="#fac:synfast:infile">infile</A>= cl.fits</kbd><br>
+<kbd><A HREF="#fac:synfast:outfile">outfile</A>= map.fits</kbd><br>
+
+<P>
+Synfast reads in the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img85.png"
+ ALT="$C_{\ell}$"></SPAN> power spectrum in 'cl.fits' up to <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="fac_img94.png"
+ ALT="$\ell=64$"></SPAN>, and
+produces the (RING ordered) map
+'map.fits' which has <!-- MATH
+ $N_{\mathrm{side}}=32$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB>=32</SPAN>.
+The map is convolved with a beam of FWHM 420.0 arcminutes. The 
+<A HREF="#fac:synfast:iseed">iseed</A><SPAN CLASS="MATH">=-1</SPAN> sets
+the random seed for the realisation. A different 
+<A HREF="#fac:synfast:iseed">iseed</A> would have given a different 
+realisation from the same power spectrum.
+
+<P>
+Since <BR>
+<kbd><A HREF="#fac:synfast:outfile_alms">outfile_alms</A></kbd><br>
+<kbd><A HREF="#fac:synfast:almsfile">almsfile</A></kbd><br>
+<kbd><A HREF="#fac:synfast:apply_windows">apply_windows</A></kbd><br>
+<kbd><A HREF="#fac:synfast:plmfile">plmfile</A></kbd><br>
+<kbd><A HREF="#fac:synfast:beam_file">beam_file</A></kbd><br>
+<kbd><A HREF="#fac:synfast:windowfile">windowfile</A></kbd><br>
+were omitted, they take their default values (empty strings). 
+This means that no file for constrained realisation or precomputed
+Legendre polynomials are read, the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> generated in the process are not
+output, and <SPAN CLASS="colordoc">synfast</SPAN> attempts to find the pixel
+window files in the default directories (see 
+<A HREF="fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:defdir">Notes on default files and directories</A>).
+</blockquote>
+
+<P>
+<hr><H2>RELEASE NOTES</H2><blockquote>
+  <DL COMPACT><DD>&#9632;  Initial release (<strong>HEALPix</strong> 0.90)
+    <DD>&#9632;  Optional non-interactive operation. Proper FITS file
+    support. Improved reccurence algorithm for <!-- MATH
+ $P_{\ell m}(\theta)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="fac_img50.png"
+ ALT="$P_{\ell m}(\theta)$"></SPAN> which can compute to higher <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="fac_img5.png"
+ ALT="$\ell$"></SPAN> values. Improved pixel windows averaged over
+    actual HEALPix pixels. New functionality: constrained realisations, precomputed
+    <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img49.png"
+ ALT="$P_{\ell m}$"></SPAN>. (<strong>HEALPix</strong> 1.00)
+    <DD>&#9632;  New functionality: constrained realisations and pixel
+    windows are now available for polarization as well. Arbitrary
+    circular beams can be used. New parser (<strong>HEALPix</strong> 1.20)
+    <DD>&#9632;  New functionnality: the generated <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> can be output, and the map
+    synthesis itself can be skipped. First and second derivatives of the
+    temperature field can be produced on demand.
+    <DD>&#9632;  New functionnality: First and second derivatives of the
+    <SPAN CLASS="MATH"><I>Q</I></SPAN> and <SPAN CLASS="MATH"><I>U</I></SPAN> Stokes field can be produced on demand.
+    <DD>&#9632;  Bug correction: corrected numerical errors on derivatives 
+<!-- MATH
+ $\partial X/\partial\theta$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="fac_img14.png"
+ ALT="$\partial X/\partial\theta$"></SPAN>, 
+<!-- MATH
+ $\partial^2 X/(\partial\theta\partial\phi\sin\theta)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="fac_img15.png"
+ ALT="$\partial^2 X/(\partial\theta\partial\phi\sin\theta)$"></SPAN>, 
+<!-- MATH
+ $\partial^2 X/\partial \theta^2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="fac_img16.png"
+ ALT="$\partial^2 X/\partial \theta^2$"></SPAN>, 
+for <SPAN CLASS="MATH"><I>X</I>=<I>Q</I>,<I>U</I></SPAN>. See <A HREF="fac_Appendix.htm#fac:sec:bug_synder">this appendix</A> for details.
+  (<strong>HEALPix</strong> 2.14)
+  </DL>
+</blockquote>
+
+<P>
+<hr><H2>MESSAGES</H2><h3>This section describes error messages generated by <b><SPAN CLASS="colordoc">synfast</SPAN></b>
+</h3>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:125px"><SPAN  CLASS="textbf">Message</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">Severity</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">Text</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+can not allocate memory for array xxx</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">Fatal</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">You do not have
+                   sufficient system resources to run this
+                   facility at the map resolution you required. 
+  Try a lower map resolution.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+
+<P>
+this is not a binary table</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the fitsfile you have specified is not 
+of the proper format</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+there are undefined values in the table!</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the fitsfile you have specified is not 
+of the proper format</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+the header in xxx is too long</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the fitsfile you have specified is not 
+of the proper format</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+XXX-keyword not found</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the fitsfile you have specified is not 
+of the proper format</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+found xxx in the file, expected:yyyy</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the specified fitsfile does not
+contain the proper amount of data.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+
+<P></TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+</TABLE>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="fac_smoothing.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="fac_HEALPix_F90_facilities.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_ud_grade.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html145"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="fac_smoothing.htm">smoothing</A>
+
+<strong>Up:</strong> <A
+ HREF="fac_HEALPix_F90_facilities.htm">HEALPix/F90 facilities</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_ud_grade.htm">ud_grade</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

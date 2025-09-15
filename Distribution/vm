@@ -1,1 +1,1 @@
-gvim ../Headers/Distribution.h ../Headers/CombinedDistribution.h *cpp &
+gvim ../Headers/Distribution.h ../Headers/CombinedDistribution.h ../Headers/PriorDistribution.h ../Headers/PosteriorDistribution.h *cpp &

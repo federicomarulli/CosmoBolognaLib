@@ -1,0 +1,297 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>write_fits_sb</TITLE>
+<META NAME="description" CONTENT="write_fits_sb">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_write_tqu.htm">
+<LINK REL="previous" HREF="idl_write_fits_partial.htm">
+<LINK REL="next" HREF="idl_write_tqu.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_write_fits_partial.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_write_tqu.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html465"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_write_fits_partial.htm">write_fits_partial</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_write_tqu.htm">write_tqu</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION7800"></A>
+<A ID="idl:write_fits_sb"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">write_fits_sb</SPAN></div><hr>
+<H3>This IDL facility writes out a <strong>HEALPix</strong> map into a FITS file according to
+the <strong>HEALPix</strong> convention. It can also write an arbitray data set into a FITS
+binary table</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/fits/write_fits_sb.pro"><strong>src/idl/fits/write_fits_sb.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+WRITE_FITS_SB, <A HREF="#idl:write_fits_sb:File">File</A>, <A HREF="#idl:write_fits_sb:Prim_Stc">Prim_Stc</A>[, <A HREF="#idl:write_fits_sb:Xten_stc">Xten_stc</A>, <A HREF="#idl:write_fits_sb:Coordsys">Coordsys=</A>, <A HREF="#idl:write_fits_sb:Nested">/Nested</A>, <A HREF="#idl:write_fits_sb:Ring">/Ring</A>,
+<A HREF="#idl:write_fits_sb:Ordering">Ordering=</A>, <A HREF="#idl:write_fits_sb:Partial">/Partial</A>, <A HREF="#idl:write_fits_sb:Nside">Nside=</A>, <A HREF="#idl:write_fits_sb:Extension">Extension=</A>, <A HREF="#idl:write_fits_sb:Nothealpix">/Nothealpix</A>]
+
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>File</B>
+<DD><A ID="idl:write_fits_sb:File"></A>          name of a FITS file in which the map is to be written
+
+<P>
+<DT>
+<B>Prim_stc</B>
+<DD><A ID="idl:write_fits_sb:Prim_Stc"></A>	IDL structure containing the following fields: 
+<BR>		- primary header 
+<BR>		- primary image 
+<BR>
+Set it to 0 to get an empty primary unit
+
+<P>
+<DT>
+<B>Xten_stc</B>
+<DD><A ID="idl:write_fits_sb:Xten_stc"></A>		  (optional), 
+<BR>
+IDL structure containing the following fields: 
+<BR>		- extension header  
+<BR>		- data column 1  
+<BR>		- data column 2   
+<BR>		... 
+<BR>
+NB: because of some astron routines limitation, avoid using the single letters
+		  'T' or 'F' as tagnames in the structures Prim_stc and Xten_stc.
+
+<P>
+</DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>Coordsys=</B>
+<DD><A ID="idl:write_fits_sb:Coordsys"></A>		  (optional), 
+<BR>
+if set to either 'C', 'E' or 'G',  specifies that the
+		Healpix coordinate system is respectively Celestial=equatorial,
+		  Ecliptic or Galactic.
+		(The relevant keyword is then added/updated in the extension
+		  header, but the map is NOT rotated)
+
+<P>
+<DT>
+<B>Ordering=</B>
+<DD><A ID="idl:write_fits_sb:Ordering"></A>		  (optional), 
+<BR>
+if set to either 'ring' or 'nested' (case un-sensitive),
+		  specifies that the map is respectively in RING or NESTED
+		  ordering scheme
+<BR>		<i>see also:</i>Nested and Ring
+
+<P>
+<DT>
+<B>Nside=</B>
+<DD><A ID="idl:write_fits_sb:Nside"></A>		(optional), 
+<BR>
+scalar integer, <strong>HEALPix</strong> resolution parameter of the
+		data set. Must be used when the data set does not
+		cover the whole sky
+
+<P>
+<DT>
+<B>Extension=</B>
+<DD><A ID="idl:write_fits_sb:Extension"></A>		(optional), 
+<BR>
+scalar integer, extension in which to write the data
+		(0 based).
+<BR>		<b>default:</b>0
+
+<P>
+<DT>
+<B>/Nested</B>
+<DD><A ID="idl:write_fits_sb:Nested"></A>	  (optional), 
+<BR>
+if set, specifies that the map is in the NESTED ordering
+	scheme
+<BR>	<i>see also:</i>Ordering and Ring 
+
+<P>
+<DT>
+<B>/Ring</B>
+<DD><A ID="idl:write_fits_sb:Ring"></A>	  (optional), 
+<BR>
+if set, specifies that the map is in the RING ordering
+	scheme
+<BR>	<i>see also:</i>Ordering and Nested
+
+<P>
+<DT>
+<B>/Partial</B>
+<DD><A ID="idl:write_fits_sb:Partial"></A>	  (optional), 
+<BR>
+if set, the data set does not cover the whole sky. In
+	that case the information on the actual map resolution should be given by the
+	qualifier Nside (see above), or included in the FITS header enclosed in
+	the Xten_stc.
+
+<P>
+<DT>
+<B>/Nothealpix</B>
+<DD><A ID="idl:write_fits_sb:Nothealpix"></A>	  (optional), 
+<BR>
+if set, the data set can be arbitrary, and the
+	restriction on the number of pixels do not apply. The keywords <SPAN style="font-family:monospace">	Ordering</SPAN>, <SPAN style="font-family:monospace">Nside</SPAN>, <SPAN style="font-family:monospace">Nested</SPAN>, <SPAN style="font-family:monospace">Ring</SPAN> and <SPAN style="font-family:monospace">Partial</SPAN> are ignored.
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<IMG
+ STYLE="height: 55.43ex; vertical-align: -27.24ex; " SRC="idl_img127.png"
+ ALT="$\textstyle \parbox{\hsize}{\facname {} writes out the information contained in ...
+...{30}$.\\
+\par
+If {\tt Nothealpix} is set, the restrictions on Nside are void.}$">
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">write_fits_sb</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">write_fits_sb</SPAN>
+  <DT>
+<B><A HREF="idl_read_fits_map.htm#idl:read_fits_map">read_fits_map</A></B>
+<DD>This <strong>HEALPix</strong> IDL facility can be used to read in maps
+  written by <SPAN CLASS="colordoc">write_fits_sb</SPAN>.
+  <DT>
+<B><A HREF="idl_read_fits_s.htm#idl:read_fits_s">read_fits_s</A></B>
+<DD>This <strong>HEALPix</strong> IDL facility can be used to read
+  into an IDL structure maps written by <SPAN CLASS="colordoc">write_fits_sb</SPAN>.
+  <DT>
+<B>sxaddpar</B>
+<DD>This IDL routine (included in <strong>HEALPix</strong> package) can be used to update
+  or add FITS keywords to the header in <SPAN style="font-family:monospace">Prim_stc</SPAN> and <SPAN style="font-family:monospace">Exten_stc</SPAN>
+<DT>
+<B><A HREF="idl_write_fits_cut4.htm#idl:write_fits_cut4">write_fits_cut4</A>,
+<A HREF="idl_write_fits_partial.htm#idl:write_fits_partial">write_fits_partial</A>,
+<A HREF="idl_write_fits_map.htm#idl:write_fits_map">write_fits_map</A></B>
+<DD><DT>
+<B><A HREF="idl_write_tqu.htm#idl:write_tqu">write_tqu</A>,
+<A HREF="#idl:write_fits_sb">write_fits_sb</A></B>
+<DD><strong>HEALPix</strong> IDL routines to write cut-sky and partial maps, full-sky maps, polarized full-sky maps and
+arbitrary data sets into FITS files
+  <DT>
+<B><A HREF="idl_write_tqu.htm#idl:write_tqu">write_tqu</A></B>
+<DD>This <strong>HEALPix</strong> IDL facility based on <SPAN CLASS="colordoc">write_fits_sb</SPAN> is designed to write
+  temperature+polarization (T,Q,U) maps
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">npix =  <A HREF="idl_nside2npix.htm#idl:nside2npix">nside2npix</A>(128)</TD>
+</TR>
+<TR><TD CLASS="LEFT">f=  randomn(seed,npix)</TD>
+</TR>
+<TR><TD CLASS="LEFT">n=  lindgen(npix)+3</TD>
+</TR>
+<TR><TD CLASS="LEFT">map_FN =  create_struct('HDR',['&nbsp;'],'FLUX',f,'NUMBER',n)</TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">write_fits_sb</SPAN>,  'map_fluxnumber.fits', 0, map_FN, coord='G', /ring</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+The structure map_FN is defined to contain a fictitious Flux<SPAN CLASS="MATH">+</SPAN>number map, where
+one field is a float and the other an integer.
+<SPAN CLASS="colordoc">write_fits_sb</SPAN> writes out the contents of map_FN into the extension 
+of the FITS file 'map_fluxnumber.fits'.
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_write_fits_partial.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_write_tqu.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html465"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_write_fits_partial.htm">write_fits_partial</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_write_tqu.htm">write_tqu</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,32 @@
+# HEALPix 3.82
+# parameter file for synfast
+# This parameter file is used by "make test".
+
+simul_type = 2
+
+nsmax = 128
+
+nlmax = 256
+
+infile = cl.fits
+
+iseed = -1
+
+fwhm_arcmin = 30
+
+beam_file = ''
+
+almsfile = ''
+
+plmfile = ''
+
+outfile = !test_map.fits
+
+#outfile_alms = ''
+outfile_alms = !test_alm.fits
+
+apply_windows = F
+
+#windowfile
+
+#winfiledir

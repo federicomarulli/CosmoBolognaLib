@@ -1,0 +1,25 @@
+# HEALPix 3.82
+# parameter file for anafast
+# This parameter file is used by "make test".
+ 
+simul_type = 2
+
+infile =   map.fits
+
+nlmax =    256
+
+maskfile = ''
+
+theta_cut_deg =   0.00
+
+regression = 2
+
+plmfile = ''
+
+outfile = !test_cl_w2.fits
+
+outfile_alms = ''
+
+won = 2
+
+iter_order = 0

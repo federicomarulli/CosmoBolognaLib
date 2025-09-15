@@ -64,11 +64,11 @@ namespace cbl {
        */
       struct STR_MOrelation_data_model {
       
-	/// Fiducial cosmology
+	/// fiducial cosmology
 	std::shared_ptr<cosmology::Cosmology> cosmology;
 	
-	/// Cosmological parameters
-	std::vector<cosmology::CosmologicalParameter> Cpar;
+	/// cosmological parameters
+	std::vector<std::string> Cpar;
 	
 	/// the redshift evolution function in the scaling relation
 	std::function<double(const double, const double, const std::shared_ptr<void>)> fz;
@@ -200,9 +200,9 @@ namespace cbl {
 	Modelling_MassObservableRelation () = default;
 	
 	/**
-	 *  @brief constuctor for the modelling of the
-	 *  cluster mass - mass proxy relation. Cosmological units are forced
-	 *  @param dataset the dataset containing x, data and errors
+	 *  @brief constuctor for the modelling of the cluster mass -
+	 *  mass proxy relation. Cosmological units are forced @param
+	 *  dataset the dataset containing x, data and errors
 	 */
 	Modelling_MassObservableRelation (const std::shared_ptr<cbl::data::Data> dataset)
 	{ m_data = dataset; }
@@ -213,7 +213,7 @@ namespace cbl {
 	 */
 	virtual ~Modelling_MassObservableRelation () = default;
 
-      ///@}
+	///@}
 	
 	/**
 	 *  @name Member functions used to set the protected members of the class
@@ -247,8 +247,8 @@ namespace cbl {
 	 *  @brief Set the data used to construct the scaling relation,
 	 *  written as:
 	 * 
-	 *  \f$\log M = \alpha + \beta 
-	 *  \log (\lambda/\lambda_{\rm piv}) + \gamma \log (f(z)),\f$
+	 *  \f$\log M = \alpha + \beta \log (\lambda/\lambda_{\rm
+	 *  piv}) + \gamma \log (f(z)),\f$
 	 *
 	 *  where \f$\lambda\f$ is the mass proxy.
 	 *  
@@ -261,13 +261,12 @@ namespace cbl {
 	 *  @param proxy_pivot proxy or mass pivot value
 	 *
 	 *  @param log_base base of the mass and proxy logarithms
-	 *  
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology, const std::vector<double> redshift, const double redshift_pivot, const double proxy_pivot, const double log_base);
+	void set_data_model (const std::shared_ptr<cosmology::Cosmology> cosmology, const std::vector<double> redshift, const double redshift_pivot, const double proxy_pivot, const double log_base);
 	
 	/**
-	 *  @brief Set the data used to construct the scaling relation,
-	 *  written as:
+	 *  @brief Set the data used to construct the scaling
+	 *  relation, written as:
 	 * 
 	 *  \f$\log M = \int_0^\infty {\rm d}\log M_{\rm tr}\,\,
 	 *  \log M_{\rm tr} \, P(\log M_{\rm tr}|\lambda_{\rm eff},z_{\rm eff}) \,,\f$ 
@@ -277,8 +276,8 @@ namespace cbl {
 	 *  a log-normal whose mean is given by the mass-mass proxy
 	 *  relation, i.e. 
 	 *
-	 *  \f$\log (M/M_{\rm piv}) = \alpha + \beta 
-	 *  \log (\lambda/\lambda_{\rm piv}) + \gamma \log (f(z)),\f$
+	 *  \f$\log (M/M_{\rm piv}) = \alpha + \beta \log
+	 *  (\lambda/\lambda_{\rm piv}) + \gamma \log (f(z)),\f$
 	 *
 	 *  and whose standard deviation is given by the intrinsic scatter
 	 *  computed in the \f$j\f$-th bin of proxy and redshift, 
@@ -302,17 +301,16 @@ namespace cbl {
 	 *  @param log_base base of the mass and proxy logarithms
 	 *
 	 *  @param Nclusters number of clusters in the bin
-	 *  
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology, const std::vector<double> redshift, const double redshift_pivot, const double proxy_pivot, const double log_base, const std::vector<double> Nclusters);
+	void set_data_model (const std::shared_ptr<cosmology::Cosmology> cosmology, const std::vector<double> redshift, const double redshift_pivot, const double proxy_pivot, const double log_base, const std::vector<double> Nclusters);
 
 	/**
 	 *  @brief Set the scaling relation and cosmological parameters,
 	 *  where the scaling relation is written as
 	 *
-	 *  \f$\log M = \alpha + \beta 
-	 *  \log (\lambda_{\rm eff}/\lambda_{\rm piv}) 
-	 *  + \gamma \log (f(z_{\rm eff})),\,\,\,\,(1)\f$
+	 *  \f$\log M = \alpha + \beta \log (\lambda_{\rm
+	 *  eff}/\lambda_{\rm piv}) + \gamma \log (f(z_{\rm
+	 *  eff})),\,\,\,\,(1)\f$
 	 *
 	 *  or as 
 	 * 
@@ -326,16 +324,17 @@ namespace cbl {
 	 *  a log-normal whose mean is given by the mass-mass proxy
 	 *  relation, i.e. 
 	 *
-	 *  \f$\log (M/M_{\rm piv}) = \alpha + \beta 
-	 *  \log (\lambda/\lambda_{\rm piv}) + \gamma \log (f(z)),\f$
+	 *  \f$\log (M/M_{\rm piv}) = \alpha + \beta \log
+	 *  (\lambda/\lambda_{\rm piv}) + \gamma \log (f(z)),\f$
 	 *
 	 *  and whose standard deviation is given by the intrinsic scatter, 
 	 *  computed in the \f$j\f$-th bin of proxy and redshift, 
 	 *  \f$ \sigma_{{\rm intr},j} \f$, expressed as
 	 *
-	 *  \f$ \sigma_{{\rm intr},j} = \frac{1}{N_{{\rm cl},j}}\left[\sigma_0 
-	 *  + \sigma_{\lambda} \log (\lambda/\lambda_{\rm piv})^{e_{\lambda}} 
-	 *  + \sigma_z \log (f(z))^{e_z}\right]\,, \f$
+	 *  \f$ \sigma_{{\rm intr},j} = \frac{1}{N_{{\rm
+	 *  cl},j}}\left[\sigma_0 + \sigma_{\lambda} \log
+	 *  (\lambda/\lambda_{\rm piv})^{e_{\lambda}} + \sigma_z \log
+	 *  (f(z))^{e_z}\right]\,, \f$
 	 *
 	 *  where \f$N_{{\rm cl},j}\f$ is the number of clusters 
 	 *  used for the stacking in the bin.
@@ -346,8 +345,9 @@ namespace cbl {
 	 *  depends on the intrinsic scatter. In particular the intrinsic
 	 *  scatter, \f$\sigma_{\rm intr}\f$, is expressed as
 	 *
-	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{\lambda} 
-	 *  \log (\lambda/\lambda_{\rm piv})^{e_{\lambda}} + \sigma_z \log (f(z))^{e_z}.\f$
+	 *  \f$ \sigma_{\rm intr} = \sigma_0 + \sigma_{\lambda} \log
+	 *  (\lambda/\lambda_{\rm piv})^{e_{\lambda}} + \sigma_z \log
+	 *  (f(z))^{e_z}.\f$
 	 *
 	 *  @param z_evo functional form of the redshift evolution
 	 *  function in the scaling relation: "E_z" \f$\rightarrow\f$ 
@@ -382,13 +382,13 @@ namespace cbl {
 	 *  redshift-dependent term of the intrinsic scatter, \f$ e_z \f$
 	 *
 	 */
-	void set_model_MassObservableRelation_cosmology (const std::string z_evo, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior);
+	void set_model_MassObservableRelation_cosmology (const std::string z_evo, const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior);
 
 	///@}
-     };
+      };
 
     
-    /**
+      /**
        * @brief compute the mass - mass proxy scaling relation
        *
        * @param alpha normalisation

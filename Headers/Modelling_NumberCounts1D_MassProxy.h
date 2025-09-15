@@ -36,6 +36,7 @@
 
 
 #include "Modelling_NumberCounts1D.h"
+#include "Bias.h"
 
 
 // ===================================================================================================
@@ -227,11 +228,47 @@ namespace cbl {
 	 *  proxy_error_type, this prior is related to the absolute error or to the relative error
 	 *
 	 *  @param Plambda_prior priors on the three parameters,
-	 *  respectively \f$ a \f$, \f$ b \f$, \f$ c \f$, defining
-	 *  the distribution \f$ P(\lambda_{\rm tr}|z_{\rm tr}) \f$
-	 *  
+	 *  respectively \f$ a \f$, \f$ b \f$, \f$ c \f$, defining the
+	 *  distribution \f$ P(\lambda_{\rm tr}|z_{\rm tr}) \f$
 	 */
-	void set_model_NumberCounts_cosmology (const std::string scalrel_z_evo, const std::string z_error_type, const std::string proxy_error_type, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution z_bias_prior, const statistics::PriorDistribution proxy_bias_prior, const statistics::PriorDistribution z_error_prior, const statistics::PriorDistribution proxy_error_prior, const std::vector<statistics::PriorDistribution> Plambda_prior);
+	void set_model_NumberCounts_cosmology (const std::string scalrel_z_evo, const std::string z_error_type, const std::string proxy_error_type, const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior, const statistics::PriorDistribution z_bias_prior, const statistics::PriorDistribution proxy_bias_prior, const statistics::PriorDistribution z_error_prior, const statistics::PriorDistribution proxy_error_prior, const std::vector<statistics::PriorDistribution> Plambda_prior);
+	
+	/**
+	 *  @brief Set the cosmological parameters used to model the 
+	 *  number counts as a function of a mass proxy, where
+	 *  \f$P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\f$ is NOT inverted.
+	 *
+	 *  @param cosmo_param vector of enums containing cosmological
+	 *  parameters
+	 *
+	 *  @param cosmo_param_prior vector containing the priors for
+	 *  the cosmological parameters
+	 *
+	 *  @param alpha_prior prior on the normalization 
+	 *  of the mass-mass proxy scaling relation, \f$\alpha\f$
+	 *
+	 *  @param beta_prior prior on the slope 
+	 *  of the mass-mass proxy scaling relation, \f$\beta\f$
+	 *
+	 *  @param gamma_prior prior on the redshift evolution factor 
+	 *  of the mass-mass proxy scaling relation, \f$\gamma\f$
+	 *
+	 *  @param scatter0_prior prior on the 
+	 *  constant term of the intrinsic scatter, \f$ \sigma_0 \f$
+	 *
+	 *  @param scatterM_prior prior on the factor in the
+	 *  proxy-dependent term of the intrinsic scatter, \f$ \sigma_{\lambda} \f$
+	 *
+	 *  @param scatterM_exponent_prior prior on the exponent in the
+	 *  proxy-dependent term of the intrinsic scatter, \f$ e_{\lambda} \f$
+	 *
+	 *  @param scatterz_prior prior on the factor in the
+	 *  redshift-dependent term of the intrinsic scatter, \f$ \sigma_z \f$
+	 *
+	 *  @param scatterz_exponent_prior prior on the exponent in the
+	 *  redshift-dependent term of the intrinsic scatter, \f$ e_z \f$
+	 */
+	void set_model_NumberCounts_cosmology_classic (const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior);
 
 	///@}
 

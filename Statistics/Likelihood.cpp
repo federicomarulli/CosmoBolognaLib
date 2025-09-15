@@ -154,11 +154,12 @@ cbl::statistics::Likelihood::Likelihood (const std::shared_ptr<data::Data> data,
 // ============================================================================================
 
 
-cbl::statistics::Likelihood::Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const Likelihood_function log_likelihood_function, const std::shared_ptr<ModelParameters> model_parameters)
+cbl::statistics::Likelihood::Likelihood (const std::shared_ptr<data::Data> data, const std::shared_ptr<Model> model, const Likelihood_function log_likelihood_function, const std::shared_ptr<ModelParameters> model_parameters, const double prec, const int Nres)
 {
   set_data(data);
   set_model(model, model_parameters);
   set_log_function(log_likelihood_function);
+  m_data->invert_covariance(prec, Nres);
 }
 
 

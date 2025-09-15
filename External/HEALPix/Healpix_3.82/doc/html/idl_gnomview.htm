@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>gnomview</TITLE>
+<META NAME="description" CONTENT="gnomview">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm">
+<LINK REL="previous" HREF="idl_gnomcursor.htm">
+<LINK REL="next" HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_gnomcursor.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html365"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_gnomcursor.htm">gnomcursor</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm">healpix_doc: PDF, HTML and EPUB documentation</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION2800"></A>
+<A ID="idl:gnomview"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">gnomview</SPAN></div><hr>
+<H3>This IDL facility provides a means to visualise a Gnomonic projection 
+(radial projection onto a tangent plane) of
+<strong>HEALPix</strong> and COBE Quad-Cube maps in an IDL environment. 
+It also offers the possibility to
+generate GIF, JPEG, PDF, PNG and Postscript color-coded images of the projected map.
+The projected (but not color-coded) data can also be output in FITS files and
+IDL arrays.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/visu/gnomview.pro"><strong>src/idl/visu/gnomview.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+GNOMVIEW, 
+
+<A HREF="idl_mollview.htm#idl:mollview:file">File</A> 
+[, <A HREF="idl_mollview.htm#idl:mollview:select">Select</A>]
+[, <A HREF="idl_mollview.htm#idl:mollview:asinh">ASINH=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:bad_color">BAD_COLOR=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:bg_color">BG_COLOR=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:charsize">CHARSIZE=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:charsize">CHARTHICK=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:colt">COLT=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:coord">COORD=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:crop">/CROP</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:customize">CUSTOMIZE=</A>,
+<A HREF="idl_mollview.htm#idl:mollview:default_settings">DEFAULT_SETTINGS=</A>,
+<A HREF="idl_mollview.htm#idl:mollview:execute">EXECUTE=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:factor">FACTOR=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:fg_color">FG_COLOR=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:fits">FITS=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:flip">/FLIP</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:gal_cut">GAL_CUT=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:gif">GIF=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:glsize">GLSIZE=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:graticule">GRATICULE=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:half_sky">/HALF_SKY</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:hbound">HBOUND=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:help">/HELP</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:hist_equal">/HIST_EQUAL</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:hxsize">HXSIZE=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:iglsize">IGLSIZE=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:igraticule">IGRATICULE=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:jpeg">JPEG=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:latex">LATEX=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:log">/LOG</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:map_out">MAP_OUT=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:max">MAX=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:min">MIN=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:nested">/NESTED</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:no_dipole">/NO_DIPOLE</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:no_monopole">/NO_MONOPOLE</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:nobar">/NOBAR</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:nolabels">/NOLABELS</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:noposition">/NOPOSITION</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:offset">OFFSET=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:outline">OUTLINE=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:pdf">PDF=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:pfonts">PFONTS=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:png">PNG=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:polarization">POLARIZATION=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:preview">/PREVIEW</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:ps">PS=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:pxsize">PXSIZE=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:pysize">PYSIZE=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:reso_arcmin">RESO_ARCMIN=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:retain">RETAIN=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:rot">ROT=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:save">/SAVE</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:shaded">/SHADED</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:silent">/SILENT</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:silhouette">SILHOUETTE=</A>,
+<A HREF="idl_mollview.htm#idl:mollview:stagger">STAGGER=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:subtitle">SUBTITLE=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:titleplot">TITLEPLOT=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:transparent">TRANSPARENT=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:truecolors">TRUECOLORS=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:units">UNITS=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:window">WINDOW=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:xpos">XPOS=</A>, 
+<A HREF="idl_mollview.htm#idl:mollview:ypos">YPOS=</A>]
+
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<DD>For a full list of qualifiers see <A HREF="idl_mollview.htm#idl:mollview">mollview</A>
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<DD>For a full list of keywords see <A HREF="idl_mollview.htm#idl:mollview">mollview</A>
+  </DL>
+
+<P>
+
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<br><br><SPAN CLASS="colordoc">gnomview</SPAN> reads in a <strong>HEALPix</strong> sky map in FITS format and generates
+a gnomic (or gnomonic) projection of it, that can be visualized on the screen or
+exported in a GIF, JPEG, PNG, PDF or Postscript file. <SPAN CLASS="colordoc">gnomview</SPAN>  allows the selection of
+the coordinate system, map size, color table, color bar inclusion,
+linear, log, hybrid or histogram equalised color scaling, 
+maximum and 
+minimum range for the plot, plot-title <I>etc</I>. It also allows the representation of the
+polarization field.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">gnomview</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<DD>see <A HREF="idl_mollview.htm#idl:mollview">mollview</A>
+  </DL>
+
+<P>
+<hr><H2>EXAMPLE # 1:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">gnomview,  'planck100GHZ-LFI.fits', rot=[160,-30], reso_arcmin=2., $</TD>
+</TR>
+<TR><TD CLASS="LEFT">pxsize = 500., $</TD>
+</TR>
+<TR><TD CLASS="LEFT">title='Simulated Planck LFI Sky Map at 100GHz',  $</TD>
+</TR>
+<TR><TD CLASS="LEFT">min=-100,max=100</TD>
+</TR>
+</TABLE></div>
+<blockquote>gnomview reads in the map 'planck100GHZ-LFI.fits' and generates
+an output image of the size of 500<SPAN CLASS="MATH"> x </SPAN>500 screen pixels, 
+with a resolution of 2 arcmin/screen pixel at the center.
+The temperature scale has been set to lie between <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.29ex; " SRC="idl_img65.png"
+ ALT="$\pm$"></SPAN> 100, and the units will
+show as <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.55ex; " SRC="idl_img66.png"
+ ALT="$\mu$"></SPAN>K.
+The title 'Simulated Planck
+LFI Sky Map at 100GHz' has been appended to the image. 
+The map is centered at (<SPAN CLASS="MATH"><I>l</I>=</SPAN>160, <SPAN CLASS="MATH"><I>b</I>=</SPAN>-30) </blockquote>
+
+<P>
+<hr><H2>EXAMPLE # 2:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">
+<P>
+map  = findgen(48)</TD>
+</TR>
+<TR><TD CLASS="LEFT">triangle= create_struct('coord','G','ra',[0,80,0],'dec',[40,45,65])</TD>
+</TR>
+<TR><TD CLASS="LEFT">gnomview,map,/online,res=25,graticule=[45,30],rot=[10,20,30],$</TD>
+</TR>
+<TR><TD CLASS="LEFT">title='Gnomic projection',subtitle='gnomview', $</TD>
+</TR>
+<TR><TD CLASS="LEFT">outline=triangle</TD>
+</TR>
+</TABLE></div>
+<blockquote>makes a gnomic projection of map (see Figure&nbsp;<A HREF="idl_mollview.htm#fig:plot_visu">1</A>b on
+page&nbsp;<A HREF="idl_mollview.htm#page:plot_visu"><IMG  ALT="[*]" SRC="crossref.png"></A>) after an arbitrary rotation, with a graticule grid
+(with a 45<SPAN CLASS="MATH"><SUP><i>o</i></SUP></SPAN> step in longitude and 30<SPAN CLASS="MATH"><SUP><i>o</i></SUP></SPAN> in latitude) and an arbitrary triangular outline</blockquote>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_gnomcursor.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html365"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_gnomcursor.htm">gnomcursor</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_healpix_doc_PDF_HTML_EPUB_d.htm">healpix_doc: PDF, HTML and EPUB documentation</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

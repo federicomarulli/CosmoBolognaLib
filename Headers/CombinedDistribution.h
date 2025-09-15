@@ -37,6 +37,7 @@
 #include "EigenWrapper.h"
 #include "ChainMesh.h"
 
+
 // ===================================================================================================
 
 
@@ -45,7 +46,8 @@ namespace cbl {
   namespace glob {
 
     /**
-     *  @class Distribution CombinedDistribution.h "Headers/Distribution.h"
+     *  @class CombinedDistribution CombinedDistribution.h
+     *  "Headers/CombinedDistribution.h"
      *
      *  @brief The class CombinedDistribution
      *
@@ -188,14 +190,14 @@ namespace cbl {
        *
        * @param meanVec vector containing the mean of the distributions
        *
-       * @param covMat the covariance matrix of the multidimensional distribution 
+       * @param covMat the covariance matrix of the multidimensional
+       * distribution
        *
        * @param xMinVec vector containing the minima of the distributions
        *
        * @param xMaxVec vector containing the maxima of the distributions
        *
        * @param seed the distribution seed for random sampling
-       *
        */
       CombinedDistribution (const DistributionType distributionType, const std::vector<double> meanVec, const std::vector<std::vector<double>> covMat, const std::vector<double> xMinVec, const std::vector<double> xMaxVec, const int seed=3213);
 
@@ -250,21 +252,23 @@ namespace cbl {
       double operator [] (std::vector<double> xx);
 
       /**
-       * @brief the i-th distribution 
+       * @brief the i-th distribution
        *
        * @param index the value for distribution calculation
        *
        * @return shared pointer to the object of the class
        * Distribution correspondent to a certain index
        */
-      std::shared_ptr<Distribution> get_distribution (int i) {return m_distributionVec[i];}
+      std::shared_ptr<Distribution> get_distribution (const int index)
+      { return m_distributionVec[index]; }
 
       /**
        * @brief the size of the distribution vector
        *
        * @return the size of the distribution vector
        */
-      size_t get_size_distribution () {return m_distributionVec.size();}
+      size_t get_size_distribution ()
+      { return m_distributionVec.size(); }
 
     };
   }

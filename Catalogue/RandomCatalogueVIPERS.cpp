@@ -37,6 +37,7 @@
 using namespace std;
 
 using namespace cbl;
+using namespace glob;
 
 
 // ============================================================================
@@ -44,7 +45,7 @@ using namespace cbl;
 
 /// @cond extrandom
 
-cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField, const bool isSpectroscopic, const Catalogue catalogue, const Catalogue catalogue_for_nz, const double N_R, const cosmology::Cosmology &cosm, const int step_redshift, const vector<double> lim, const double redshift_min, const double redshift_max, const bool do_convol, const double sigma, const bool use_venice, const bool do_zdistr_with_venice, const string file_random, const string mask, const string pointing_file, const string dir_venice, const int seed) 
+cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField, const bool isSpectroscopic, const Catalogue catalogue, const Catalogue catalogue_for_nz, const double N_R, const std::shared_ptr<cosmology::Cosmology> cosmology, const int step_redshift, const vector<double> lim, const double redshift_min, const double redshift_max, const bool do_convol, const double sigma, const bool use_venice, const bool do_zdistr_with_venice, const string file_random, const string mask, const string pointing_file, const string dir_venice, const int seed) 
 {
   if (type!=RandomType::_createRandom_VIPERS_) ErrorCBL("the random catalogue has to be of type _VIPERS_ !", "Catalogue", "RandomCatalogueVIPERS.cpp");
   
@@ -204,7 +205,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
 	  ss >> RA; ss >> DEC; ss >> REDSHIFT; ss >> FIELD;
 	  if (redshift_min<REDSHIFT && REDSHIFT<redshift_max && lim[0]<RA && RA<lim[1] && lim[2]<DEC && DEC<lim[3]) {
 	    observedCoordinates coord = {RA, DEC, REDSHIFT};
-	    m_object.push_back(move(Object::Create(ObjectType::_Random_, coord, CoordinateUnits::_degrees_, cosm, 1., 0, -1, FIELD)));
+	    m_object.push_back(move(Object::Create(ObjectType::_Random_, coord, CoordinateUnits::_degrees_, cosmology, 1., 0, -1, FIELD)));
 	  }
 	}
     }
@@ -240,7 +241,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
       // construct the objects
       for (size_t i=0; i<random_ra.size(); ++i) {
 	observedCoordinates coord = {random_ra[i], random_dec[i], random_redshift[i]};
-	m_object.push_back(move(Object::Create(ObjectType::_Random_, coord, CoordinateUnits::_degrees_, cosm, 1., 0, -1, field[i])));
+	m_object.push_back(move(Object::Create(ObjectType::_Random_, coord, CoordinateUnits::_degrees_, cosmology, 1., 0, -1, field[i])));
       }
       
     }
@@ -250,7 +251,7 @@ cbl::catalogue::Catalogue::Catalogue (const RandomType type, const string WField
   
  
   if (isSpectroscopic) 
-    computeComovingCoordinates(cosm);
+    computeComovingCoordinates(cosmology);
   
   
   // ----- resize the random catalogue to have exactly N_R*catalogue.nObjects() objects -----

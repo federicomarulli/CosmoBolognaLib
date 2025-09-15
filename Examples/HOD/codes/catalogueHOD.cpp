@@ -2,6 +2,7 @@
 // Example code: how to construct a Halo Occupation Distribution (HOD) galaxy catalogue
 // ====================================================================================
 
+#include "LCDM.h"
 #include "Catalogue.h"
  
 int main () {
@@ -12,8 +13,8 @@ int main () {
     // ---------------- set the cosmological parameters  ------------
     // --------------------------------------------------------------
 
-    const cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
-
+    auto cosmology = std::make_shared<cbl::cosmology::LCDM>("Planck18");
+    
     
     // ---------------------------------------------------------------------
     // ---------------- read the dark matter halo catalogue ----------------
@@ -23,15 +24,15 @@ int main () {
     const std::string input_path = "../input/";
     const std::string output_path = "../output/";
     const std::string input_file = "haloCat.dat";
-
+    
     // halo catalogue constructor
-    cbl::catalogue::Catalogue haloCat { cbl::catalogue::ObjectType::_HostHalo_, cbl::CoordinateType::_comoving_, { cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_, cbl::catalogue::Var::_Mass_ }, {1, 2, 3, 4}, {input_path+input_file}, 0, 1., 1., cosmology };
+    cbl::catalogue::Catalogue haloCat { cbl::catalogue::ObjectType::_HostHalo_, cbl::CoordinateType::_comoving_, { cbl::catalogue::Var::_X_, cbl::catalogue::Var::_Y_, cbl::catalogue::Var::_Z_, cbl::catalogue::Var::_Mass_ }, {1, 2, 3, 4}, {input_path+input_file}, 0, 1., 1., cosmology};
 
 
     // --------------------------------------------------------------------------------------
     // ---------------- construct the HOD galaxy catalogue from the halo one ----------------
     // --------------------------------------------------------------------------------------
-
+    
     cbl::catalogue::Catalogue HOD { haloCat, cosmology, cbl::catalogue::HODType::_Moster10_, 1.e8, false };
 
     std::cout << cbl::par::col_green << "HOD catalogue MIN/MAX values per variable:" << cbl::par::col_default << std::endl;

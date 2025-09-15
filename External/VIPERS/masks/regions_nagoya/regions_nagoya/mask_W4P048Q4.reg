@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: /tmp/fileGrBMtN.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(332.09959,1.467701,332.10227,1.464332,332.20092,1.464476,332.21008,1.4658324,332.20987,1.471916,332.20988,1.589899,332.20133,1.591662,332.10033,1.593226,332.09327,1.589903,332.09327,1.471915) # color=red dash=1

@@ -2,7 +2,7 @@
 // Example code: how to perform a Bayesian fit to a set of data points with a generic model
 // ========================================================================================
 
-#include "Cosmology.h"
+#include "LCDM.h"
 #include "Data1D.h"
 #include "Posterior.h"
 
@@ -14,11 +14,11 @@ using namespace std;
 vector<double> model_function (const vector<double> x, const shared_ptr<void> modelInput, std::vector<double> &parameter)
 {
   // the object Cosmology, used in this example to compute Omega_matter
-  cbl::cosmology::Cosmology cosm = *static_pointer_cast<cbl::cosmology::Cosmology>(modelInput);
+  auto cosm = static_pointer_cast<cbl::cosmology::LCDM>(modelInput);
 
   vector<double> model(x.size(), 0.);
   for (size_t i=0; i<x.size(); ++i)
-    model[i] = parameter[0]*x[i]+parameter[1]+parameter[2]*cosm.Omega_matter(); // the model
+    model[i] = parameter[0]*x[i]+parameter[1]+parameter[2]*cosm->Omega_matter(); // the model
 
   parameter[3] = parameter[0]+parameter[1]+parameter[2]; // parameter[3] is a derived parameter
 
@@ -64,8 +64,7 @@ int main () {
     parType.emplace_back(cbl::statistics::ParameterType::_Derived_);   
 
     // set the stuff used to construct the model: here an object of class cosmology, just as an example 
-    const cbl::cosmology::Cosmology cosmology;
-    auto ptr_modelInput = make_shared<cbl::cosmology::Cosmology>(cosmology);
+    auto ptr_modelInput = make_shared<cbl::cosmology::LCDM>("Planck18");
 
     // construct the model
     const cbl::statistics::Model1D model(&model_function, nparameters, parType, parNames, ptr_modelInput);

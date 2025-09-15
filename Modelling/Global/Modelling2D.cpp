@@ -44,6 +44,9 @@ using namespace cbl;
 
 void cbl::modelling::Modelling::set_fit_range (const double xmin, const double xmax, const double ymin, const double ymax)
 {
+  if (m_likelihood != NULL)
+    ErrorCBL("You must set the fit range before the declaration of the likelihood function!", "set_fit_range", "Modelling2D.cpp");
+  
   m_data_fit = m_data->cut(xmin, xmax, ymin, ymax); 
   m_fit_range = true;
 }

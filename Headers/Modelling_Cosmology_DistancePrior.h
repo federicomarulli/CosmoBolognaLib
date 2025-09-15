@@ -66,7 +66,7 @@ namespace cbl {
 	virtual std::shared_ptr<data::Data> dataset ()
 	{ ErrorCBL("no dataset for base class!", "dataset", "Modelling_Cosmology_DistancePrior.h"); return NULL; }
 	  
-	virtual std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
+	virtual std::vector<double> model (const std::shared_ptr<cosmology::Cosmology> cosmology)
 	{ (void)cosmology; ErrorCBL("no model for base class!", "model", "Modelling_Cosmology_DistancePrior.h"); std::vector<double> vv; return vv; }
 
       };
@@ -97,13 +97,13 @@ namespace cbl {
 
 	std::shared_ptr<data::Data> dataset() {return m_dataset; }
 
-	std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
+	std::vector<double> model (const std::shared_ptr<cosmology::Cosmology> cosmology)
 	{
 	  std::vector<double> mm(3, 0);
 
-	  mm[0] = cosmology.Omega_baryon()*cosmology.hh()*cosmology.hh();
-	  mm[1] = cosmology.Omega_matter()*cosmology.hh()*cosmology.hh();
-	  mm[2] = cosmology.D_M(m_dataset->xx(2))/cosmology.rs_CAMB();
+	  mm[0] = cosmology->Omega_baryon()*cosmology->little_h()*cosmology->little_h();
+	  mm[1] = cosmology->Omega_matter()*cosmology->little_h()*cosmology->little_h();
+	  mm[2] = cosmology->D_M(m_dataset->xx(2))/cosmology->sound_horizon_at_drag_epoch();
 
 	  return mm;
 	}
@@ -135,13 +135,13 @@ namespace cbl {
 
 	std::shared_ptr<data::Data> dataset () { return m_dataset; }
 
-	std::vector<double> model (const cbl::cosmology::Cosmology cosmology)
+	std::vector<double> model (const std::shared_ptr<cosmology::Cosmology> cosmology)
 	{
 	  std::vector<double> mm(3, 0);
 
-	  mm[0] = cosmology.Omega_baryon()*cosmology.hh()*cosmology.hh();
-	  mm[1] = cosmology.Omega_matter()*cosmology.hh()*cosmology.hh();
-	  mm[2] = cosmology.D_M(m_dataset->xx(2))/cosmology.rs_CAMB();
+	  mm[0] = cosmology->Omega_baryon()*cosmology->little_h()*cosmology->little_h();
+	  mm[1] = cosmology->Omega_matter()*cosmology->little_h()*cosmology->little_h();
+	  mm[2] = cosmology->D_M(m_dataset->xx(2))/cosmology->sound_horizon_at_drag_epoch();
 
 	  return mm;
 	}

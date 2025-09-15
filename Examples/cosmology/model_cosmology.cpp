@@ -3,6 +3,7 @@
 // Data from Addison et al. 2013
 // ==================================================
 
+#include "LCDM.h"
 #include "Data1D.h"
 #include "Modelling_Cosmology.h"
 
@@ -10,11 +11,11 @@ int main () {
 
   try {
 
-    // ---------------------------------------------------------------------------
-    // ---------------- using one of the built-in cosmological models ------------
-    // ---------------------------------------------------------------------------
+    // --------------------------------------------------------
+    // ---------------- set the cosmological model ------------
+    // --------------------------------------------------------
 
-    cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_, "LCDM", false};
+    auto cosmology = std::make_shared<cbl::cosmology::LCDM>("Planck18");
 
 
     // ----------------------------------------------
@@ -64,11 +65,11 @@ int main () {
     modelCosmo.set_fiducial_cosmology(cosmology);
 
 
-    std::vector<cbl::cosmology::CosmologicalParameter> Cpar = {cbl::cosmology::CosmologicalParameter::_Omega_matter_LCDM_, cbl::cosmology::CosmologicalParameter::_H0_, cbl::cosmology::CosmologicalParameter::_rs_};
+    std::vector<std::string> Cpar = {"Omega_matter_LCDM", "H0", "rs"};
 
     cbl::statistics::PriorDistribution OmegaM_prior(cbl::glob::DistributionType::_Uniform_, 0.1, 0.5, 5452);
     cbl::statistics::PriorDistribution H0_prior(cbl::glob::DistributionType::_Uniform_, 50, 100, 6764);
-    cbl::statistics::PriorDistribution rs_prior(cbl::glob::DistributionType::_Gaussian_, {cosmology.rs_CAMB(), 10}, 130, 180, 5645);
+    cbl::statistics::PriorDistribution rs_prior(cbl::glob::DistributionType::_Gaussian_, {cosmology->sound_horizon_at_drag_epoch(), 10}, 130, 180, 5645);
 
     modelCosmo.set_cosmological_parameters(Cpar, {OmegaM_prior, H0_prior, rs_prior});
 
@@ -80,14 +81,14 @@ int main () {
     const int chain_size = 100;
     const int nwalkers = 10;
     const int seed = 4232;
-    std::vector<double> starting_parameters = {cosmology.Omega_matter(), cosmology.H0(), 150.};
+    std::vector<double> starting_parameters = {cosmology->Omega_matter(), cosmology->Hubble(0.), 150.};
 
+    modelCosmo.set_fit_range(cbl::Min(data->xx()), cbl::Max(data->xx()));
+    
     modelCosmo.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Covariance_);
     
     modelCosmo.sample_posterior(chain_size, nwalkers, seed);
 
-    modelCosmo.set_fit_range(cbl::Min(data->xx()), cbl::Max(data->xx()));
-    
     modelCosmo.show_results();
   }
 

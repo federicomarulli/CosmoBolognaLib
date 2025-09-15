@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileDopJ6V.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(34.209528,-5.505881,34.315966,-5.506008,34.315866,-5.387163,34.301783,-5.376064,34.21176,-5.37678,34.203924,-5.382188,34.201309,-5.3850743,34.201283,-5.5014845) # color=red dash=1

@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/file48i54x.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(36.276904,-5.506136,36.381412,-5.506172,36.3816,-5.387178,36.37063,-5.378839,36.36716,-5.3776362,36.362895,-5.376842,36.279078,-5.376794,36.2713,-5.382205,36.266233,-5.387249,36.266214,-5.468907,36.26621,-5.487072,36.266207,-5.500681) # color=red dash=1

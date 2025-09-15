@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileqdzLnn.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(30.645115,-5.980745,30.736561,-5.98074,30.744117,-5.978768,30.749371,-5.974039,30.749433,-5.937709,30.749415,-5.928654,30.749418,-5.846997,30.7477,-5.848383,30.634877,-5.848272,30.632243,-5.851537,30.632553,-5.973445) # color=red dash=1

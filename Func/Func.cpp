@@ -536,7 +536,8 @@ double cbl::interpolated_2D (const double _x1, const double _x2, const std::vect
   gsl_interp2d_free(interp);
   gsl_interp_accel_free(x1acc);
   gsl_interp_accel_free(x2acc);
-  delete ydata;
+
+  delete[] ydata;
 
   return val;
 }
@@ -908,7 +909,7 @@ double cbl::Average (const std::vector<double> vect, const std::vector<double> w
 
 #pragma omp for schedule(static, 2)
     for (size_t i=0; i<vect.size(); ++i)
-      averT += weight[i]/(WeightT+=weight[i])*(vect[i]-averT);
+      averT += (WeightT+weight[i]>0) ? weight[i]/(WeightT+=weight[i])*(vect[i]-averT) : 0.;
 
 #pragma omp critical
     aver += ((WeightTOT+=WeightT)>0) ? WeightT/WeightTOT*(averT-aver) : 0.;
@@ -975,7 +976,7 @@ double cbl::Sigma (const std::vector<double> vect, const std::vector<double> wei
 #pragma omp for schedule(static, 2)
     for (size_t i=0; i<vect.size(); ++i) {
       aver_n1T = aver_nT;
-      aver_nT += weight[i]/(WeightT+=weight[i])*(vect[i]-aver_nT);
+      aver_nT += (WeightT+weight[i]>0) ? weight[i]/(WeightT+=weight[i])*(vect[i]-aver_nT) : 0.;
       SnT += weight[i]*(vect[i]-aver_n1T)*(vect[i]-aver_nT);
     }
 
@@ -1113,6 +1114,30 @@ void cbl::measure_var_function (const std::vector<double> var, const int bin, co
 
 
 // ============================================================================================
+
+
+std::vector<std::vector<double>> cbl::bin_limits(const std::vector<double> bin_centers) {
+  std::vector<double> bin_widths(bin_centers.size() - 1);
+  for (size_t i = 0; i < bin_widths.size(); ++i) {
+    bin_widths[i] = bin_centers[i + 1] - bin_centers[i];
+  }
+
+  std::vector<double> lower_limits(bin_centers.size() - 1);
+  std::vector<double> upper_limits(bin_centers.size() - 1);
+  for (size_t i = 0; i < lower_limits.size(); ++i) {
+    lower_limits[i] = bin_centers[i] - 0.5 * bin_widths[i];
+    upper_limits[i] = bin_centers[i] + 0.5 * bin_widths[i];
+  }
+
+  // Include the last bin
+  lower_limits.push_back(bin_centers.back() - 0.5 * bin_widths.back());
+  upper_limits.push_back(bin_centers.back() + 0.5 * bin_widths.back());
+
+  return {lower_limits, upper_limits};
+}
+
+
+//==============================================================================
 
 
 void cbl::bin_function (const std::string file_grid, double func(double, void *), void *par, const int bin, const double x_min, const double x_max, const std::string binning, std::vector<double> &xx, std::vector<double> &yy)
@@ -1833,6 +1858,16 @@ double cbl::Legendre_polynomial_theta_average (const double theta_min, const dou
 // ============================================================================
 
 
+double cbl::Legendre_bin_averaged(double theta_lower, double theta_upper, int l) {
+  
+  return (legendre_polynomial(std::cos(theta_upper),l+1) - legendre_polynomial(std::cos(theta_lower), l+1) - legendre_polynomial(std::cos(theta_upper), l-1) + legendre_polynomial(std::cos(theta_lower), l-1)) /  (2*l+1) / (std::cos(theta_upper) - std::cos(theta_lower));
+  
+}
+
+
+// ============================================================================
+
+
 double cbl::Legendre_polynomial_triangles_average (const double r12_min, const double r12_max, const double r13_min, const double r13_max, const double r23_min, const double r23_max, const int ll, const double rel_err, const double abs_err, const int nevals)
 {
   double norm = 2*(pow(r12_max, 3)-pow(r12_min,3))*(pow(r13_max, 3)-pow(r13_min, 3))/9;
@@ -2214,7 +2249,7 @@ double cbl::trapezoid_integration (const std::vector<double> xx, const std::vect
 // ============================================================================
 
 
-double cbl::binomial_coefficient(const int n, const int m)
+double cbl::binomial_coefficient (const int n, const int m)
 {
   return double(gsl_sf_fact(n))/double(gsl_sf_fact(m)*gsl_sf_fact(n-m));
 }
@@ -2223,21 +2258,7 @@ double cbl::binomial_coefficient(const int n, const int m)
 // ============================================================================
 
 
-template <typename T>        //template used in wigner_3j
-double cbl::sgn(T val)
-{
-  int sgn = (T(0) < val) - (val < T(0));
-  if (sgn == 0)
-    return 1.0;
-  else
-    return (double)sgn;
-}
-
-
-// ============================================================================
-
-
-double cbl::wigner3j_auxA(double l1, double l2, double l3, double m1, double /*m2*/, double /*m3*/)
+double cbl::wigner3j_auxA (const double l1, const double l2, const double l3, const double m1)
 {
   double T1 = l1*l1-pow(l2-l3,2.0);
   double T2 = pow(l2+l3+1.0,2.0)-l1*l1;
@@ -2250,12 +2271,12 @@ double cbl::wigner3j_auxA(double l1, double l2, double l3, double m1, double /*m
 // ============================================================================
 
 
-double cbl::wigner3j_auxB(double l1, double l2, double l3, double m1, double m2, double m3)
+double cbl::wigner3j_auxB (const double l1, const double l2, const double l3, const double m1, const double m2, const double m3)
 {
-  double T1 = -(2.0*l1+1.0);
-  double T2 = l2*(l2+1.0)*m1;
-  double T3 = l3*(l3+1.0)*m1;
-  double T4 = l1*(l1+1.0)*(m3-m2);
+  const double T1 = -(2.0*l1+1.0);
+  const double T2 = l2*(l2+1.0)*m1;
+  const double T3 = l3*(l3+1.0)*m1;
+  const double T4 = l1*(l1+1.0)*(m3-m2);
   
   return T1*(T2-T3-T4);
 }
@@ -2264,15 +2285,15 @@ double cbl::wigner3j_auxB(double l1, double l2, double l3, double m1, double m2,
 // ============================================================================
 
 
-std::vector<double> cbl::wigner3j(double l2, double l3, double m1, double m2, double m3)
+std::vector<double> cbl::wigner3j (const double l2, const double l3, const double m1, const double m2, const double m3)
 {
     
   // We compute the numeric limits of double precision.
-  double huge = sqrt(std::numeric_limits<double>::max()/20.0);
-  double srhuge = sqrt(huge);
-  double tiny = std::numeric_limits<double>::min();
-  double srtiny = sqrt(tiny);
-  double eps = std::numeric_limits<double>::epsilon();
+  const double huge = sqrt(std::numeric_limits<double>::max()/20.0);
+  const double srhuge = sqrt(huge);
+  const double tiny = std::numeric_limits<double>::min();
+  const double srtiny = sqrt(tiny);
+  const double eps = std::numeric_limits<double>::epsilon();
 
   // We enforce the selection rules.
   bool select(true);
@@ -2285,8 +2306,8 @@ std::vector<double> cbl::wigner3j(double l2, double l3, double m1, double m2, do
   if (!select) return std::vector<double>(1,0.0);
 
   // We compute the limits of l1.
-  double l1min = std::max(std::fabs(l2-l3),std::fabs(m1));
-  double l1max = l2+l3;
+  const double l1min = std::max(std::fabs(l2-l3),std::fabs(m1));
+  const double l1max = l2+l3;
 
   // We compute the size of the resulting array.
   int size = (int)std::floor(l1max-l1min+1.0+eps);
@@ -2307,10 +2328,10 @@ std::vector<double> cbl::wigner3j(double l2, double l3, double m1, double m2, do
       // From now on, we check the variation of |alpha(l1)|.
       double alphaNew, l1(l1min);
       if (l1min==0.0)
-	alphaNew = -(m3-m2+2.0*wigner3j_auxB(l1,l2,l3,m1,m2,m3))/wigner3j_auxA(1.0,l2,l3,m1,m2,m3);
+	alphaNew = -(m3-m2+2.0*wigner3j_auxB(l1, l2, l3, m1, m2, m3))/wigner3j_auxA(1.0, l2, l3, m1);
       else
-	alphaNew = -wigner3j_auxB(l1min,l2,l3,m1,m2,m3)
-	  /(l1min*wigner3j_auxA(l1min+1.0,l2,l3,m1,m2,m3));
+	alphaNew = -wigner3j_auxB(l1min, l2, l3, m1, m2, m3)
+	  /(l1min*wigner3j_auxA(l1min+1.0, l2, l3, m1));
 
       // We compute the two-term recursion.
       thrcof[1] = alphaNew*thrcof[0];
@@ -2324,10 +2345,10 @@ std::vector<double> cbl::wigner3j(double l2, double l3, double m1, double m2, do
 	  // From now on, we check the variation of |alpha(l1)|.
 	  double alphaOld, alphaNew, beta, l1(l1min);
 	  if (l1min==0.0)
-	    alphaNew = -(m3-m2+2.0*wigner3j_auxB(l1,l2,l3,m1,m2,m3))/wigner3j_auxA(1.0,l2,l3,m1,m2,m3);
+	    alphaNew = -(m3-m2+2.0*wigner3j_auxB(l1, l2, l3, m1, m2, m3))/wigner3j_auxA(1.0, l2, l3, m1);
 	  else
-	    alphaNew = -wigner3j_auxB(l1min,l2,l3,m1,m2,m3)
-	      /(l1min*wigner3j_auxA(l1min+1.0,l2,l3,m1,m2,m3));
+	    alphaNew = -wigner3j_auxB(l1min, l2, l3, m1, m2, m3)
+	      /(l1min*wigner3j_auxA(l1min+1.0, l2, l3, m1));
 
 	  // We compute the two-term recursion.
 	  thrcof[1] = alphaNew*thrcof[0];
@@ -2338,16 +2359,16 @@ std::vector<double> cbl::wigner3j(double l2, double l3, double m1, double m2, do
 	  do
 	    {
 	      // Bookkeeping:
-	      i++;					// Next term in recursion
-	      alphaOld = alphaNew;	// Monitoring of |alpha(l1)|.
-	      l1 += 1.0;				// l1 = l1+1
+	      i ++;		   // Next term in recursion
+	      alphaOld = alphaNew; // Monitoring of |alpha(l1)|.
+	      l1 += 1.0;	   // l1 = l1+1
 
 	      // New coefficients in recursion.
-	      alphaNew = -wigner3j_auxB(l1,l2,l3,m1,m2,m3)
-		/(l1*wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3));
+	      alphaNew = -wigner3j_auxB(l1, l2, l3, m1, m2, m3)
+		/(l1*wigner3j_auxA(l1+1.0, l2, l3, m1));
 
-	      beta = -(l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3)
-		/(l1*wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3));
+	      beta = -(l1+1.0)*wigner3j_auxA(l1, l2, l3, m1)
+		/(l1*wigner3j_auxA(l1+1.0, l2, l3, m1));
 
 	      // Application of the recursion.
 	      thrcof[i] = alphaNew*thrcof[i-1]+beta*thrcof[i-2];
@@ -2381,7 +2402,7 @@ std::vector<double> cbl::wigner3j(double l2, double l3, double m1, double m2, do
 	  if (i!=size-1)
 	    {
 	      // We keep the two terms around l1mid to compute the factor later.
-	      double l1midm1(thrcof[i-2]),l1mid(thrcof[i-1]),l1midp1(thrcof[i]);
+	      const double l1midm1(thrcof[i-2]),l1mid(thrcof[i-1]),l1midp1(thrcof[i]);
 
 	      // We compute the backward recursion by providing an arbitrary
 	      // startint value.
@@ -2389,8 +2410,8 @@ std::vector<double> cbl::wigner3j(double l2, double l3, double m1, double m2, do
 
 	      // We compute the two-term recursion.
 	      l1 = l1max;
-	      alphaNew = -wigner3j_auxB(l1,l2,l3,m1,m2,m3)
-		/((l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3));
+	      alphaNew = -wigner3j_auxB(l1, l2, l3, m1, m2, m3)
+		/((l1+1.0)*wigner3j_auxA(l1, l2, l3, m1));
 	      thrcof[size-2] = alphaNew*thrcof[size-1];
 
 	      // We compute the rest of the backward recursion.
@@ -2398,14 +2419,14 @@ std::vector<double> cbl::wigner3j(double l2, double l3, double m1, double m2, do
 	      do
 		{
 		  // Bookkeeping
-		  j--;			// Previous term in recursion.
+		  j --;			// Previous term in recursion.
 		  l1 -= 1.0;		// l1 = l1-1
 
 					// New coefficients in recursion.
-		  alphaNew = -wigner3j_auxB(l1,l2,l3,m1,m2,m3)
-		    /((l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3));
-		  beta = -l1*wigner3j_auxA(l1+1.0,l2,l3,m1,m2,m3)
-		    /((l1+1.0)*wigner3j_auxA(l1,l2,l3,m1,m2,m3));
+		  alphaNew = -wigner3j_auxB(l1, l2, l3, m1, m2, m3)
+		    /((l1+1.0)*wigner3j_auxA(l1, l2, l3, m1));
+		  beta = -l1*wigner3j_auxA(l1+1.0, l2, l3, m1)
+		    /((l1+1.0)*wigner3j_auxA(l1, l2, l3, m1));
 
 		  // Application of the recursion.
 		  thrcof[j] = alphaNew*thrcof[j+1]+beta*thrcof[j+2];
@@ -2425,7 +2446,7 @@ std::vector<double> cbl::wigner3j(double l2, double l3, double m1, double m2, do
 		} while (j>(i-2)); // Loop stops when we are at l1=l1mid-1.
 
 	      // We now compute the scaling factor for the forward recursion.
-	      double lambda = (l1midp1*thrcof[j+2]+l1mid*thrcof[j+1]+l1midm1*thrcof[j])
+	      const double lambda = (l1midp1*thrcof[j+2]+l1mid*thrcof[j+1]+l1midm1*thrcof[j])
 		/(l1midp1*l1midp1+l1mid*l1mid+l1midm1*l1midm1);
 
 	      // We scale the forward recursion.
@@ -2439,21 +2460,14 @@ std::vector<double> cbl::wigner3j(double l2, double l3, double m1, double m2, do
 
   // We compute the overall factor.
   double sum = 0.0;
-  for (int k=0;k<size;k++)
-    {
-      sum += (2.0*(l1min+k)+1.0)*thrcof[k]*thrcof[k];
-    }
-  //std::cout << sum << std::endl;
+  for (int k=0; k<size; k++)
+    sum += (2.0*(l1min+k)+1.0)*thrcof[k]*thrcof[k];
 
-  //std::cout << "(-1)^(l2-l3-m1): " << pow(-1.0,l2-l3-m1) << " sgn:" << sgn(thrcof[size-1]) << std::endl;
-  double c1 = pow(-1.0,l2-l3-m1)*sgn(thrcof[size-1]);
-  //std::cout << "c1: " << c1 << std::endl;
+  const double c1 = pow(-1.0,l2-l3-m1)*sgn(thrcof[size-1]);
+  
   for (std::vector<double>::iterator it = thrcof.begin(); it != thrcof.end(); ++it)
-    {
-      //std::cout << *it << ", " << c1 << ", ";
-      *it *= c1/sqrt(sum);
-      //std::cout << *it << std::endl;
-    }
+    *it *= c1/sqrt(sum);
+  
   return thrcof;
 }
 
@@ -2461,7 +2475,7 @@ std::vector<double> cbl::wigner3j(double l2, double l3, double m1, double m2, do
 // ============================================================================
 
 
-double cbl::wigner3j(double l1, double l2, double l3,double m1, double m2, double m3)
+double cbl::wigner3j (const double l1, const double l2, const double l3,const double m1, const double m2, const double m3)
 {
   // We enforce the selection rules.
   bool select(true);
@@ -2478,7 +2492,7 @@ double cbl::wigner3j(double l1, double l2, double l3,double m1, double m2, doubl
   if (!select) return 0.0;
 
   // We compute l1min and the position of the array we will want.
-  double l1min = std::max(std::fabs(l2-l3),std::fabs(m1));
+  const double l1min = std::max(std::fabs(l2-l3),std::fabs(m1));
 
   // We fetch the proper value in the array.
   int index = (int)(l1-l1min);
@@ -2490,7 +2504,7 @@ double cbl::wigner3j(double l1, double l2, double l3,double m1, double m2, doubl
 // ============================================================================
 
 
-double cbl::wigner_3j(const int j1, const int j2, const int j3, const int m1, const int m2, const int m3)
+double cbl::wigner_3j (const int j1, const int j2, const int j3, const int m1, const int m2, const int m3)
 {
   return gsl_sf_coupling_3j(2*j1, 2*j2, 2*j3, 2*m1, 2*m2, 2*m3);
 }
@@ -2499,7 +2513,7 @@ double cbl::wigner_3j(const int j1, const int j2, const int j3, const int m1, co
 // ============================================================================
 
 
-double cbl::wigner_6j(const int j1, const int j2, const int j3, const int j4, const int j5, const int j6)
+double cbl::wigner_6j (const int j1, const int j2, const int j3, const int j4, const int j5, const int j6)
 {
   return gsl_sf_coupling_6j(2*j1, 2*j2, 2*j3, 2*j4, 2*j5, 2*j6);
 }
@@ -2508,7 +2522,7 @@ double cbl::wigner_6j(const int j1, const int j2, const int j3, const int j4, co
 // ============================================================================
 
 
-double cbl::clebsh_gordan(const int l1, const int l2, const int m1, const int m2, const int l3, const int m3)
+double cbl::clebsh_gordan (const int l1, const int l2, const int m1, const int m2, const int l3, const int m3)
 {
   return pow(-1, l1-l2+m3)*sqrt(2*l3+1)*gsl_sf_coupling_3j(2*l1, 2*l2, 2*l3, 2*m1, 2*m2, 2*m3);
 }
@@ -2517,7 +2531,7 @@ double cbl::clebsh_gordan(const int l1, const int l2, const int m1, const int m2
 // ============================================================================
 
 
-double cbl::coupling_3j(const int l, const int l_prime, const int l2)
+double cbl::coupling_3j (const int l, const int l_prime, const int l2)
 {
   return  gsl_sf_coupling_3j(2*l, 2*l_prime, 2*l2, 0, 0, 0);
 }
@@ -2685,6 +2699,34 @@ std::vector<std::vector<double>> cbl::generate_correlated_data (const int nExtra
 
 // ============================================================================
 
+//returns the arange vector from three parameters
+std::vector<double> cbl::arange(const double begin, const double end, const double increment) 
+{
+    unsigned int size = static_cast<int>((end-begin)/increment);
+    if(size <= 0)
+      ErrorCBL("first value cannot be equal or greater than last value" ,"arange", "Func.cpp");
+    std::vector<double> result;
+    double res=begin;
+    while(res < end) {
+        result.push_back(res);
+        res = res + increment;
+    }
+    return result;
+}
+
+//returns the arange vector from the size
+std::vector<int> cbl::arange(const int unsigned size) 
+{
+    if(size <= 0)
+      ErrorCBL("size must be greater than zero" ,"arange", "Func.cpp");
+    std::vector<int> result(size);
+    for (size_t i = 0; i < size; ++i) {
+        result[i] = i;
+    }
+    return result;
+}
+
+// ============================================================================
 
 /* ======== Cosimo Fedeli ======== */
 

@@ -1,6 +1,6 @@
-CXX = g++
+CXX = /opt/homebrew/bin/g++-15
 
-FLAGS0 = -std=c++11 -fopenmp 
+FLAGS0 = -std=c++17 -fopenmp 
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 
 dirLib = $(PWD)/../../
@@ -9,9 +9,8 @@ dir_Eigen = $(dirLib)External/Eigen/eigen-3.4.0/
 dir_CCfits = $(dirLib)External/CCfits/include
 dirCUBA = $(dirLib)External/Cuba-4.2.1/
 
-FLAGS_LIB = -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lCBL
-FLAGS_INC = -I$(HOME)/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
-
+FLAGS_LIB = -L/opt/homebrew/lib -Wl,-rpath,$(HOME)/lib/ -Wl,-rpath,$(dirLib) -L$(dirLib) -lCBL
+FLAGS_INC = -I/opt/homebrew/include -I$(HOME)/include/ -I$(dirH) -I$(dirCUBA) -I$(dir_Eigen) -I$(dir_CCfits)
 OBJ = catalogue.o
 
 ES = so

@@ -1,0 +1,234 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>cl2fits</TITLE>
+<META NAME="description" CONTENT="cl2fits">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_convert_oldhpx2cmbfast.htm">
+<LINK REL="previous" HREF="idl_change_polcconv.htm">
+<LINK REL="next" HREF="idl_convert_oldhpx2cmbfast.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_change_polcconv.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_convert_oldhpx2cmbfast.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html347"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_change_polcconv.htm">change_polcconv</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_convert_oldhpx2cmbfast.htm">convert_oldhpx2cmbfast</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION1900"></A>
+<A ID="idl:cl2fits"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">cl2fits</SPAN></div><hr>
+<H3>This IDL facility provides a means to
+write into a FITS file as an ascii table extension the power 
+spectrum coefficients passed to the routine. Adds additional
+headers if required. The facility is primarily intended to allow the
+user to write a theoretical power spectrum into a FITS file in 
+the correct format to be ingested by the <strong>HEALPix</strong> simulation facility 
+<SPAN  CLASS="textbf">synfast</SPAN>.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/fits/cl2fits.pro"><strong>src/idl/fits/cl2fits.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+CL2FITS, <A HREF="#idl:cl2fits:cl_array">cl_array</A>, <A HREF="#idl:cl2fits:fitsfile">fitsfile</A>, [<A HREF="#idl:cl2fits:HDR">HDR=</A>, <A HREF="#idl:cl2fits:HELP">/HELP</A>, <A HREF="#idl:cl2fits:XHDR">XHDR=</A>, <A HREF="#idl:cl2fits:CMBFAST">/CMBFAST</A>, <A HREF="#idl:cl2fits:UNITS">UNITS=</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>cl_array<A ID="idl:cl2fits:cl_array"></A></B>
+<DD>real or double array of Cl coefficients to be written to
+      file. This has dimension either (lmax+1,9) given in the sequence T E B
+      TxE TxB ExB ExT BxT BxE <B>or</B> (lmax+1,6) given in the sequence T E B
+      TxE TxB ExB <B>or</B> (lmax+1,4) given in the sequence T E B
+      TxE <B>or</B> (lmax+1) for T alone. 
+<BR>
+The convention for the power spectrum is that it is not
+      normalised by the Harrison-Zeldovich (flat) spectrum.
+    <DT>
+<B>fitsfile<A ID="idl:cl2fits:fitsfile"></A></B>
+<DD>String containing the name of the file to be written.
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>HDR<A ID="idl:cl2fits:HDR"></A>=</B>
+<DD>String array containing the (non-trivial) primary header
+      for the FITS file. 
+    <DT>
+<B>/HELP<A ID="idl:cl2fits:HELP"></A></B>
+<DD>If set, a help message is printed out, no file is written
+
+<P>
+<DT>
+<B>XHDR<A ID="idl:cl2fits:XHDR"></A>=</B>
+<DD>String array containing the (non-trivial) extension header
+      for the FITS file. 
+    <DT>
+<B>/CMBFAST<A ID="idl:cl2fits:CMBFAST"></A></B>
+<DD>if set, the routine will add the keyword 'POLNORM =
+    CMBFAST' in the FITS header, meaning that the polarization power spectra
+    have the same convention as CMBFAST (and Healpix 1.2). 
+    If this keyword is not present in the input FITS file, <SPAN style="font-family:monospace">synfast</SPAN> will issue a
+    warning when simulating a polarization map from that power spectrum, but no
+    attempt to renormalize the power spectra will be made. To actually perform
+    the renormalization, see <A HREF="idl_convert_oldhpx2cmbfast.htm#idl:convert_oldhpx2cmbfast">convert_oldhpx2cmbfast</A>
+    <DT>
+<B>UNITS<A ID="idl:cl2fits:UNITS"></A>=</B>
+<DD>String scalar containing units of power spectrum (eg, uK2,
+         Kelvin**2, ...), to be put in keywords 'TUNIT*' of the extension header. 
+         If provided, will override the values present in XHDR (if any).
+    <DT>
+<DD>NOTE: optional header strings should NOT include the
+      header keywords explicitly written by this routine.
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">cl2fits</SPAN> writes the input power spectrum coefficients into a FITS
+file containing an ascii table extension. Optional headers conforming
+to the FITS convention can also be written to the output file. All
+required FITS header keywords (like SIMPLE, BITPIX, ...) are automatically generated by the
+routine and should NOT be duplicated in the optional header inputs
+(they would be ignored anyway).
+The one/four/six/nine column(s) are automatically named 
+<SPAN style="font-family:monospace">TEMPERATURE</SPAN>, <SPAN style="font-family:monospace">GRAD</SPAN>, <SPAN style="font-family:monospace">CURL</SPAN>, <SPAN style="font-family:monospace">TG</SPAN>, <SPAN style="font-family:monospace">TC</SPAN>, <SPAN style="font-family:monospace">GC</SPAN>, <SPAN style="font-family:monospace">GT</SPAN>, <SPAN style="font-family:monospace">CT</SPAN> and <SPAN style="font-family:monospace">CG</SPAN> respectively.
+If the power spectrum is provided in a double precision array, the output format
+will automatically feature more decimal places.
+The current implementation is much faster than the one available in
+Healpix 1.10 thanks to replacing an internal loop by vector operations.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">cl2fits</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">cl2fits</SPAN>.
+    <DT>
+<B><A HREF="idl_fits2cl.htm#idl:fits2cl">fits2cl</A></B>
+<DD>provides the complimentary routine to read in a
+      power spectrum from a FITS file.
+    <DT>
+<B><A HREF="idl_convert_oldhpx2cmbfast.htm#idl:convert_oldhpx2cmbfast">convert_oldhpx2cmbfast</A></B>
+<DD>convert an
+    existing power spectrum FITS file from the polarization convention used in
+    Healpix 1.1 to the one used in Healpix 1.2 (and CMBFAST).
+    <DT>
+<B><A HREF="idl_bl2fits.htm#idl:bl2fits">bl2fits</A></B>
+<DD>facility to write a window function into a FITS file.
+    <DT>
+<B><A HREF="idl_fits2alm.htm#idl:fits2alm">fits2alm</A>, <A HREF="idl_alm2fits.htm#idl:alm2fits">alm2fits</A></B>
+<DD>routines to read and write <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img1.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients
+    <DT>
+<B>synfast</B>
+<DD>utilises the output file generated by <SPAN CLASS="colordoc">cl2fits</SPAN>.
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">cl2fits</SPAN>, pwrsp, 'spectrum.fits', HDR = hdr, XHDR = xhdr</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+<SPAN CLASS="colordoc">cl2fits</SPAN> writes the power spectrum stored in the variable <SPAN style="font-family:monospace">pwrsp</SPAN>
+to the output FITS file <SPAN style="font-family:monospace">spectrum.fits</SPAN> with optional headers
+passed by the string variables <SPAN style="font-family:monospace">hdr</SPAN> and <SPAN style="font-family:monospace">xhdr</SPAN>.
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_change_polcconv.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_convert_oldhpx2cmbfast.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html347"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_change_polcconv.htm">change_polcconv</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_convert_oldhpx2cmbfast.htm">convert_oldhpx2cmbfast</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

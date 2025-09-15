@@ -1,0 +1,588 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>sky_ng_sim</TITLE>
+<META NAME="description" CONTENT="sky_ng_sim">
+<META NAME="keywords" CONTENT="facilities">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="facilities.css">
+
+<LINK REL="next" HREF="fac_smoothing.htm">
+<LINK REL="previous" HREF="fac_process_mask.htm">
+<LINK REL="next" HREF="fac_smoothing.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="fac_process_mask.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="fac_HEALPix_F90_facilities.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_smoothing.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html141"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="fac_process_mask.htm">process_mask</A>
+
+<strong>Up:</strong> <A
+ HREF="fac_HEALPix_F90_facilities.htm">HEALPix/F90 facilities</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_smoothing.htm">smoothing</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION1200"></A>
+<A ID="fac:sky_ng_sim"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">sky_ng_sim</SPAN></div><hr>
+<H3>This program can be used to create temperature <strong>HEALPix</strong> maps computed as realisations 
+of random <EM>Non-Gaussian</EM> fields on a sphere (either even power of a Gaussian
+distribution, or Simple Harmonics Oscillator PDF, see Description section for
+details). 
+<BR>
+It is directly adapted from the NGSIMS code described in 
+<A ID="tex2html22"
+  HREF="http://adsabs.harvard.edu/abs/2005MNRAS.357....1R">Rocha et al, MNRAS, 357, 1 (2005)</A>
+<BR>
+The operation count is dominated by a term scaling as
+
+<!-- MATH
+ ${\cal {O}}(N_{\mathrm{pix}}^{1/2} \ell_{\mathrm{max}}^2)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 3.21ex; vertical-align: -0.91ex; " SRC="fac_img25.png"
+ ALT="${\cal {O}}(N_{\mathrm{pix}}^{1/2}\ell_{\mathrm{max}}^2 )$"></SPAN>. 
+The map angular power spectrum, resolution, Gaussian beam FWHM or arbitrary beam window  
+and random seed for the simulation can be selected by the user.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/ngsims_full_sky/sky_ng_sim.F90"><strong>src/f90/ngsims_full_sky/sky_ng_sim.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>%
+sky_ng_sim [parameter_file]
+</h3></blockquote>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>simul_type = </B>
+<DD><A ID="fac:sky_ng_sim:simul_type"></A>Defines the simulation type, 1=temperature map only,
+       3=temperature and its first spatial derivatives,
+       4=temperature and its first and second spatial derivatives.
+(default= 1).
+    <DT>
+<B>infile = </B>
+<DD><A ID="fac:sky_ng_sim:infile"></A>Defines the input power spectrum file,
+	(default= HEALPIX/test/cl.fits).
+<DT>
+<B>outfile_alms = </B>
+<DD><A ID="fac:sky_ng_sim:outfile_alms"></A>Defines the FITS file in which to output <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> used
+      for the simulation (default= `')
+<DT>
+<B>outfile = </B>
+<DD><A ID="fac:sky_ng_sim:outfile"></A>Defines the output map file, (default= test.fits).
+<DT>
+<B>nsmax = </B>
+<DD><A ID="fac:sky_ng_sim:nsmax"></A>Defines the resolution of the map.
+(default= 32)
+<DT>
+<B>nlmax = </B>
+<DD><A ID="fac:sky_ng_sim:nlmax"></A>Defines the maximum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="fac_img5.png"
+ ALT="$\ell$"></SPAN> value 
+to be used in the simulation. WARNING: <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img58.png"
+ ALT="$\ell_{max}$"></SPAN> can not exceed
+the value <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.10ex; " SRC="fac_img65.png"
+ ALT="$4\cdot$"></SPAN> <SPAN style="font-family:monospace">nsmax</SPAN>, because the coefficients of the  average Fourier 
+pixel window functions
+are precomputed and provided up to this limit.
+(default= 2*<SPAN style="font-family:monospace">nsmax</SPAN>)
+<DT>
+<B>fwhm_arcmin = </B>
+<DD><A ID="fac:sky_ng_sim:fwhm_arcmin"></A>Defines the FWHM size in arcminutes 
+of the simulated Gaussian beam.
+(default= 0.0)
+<DT>
+<B>beam_file = </B>
+<DD><A ID="fac:sky_ng_sim:beam_file"></A>Defines the FITS file describing the
+    Legendre window
+    function of the circular beam to be used for the
+    simulation. If set to an existing file name, it will override the
+    <SPAN style="font-family:monospace">fhwm_arcmin</SPAN> given above. (default=`')
+<DT>
+<B>windowfile = </B>
+<DD><A ID="fac:sky_ng_sim:windowfile"></A>Defines the input filename  for the pixel
+    smoothing windows 
+(default= pixel_window_n????.fits, see 
+<A HREF="fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:defdir">Notes on default files and directories</A>)
+<DT>
+<B>winfiledir = </B>
+<DD>Defines the directory in which windowfile
+    is located (default : see 
+<A HREF="fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:defdir">Notes on default files and directories</A>)
+<DT>
+<B>iseed = </B>
+<DD><A ID="fac:sky_ng_sim:iseed"></A>Defines the seed of the pseudo-random sequence to be used 
+for the generation of the non-gaussian white noise (default= 1)
+<DT>
+<B>plot = </B>
+<DD><A ID="fac:sky_ng_sim:plot"></A>If <SPAN CLASS="colordoc">sky_ng_sim</SPAN> was linked with the PGPLOT library during compilation, and
+if <SPAN style="font-family:monospace">plot</SPAN> is set to (case unsensitive) <SPAN style="font-family:monospace">.true.</SPAN>, <SPAN style="font-family:monospace">t</SPAN>, <SPAN style="font-family:monospace">yes</SPAN>, <SPAN style="font-family:monospace">y</SPAN>  or
+1, then the histogram of the simulated non-gaussian is produced, overplotted
+with the theoretical PDF; the histogram of the final map pixel values,
+overplotted with a PDF of a gaussian of same mean and variance is subsequently
+produced.
+(default=.false.)
+<DT>
+<B>pdf_choice=1 </B>
+<DD><A ID="fac:sky_ng_sim:pdf_choice"></A>Choice of non-Gaussian PDF to use: 1= Simple
+Harmonics oscillator (see Eq&nbsp;<A HREF="#eq:nongauss_sho">4</A> below)
+<table width="90%">
+      <tr><td align="right" valign="top">sigma0= </td><td valign="top">&nbsp;<A ID="fac:sky_ng_sim:sigma0"></A>RMS of oscillator ground state</td></tr>
+<tr><td align="right" valign="top">na= </td><td valign="top">&nbsp;<A ID="fac:sky_ng_sim:na"></A>Integer in {0, 20}. Number of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="fac_img66.png"
+ ALT="$\alpha$"></SPAN> coefficients to be
+given (default=3).
+Note: analytical calculation of the PDF moments
+can only be done for <SPAN style="font-family:monospace">na</SPAN><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.41ex; " SRC="fac_img67.png"
+ ALT="$\le 3$"></SPAN>. </td></tr>
+<tr><td align="right" valign="top">alpha_1=, alpha_2=, ... </td><td valign="top">&nbsp;<A ID="fac:sky_ng_sim:alpha_1"></A><A ID="fac:sky_ng_sim:alpha_2"></A><A ID="fac:sky_ng_sim:alpha_3"></A>Real values of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img68.png"
+ ALT="$\alpha_i$"></SPAN> coefficients for
+<SPAN CLASS="MATH"><I>i</I></SPAN> in <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="fac_img69.png"
+ ALT="$[1, {\tt na}]$"></SPAN></td></tr></table>
+
+<DT>
+<B>pdf_choice=2</B>
+<DD>Choice of non-Gaussian PDF to use: 2=Power of a
+Gaussian (see Eq&nbsp;<A HREF="#eq:nongauss_powgauss">5</A> below)
+      <table width="90%">
+     <tr><td align="right" valign="top">npower = </td><td valign="top">&nbsp;<A ID="fac:sky_ng_sim:npower"></A>Positive integer in {1,4} (default=1). The gaussian
+will be set to the power 2*<SPAN style="font-family:monospace">npower</SPAN>.
+     </td></tr></table>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+A random non-Gaussian white noise map is generated, using either
+
+<UL>
+<LI>a simple linear harmonic oscillator, where the PDF of the pixel
+temperature <SPAN CLASS="MATH"><I>t</I></SPAN> is
+	<BR>
+<DIV ALIGN="CENTER"><A ID="eq:nongauss_sho"></A>
+<!-- MATH
+ \begin{eqnarray}
+\rho_{\rm SHO}(t) = \left| \psi_n\right|^2 = e^{-t^2/2\sigma_0^2} \left|\sum_{i=0}^{n} \alpha_i
+C_i H_i \left(\frac{t}{\sqrt{2}\sigma_0}\right)\right|^2
+\end{eqnarray}
+ -->
+<SPAN CLASS="MATH">
+<TABLE CELLPADDING="0" ALIGN="CENTER" WIDTH="100%">
+<TR VALIGN="MIDDLE"><TD NOWRAP WIDTH="46%" ALIGN="RIGHT"><IMG
+ STYLE="height: 6.29ex; vertical-align: -2.60ex; " SRC="fac_img70.png"
+ ALT="$\displaystyle \rho_{\rm SHO}(t) = \left\vert \psi_n\right\vert^2 = e^{-t^2/2\si...
+...{i=0}^{n} \alpha_i
+C_i H_i \left(\frac{t}{\sqrt{2}\sigma_0}\right)\right\vert^2$"></TD>
+<TD>&nbsp;</TD>
+<TD>&nbsp;</TD>
+<TD CLASS="eqno" WIDTH="8%" ALIGN="RIGHT">
+(<SPAN CLASS="arabic">4</SPAN>)</TD></TR>
+</TABLE>
+</SPAN></DIV>
+<BR CLEAR="ALL"><P></P>
+where <SPAN CLASS="MATH"><I>H</I><SUB><i>i</i></SUB></SPAN> are the Hermite polynomials, <SPAN CLASS="MATH"><I>C</I><SUB><i>i</i></SUB></SPAN> their normalization constants,
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="fac_img71.png"
+ ALT="$\sigma_0^2$"></SPAN> the variance of the (Gaussian) ground state <!-- MATH
+ $\left|\psi_0\right|^2,$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.74ex; vertical-align: -0.68ex; " SRC="fac_img72.png"
+ ALT="$\left\vert\psi_0\right\vert^2,$"></SPAN>
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img68.png"
+ ALT="$\alpha_i$"></SPAN> for <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.41ex; " SRC="fac_img73.png"
+ ALT="$i\ge 1$"></SPAN> are free parameters, while <!-- MATH
+ $\alpha_0 =
+\left(1 - \sum_i^n |\alpha_i|^2\right)^{1/2}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 3.03ex; vertical-align: -0.68ex; " SRC="fac_img74.png"
+ ALT="$\alpha_0 =
+\left(1 - \sum_i^n \vert\alpha_i\vert^2\right)^{1/2}$"></SPAN> is constrained;
+</LI>
+<LI>or, an even power of a gaussian PDF, where the temperature of pixel <SPAN CLASS="MATH"><I>q</I></SPAN> is
+	<BR>
+<DIV ALIGN="CENTER"><A ID="eq:nongauss_powgauss"></A>
+<!-- MATH
+ \begin{eqnarray}
+t_q = g_q^{2 P}
+\end{eqnarray}
+ -->
+<SPAN CLASS="MATH">
+<TABLE CELLPADDING="0" ALIGN="CENTER" WIDTH="100%">
+<TR VALIGN="MIDDLE"><TD NOWRAP WIDTH="46%" ALIGN="RIGHT"><I>t</I><SUB><i>q</i></SUB> = <I>g</I><SUB><i>q</i></SUB><SUP>2 <I>P</I></SUP></TD>
+<TD>&nbsp;</TD>
+<TD>&nbsp;</TD>
+<TD CLASS="eqno" WIDTH="8%" ALIGN="RIGHT">
+(<SPAN CLASS="arabic">5</SPAN>)</TD></TR>
+</TABLE>
+</SPAN></DIV>
+<BR CLEAR="ALL"><P></P>
+where <SPAN CLASS="MATH"><I>g</I></SPAN> is a zero mean, unit variance Gaussian variable, and <SPAN CLASS="MATH"><I>P</I></SPAN> is
+a user-defined positive integer.
+</LI>
+</UL>
+The resulting map is analyzed into its <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients, which are then
+multiplied by the beam, pixel and spectrum window
+<BR>
+<DIV ALIGN="CENTER">
+
+<!-- MATH
+ \begin{eqnarray}
+a_{\ell m} \longrightarrow a_{\ell m} \left[C(l)\right]^{1/2} B(\ell) w_{\rm pix}(\ell) \nonumber
+\end{eqnarray}
+ -->
+<SPAN CLASS="MATH">
+<TABLE CELLPADDING="0" ALIGN="CENTER" WIDTH="100%">
+<TR VALIGN="MIDDLE"><TD NOWRAP WIDTH="46%" ALIGN="RIGHT"><IMG
+ STYLE="height: 2.97ex; vertical-align: -0.75ex; " SRC="fac_img75.png"
+ ALT="$\displaystyle a_{\ell m} \longrightarrow a_{\ell m} \left[C(l)\right]^{1/2} B(\ell) w_{\rm pix}(\ell)$"></TD>
+<TD>&nbsp;</TD>
+<TD>&nbsp;</TD>
+<TD CLASS="eqno" WIDTH="8%" ALIGN="RIGHT">
+&nbsp;</TD></TR>
+</TABLE>
+</SPAN></DIV>
+<BR CLEAR="ALL"><P></P>
+The resulting <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients are turned back into a map, which is
+therefore non-gaussian, with an effective angular power spectrum <!-- MATH
+ $C(\ell) B(\ell)^2
+w_{\mathrm{pix}}(\ell)^2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.75ex; " SRC="fac_img76.png"
+ ALT="$C(\ell) B(\ell)^2
+w_{\mathrm{pix}}(\ell)^2$"></SPAN> (Rocha et al, 2005).
+
+<BR>
+Notes: the code has been modified from the original NGSIMS package in several
+respects:
+the seed parameter is named <SPAN style="font-family:monospace">iseed</SPAN> instead of <SPAN style="font-family:monospace">idum</SPAN>, to be consistent
+with other <strong>HEALPix</strong> simulation codes; and the SHO generator has been
+dramatically sped up, without loss of accuracy. Moreover, just like in <A HREF="fac_synfast.htm#fac:synfast"><SPAN style="font-family:monospace">synfast</SPAN></A> facility,
+it is now possible to output the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients being used (<SPAN style="font-family:monospace">outfile_alms</SPAN> option), and the spatial derivatives of the final map can also be
+output (<SPAN style="font-family:monospace">simul_type</SPAN> option).
+
+</blockquote>
+
+<P>
+<hr><H2>DATASETS</H2>
+<h3>The following datasets are involved in the <b><SPAN CLASS="colordoc">sky_ng_sim</SPAN></b>
+ processing.</h3>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">Dataset</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">Description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+/data/pixel_window_nxxxx.fits</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">Files containing pixel windows for
+                   various nsmax.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"></TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+</TABLE>
+
+<P>
+<hr><H2>SUPPORT    </H2><H3>This section lists those routines and facilities (including those <i>external</i> to the <b>HEALPix</b> distribution) which can assist in the utilisation of <b><SPAN CLASS="colordoc">sky_ng_sim</SPAN></b>.</H3>
+  <DL COMPACT><DT>
+<B><A HREF="./sub_generate_beam.htm#sub:generate_beam">generate_beam</A></B>
+<DD>This <strong>HEALPix</strong> Fortran
+subroutine generates or reads the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="fac_img19.png"
+ ALT="$B(\ell)$"></SPAN> window function used in <SPAN CLASS="colordoc">sky_ng_sim</SPAN>
+  <DT>
+<B><A HREF="fac_map2gif.htm#fac:map2gif">map2gif</A></B>
+<DD>This <strong>HEALPix</strong> Fortran facility can be used to visualise the
+  output map.
+  <DT>
+<B><A HREF="./idl_mollview.htm#idl:mollview">mollview</A></B>
+<DD>This <strong>HEALPix</strong> IDL facility can be used to visualise the
+  output map.
+  <DT>
+<B><A HREF="fac_anafast.htm#fac:anafast">anafast</A></B>
+<DD>This <strong>HEALPix</strong> Fortran facility can analyse a <strong>HEALPix</strong> map and 
+     	       save the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img23.png"
+ ALT="$C_\ell$"></SPAN>s to be read by sky_ng_sim.
+
+<P>
+</DL>
+
+<P>
+<hr><H2>EXAMPLE # 1:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">sky_ng_sim</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+sky_ng_sim runs in interactive mode, self-explanatory.
+</blockquote>
+
+<P>
+<hr><H2>EXAMPLE # 2:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">sky_ng_sim  filename</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>When 'filename' is present, <SPAN style="font-family:monospace">sky_ng_sim</SPAN> enters the non-interactive mode and parses
+its inputs from the file 'filename'. This has the following
+structure: the first entry is a qualifier which announces to the parser
+which input immediately follows. If this input is omitted in the
+input file, the parser assumes the default value.
+If the equality sign is omitted, then the parser ignores the entry.
+In this way comments may also be included in the file.
+In this example, the file contains the following qualifiers:
+<BR>
+<kbd><A HREF="#fac:sky_ng_sim:simul_type">simul_type</A>= 1</kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:nsmax">nsmax</A>= 128</kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:nlmax">nlmax</A>= 256</kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:fwhm_arcmin">fwhm_arcmin</A>= 30.0</kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:infile">infile</A>= cl.fits</kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:pdf_choice">pdf_choice</A>= 1</kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:iseed">iseed</A>=  1</kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:na">na</A>= 3</kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:sigma0">sigma0</A>= 1.0</kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:alpha_1">alpha_1</A>= 0.0</kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:alpha_2">alpha_2</A>= 0.0</kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:alpha_3">alpha_3</A>= 0.2</kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:outfile">outfile</A>= !test_ngfs.fits</kbd><br>
+<SPAN style="font-family:monospace">sky_ng_sim</SPAN> reads in the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img23.png"
+ ALT="$C_\ell$"></SPAN> power spectrum in 'cl.fits' up to <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="fac_img77.png"
+ ALT="$\ell=256$"></SPAN>, and produces the map
+'map.fits' which has <!-- MATH
+ $N_{\mathrm{side}}=128$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB>=128</SPAN>. The non-gaussian white noise was generated
+assuming a SHO PDF (see Eq&nbsp;<A HREF="#eq:nongauss_sho">4</A> above) with <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.45ex; " SRC="fac_img78.png"
+ ALT="$\sigma_0=1$"></SPAN> and
+<!-- MATH
+ $\alpha_i = (0, 0, 0.2)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="fac_img79.png"
+ ALT="$\alpha_i = (0, 0, 0.2)$"></SPAN>.
+The map is convolved with a beam of FWHM 30.0 arcminutes. The 
+<A HREF="#fac:sky_ng_sim:iseed">iseed</A><SPAN CLASS="MATH">=1</SPAN> sets
+the random seed for the realisation. A different <A HREF="#fac:sky_ng_sim:iseed">iseed</A>would have given a different 
+realisation from the same power spectrum. And finally, since <SPAN style="font-family:monospace"><A HREF="#fac:sky_ng_sim:simul_type">simul_type</A>=
+1</SPAN> only the map (and not its spatial derivatives) will be output.
+
+<P>
+Since <BR>
+<kbd><A HREF="#fac:sky_ng_sim:beam_file">beam_file</A></kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:windowfile">windowfile</A></kbd><br>
+<kbd><A HREF="#fac:sky_ng_sim:outfile_alms">outfile_alms</A></kbd><br>
+were omitted, they take their default values (empty strings). 
+This means respectively that no beam were read, that <SPAN style="font-family:monospace">sky_ng_sim</SPAN> attempts to find the pixel
+window files in the default directories (see page&nbsp;<A HREF="fac_Using_HEALPix_Fortran_90_fa.htm#page:defdir"><IMG  ALT="[*]" SRC="crossref.png"></A>), and
+that the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> generated and used to produce the map were not output.
+</blockquote>
+
+<P>
+<hr><H2>RELEASE NOTES</H2><blockquote>
+  <DL COMPACT><DD>&#9632;  Initial release (<strong>HEALPix</strong> 2.10)
+  </DL>
+</blockquote>
+
+<P>
+<hr><H2>MESSAGES</H2><h3>This section describes error messages generated by <b><SPAN CLASS="colordoc">sky_ng_sim</SPAN></b>
+</h3>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:125px"><SPAN  CLASS="textbf">Message</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">Severity</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">Text</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+can not allocate memory for array xxx</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">Fatal</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">You do not have
+                   sufficient system resources to run this
+                   facility at the map resolution you required. 
+  Try a lower map resolution.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+
+<P>
+this is not a binary table</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the fitsfile you have specified is not 
+of the proper format</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+there are undefined values in the table!</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the fitsfile you have specified is not 
+of the proper format</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+the header in xxx is too long</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the fitsfile you have specified is not 
+of the proper format</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+XXX-keyword not found</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the fitsfile you have specified is not 
+of the proper format</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+found xxx in the file, expected:yyyy</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the specified fitsfile does not
+contain the proper amount of data.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+
+<P></TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+</TABLE>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="fac_process_mask.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="fac_HEALPix_F90_facilities.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_smoothing.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html141"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="fac_process_mask.htm">process_mask</A>
+
+<strong>Up:</strong> <A
+ HREF="fac_HEALPix_F90_facilities.htm">HEALPix/F90 facilities</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_smoothing.htm">smoothing</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

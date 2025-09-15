@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/filexBwCRL.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(30.791993,-5.804347,30.860565,-5.804041,30.868175,-5.803911,30.890726,-5.804176,30.900057,-5.803032,30.899964,-5.712285,30.895789,-5.698861,30.896873,-5.685031,30.894649,-5.680035,30.891043,-5.677953,30.795744,-5.677861,30.785302,-5.684344,30.782889,-5.689615,30.782893,-5.803048) # color=red dash=1

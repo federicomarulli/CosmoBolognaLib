@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>The HEALPix Software Package</TITLE>
+<META NAME="description" CONTENT="The HEALPix Software Package">
+<META NAME="keywords" CONTENT="intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="intro.css">
+
+<LINK REL="next" HREF="intro_HEALPix_conventions.htm">
+<LINK REL="previous" HREF="intro_Geometric_Algebraic_Propert.htm">
+<LINK REL="next" HREF="intro_HEALPix_conventions.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="intro_Geometric_Algebraic_Propert.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_HEALPix_conventions.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html107"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_Geometric_Algebraic_Propert.htm">Geometric and Algebraic Properties of HEALPix</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_HEALPix_conventions.htm">HEALPix conventions</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A ID="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A ID="tex2html109"
+  HREF="intro_HEALPix_Software_Package.htm#SECTION510">Contents and purposes</A>
+<LI><A ID="tex2html110"
+  HREF="intro_HEALPix_Software_Package.htm#SECTION520">Licensing</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A ID="SECTION500">
+The <strong>HEALPix</strong> Software Package</A>
+</H1>
+
+<H2><A ID="SECTION510">
+Contents and purposes</A>
+</H2>
+We have developed a package of <strong>HEALPix</strong> based mathematical software, consisting
+of C, C++, Fortran90, IDL/GDL, Java and Python source codes as well as documentation and
+examples. Successful installation produces a set of facilities using standardised
+FITS I/O interfaces 
+(<kbd><A ID="tex2html8"
+  HREF="https://heasarc.gsfc.nasa.gov/docs/software/fitsio">https://heasarc.gsfc.nasa.gov/docs/software/fitsio</A></kbd>) 
+as well as 
+libraries  which users can link to their own applications.
+Among the tasks performed by the  components of the 
+<strong>HEALPix</strong> package  are the
+following:
+
+<P>
+
+<UL>
+<LI>Simulation of the full sky CMB temperature and polarisation maps
+as realisations of random Gaussian fields, with an option to constrain
+the realisation by prior information.
+</LI>
+<LI>Analysis of the full sky CMB temperature and polarisation maps
+resulting in power spectra and/or spherical harmonic
+coefficients. Relevant conventions are given in Appendix <A HREF="intro_HEALPix_conventions.htm#sec:conventions">A</A>.
+<SPAN CLASS="LARGE"><EM>Note that the convention used for polarization has been changed in
+release 1.2!</EM></SPAN>.
+</LI>
+<LI>Global smoothing of whole sky maps with a Gaussian kernel.
+</LI>
+<LI>Degradation and upgrade of the resolution of discrete maps.
+</LI>
+<LI>Global searches on the maps for nearest-neighbours and 
+the maxima/minima of the discretised functions.
+</LI>
+<LI>Algebraic conversion of the maps between the RING and NESTED numbering
+schemes, and mapping back and forth between  positions on the sphere and 
+discrete pixel index space.
+</LI>
+<LI>Pixel queries for various geometrical shapes (discs, triangles, polygons ...)
+</LI>
+<LI>Visualisation of the <strong>HEALPix</strong> formatted sky maps in the
+Mollweide, orthographic, cartesian cylindrical and gnomonic
+projections of the whole sky or small areas of it. 
+</LI>
+</UL>
+
+<P>
+The package includes documents which describe the installation
+process, the facilities available and a large number of 
+subroutines contained in the various libraries. It is
+available to the scientific community  at <kbd><A ID="tex2html9"
+  HREF="https://healpix.sourceforge.io">https://healpix.sourceforge.io</A></kbd>.
+
+<P>
+<strong>HEALPix</strong> was the format chosen by the <SPAN  CLASS="textbf">WMAP</SPAN>
+collaboration 
+for the production
+of sky maps (see 
+<kbd><A ID="tex2html10"
+  HREF="https://map.gsfc.nasa.gov/news/index.html">https://map.gsfc.nasa.gov/news/index.html</A></kbd>)
+ from the mission data. 
+
+<P>
+<strong>HEALPix</strong> software and format have been used by the HFI and LFI consortia of <SPAN  CLASS="textbf">Planck</SPAN>
+collaboration for the simulation, analysis and data release of <SPAN  CLASS="textbf">Planck</SPAN> data
+(see <kbd><A ID="tex2html11"
+  HREF="https://www.cosmos.esa.int/web/planck">https://www.cosmos.esa.int/web/planck</A></kbd>).
+
+<P>
+<strong>HEALPix</strong> software has been selected by the <SPAN  CLASS="textbf">GAIA</SPAN> satellite mission currently surveying our Galaxy
+(see <kbd><A ID="tex2html12"
+  HREF="https://www.esa.int/Our_Activities/Space_Science/Gaia_overview">https://www.esa.int/Our_Activities/Space_Science/Gaia_overview</A></kbd>)
+
+<P>
+
+<H2><A ID="SECTION520"></A>
+<A ID="intro:licensing"></A>
+<BR>
+Licensing
+</H2>
+The full-fledged <strong>HEALPix</strong> software package described above and in the accompanying documentation
+can be downloaded from  <kbd><A ID="tex2html13"
+  HREF="https://sourceforge.net/projects/healpix/files/latest/download">https://sourceforge.net/projects/healpix/files/latest/download</A></kbd> under 
+<A ID="tex2html16"
+  HREF="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html">version 2 of the GNU General Public License (<SPAN  CLASS="textbf">GPLv2</SPAN>)</A>
+which is described at length in  
+<kbd><A ID="tex2html14"
+  HREF="https://www.gnu.org/licenses/old-licenses/gpl-2.0-faq.html">https://www.gnu.org/licenses/old-licenses/gpl-2.0-faq.html</A></kbd>.
+<BR>
+<BR>
+Beside this, a subset of C routines called <SPAN  CLASS="texttt"><SPAN  CLASS="textbf">healpix_bare</SPAN></SPAN>, and providing support for back and forth conversion between
+pixel indexes and angular or vector coordinates on the sphere, 
+and between RING and NESTED pixel indexes, is available from 
+<kbd><A ID="tex2html15"
+  HREF="https://sourceforge.net/projects/healpix/files/healpix_bare_1.0">https://sourceforge.net/projects/healpix/files/healpix_bare_1.0</A></kbd> under a more permissive
+<A ID="tex2html17"
+  HREF="https://opensource.org/licenses/BSD-3-Clause"><SPAN  CLASS="textbf">3-clause BSD license</SPAN></A>.
+It was developed with a focus on accuracy, reliability and clarity, with good timing performances, 
+and is intended for developers of BSD-licensed HEALPix related codes, so that they won't 
+have to reimplement some central algorithms.
+<BR>
+However, for ultimate optimization, and to get all the features of <strong>HEALPix</strong>, the GPLv2-licensed
+package must be used.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="intro_Geometric_Algebraic_Propert.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_HEALPix_conventions.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html107"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_Geometric_Algebraic_Propert.htm">Geometric and Algebraic Properties of HEALPix</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_HEALPix_conventions.htm">HEALPix conventions</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

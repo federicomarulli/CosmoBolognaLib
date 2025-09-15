@@ -1,0 +1,525 @@
+\batchmode
+
+
+\documentclass[12pt,twoside]{article}
+\RequirePackage{ifthen}
+
+
+\usepackage{xr-hyper,healpix,graphicx,html,makeidx,dirtree}
+\usepackage{ae,lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{tocloft}%
+\providecommand{\hpxversion}{3.82}%
+\providecommand{\hpxverstex}{3\_82}%
+\providecommand{\idlversion}{6.4 }%2013-10%
+\providecommand{\gdlversion}{1.0.1}% Oct 2021%
+\providecommand{\gdlreldate}{Oct 2021}%
+\providecommand{\gdlsite}{https://github.com/gnudatalanguage/gdl}%
+\providecommand{\flversion}{0.79.50 }% Jul 2021%
+\providecommand{\flsitea}{https://www.flxpert.hu/fl}%
+\providecommand{\flsiteb}{https://bitbucket.org/fawlty/fl/src/master} 
+
+%
+\providecommand{\hpyversion}{1.16.1}% 2022-07-29? (3.82)%
+\providecommand{\hpysite}{https://github.com/healpy/healpy}%
+\providecommand{\srcurl}{https://healpix.sourceforge.io/src/3.82/} 
+
+%
+\providecommand{\healpixmail}{{\em healpix-support} \texttt{at} {\em lists.sourceforge.net}} 
+
+%
+\providecommand{\hpxwebsite}{https://healpix.sourceforge.io}%
+\providecommand{\oldhpxwebsite}{http://healpix.sf.net} 
+
+%
+\providecommand{\healpixwebpage}{https://healpix.sourceforge.io}%
+\providecommand{\healpixsupport}{https://healpix.sourceforge.io/support.php} 
+
+%
+\providecommand{\defwebsite}{\website{\htmladdnormallink{https://healpix.sourceforge.io}{https://healpix.sourceforge.io}\\\htmladdnormallink{http://healpix.sf.net}{http://healpix.sf.net}}} 
+
+%
+\providecommand{\hpxfitsexamples}{https://healpix.sourceforge.io/data/examples}%
+\providecommand{\hpxfitsdoc}{https://healpix.sourceforge.io/data/examples/healpix\_fits\_specs.pdf}%%% TEXEXPAND: END FILE ./hpxwebsites.tex
+ \hypersetup{%
+	pdftitle={HEALPix Installation Guidelines},%
+	pdfauthor={E. Hivon et al},%
+	pdfkeywords={HEALPix, Installation},%
+	colorlinks=true}
+
+%
+\providecommand{\nside}{N_{\mathrm{side}}}%
+\providecommand{\npix}{N_{\mathrm{pix}}}%
+\providecommand{\lmax}{\ell_{\mathrm{max}}}%
+\providecommand{\doubledash}{-{}--} 
+%
+\renewcommand{\contentsname}{{TABLE OF CONTENTS}}
+
+%
+\providecommand{\linklatexhtml}[3]{% \linklatexhtml{name}{latex_target}{html_target}
+\htmladdnormallink{#1}{#3}}%
+\providecommand{\mylink}[2]{% \mylink{link_id}{link_text} (internal link)
+\hyperref{#2}{}{}{#1}}%
+\providecommand{\mylinkext}[2]{% \mylink{link_id}{link_text}  (external link)
+\hyperref{#2}{}{}{#1}} 
+
+
+\makeatletter%
+\providecommand{\nop}[1]{\Hy@raisedlink{\hypertarget{#1}{}}} 
+\makeatother%
+\providecommand{\mytarget}[1]{\Hy@raisedlink{\hypertarget{#1}{}}}%    \mytarget{id}%
+\providecommand{\mytarget}[1]{\label{#1}} 
+
+
+\sloppy
+\setcounter{secnumdepth}{10}%must be non-zero for cross-reference of Figs and Sections
+\setcounter{tocdepth}{10}
+
+\newcounter{append} 
+%
+\providecommand{\facname}{}  % must be here because it is in idl.tex%
+\providecommand{\FACNAME}{}  % must be here because it is in idl.tex
+\externaldocument{intro}[intro.pdf]
+\externaldocument{csub}[csub.pdf]
+\externaldocument{idl}[idl.pdf]
+\externaldocument{facilities}[facilities.pdf]
+\externaldocument{subroutines}[subroutines.pdf]
+\externallabels{.}{/tmp/introlabels.pl}
+\externallabels{.}{/tmp/intro_labels.pl}
+\externallabels{.}{/tmp/csublabels.pl}
+\externallabels{.}{/tmp/csub_labels.pl}
+\externallabels{.}{/tmp/idllabels.pl}
+\externallabels{.}{/tmp/idl_labels.pl}
+\externallabels{.}{/tmp/facilitieslabels.pl}
+\externallabels{.}{/tmp/fac_labels.pl}
+\externallabels{.}{/tmp/subroutineslabels.pl}
+\externallabels{.}{/tmp/sub_labels.pl}
+
+
+\usepackage{xcolor}
+
+
+
+\makeatletter
+
+\makeatletter
+\count@=\the\catcode`\_ \catcode`\_=8 
+\newenvironment{tex2html_wrap}{}{}%
+\catcode`\<=12\catcode`\_=\count@
+\newcommand{\providedcommand}[1]{\expandafter\providecommand\csname #1\endcsname}%
+\newcommand{\renewedcommand}[1]{\expandafter\providecommand\csname #1\endcsname{}%
+  \expandafter\renewcommand\csname #1\endcsname}%
+\newcommand{\newedenvironment}[1]{\newenvironment{#1}{}{}\renewenvironment{#1}}%
+\let\newedcommand\renewedcommand
+\let\renewedenvironment\newedenvironment
+\makeatother
+\let\mathon=$
+\let\mathoff=$
+\ifx\AtBeginDocument\undefined \newcommand{\AtBeginDocument}[1]{}\fi
+\newbox\sizebox
+\setlength{\hoffset}{0pt}\setlength{\voffset}{0pt}
+\addtolength{\textheight}{\footskip}\setlength{\footskip}{0pt}
+\addtolength{\textheight}{\topmargin}\setlength{\topmargin}{0pt}
+\addtolength{\textheight}{\headheight}\setlength{\headheight}{0pt}
+\addtolength{\textheight}{\headsep}\setlength{\headsep}{0pt}
+\setlength{\textwidth}{349pt}
+\newwrite\lthtmlwrite
+\makeatletter
+\let\realnormalsize=\normalsize
+\global\topskip=2sp
+\def\preveqno{}\let\real@float=\@float \let\realend@float=\end@float
+\def\@float{\let\@savefreelist\@freelist\real@float}
+\def\liih@math{\ifmmode$\else\bad@math\fi}
+\def\end@float{\realend@float\global\let\@freelist\@savefreelist}
+\let\real@dbflt=\@dbflt \let\end@dblfloat=\end@float
+\let\@largefloatcheck=\relax
+\let\if@boxedmulticols=\iftrue
+\def\@dbflt{\let\@savefreelist\@freelist\real@dbflt}
+\def\adjustnormalsize{\def\normalsize{\mathsurround=0pt \realnormalsize
+ \parindent=0pt\abovedisplayskip=0pt\belowdisplayskip=0pt}%
+ \def\phantompar{\csname par\endcsname}\normalsize}%
+\def\lthtmltypeout#1{{\let\protect\string \immediate\write\lthtmlwrite{#1}}}%
+\usepackage[tightpage,active]{preview}
+\newbox\lthtmlPageBox
+\newdimen\lthtmlCropMarkHeight
+\newdimen\lthtmlCropMarkDepth
+\long\def\lthtmlTightVBoxA#1{\def\lthtmllabel{#1}
+    \setbox\lthtmlPageBox\vbox\bgroup\catcode`\_=8 }%
+\long\def\lthtmlTightVBoxZ{\egroup
+    \lthtmlCropMarkHeight=\ht\lthtmlPageBox \advance \lthtmlCropMarkHeight 6pt
+    \lthtmlCropMarkDepth=\dp\lthtmlPageBox
+    \lthtmltypeout{^^J:\lthtmllabel:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
+    \lthtmltypeout{^^J:\lthtmllabel:lthtmlCropMarkDepth:=\the\lthtmlCropMarkDepth:1ex:=\the \dimexpr 1ex}%
+    \begin{preview}\copy\lthtmlPageBox\end{preview}}%
+\long\def\lthtmlTightFBoxA#1{\def\lthtmllabel{#1}%
+    \adjustnormalsize\setbox\lthtmlPageBox=\vbox\bgroup %
+    \let\ifinner=\iffalse \let\)\liih@math %
+    \bgroup\catcode`\_=8 }%
+\long\def\lthtmlTightFBoxZ{\egroup
+    \@next\next\@currlist{}{\def\next{\voidb@x}}%
+    \expandafter\box\next\egroup %
+    \lthtmlCropMarkHeight=\ht\lthtmlPageBox \advance \lthtmlCropMarkHeight 6pt
+    \lthtmlCropMarkDepth=\dp\lthtmlPageBox
+    \lthtmltypeout{^^J:\lthtmllabel:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
+    \lthtmltypeout{^^J:\lthtmllabel:lthtmlCropMarkDepth:=\the\lthtmlCropMarkDepth:1ex:=\the \dimexpr 1ex}%
+    \begin{preview}\copy\lthtmlPageBox\end{preview}}%
+    \long\def\lthtmlinlinemathA#1#2\lthtmlindisplaymathZ{\lthtmlTightVBoxA{#1}{\hbox\bgroup#2\egroup}\lthtmlTightVBoxZ}
+    \def\lthtmlinlineA#1#2\lthtmlinlineZ{\lthtmlTightVBoxA{#1}{\hbox\bgroup#2\egroup}\lthtmlTightVBoxZ}
+    \long\def\lthtmldisplayA#1#2\lthtmldisplayZ{\lthtmlTightVBoxA{#1}{#2}\lthtmlTightVBoxZ}
+    \long\def\lthtmldisplayB#1#2\lthtmldisplayZ{\\edef\preveqno{(\theequation)}%
+        \lthtmlTightVBoxA{#1}{\let\@eqnnum\relax#2}\lthtmlTightVBoxZ}
+    \long\def\lthtmlfigureA#1{\let\@savefreelist\@freelist
+        \lthtmlTightFBoxA{#1}}
+    \long\def\lthtmlfigureZ{
+        \lthtmlTightFBoxZ\global\let\@freelist\@savefreelist}
+    \long\def\lthtmlpictureA#1{\let\@savefreelist\@freelist
+        \lthtmlTightVBoxA{#1}}
+    \long\def\lthtmlpictureZ{
+        \lthtmlTightVBoxZ\global\let\@freelist\@savefreelist}
+\def\lthtmlcheckvsize{\ifdim\ht\sizebox<\vsize 
+  \ifdim\wd\sizebox<\hsize\expandafter\hfill\fi \expandafter\vfill
+  \else\expandafter\vss\fi}%
+\providecommand{\selectlanguage}[1]{}%
+\makeatletter \tracingstats = 1 
+
+
+\begin{document}
+\pagestyle{empty}\thispagestyle{empty}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength hsize=\the\hsize}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength vsize=\the\vsize}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength hoffset=\the\hoffset}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength voffset=\the\voffset}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength topmargin=\the\topmargin}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength topskip=\the\topskip}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength headheight=\the\headheight}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength headsep=\the\headsep}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength parskip=\the\parskip}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength oddsidemargin=\the\oddsidemargin}\lthtmltypeout{}%
+\makeatletter
+\if@twoside\lthtmltypeout{latex2htmlLength evensidemargin=\the\evensidemargin}%
+\else\lthtmltypeout{latex2htmlLength evensidemargin=\the\oddsidemargin}\fi%
+\lthtmltypeout{}%
+\makeatother
+\setcounter{page}{1}
+\onecolumn
+
+% !!! IMAGES START HERE !!!
+
+\setcounter{secnumdepth}{10}
+\setcounter{tocdepth}{10}
+\stepcounter{section}
+\stepcounter{section}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3053}%
+$2^{128}-1 \approx 3.4\ 10^{38}$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsubsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3055}%
+$\langle$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3057}%
+$\rangle$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3063}%
+$\ldots$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3065}%
+$(\mu{\mathrm{K}})^2$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3067}%
+$C(\ell)$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3071}%
+$[0, \ell_{\mathrm{max}}]$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3073}%
+$\ell_{\mathrm{max}}$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsubsection}
+
+
+\setlength{\itemsep}{-1pt}%
+
+
+
+\setlength{\parsep}{-10pt}%
+
+
+
+\setlength{\itemsep}{-1pt}%
+
+
+
+\setlength{\parsep}{-10pt}%
+
+
+
+\setlength{\itemsep}{-1pt}%
+
+
+
+\setlength{\parsep}{-10pt}%
+
+
+
+\setlength{\itemsep}{-1pt}%
+
+
+
+\setlength{\parsep}{-10pt}%
+
+\stepcounter{subsubsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{section}
+\stepcounter{subsection}
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+\stepcounter{subsection}
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+\stepcounter{subsection}
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3077}%
+$|s|\ge0$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{subsubsection}
+\stepcounter{subsubsection}
+\stepcounter{section}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3083}%
+$\ell_{\mathrm{max}}=4096$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3091}%
+$\Lambda$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3095}%
+$\ell_{\mathrm{max}}=1.5 N_{\mathrm{side}}$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3097}%
+$a_{\ell m}$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3101}%
+$\{16,\ldots,2048\}$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3105}%
+$n \ge 100$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline3137}%
+$\langle\ldots\rangle$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+
+\setlength{\itemsep}{0pt}%
+
+
+
+\setlength{\parsep}{0pt}%
+
+
+\end{document}

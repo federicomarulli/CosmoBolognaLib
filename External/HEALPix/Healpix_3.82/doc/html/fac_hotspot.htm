@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>hotspot</TITLE>
+<META NAME="description" CONTENT="hotspot">
+<META NAME="keywords" CONTENT="facilities">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="facilities.css">
+
+<LINK REL="next" HREF="fac_map2gif.htm">
+<LINK REL="previous" HREF="fac_anafast.htm">
+<LINK REL="next" HREF="fac_map2gif.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="fac_anafast.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="fac_HEALPix_F90_facilities.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_map2gif.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html131"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="fac_anafast.htm">anafast</A>
+
+<strong>Up:</strong> <A
+ HREF="fac_HEALPix_F90_facilities.htm">HEALPix/F90 facilities</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_map2gif.htm">map2gif</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION700"></A>
+<A ID="fac:hotspot"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">hotspot</SPAN></div><hr>
+<H3>This Fortran facility provides a means to find local extrema of
+a map in <strong>HEALPix</strong> format. It also serves to illustrate the use of the
+following parts of the <strong>HEALPix</strong> toolkit:
+fast neighbour and extrema finding in the nested scheme,
+in-place conversion between RING and NESTED pixel schemes </H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/hotspot/HotSpots.F90"><strong>src/f90/hotspot/HotSpots.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>%
+hotspot
+</h3></blockquote>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>infile = </B>
+<DD><A ID="fac:hotspot:infile"></A>Defines the input map file.
+    <DT>
+<B>extrema_outfile = </B>
+<DD><A ID="fac:hotspot:extrema_outfile"></A>Defines the output map file.
+    <DT>
+<B>maxima_outfile = </B>
+<DD><A ID="fac:hotspot:maxima_outfile"></A>Defines the output ascii list of maxima.
+    <DT>
+<B>minima_outfile =  </B>
+<DD><A ID="fac:hotspot:minima_outfile"></A>Defines the output ascii list of minima.
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+
+ hotspot reads a healpix map in FITS format and generates the following outputs: 
+1) a <strong>HEALPix</strong> map in FITS format which is zero everywhere, except at
+ pixels which contain local extrema. These pixels have the same
+ values as in the input map.
+2) an ASCII file which lists the pixel numbers and values of
+ maxima, and
+3) an ASCII file which lists the pixel numbers and values of
+ minima.
+<br><br>The facility can be used in both an interactive
+mode and a command mode, where command qualifiers
+are fed to the facility using an input file.
+<br><br>Note the following limitations:
+hotspot (and the toolkit neighbour finder which it uses) will
+only work on maps with <!-- MATH
+ $N_{\mathrm{side}}\ge 2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img51.png"
+ ALT="$N_{\mathrm{side}}\ge 2$"></SPAN>.
+
+</blockquote>
+
+<P>
+<hr><H2>DATASETS</H2>
+<h3>The following datasets are involved in the <b><SPAN CLASS="colordoc">hotspot</SPAN></b>
+ processing.</h3>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">Dataset</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">Description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+None required</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"></TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+</TABLE>
+
+<P>
+<hr><H2>SUPPORT    </H2><H3>This section lists those routines and facilities (including those <i>external</i> to the <b>HEALPix</b> distribution) which can assist in the utilisation of <b><SPAN CLASS="colordoc">hotspot</SPAN></b>.</H3>
+  <DL COMPACT><DT>
+<B><A HREF="fac_synfast.htm#fac:synfast">synfast</A></B>
+<DD>This <strong>HEALPix</strong> facility can generate a FITS format 
+            sky map to be input to hotspot.
+  <DT>
+<B><A HREF="fac_map2gif.htm#fac:map2gif">map2gif</A></B>
+<DD>This <strong>HEALPix</strong> Fortran facility can be used to visualise the
+  output map.
+  <DT>
+<B><A HREF="./idl_mollview.htm#idl:mollview">mollview</A></B>
+<DD>This <strong>HEALPix</strong> IDL facility can be used to visualise the
+  output map.
+  </DL>
+
+<P>
+<hr><H2>EXAMPLE # 1:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">hotspot</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+hotspot runs in interactive mode.
+</blockquote>
+
+<P>
+
+<P>
+<hr><H2>EXAMPLE # 2:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">hotspot  filename</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>When `filename' is present, hotspot enters the non-interactive mode and parses
+its inputs from the file `filename'. This has the following
+structure: the first entry is a qualifier which announces to the parser
+which input immediately follows. If this input is omitted in the
+input file, the parser assumes the default value shown below.
+If the equality sign is omitted, then the parser ignores the entry.
+In this way comments may also be included in the file.
+In this example, the file contains the following qualifiers:
+<BR>
+<kbd><A HREF="#fac:hotspot:infile">infile</A>= map.fits</kbd><br>
+<kbd><A HREF="#fac:hotspot:extrema_outfile">extrema_outfile</A>= pixlminmax.fits</kbd><br>
+<kbd><A HREF="#fac:hotspot:maxima_outfile">maxima_outfile</A>= maxima.dat</kbd><br>
+<kbd><A HREF="#fac:hotspot:minima_outfile">minima_outfile</A>= minima.dat</kbd><br>
+hotspot reads in the map `map.fits' and generates
+an output map with name `pixlminmax.fits', and two ASCII files,
+`maxima.dat' and
+`minima.dat'.
+</blockquote>
+
+<P>
+<hr><H2>RELEASE NOTES</H2><blockquote>
+  <DL COMPACT><DD>&#9632;  Initial release (<strong>HEALPix</strong> 0.90)
+    <DD>&#9632;  Optional non-interactive operation. Proper FITS file support
+    for input and output maps. (<strong>HEALPix</strong> 1.00)
+  </DL>
+</blockquote>
+
+<hr><H2>MESSAGES</H2><h3>This section describes error messages generated by <b><SPAN CLASS="colordoc">hotspot</SPAN></b>
+</h3>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:125px"><SPAN  CLASS="textbf">Message</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">Severity</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">Text</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+can not allocate memory for array xxx</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">Fatal</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">You do not have
+                   sufficient system resources to run this
+                   facility at the map resolution you required. 
+  Try a lower map resolution.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px"></TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+</TABLE>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="fac_anafast.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="fac_HEALPix_F90_facilities.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_map2gif.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html131"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="fac_anafast.htm">anafast</A>
+
+<strong>Up:</strong> <A
+ HREF="fac_HEALPix_F90_facilities.htm">HEALPix/F90 facilities</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_map2gif.htm">map2gif</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

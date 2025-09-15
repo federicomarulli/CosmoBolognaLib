@@ -1,0 +1,223 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>Introduction</TITLE>
+<META NAME="description" CONTENT="Introduction">
+<META NAME="keywords" CONTENT="intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="intro.css">
+
+<LINK REL="next" HREF="intro_Discretisation_Functions_on.htm">
+<LINK REL="previous" HREF="intro_TABLE_CONTENTS.htm">
+<LINK REL="next" HREF="intro_Discretisation_Functions_on.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_Discretisation_Functions_on.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html99"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_Discretisation_Functions_on.htm">Discretisation of Functions on the Sphere</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION200">
+Introduction</A>
+</H1>
+
+<P>
+The analysis of functions on  domains with spherical topology occupies a
+central place in physical science and engineering disciplines. 
+This is particularly apparent in the fields of astronomy, cosmology, 
+geophysics,  atomic and nuclear physics. In many cases the geometry is either
+dictated by the object under study or approximate spherical symmetry can be
+exploited to yield powerful perturbation methods. Practical
+limits for the purely analytical study of these problems create
+an urgent necessity for efficient and accurate numerical tools.
+
+<P>
+The 
+simplicity of the spherical form belies the intricacy of global
+analysis on the sphere. There is no known
+point set which achieves the analogue of uniform sampling in Euclidean space and
+allows exact and invertible discrete spherical harmonic decompositions
+of arbitrary but band-limited functions. Any existing proposition of practical
+schemes for the  discrete treatment of such functions 
+on the sphere  introduces some (hopefully tiny) 
+systematic error dependent on the global properties of
+the point set. The goal is to minimise these errors and
+faithfully represent deterministic functions as well as realizations of
+random variates both
+in configuration and Fourier space while maintaining computational efficiency.
+
+<P>
+We illustrate these points using as an example the field which is particularly 
+close to the authors' hearts, Cosmic Microwave Background (CMB)
+anisotropies. 
+As some of us had learned while working with the <I>COBE</I> mission (launched by NASA in 1989) products
+the digitised
+sky map is an essential intermediate 
+stage in information processing between 
+the entry point of data acquisition by the 
+instruments &mdash; very large time ordered data streams,
+and the final stage of astrophysical analysis &mdash; 
+typically producing a 
+'few'
+ numerical values
+of physical parameters of interest. 
+<I>COBE</I>-DMR sky maps (angular resolution of 7&deg;(FWHM) in
+three frequency bands, two channels each, 6144 pixels per map)
+were considered large at the time of their release.
+
+<P>
+In the following decade, we saw an explosion
+of available data.
+The  Wilkinson Microwave Anisotropy Probe (WMAP, launched by NASA in 2001) and Planck Surveyor 
+(launched by ESA in 2009)
+were aiming
+at providing multi-frequency, high resolution, full sky measurements of the anisotropy in
+both temperature and polarization of the cosmic microwave
+background radiation.
+The ultimate data products of these missions &mdash;
+multiple microwave sky maps, each of which comprises
+more than <SPAN CLASS="MATH"><IMG
+ STYLE="height: 0.58ex; vertical-align: -0.10ex; " SRC="intro_img1.png"
+ ALT="$\sim $"></SPAN> <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.10ex; " SRC="intro_img2.png"
+ ALT="$10^6$"></SPAN> pixels in order to render the angular 
+resolution of the instruments &mdash;
+presented serious challenges to those involved in the
+analysis and scientific exploitation of the results of both surveys, and motived
+the development of many new theoretical and numerical tools.
+
+<P>
+As for ongoing and future CMB maps, a whole sky CMB survey  
+at the angular resolution
+of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.75ex; vertical-align: -0.10ex; " SRC="intro_img3.png"
+ ALT="$\sim 10'$"></SPAN> (FWHM), discretised with 
+a few pixels per resolution element 
+(so that the discretisation effects on the signal are  
+sub-dominant with respect to the effects of instrument's angular response),
+require map sizes of at least 
+<!-- MATH
+ $N_{\mathrm{pix}}\sim  10^7$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.56ex; vertical-align: -0.75ex; " SRC="intro_img4.png"
+ ALT="$N_{\mathrm{pix}}\sim 10^7$"></SPAN> pixels.
+More pixels than that are needed to represent the Planck-HFI higher 
+resolution channels.
+This estimate, <!-- MATH
+ $N_{\mathrm{pix}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.75ex; " SRC="intro_img5.png"
+ ALT="$N_{\mathrm{pix}}$"></SPAN>, should be multiplied by  the number of frequency bands 
+(or, indeed, by the number of individual
+observing channels &mdash; 74 in the case of Planck &mdash; for the analysis work 
+to be done before the
+final coadded maps are made for each frequency band) to render 
+an approximate expected
+size of the already very compressed form of survey data which is
+the input to the astrophysical analysis pipeline. 
+
+<P>
+It appears to us that very careful
+attention ought to be given to devising  high resolution CMB map
+structures which can maximally facilitate 
+the forthcoming analyses of large size data sets, for the following
+reasons:
+
+<UL>
+<LI>It is clearly very easy to end up with an estimated size of many GBy 
+for the 
+data objects which would be directly involved in the science extraction
+part of the future CMB missions.
+</LI>
+<LI>Many essential scientific questions
+can only be answered by <EM>global</EM> studies of  future data sets.
+</LI>
+</UL>
+
+<P>
+This document is an introduction to the
+properties of our proposed approach for a high resolution numerical
+representation of  functions on the sphere
+ &mdash; the Hierarchical
+Equal Area and iso-Latitude Pixelation  (<strong>HEALPix</strong>, see 
+<kbd><A ID="tex2html3"
+  HREF="https://healpix.sourceforge.io">https://healpix.sourceforge.io</A></kbd>), 
+and the associated multi-purpose computer 
+software package. 
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_Discretisation_Functions_on.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html99"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_Discretisation_Functions_on.htm">Discretisation of Functions on the Sphere</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

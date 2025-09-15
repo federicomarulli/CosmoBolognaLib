@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>planck_rng derived type</TITLE>
+<META NAME="description" CONTENT="planck_rng derived type">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_plm_gen.htm">
+<LINK REL="previous" HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+<LINK REL="next" HREF="sub_plm_gen.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_plm_gen.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html459"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm">pix2xxx,ang2xxx,vec2xxx, nest2ring,ring2nest</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_plm_gen.htm">plm_gen</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION7600"></A>
+<A ID="sub:planck_rng"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">planck_rng</SPAN></div><hr>
+<H3>The derived type <SPAN CLASS="colordoc">planck_rng</SPAN> is used by the Random Number Generation routines 
+<A HREF="sub_rand_init.htm#sub:rand_init">rand_init</A>,
+<A HREF="sub_rand_uni.htm#sub:rand_uni">rand_uni</A>, 
+<A HREF="sub_rand_gauss.htm#sub:rand_gauss">rand_gauss</A> to describe fully the current RNG
+sequence.
+<BR>
+Most users do not need to know about the <SPAN CLASS="colordoc">planck_rng</SPAN> definition. It may be
+useful for those wanting to take a snapshot of the RNG sequence they are using (by eg,
+dumping the latest values of <SPAN CLASS="colordoc">planck_rng</SPAN> structure on disk) so that the same sequence can be resumed
+later on from that same point.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/rngmod.f90"><strong>src/f90/mod/rngmod.f90</strong></a>&nbsp;  
+
+<P>
+The type <SPAN CLASS="colordoc">planck_rng</SPAN> is a structure defined as
+
+<P>
+ <TABLE class="PAD  BORDER" style="width:100%">
+<TR><TD CLASS="LEFT">name</TD>
+<TD CLASS="CENTER">type</TD>
+<TD CLASS="LEFT">definition</TD>
+</TR>
+<TR><TD CLASS="LEFT">x, y, z, w</TD>
+<TD CLASS="CENTER">I4B</TD>
+<TD CLASS="LEFT">internal variables of uniform RNG</TD>
+</TR>
+<TR><TD CLASS="LEFT">gset</TD>
+<TD CLASS="CENTER">DP</TD>
+<TD CLASS="LEFT">internal variable for Gaussian RNG</TD>
+</TR>
+<TR><TD CLASS="LEFT">empty</TD>
+<TD CLASS="CENTER">LGT</TD>
+<TD CLASS="LEFT">flag used by Gaussian RNG</TD>
+</TR>
+</TABLE>
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">planck_rng</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_rand_gauss.htm#sub:rand_gauss">rand_gauss</A></B>
+<DD>function which returns a  random normal deviate.
+  <DT>
+<B><A HREF="sub_rand_uni.htm#sub:rand_uni">rand_uni</A></B>
+<DD>function which returns a random uniform deviate.
+   <DT>
+<B><A HREF="sub_rand_init.htm#sub:rand_init">rand_init</A></B>
+<DD>subroutine to initiate a random number sequence. 
+  </DL>
+
+<P>
+
+<P>
+
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_plm_gen.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html459"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm">pix2xxx,ang2xxx,vec2xxx, nest2ring,ring2nest</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_plm_gen.htm">plm_gen</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

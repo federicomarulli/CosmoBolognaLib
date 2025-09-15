@@ -1,0 +1,301 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>outline_earth</TITLE>
+<META NAME="description" CONTENT="outline_earth">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+<LINK REL="previous" HREF="idl_orthview.htm">
+<LINK REL="next" HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_orthview.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html417"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_orthview.htm">orthview</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm">pix2xxx, ang2xxx, vec2xxx, nest2ring, ring2nest</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION5400"></A>
+<A ID="idl:outline_earth"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">outline_earth</SPAN></div><hr>
+<H3>This IDL facility generates an outline of the Earth continents, coast lines, 
+countries and/or rivers, at various resolution, 
+which can then be overplotted onto <strong>HEALPix</strong> maps using the 
+<A HREF="idl_mollview.htm#idl:mollview:outline">outline</A> option of
+<A HREF="idl_cartview.htm#idl:cartview">cartview</A>,
+<A HREF="idl_gnomview.htm#idl:gnomview">gnomview</A>,
+<A HREF="idl_mollview.htm#idl:mollview">mollview</A> or
+<A HREF="idl_orthview.htm#idl:orthview">orthview</A>.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/visu/outline_earth.pro"><strong>src/idl/visu/outline_earth.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+<A HREF="#idl:outline_earth:geo">geo</A> = 
+OUTLINE_EARTH([<A HREF="#idl:outline_earth:geo_in">geo_in</A>], [<A HREF="#idl:outline_earth:behavior">BEHAVIOR=</A>, 
+<A HREF="#idl:outline_earth:coasts">/COASTS</A>,
+<A HREF="#idl:outline_earth:color">COLOR=</A>,
+<A HREF="#idl:outline_earth:continents">/CONTINENTS</A>,
+<A HREF="#idl:outline_earth:countries">/COUNTRIES</A>,
+<A HREF="#idl:outline_earth:help">/HELP</A>,
+<A HREF="#idl:outline_earth:hires">HIRES=</A>,
+<A HREF="#idl:outline_earth:linestyle">LINESTYLE=</A>,
+<A HREF="#idl:outline_earth:rivers">/RIVERS</A>,
+<A HREF="#idl:outline_earth:thick">THICK=</A>])
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>geo</B>
+<DD><A ID="idl:outline_earth:geo"></A> output IDL structure
+   <DT>
+<B>geo_in</B>
+<DD><A ID="idl:outline_earth:geo_in"></A> optional input IDL structure generated
+by a previous call to <SPAN CLASS="colordoc">outline_earth</SPAN>, which will be included into the output 
+<A HREF="#idl:outline_earth:geo"><SPAN  CLASS="texttt">geo</SPAN></A> (see <A HREF="#idl:outline_earth:example">Example</A>)
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>BEHAVIOR=</B>
+<DD><A ID="idl:outline_earth:behavior"></A> either 'GDL', 'IDL' or absent: 
+            changes the origin of the Earth data 
+  (see <A HREF="#idl:outline_earth:description">below</A>)
+
+<P>
+<DT>
+<B>/COASTS</B>
+<DD><A ID="idl:outline_earth:coasts"></A> if set, adds coastlines, islands, and lakes information in <A HREF="#idl:outline_earth:geo"><SPAN  CLASS="texttt">geo</SPAN></A> with the features 
+<A HREF="#idl:outline_earth:color">COLOR</A>,
+<A HREF="#idl:outline_earth:linestyle">LINESTYLE</A> and
+<A HREF="#idl:outline_earth:linestyle">THICK</A>.
+
+<P>
+<DT>
+<B>COLOR=</B>
+<DD><A ID="idl:outline_earth:color"></A> scalar or 2-element array: color index to be given to geographical data in final plot in [0, 255]. See <A HREF="idl_mollview.htm#idl:mollview:outline">outline</A> of <A HREF="idl_mollview.htm#idl:mollview">mollview</A> for details.
+
+<P>
+<DT>
+<B>/CONTINENTS</B>
+<DD><A ID="idl:outline_earth:continents"></A> if set, adds continental boundaries
+
+<P>
+<DT>
+<B>/COUNTRIES</B>
+<DD><A ID="idl:outline_earth:countries"></A> if set, adds political boundaries (as of 1993)
+
+<P>
+<DT>
+<B>/HELP</B>
+<DD><A ID="idl:outline_earth:help"></A> if set, prints extended help
+
+<P>
+<DT>
+<B>HIRES=</B>
+<DD><A ID="idl:outline_earth:hires"></A>	if set <SPAN CLASS="MATH">&gt;0</SPAN> use high resolution information (if it is available) 
+              instead of default low resolution one.
+<BR>
+Either 0 or 1 (and more) in IDL mode;
+<BR>
+in 0,1,2,3,4 in GDL mode.
+<BR>
+Beware that Hires data are voluminous, longer to process
+              and will result in large PNG or PDF files when plotted with eg mollview
+
+<P>
+<DT>
+<B>LINESTYLE=</B>
+<DD><A ID="idl:outline_earth:linestyle"></A> linestyle given to current geographical outline(s). <b>default:</b>0. See <A HREF="idl_mollview.htm#idl:mollview:outline">outline</A> of <A HREF="idl_mollview.htm#idl:mollview">mollview</A> for details.
+
+<P>
+<DT>
+<B>/RIVERS</B>
+<DD><A ID="idl:outline_earth:rivers"></A> if set, adds rivers
+
+<P>
+<DT>
+<B>THICK=</B>
+<DD><A ID="idl:outline_earth:thick"></A> thickness of the geographical lines <b>default:</b>1.0.
+See <A HREF="idl_mollview.htm#idl:mollview:outline">outline</A> of <A HREF="idl_mollview.htm#idl:mollview">mollview</A> for details.
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">outline_earth</SPAN> <A ID="idl:outline_earth:description"></A> reads Earth data from disk (see below) and generates outlines of the Earth continents, coast lines, 
+countries and/or rivers (in combination or separately), at various resolution, with a user-specified color, linestyle and thickness, which can then be overplotted onto <strong>HEALPix</strong> maps using 
+<A HREF="idl_cartview.htm#idl:cartview">cartview</A>,
+<A HREF="idl_gnomview.htm#idl:gnomview">gnomview</A>,
+<A HREF="idl_mollview.htm#idl:mollview">mollview</A> or
+<A HREF="idl_orthview.htm#idl:orthview">orthview</A>.
+
+<BR>&ndash; If run under IDL (or if <A HREF="#idl:outline_earth:behavior">BEHAVIOR</A>='IDL') 
+  the Earth data are read from
+  <SPAN  CLASS="texttt">$IDL_DIR/resource/maps/*/*.*</SPAN>
+  with 'low' (<A HREF="#idl:outline_earth:hires">HIRES</A>=0) and if available 'high' (<A HREF="#idl:outline_earth:hires">HIRES</A><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.41ex; " SRC="idl_img98.png"
+ ALT="$\ge$"></SPAN>1) resolution.
+
+<BR>&ndash; If run under GDL (or if <A HREF="#idl:outline_earth:behavior">BEHAVIOR</A>='GDL') the GSHHS data 
+  (version 2.2 or more, available at 
+  <kbd><A ID="tex2html90"
+  HREF="https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest">https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest</A></kbd><SPAN  CLASS="texttt">/gshhg-bin-*.zip</SPAN>)
+  are read from <SPAN  CLASS="texttt">$GSHHS_DATA_DIR/*.b</SPAN>
+  with <A HREF="#idl:outline_earth:hires">HIRES</A>=0,1,2,3,4 standing for 'coarse', 'low', 'intermediate', 
+  'high' and 'full' resolution respectively.
+<BR>
+In GDL mode, Coasts and Continents are degenerate.
+
+<BR>&ndash; Under FL, <A HREF="#idl:outline_earth:behavior">BEHAVIOR</A> must be set to either 'IDL' or 'GDL', 
+  and the corresponding data must be available .
+
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">outline_earth</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">outline_earth</SPAN>.
+    <DT>
+<B><A HREF="idl_cartview.htm#idl:cartview">cartview</A>, <A HREF="idl_gnomview.htm#idl:gnomview">gnomview</A></B>
+<DD><DT>
+<B><A HREF="idl_mollview.htm#idl:mollview">mollview</A>, <A HREF="idl_orthview.htm#idl:orthview">orthview</A></B>
+<DD>visualization routines that overplot the Earth geographical outlines generated by <SPAN CLASS="colordoc">outline_earth</SPAN>)
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><A ID="idl:outline_earth:example"></A><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">geo = <SPAN CLASS="colordoc">outline_earth</SPAN>(/continents,/hires,thick=0.8)</TD>
+</TR>
+<TR><TD CLASS="LEFT">geo = <SPAN CLASS="colordoc">outline_earth</SPAN>(geo, /rivers,      thick=0.1,col=20)</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="idl_mollview.htm#idl:mollview">mollview</A>, findgen(12), $</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="idl_mollview.htm#idl:mollview:outline">outline</A>=geo, <A HREF="idl_mollview.htm#idl:mollview:flip">/flip</A>, <A HREF="idl_mollview.htm#idl:mollview:coord">coord=['C','C']</A>, $</TD>
+</TR>
+<TR><TD CLASS="LEFT">min=-11,max=11,colt='planck1',/crop</TD>
+</TR>
+</TABLE></div>
+<blockquote>Creates a structure containing a thick-lined high-resolution continent outline, 
+adds a thin-lined lower resolution rivers outline, in a different color, and then overplots the combination
+on a Mollweide projection of a (simple) <strong>HEALPix</strong> map
+(see Fig.&nbsp;<A HREF="#fig:outline_earth">6</A>)
+Note that since Earth data (generated in Celestial = eQuatorial coordinates) 
+are usually shown with the longitude increasing from left to right 
+(contrary to astronomical data), the <SPAN  CLASS="texttt">flip</SPAN> keyword must be set in <SPAN  CLASS="texttt">mollview</SPAN>.
+</blockquote>
+
+<P>
+
+<DIV class="CENTER"><A ID="page:outline_earth"></A><A ID="fig:outline_earth"></A><A ID="17240"></A>
+<TABLE>
+<CAPTION class="BOTTOM"><STRONG>Figure 6:</STRONG>
+Illustration of the Earth outlines created by outline_earth.</CAPTION>
+<TR><TD>
+<DIV CLASS="centerline" ID="par43269" ALIGN="CENTER">
+<IMG
+  WIDTH="720" HEIGHT="360" STYLE=""
+ SRC="./outline_earth.png"
+ ALT="Image outline_earth"></DIV>
+
+<P></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_orthview.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html417"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_orthview.htm">orthview</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm">pix2xxx, ang2xxx, vec2xxx, nest2ring, ring2nest</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

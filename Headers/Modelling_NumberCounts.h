@@ -79,6 +79,9 @@ namespace cbl {
 
 	/// the container of parameters for number counts model computation
 	modelling::numbercounts::STR_NC_data_model m_data_model;
+	
+	/// the container of parameters for the number counts response function model (for super-sample covariance)
+	modelling::numbercounts::STR_NC_data_model m_data_model_SSC;
 
 	/// the container of parameters for size number counts model computation
 	modelling::numbercounts::STR_NCSF_data_model m_data_model_SF;
@@ -215,13 +218,14 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const std::string selection_function_file=par::defaultString, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const int z_step=50, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
+	void set_data_model (const std::shared_ptr<cosmology::Cosmology> cosmology=NULL, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const std::string selection_function_file=par::defaultString, const std::vector<int> selection_function_column={}, const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const int z_step=50, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
 	
 	/**
 	 *  @brief set the data used to construct a model of
 	 *  number counts as a function of a mass proxy, here 
-	 *  expressed as \f$\lambda\f$, with the following
-	 *  functional form:
+	 *  expressed as \f$\lambda\f$, where
+	 *  \f$P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\f$ is inverted (see Lesci+22).
+	 *  Functional form:
 	 *  
 	 *  \f$ \langle N(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j})\rangle 
 	 *  = w(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j})\,\,\Omega 
@@ -236,7 +240,7 @@ namespace cbl {
 	 *  \,\,P(\lambda_{\rm ob}|\lambda_{\rm tr}), \f$
 	 *
 	 *  where \f$ w(\Delta{\lambda_{\text{ob},i}},\Delta z_{\text{ob},j}) \f$ is
-	 *  the weight derived from the selection function (see e.g. Lesci et al. 2021),
+	 *  the weight derived from the selection function (see e.g. Lesci+22),
 	 *  and \f$\Omega\f$ is the survey effective area.
 	 *
 	 *  Furthermore, \f$P(z_{\rm ob}|z_{\rm tr})\f$ and \f$P(\lambda_{\rm ob}|\lambda_{\rm tr})\f$
@@ -291,10 +295,118 @@ namespace cbl {
 	 *  @param area_degrees the area in degrees
 	 *
 	 *  @param prec the precision
+	 */
+	void set_data_model (const std::shared_ptr<cosmology::Cosmology> cosmology, const std::vector<double> SF_weights, const double z_pivot, const double proxy_pivot, const double mass_pivot, const double log_base, const std::string method_Pk, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const std::string model_bias="Tinker", const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
+	
+	/**
+	 *  @brief set the data used to construct a model of
+	 *  number counts as a function of a mass proxy, here 
+	 *  expressed as \f$\lambda\f$, where the functional form is the classic one
+	 *  (namely \f$P(\lambda_{\rm tr}| M_{\rm tr},z_{\rm tr})\f$ is NOT inverted).
+	 *  
+	 *  @param cosmology the cosmological model
 	 *
+	 *  @param redshift_points_completeness **true** cluster redshift points
+	 *  where the completeness is measured. Note that this range should
+	 *  be large enough given the uncertainties on the observed redshifts.
+	 *  If not provided, the completeness is 1 in each point
+	 *
+	 *  @param proxy_points_completeness **true** cluster mass proxy points
+	 *  where the completeness is measured. Note that this range should
+	 *  be large enough given the uncertainties on the observed proxy.
+	 *  If not provided, the completeness is 1 in each point
+	 *
+	 *  @param completeness completeness as a function of redshift (first
+	 *  dimension) and mass proxy (second dimension). This quantity is interpolated.
+	 *  To check the quality of the interpolation, use
+	 *  cbl::modelling::densityprofile::Modelling_DensityProfile::completeness_interp().
+	 *  If not provided, the completeness is 1 in each point
+	 *
+	 *  @param purity purity in each mass proxy bin
+	 *
+	 *  @param z_error_normalised \f$\sigma_z\f$, where the redshift statistical error
+	 *  is given by \f$\sigma_z(1+z)\f$
+	 *
+	 *  @param scalrel_z_evo functional form of the redshift evolution
+	 *  function in the scaling relation: "E_z" \f$\rightarrow\f$ 
+	 *  \f$ f(z)=E(z)/E(z_{piv}) \f$, "direct" \f$\rightarrow\f$ 
+	 *  \f$ f(z)=(1+z)/(1+z_{piv}) \f$
+	 *
+	 *  @param z_pivot the redshift pivot in the scaling relation
+	 *
+	 *  @param proxy_pivot the mass proxy pivot in the scaling relation
+	 *
+	 *  @param mass_pivot the mass pivot; for example, if the scaling relation
+	 *  is written as \f$ \log [M/(10^{14}M_\odot /h)] = 
+	 *  \alpha+\beta \log(\lambda/\lambda_{piv})+\gamma\log f(z) \f$,
+	 *  then mass_pivot = 1.e14
+	 *
+	 *  @param log_base the base of the logarithm used in the 
+	 *  mass-mass proxy scaling relation
+	 *
+	 *  @param method_Pk method used to compute the power spectrum
+	 *  (i.e. the Boltzmann solver); valid choices for method_Pk
+	 *  are: CAMB [http://camb.info/], CLASS
+	 *  [http://class-code.net/], MPTbreeze-v1
+	 *  [http://arxiv.org/abs/1207.1465], EisensteinHu
+	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
+	 *
+	 *  @param store_output if true the output files created by
+	 *  the Boltzmann solver are stored; if false the output files
+	 *  are removed
+	 *
+	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
+	 *  &rarr; normalize the power spectrum
+	 *
+	 *  @param Delta \f$\Delta\f$, the overdensity
+	 *
+	 *  @param isDelta_critical \f$\rightarrow\f$ \f$\Delta\f$ is the
+	 *  overdensity defined with respect to the critical density
+	 *
+	 *  @param model_MF author(s) who proposed the mass function
+	 *
+	 *  @param model_bias author(s) who proposed the bias function,
+	 *  used for the transfer function necessary for the super-sample
+	 *  covariance
+	 *
+	 *  @param z_min minimum redshift
+	 * 
+	 *  @param z_max maximum redshift
+	 *
+	 *  @param area_degrees the area in degrees
+	 *
+	 *  @param prec the precision
+	 */
+	void set_data_model (const std::shared_ptr<cosmology::Cosmology> cosmology, const std::vector<double> redshift_points_completeness, const std::vector<double> proxy_points_completeness, const std::vector<std::vector<double>> completeness, const std::vector<double> purity, const double z_error_normalised, const std::string scalrel_z_evo, const double z_pivot, const double proxy_pivot, const double mass_pivot, const double log_base, const std::string method_Pk, const bool store_output, const int norm, const double Delta, const bool isDelta_critical, const std::string model_MF, const std::string model_bias, const double z_min, const double z_max, const double area_degrees, const double prec=1.e-4);
+	
+	/**
+	 *  @brief Set the functional forms for the mean and rms of
+	 *  the Gaussian PDF \f$P(\lambda_{\rm ob}|\lambda,z)\f$.
+	 *
+	 *  The mean is expressed as
+	 *
+	 *  \f$ \mu = \lambda + A_\mu \lambda \exp[- \lambda 
+	 *  (B_\mu + C_\mu \, z)]\,, \f$
+	 *
+	 *  while the rms has the following expression
+	 *
+	 *  \f$ \sigma = A_\sigma \lambda \exp[- \lambda 
+	 *  (B_\sigma + C_\sigma \, z)]\,. \f$
+	 *  
+	 *  @param A_mu the parameter \f$A_\mu\f$
+	 *  
+	 *  @param B_mu the parameter \f$B_\mu\f$
+	 *  
+	 *  @param C_mu the parameter \f$C_\mu\f$
+	 *  
+	 *  @param A_sigma the parameter \f$A_\sigma\f$
+	 *  
+	 *  @param B_sigma the parameter \f$B_\sigma\f$
+	 *  
+	 *  @param C_sigma the parameter \f$C_\sigma\f$
 	 *  
 	 */
-	void set_data_model (const cbl::cosmology::Cosmology cosmology, const std::vector<double> SF_weights, const double z_pivot, const double proxy_pivot, const double mass_pivot, const double log_base, const std::string method_Pk, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const std::string model_bias="Tinker", const double z_min=par::defaultDouble, const double z_max=par::defaultDouble, const double area_degrees=par::defaultDouble, const double prec=1.e-4);
+	void set_P_proxy (const double A_mu, const double B_mu, const double C_mu, const double A_sigma, const double B_sigma, const double C_sigma);
 
 	///@}
 		
@@ -333,15 +445,6 @@ namespace cbl {
 	 *  [http://arxiv.org/abs/1207.1465], EisensteinHu
 	 *  [http://background.uchicago.edu/~whu/transfer/transferpage.html]
 	 *
-	 *  @param k_Pk_ratio wave vector module required to compute
-	 *  the growth factor (cbl::cosmology::Cosmology::DD_norm())
-	 *  with the method "Pk_ratio". This parameter represents
-	 *  wavenumber at which the ratio between the the power
-	 *  spectra at different redshift is computed. It is
-	 *  recommended to use this method when dealing with
-	 *  cosmologies alternative to the LCDM. To avoid to compute
-	 *  the growth factor with this method, set k_Pk_ratio=-1.
-	 *
 	 *  @param store_output if true the output files created by
 	 *  the Boltzmann solver are stored; if false the output files
 	 *  are removed
@@ -371,14 +474,11 @@ namespace cbl {
 	 *  spectrum with the method specified by method_Pk; false
 	 *  \f$\rightarrow\f$ the input_file is a file containing the
 	 *  power spectrum
-	 *
-	 *  
 	 */
 	
-	void set_data_model_SF (const cosmology::Cosmology cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const double k_Pk_ratio=-1., const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
+	void set_data_model_SF (const std::shared_ptr<cosmology::Cosmology> cosmology, const std::vector<double> radii, const double redshift, const std::string model, const double b_eff, double slope=0.854, double offset=0.420, const double deltav_NL=-0.795, const double del_c=1.69, const std::string method_Pk="EisensteinHu", const bool store_output=true, const std::string output_root="test", const std::string interpType="Linear", const double k_max=100., const std::string input_file=par::defaultString, const bool is_parameter_file=true); 
 
-
-	/**
+       /**
 	 *  @brief set the data used to construct mass
 	 *  number counts of simulation snapshots
          *  
@@ -403,10 +503,6 @@ namespace cbl {
 	 *  @param step number of steps used to compute the binned
 	 *  power spectrum
 	 *
-	 *  @param store_output if true the output files created by
-	 *  the Boltzmann solver are stored; if false the output files
-	 *  are removed
-	 *
 	 *  @param norm 0 &rarr; don't normalize the power spectrum; 1
 	 *  &rarr; normalize the power spectrum
 	 *
@@ -427,10 +523,10 @@ namespace cbl {
        	 *
 	 *  @param prec the precision
 	 */
-	virtual void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const bool store_output=true, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4) 
+	virtual void set_data_model_snapshot (const std::shared_ptr<cosmology::Cosmology> cosmology=NULL, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4) 
 	{ 
 	  (void)cosmology; (void)redshift; (void)method_Pk; (void)k_min; (void)k_max; (void)step;
-	  (void)store_output; (void)norm; (void)Delta; (void)isDelta_critical; (void)model_MF;
+	  (void)norm; (void)Delta; (void)isDelta_critical; (void)model_MF;
 	  (void)Volume; (void)prec; (void)Mass_min; (void)Mass_max; (void)Mass_step;
 	  cbl::ErrorCBL("", "set_data_model_snapshot", "Modelling_NumberCounts.h");
 	}

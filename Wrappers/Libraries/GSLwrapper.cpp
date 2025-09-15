@@ -549,7 +549,7 @@ vector<double> cbl::wrapper::gsl::GSL_minimize_nD (FunctionDoubleVector func, co
       if ((status!=GSL_SUCCESS) && (status!=GSL_CONTINUE))
 	check_GSL_fail(status, true, "GSL_minimize_nD", "gsl_multimin_fminimizer_iterate");
 
-      coutCBL << std::fixed << "\r" << "Iteration " << iter << std::scientific << std::setprecision(2) << " " << "Size= " << size << ", Tol = "<< tol << "\r"<<std::fixed; cout.flush(); 
+      coutCBL << std::fixed << "\r" << "Iteration " << iter << std::scientific << std::setprecision(2) << " " << "Size = " << size << ", Tol = "<< tol << "\r"<<std::fixed; cout.flush(); 
     }
   
   while (status==GSL_CONTINUE && iter<max_iter);
@@ -633,7 +633,7 @@ vector<double> cbl::wrapper::gsl::GSL_minimize_nD (FunctionDoubleVectorRef func,
     if ((status!=GSL_SUCCESS) && (status!=GSL_CONTINUE))
       check_GSL_fail(status, true, "GSL_minimize_nD", "gsl_multimin_test_size");
     
-    coutCBL << std::fixed << "\r" << "Iteration " << iter << std::scientific << std::setprecision(2) << " " << "Size= " << size << ", Tol = "<< tol << "\r"<<std::fixed; cout.flush(); 
+    coutCBL << std::fixed << "\r" << "Iteration " << iter << std::scientific << std::setprecision(2) << " " << "Size = " << size << ", Tol = "<< tol << "\r"<<std::fixed; cout.flush(); 
   }
   while (status==GSL_CONTINUE && iter<max_iter);
 
@@ -698,9 +698,7 @@ double cbl::wrapper::gsl::GSL_minimize_1D (FunctionDoubleDouble func, const doub
 
   gsl_min_fminimizer_free(s);
 
-  if (status==GSL_SUCCESS)
-    coutCBL << "Converged to a minimum at iteration " << iter << " (<" << max_iter << ")" << endl;
-  else if (status==GSL_CONTINUE)
+  if (status==GSL_CONTINUE)
     ErrorCBL("Minimization has not converged. Try with lower tolerance or larger number of iterations", "GSL_minimize_1D", "GSLwrapper.cpp");
   else
     check_GSL_fail(status, true, "GSL_minimize_1D", par::defaultString);

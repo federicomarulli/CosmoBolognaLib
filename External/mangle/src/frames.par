@@ -15,34 +15,34 @@ c........index to angular reference frame
      *  )
 
 c........equatorial (RA & Dec) 1950 <-> galactic
-      real*10 RAG,DECG,L2P
+      real*16 RAG,DECG,L2P
       parameter (
 c        RA & Dec of galactic north pole in deg
-     *  RAG=192.25_10,DECG=27.4_10,
+     *  RAG=192.25_16,DECG=27.4_16,
 c        galactic longitude of NCP in deg; note b2p=decg
-     *  L2P=123._10)
+     *  L2P=123._16)
 
 c........equatorial <-> ecliptic
 c Ecliptic latitude of NCP depends on epoch (e.g. 1950, 2000);
-c real*10 function felp(epoch) gives ecliptic latitude of NCP.
+c real*16 function felp(epoch) gives ecliptic latitude of NCP.
 c        coefficients of expansion of ecliptic latitude of NCP
-      real*10 E1,E2,E3,E4
-      parameter (E1=23.452294_10,E2=-1.30125e-2_10,
-     *	E3=-1.64e-6_10,E4=5.03e-7_10)
-      real*10 EAZP,RAEZ
+      real*16 E1,E2,E3,E4
+      parameter (E1=23.452294_16,E2=-1.30125e-2_16,
+     *	E3=-1.64e-6_16,E4=5.03e-7_16)
+      real*16 EAZP,RAEZ
       parameter (
 c        ecliptic longitude of NCP in deg
-     *  EAZP=90._10,
+     *  EAZP=90._16,
 c        RA of ecliptic NP in deg
-     *  RAEZ=270._10)
+     *  RAEZ=270._16)
 
 c........equatorial 2000 <-> SDSS
-      real*10 RASDNP,DECSDNP,ETANCP
+      real*16 RASDNP,DECSDNP,ETANCP
       parameter (
 c        RA, Dec J2000 FK5 of SDSS NP (lambda=90 deg) in deg
-     *  RASDNP=275._10,DECSDNP=0._10,
+     *  RASDNP=275._16,DECSDNP=0._16,
 c        SDSS longitude (eta) of North Celestial Pole in deg
 c ETANCP is per the SDSS convention, which is minus the normal
 c convention for longitudes!
-     *  ETANCP=57.2_10)
+     *  ETANCP=57.2_16)
 

@@ -2,8 +2,12 @@
 // Example code: how to measure the connected and reduced three-point correlation functions
 // ========================================================================================
 
+#include "LCDM.h"
 #include "ThreePointCorrelation_comoving_reduced.h"
 #include "GlobalFunc.h"
+
+using namespace std;
+
 
 int main () {
 
@@ -13,14 +17,14 @@ int main () {
     // ---------------- set the cosmological parameters  ------------
     // --------------------------------------------------------------
 
-    cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
 
   
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
   
-    std::string file_catalogue = "../input/cat.dat";
+    string file_catalogue = "../input/cat.dat";
 
     cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -35,7 +39,7 @@ int main () {
   
     // construct the sub-regions used for jackknife and bootstrap
 
-    std::cout << "I'm constructing the sub-regions used for jackknife and bootstrap..." << std::endl;
+    cout << "I'm constructing the sub-regions used for jackknife and bootstrap..." << endl;
     const int nx = 3, ny = 3, nz = 3;
     cbl::set_ObjectRegion_SubBoxes(catalogue, random_catalogue, nx, ny, nz);
   
@@ -52,10 +56,10 @@ int main () {
   
     // output data
   
-    const std::string dir_output = "../output/";
-    const std::string dir_triplets = dir_output;
-    const std::string dir_2pt = dir_output;
-    const std::string file_output = "3ptJK.dat";
+    const string dir_output = "../output/";
+    const string dir_triplets = dir_output;
+    const string dir_2pt = dir_output;
+    const string file_output = "3ptJK.dat";
 
   
     // measure the connected and reduced three-point correlation functions and write the output
@@ -68,7 +72,7 @@ int main () {
 
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>remove_dipole</TITLE>
+<META NAME="description" CONTENT="remove_dipole">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_reorder.htm">
+<LINK REL="previous" HREF="idl_read_tqu.htm">
+<LINK REL="next" HREF="idl_reorder.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_read_tqu.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_reorder.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html441"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_read_tqu.htm">read_tqu</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_reorder.htm">reorder</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION6600"></A>
+<A ID="idl:remove_dipole"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">remove_dipole</SPAN></div><hr>
+<H3>This IDL facility provides a means to fit and remove the dipole and monopole
+from a <strong>HEALPix</strong> map.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/misc/remove_dipole.pro"><strong>src/idl/misc/remove_dipole.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+REMOVE_DIPOLE,
+<A HREF="#idl:remove_dipole:map"> Map</A> [,
+<A HREF="#idl:remove_dipole:weight"> Weight</A>,
+<A HREF="#idl:remove_dipole:bad_data">BAD_DATA=</A>,
+<A HREF="#idl:remove_dipole:gal_cut">GAL_CUT=</A>,
+<A HREF="#idl:remove_dipole:coord_in">COORD_IN=</A>,
+<A HREF="#idl:remove_dipole:coord_out">COORD_OUT=</A>,
+<A HREF="#idl:remove_dipole:covariance_matrix">Covariance_Matrix=</A>,
+<A HREF="#idl:remove_dipole:dipole">Dipole=</A>,
+<A HREF="#idl:remove_dipole:monopole">Monopole=</A>,
+<A HREF="#idl:remove_dipole:noremove">/NOREMOVE</A>,
+<A HREF="#idl:remove_dipole:nside">NSIDE=</A>,
+<A HREF="#idl:remove_dipole:onlymonopole">/ONLYMONOPOLE</A>,
+<A HREF="#idl:remove_dipole:ordering">ORDERING=</A>,
+<A HREF="#idl:remove_dipole:pixel">PIXEL=</A>,
+<A HREF="#idl:remove_dipole:silent">/SILENT</A>,
+<A HREF="#idl:remove_dipole:units">UNITS=</A>,
+<A HREF="#idl:remove_dipole:help">/HELP</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>Map</B>
+<DD><A ID="idl:remove_dipole:map"></A> input and output, vector
+<BR>
+map from which monopole and dipole are to be removed
+      (also used for output).
+      Assumed to be a full sky data set, unless PIXEL is set and has the same
+      size as map
+    <DT>
+<B>Weight</B>
+<DD><A ID="idl:remove_dipole:weight"></A> input, vector, optional
+<BR>
+same size as map,
+     describe weighting scheme to apply to each pixel for the fit 
+<BR>	<b>default:</b>uniform weight
+    <DT>
+<B>BAD_DATA =</B>
+<DD><A ID="idl:remove_dipole:bad_data"></A> 
+    scalar float, value given on input to bad pixels 
+<BR>          <b>default:</b><SPAN style="font-family:monospace">!healpix.bad_value</SPAN> <!-- MATH
+ $\equiv -1.6375\ 10^{30}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.29ex; " SRC="idl_img114.png"
+ ALT="$\equiv -1.6375\ 10^{30}$"></SPAN>.
+    <DT>
+<B>GAL_CUT=</B>
+<DD><A ID="idl:remove_dipole:gal_cut"></A> 
+    if set to a value larger than 0, the pixels with galactic
+    latitude <SPAN CLASS="MATH">|b|&lt;</SPAN>gal_cut degrees are not considered in the
+      fit. 
+<BR><B>NB:</B>
+      the cut is <EM>really</EM> done in Galactic coordinates. If the input
+      coordinates are different (see Coord_In), the map is rotated into galactic
+      before applying the cut.
+    <DT>
+<B>COORD_IN =</B>
+<DD><A ID="idl:remove_dipole:coord_in"></A> 
+     string, map coordinate system (either 'Q' or 'C': equatorial,
+    'G': galactic or 'E': ecliptic; upper/lower case accepted)
+<BR>         <b>default:</b>'G' (galactic)
+    <DT>
+<B>COORD_OUT =</B>
+<DD><A ID="idl:remove_dipole:coord_out"></A> 
+    string, coordinate system (see above) in which
+    to output dipole vector in variable Dipole 
+<BR>         <b>default:</b>same as coord_in
+    <DT>
+<B>Covariance_Matrix =</B>
+<DD><A ID="idl:remove_dipole:covariance_matrix"></A> 
+    OUTPUT, scalar (or symmetric 4x4 matrix), 
+<BR>
+covariance
+     of the statistical errors made on monopole (and dipole) determination
+    <DT>
+<B>Dipole=</B>
+<DD><A ID="idl:remove_dipole:dipole"></A> 
+	OUTPUT, 3d vector, 
+<BR>
+coordinates of best fit dipole (done simultaneously with monopole), same
+        units as input map
+    <DT>
+<B>Monopole=</B>
+<DD><A ID="idl:remove_dipole:monopole"></A> 
+        OUTPUT, scalar float, 
+<BR>
+value found for the best fit monopole (done simultaneously with dipole),
+        same units as input map
+    <DT>
+<B>NSIDE=</B>
+<DD><A ID="idl:remove_dipole:nside"></A> 
+    scalar integer, healpix resolution parameter
+    <DT>
+<B>ORDERING=</B>
+<DD><A ID="idl:remove_dipole:ordering"></A> 
+    string, ordering scheme (either 'RING' or 'NESTED')
+    <DT>
+<B>PIXEL=</B>
+<DD><A ID="idl:remove_dipole:pixel"></A> 
+    input, vector, gives the Healpix index of the pixels
+        whose temperature is actually given in map (for cut sky
+    maps). If present, must match Map in size. If absent, it is
+    assumed that the map covers the whole sky.
+    <DT>
+<B>UNITS=</B>
+<DD><A ID="idl:remove_dipole:units"></A> 
+   string, units of the input map
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>/NOREMOVE</B>
+<DD><A ID="idl:remove_dipole:noremove"></A> 
+   if set, the best fit dipole and monopole are computed but not
+    removed (ie, Map is unchanged)
+    <DT>
+<B>/ONLYMONOPOLE</B>
+<DD><A ID="idl:remove_dipole:onlymonopole"></A> 
+   if set, fit (and remove) only the monopole
+    <DT>
+<B>/HELP</B>
+<DD><A ID="idl:remove_dipole:help"></A> 
+    if set, only display documentation header
+    <DT>
+<B>/SILENT</B>
+<DD><A ID="idl:remove_dipole:silent"></A> 
+    if set, the routine works silently
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+remove_dipolemakes a simultaneous least square fit of the monopole and dipole on all the valid
+pixels of Map (those with a value different from BAD_DATA) with a galactic
+latitude larger in magnitude than GAL_CUT (in degrees). The position of the pixels
+on the sky is reconstructed from NSIDE and ORDERING.
+If Map does not cover the full sky, the actual indices of the concerned pixels should be given in PIXEL
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">remove_dipole</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run remove_dipole.
+  </DL>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_read_tqu.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_reorder.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html441"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_read_tqu.htm">read_tqu</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_reorder.htm">reorder</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

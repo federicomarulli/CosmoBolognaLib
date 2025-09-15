@@ -34,7 +34,7 @@
 #ifndef __MODELLINGTWOPOINT__
 #define __MODELLINGTWOPOINT__
 
-
+#include "Sigma.h"
 #include "TwoPointCorrelation.h"
 #include "Modelling.h"
 #include "ModelFunction_TwoPointCorrelation.h"

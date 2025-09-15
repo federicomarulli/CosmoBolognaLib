@@ -37,6 +37,7 @@
 
 // ===================================================================================================
 
+
 namespace cbl {
 
   namespace catalogue {
@@ -73,17 +74,6 @@ namespace cbl {
       ///@{
       
       /**
-       * @brief function that allows copying private variables of the class 
-       * when an object of class Catalogue is copied
-       * 
-       * @return a shared pointer to the Object
-       *
-       */
-      std::shared_ptr<Object> getShared() {
-        return std::make_shared<Void>(*this);
-      }
-      
-      /**
        *  @brief default constructor
        */
       Void () 
@@ -117,7 +107,7 @@ namespace cbl {
        *
        *  
        */
-      Void (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+      Void (const glob::comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
 
       /**
@@ -127,8 +117,8 @@ namespace cbl {
        *  @param coord structure containing the comoving coordinates
        *  {x, y, z}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param z1_guess minimum prior on the redshift
        *
@@ -156,8 +146,8 @@ namespace cbl {
        *
        *  
        */
-      Void (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
+      Void (const glob::comovingCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+      : Object(coord, cosmology, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -187,7 +177,7 @@ namespace cbl {
        *
        *  
        */
-      Void (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+      Void (const glob::observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
 	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
       
       /**
@@ -221,7 +211,7 @@ namespace cbl {
        *
        *  
        */
-      Void (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+      Void (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
 	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
       
       /**
@@ -232,8 +222,8 @@ namespace cbl {
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshitf}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -257,8 +247,8 @@ namespace cbl {
        *
        *  
        */
-      Void (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
-	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
+      Void (const glob::observedCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+	: Object(coord, cosmology, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -269,7 +259,8 @@ namespace cbl {
        *
        *  @param inputUnits the units of the input coordinates
        *
-       *  @param cosm object of class Cosmology, used to estimate comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -293,8 +284,8 @@ namespace cbl {
        *
        *  
        */
-      Void (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
-	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
+      Void (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
+      : Object(coord, inputUnits, cosmology, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
 
       /**
        *  @brief constructor that uses both comoving and observed coordinates
@@ -334,7 +325,7 @@ namespace cbl {
        *  
        */
       Void (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double radius=par::defaultDouble, const double densityContrast=par::defaultDouble, const double centralDensity=par::defaultDouble) 
-	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
+      : Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement), m_radius(radius), m_densityContrast(densityContrast), m_centralDensity(centralDensity) {}
       
       /**
        *  @brief default destructor
@@ -348,6 +339,17 @@ namespace cbl {
        *  @name Member functions used to get the private members 
        */
       ///@{
+      
+      /**
+       * @brief function that allows copying private variables of the
+       * class when an object of class Catalogue is copied
+       * 
+       * @return a shared pointer to the Object
+       */
+      std::shared_ptr<Object> ptrObject () override
+      {
+        return std::make_shared<Void>(*this);
+      }
     
       /**
        *  @brief get the private member \e m_radius

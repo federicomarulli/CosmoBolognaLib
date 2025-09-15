@@ -159,10 +159,8 @@ namespace cbl {
 	 *  @param Mass_step the number of bins for mass vector
        	 *
 	 *  @param prec the precision
-	 *
-	 *  
 	 */
-	void set_data_model_snapshot (const cbl::cosmology::Cosmology cosmology={}, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4); 
+	void set_data_model_snapshot (const std::shared_ptr<cosmology::Cosmology> cosmology, const double redshift=0., const std::string method_Pk="CAMB", const double k_min=1.e-4, const double k_max=100., const int step=500, const int norm=-1, const double Delta=200., const bool isDelta_critical=true, const std::string model_MF="Tinker", const double Volume=par::defaultDouble, const double Mass_min=par::defaultDouble, const double Mass_max=par::defaultDouble, const int Mass_step=100, const double prec=1.e-4); 
 	
 	///@}
 
@@ -172,7 +170,7 @@ namespace cbl {
 	///@{
 
 	/**
-	 *  @brief set the cosmological parameters used to model the 
+	 *  @brief set the cosmological parameters used to model the
 	 *  mass function
 	 *
 	 *  the model has N cosmological parameters
@@ -182,10 +180,8 @@ namespace cbl {
 	 *
 	 *  @param cosmo_param_prior vector containing the priors for
 	 *  the cosmological parameters
-	 *
-	 *  
 	 */
-	void set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
+	void set_model_NumberCounts_cosmology (const std::vector<std::string> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
 
 	///@}
 

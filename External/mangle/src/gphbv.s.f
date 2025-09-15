@@ -1,5 +1,5 @@
 c-----------------------------------------------------------------------
-c © A J S Hamilton 2001
+c ï¿½ A J S Hamilton 2001
 c-----------------------------------------------------------------------
 c * This routine needs upgrading to the same level of robustness
 c * as the rest of the mangle software:
@@ -20,24 +20,24 @@ c * but vert is missing contributions from point abuts.
 c-----------------------------------------------------------------------
       subroutine gphbv(bound,vert,rp,cm,np,npb,npc,i,tol,phi,iord)
       integer np,npb,npc,i,iord(2*np)
-      real*10 bound(2),vert(2),rp(3,np),cm(np),tol,phi(2,np)
+      real*16 bound(2),vert(2),rp(3,np),cm(np),tol,phi(2,np)
 c
 c        parameters
       include 'pi.par'
-      real*10 TWOPI
-      parameter (TWOPI=2._10*PI)
+      real*16 TWOPI
+      parameter (TWOPI=2._16*PI)
 c        intrinsics
       intrinsic abs
 c        externals
       integer gsegij,gzeroar
 c        data variables
-      real*10 big,bndtol,psitol
-      real*10 dphmin
+      real*16 big,bndtol,psitol
+      real*16 dphmin
 c        local (automatic) variables
       integer iphbv,iseg,j,jm(2),jml,jmu,jp(2),jpl,jpu,k,km(2),kp(2),
      *  l,ni,nmult
       logical warn
-      real*10 bik,cmi,cmik,cmk,cti(3),ctk(3),ctpsi(3),
+      real*16 bik,cmi,cmik,cmk,cti(3),ctk(3),ctpsi(3),
      *  d,dbound(2),dph,dvert(2),p,ph,phm,php,psi(3),
      *  scmi,si,sk,t(3),xi(3),yi(3)
 c *
@@ -147,13 +147,13 @@ c         vert(2)
 c Work arrays: phi and iord should be dimensioned at least 2*np
 c
 c        set azimuthal angle of non-intersection to big
-      data big /1.e6_10/
+      data big /1.e6_16/
 c        set vertex term to zero if |psi| < psitol
-      data psitol /1.e-10_10/
+      data psitol /1.e-10_16/
 c        ok if bound(1) tests not too far outside [0,max]
-      data bndtol /1.e-10_10/
+      data bndtol /1.e-10_16/
 c        warn about multiple intersection when dph < dphmin
-      data dphmin /1.e-8_10/
+      data dphmin /1.e-8_16/
 c
 C     print *,'--------------------'
 c        abutting boundary must belong to W2 or W3
@@ -162,23 +162,23 @@ c        abutting boundary must belong to W2 or W3
         goto 410
       endif
 c        zero stuff
-      bound(1)=0._10
-      bound(2)=0._10
-      vert(1)=0._10
-      vert(2)=0._10
+      bound(1)=0._16
+      bound(2)=0._16
+      vert(1)=0._16
+      vert(2)=0._16
       warn=.false.
 c        check for zero angle because one circle is null
       if (gzeroar(cm,np).eq.0) goto 410
 c        cm(i).ge.2 means include whole sphere, which is no constraint
-      if (cm(i).ge.2._10) goto 410
+      if (cm(i).ge.2._16) goto 410
 c--------identify boundary segments around circle i
-      if (cm(i).ge.0._10) then
+      if (cm(i).ge.0._16) then
         scmi=1
       else
         scmi=-1
       endif
       cmi=abs(cm(i))
-      si=sqrt(cmi*(2._10-cmi))
+      si=sqrt(cmi*(2._16-cmi))
 c........construct cartesian axes with z-axis along rp(i)
       call gaxisi(rp(1,i),xi,yi)
 c........angles phi about z-axis rp(i) of intersection of i & j circles
@@ -191,7 +191,7 @@ c........i circle has no intersections
       if (ni.eq.0) then
         dph=TWOPI
         dbound(1)=si*dph
-        dbound(2)=(1._10/si-2._10*si)*dph
+        dbound(2)=(1._16/si-2._16*si)*dph
         bound(1)=bound(1)+dbound(1)
         bound(2)=bound(2)+dbound(2)
 C       print *,'full circle'
@@ -226,7 +226,7 @@ c    *        ,i,': segment',km(1),kp(1),' &',km(2),kp(2),' dph=',dph
 c........segment satisfies conditions
 c. . . . boundary terms
           dbound(1)=si*dph
-          dbound(2)=(1._10/si-2._10*si)*dph
+          dbound(2)=(1._16/si-2._16*si)*dph
           bound(1)=bound(1)+dbound(1)
           bound(2)=bound(2)+dbound(2)
 C         print *,'at',i,': edge',km(1),kp(1),' &',km(2),kp(2),
@@ -245,104 +245,104 @@ c        end point is intersection of i circle with k circle
                 k=kp(iphbv)
               endif
               if (k.eq.0) then
-                psi(iphbv)=0._10
-                ctpsi(iphbv)=1._10/psi(iphbv)
-                t(iphbv)=0._10
+                psi(iphbv)=0._16
+                ctpsi(iphbv)=1._16/psi(iphbv)
+                t(iphbv)=0._16
 c        cti = cot th(i)
-                cti(iphbv)=(1._10-cmi)/si
+                cti(iphbv)=(1._16-cmi)/si
                 if (scmi.lt.0) cti(iphbv)=-cti(iphbv)
                 if (iphbv.eq.2) cti(iphbv)=-cti(iphbv)
 c        ctk = cot th(k)
                 ctk(iphbv)=cti(iphbv)
               else
                 cmk=abs(cm(k))
-                sk=sqrt(cmk*(2._10-cmk))
+                sk=sqrt(cmk*(2._16-cmk))
 c        cmik = 1-cos th(ik)
                 cmik=((rp(1,i)-rp(1,k))**2+(rp(2,i)-rp(2,k))**2
-     *            +(rp(3,i)-rp(3,k))**2)/2._10
+     *            +(rp(3,i)-rp(3,k))**2)/2._16
 c        bik = cik-ci*ck
 c        d = 1-ci^2-ck^2-cik^2+2*ci*ck*cik
 c        cos psi = bik/(si*sk)
 c        sin psi = sqrt(d)/(si*sk)
 c        psi = atan(sqrt(d)/bik) is exterior angle at intersection
                 bik=(cmi+cmk)-cmi*cmk-cmik
-                if ((scmi.ge.0.and.cm(k).lt.0._10)
-     *            .or.(scmi.le.0.and.cm(k).ge.0._10)) bik=-bik
+                if ((scmi.ge.0.and.cm(k).lt.0._16)
+     *            .or.(scmi.le.0.and.cm(k).ge.0._16)) bik=-bik
                 if (iphbv.eq.2) bik=-bik
 c        i and k circles kiss
                 if (phi(1,k).eq.phi(2,k)) then
-                  d=0._10
+                  d=0._16
                 else
-                  d=-(cmi-cmk)**2+cmik*(2._10*((cmi+cmk)-cmi*cmk)-cmik)
+                  d=-(cmi-cmk)**2+cmik*(2._16*((cmi+cmk)-cmi*cmk)-cmik)
 c        assert that circles at least touch
-                  if (d.lt.0._10) d=0._10
+                  if (d.lt.0._16) d=0._16
                   d=sqrt(d)
                 endif
                 ctpsi(iphbv)=bik/d
                 psi(iphbv)=atan2(d,bik)
 c        t=tan psi/2
-                if (bik.gt.0._10) then
+                if (bik.gt.0._16) then
                   t(iphbv)=d/(bik+sqrt(bik**2+d**2))
-                elseif (bik.lt.0._10) then
+                elseif (bik.lt.0._16) then
                   t(iphbv)=(-bik+sqrt(bik**2+d**2))/d
-                elseif (bik.eq.0._10) then
-                  t(iphbv)=1._10
+                elseif (bik.eq.0._16) then
+                  t(iphbv)=1._16
                 endif
 c        cti = cot th(i)
-                cti(iphbv)=(1._10-cmi)/si
+                cti(iphbv)=(1._16-cmi)/si
                 if (scmi.lt.0) cti(iphbv)=-cti(iphbv)
                 if (iphbv.eq.2) cti(iphbv)=-cti(iphbv)
 c        ctk = cot th(k)
-                ctk(iphbv)=(1._10-cmk)/sk
-                if (cm(k).lt.0._10) ctk(iphbv)=-ctk(iphbv)
+                ctk(iphbv)=(1._16-cmk)/sk
+                if (cm(k).lt.0._16) ctk(iphbv)=-ctk(iphbv)
               endif
             enddo
 c        psi(3) = psi(1) + psi(2) - pi
             psi(3)=psi(1)+psi(2)-PI
 c        cot psi(3)
-            if (abs(ctpsi(1)).le.1._10) then
-              if (abs(ctpsi(2)).le.1._10) then
-                ctpsi(3)=(ctpsi(1)*ctpsi(2)-1._10)
+            if (abs(ctpsi(1)).le.1._16) then
+              if (abs(ctpsi(2)).le.1._16) then
+                ctpsi(3)=(ctpsi(1)*ctpsi(2)-1._16)
      *            /(ctpsi(1)+ctpsi(2))
               else
-                ctpsi(3)=(ctpsi(1)-1._10/ctpsi(2))
-     *            /(ctpsi(1)/ctpsi(2)+1._10)
+                ctpsi(3)=(ctpsi(1)-1._16/ctpsi(2))
+     *            /(ctpsi(1)/ctpsi(2)+1._16)
               endif
             else
-              if (abs(ctpsi(2)).le.1._10) then
-                ctpsi(3)=(ctpsi(2)-1._10/ctpsi(1))
-     *            /(1._10+ctpsi(2)/ctpsi(1))
+              if (abs(ctpsi(2)).le.1._16) then
+                ctpsi(3)=(ctpsi(2)-1._16/ctpsi(1))
+     *            /(1._16+ctpsi(2)/ctpsi(1))
               else
-                ctpsi(3)=(1._10-1._10/ctpsi(1)/ctpsi(2))
-     *            /(1._10/ctpsi(2)+1._10/ctpsi(1))
+                ctpsi(3)=(1._16-1._16/ctpsi(1)/ctpsi(2))
+     *            /(1._16/ctpsi(2)+1._16/ctpsi(1))
               endif
             endif
 c        tan psi(3)/2
-            if (abs(t(1)).le.1._10) then
-              if (abs(t(2)).le.1._10) then
-                t(3)=(t(1)*t(2)-1._10)/(t(1)+t(2))
+            if (abs(t(1)).le.1._16) then
+              if (abs(t(2)).le.1._16) then
+                t(3)=(t(1)*t(2)-1._16)/(t(1)+t(2))
               else
-                t(3)=(t(1)-1._10/t(2))/(t(1)/t(2)+1._10)
+                t(3)=(t(1)-1._16/t(2))/(t(1)/t(2)+1._16)
               endif
             else
-              if (abs(t(2)).le.1._10) then
-                t(3)=(t(2)-1._10/t(1))/(1._10+t(2)/t(1))
+              if (abs(t(2)).le.1._16) then
+                t(3)=(t(2)-1._16/t(1))/(1._16+t(2)/t(1))
               else
-                t(3)=(1._10-1._10/t(1)/t(2))/(1._10/t(2)+1._10/t(1))
+                t(3)=(1._16-1._16/t(1)/t(2))/(1._16/t(2)+1._16/t(1))
               endif
             endif
             cti(3)=ctk(1)
             ctk(3)=ctk(2)
             do iphbv=1,3
               if (abs(psi(iphbv)).le.psitol) then
-                dvert(1)=0._10
-                dvert(2)=0._10
+                dvert(1)=0._16
+                dvert(2)=0._16
               else
-                dvert(1)=1._10-psi(iphbv)*ctpsi(iphbv)
-                dvert(2)=t(iphbv)*(3._10+t(iphbv)**2)
-     *            *(cti(iphbv)+ctk(iphbv))/2._10
-                dvert(1)=dvert(1)/2._10
-                dvert(2)=dvert(2)/2._10
+                dvert(1)=1._16-psi(iphbv)*ctpsi(iphbv)
+                dvert(2)=t(iphbv)*(3._16+t(iphbv)**2)
+     *            *(cti(iphbv)+ctk(iphbv))/2._16
+                dvert(1)=dvert(1)/2._16
+                dvert(2)=dvert(2)/2._16
               endif
               if (iphbv.le.2) then
                 vert(1)=vert(1)+dvert(1)
@@ -355,9 +355,9 @@ C             print *,'vertex',i,k,' part ',iphbv,
 C    *          ' psi =',psi(iphbv)
 C             print *,'     dvert =',dvert(1),dvert(2),
 C    *          ' vert =',vert(1),vert(2)
-C             print *,' cot(',psi(iphbv),') =',1._10/tan(psi(iphbv)),
+C             print *,' cot(',psi(iphbv),') =',1._16/tan(psi(iphbv)),
 C    *          ' should =',ctpsi(iphbv)
-C             print *,' tan(',psi(iphbv),'/2) =',tan(psi(iphbv)/2._10),
+C             print *,' tan(',psi(iphbv),'/2) =',tan(psi(iphbv)/2._16),
 C    *          ' should =',t(iphbv)
 C             print *,' cot(th_i) =',cti(iphbv),
 C    *          ' cot(th_k) =',ctk(iphbv)
@@ -371,11 +371,11 @@ c--------finish off
 c        check angle is between 0 and 2*pi
       p=bound(1)/si/TWOPI
 c     print *,rp(1,i),rp(2,i),rp(3,i),'angle/(2*pi)=',p
-      if (p.lt.0._10) then
+      if (p.lt.0._16) then
         print *,'*** from gphbv: angle/(2*pi)=',p,
      *    '  should be .ge. 0'
         warn=.true.
-      elseif (p.gt.1._10) then
+      elseif (p.gt.1._16) then
         if (bound(1)/si.le.TWOPI+bndtol) then
           continue
         else

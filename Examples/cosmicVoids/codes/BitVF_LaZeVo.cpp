@@ -32,7 +32,7 @@ int main () {
     cbl::catalogue::Catalogue tracer_catalogue {cbl::catalogue::ObjectType::_Halo_, cbl::CoordinateType::_comoving_, var_names_tracers, columns_tracers, {file_tracers}, 0, nSub, scaleFact};
     
     // random catalogue constructor (empty if it is not given)
-    Catalogue random_catalogue = {};
+    std::vector<Catalogue> random_catalogue = {};
 
     // store the mean particle separation of the simulation
     double mps = tracer_catalogue.mps();
@@ -43,25 +43,30 @@ int main () {
     // output suffix 
     const string output = "output.dat";
 
+    // smoothing sigma (in mps units)
+    double sigma = 2./pow(2,1./3);
+
     // chainmesh cell size
     const double cellsize = 4*mps;
 
-    // number of reconstruction of the displacement field
-    const int n_rec = 5;
+    // number of reconstruction of the displacement field (advice: 30+)
+    const int n_rec = 30;
 
     // cell size for the estimation of the divergence field (mps units)
-    const double step_size = 2.5/3;
+    const double step_size = 1./pow(2,1./3);
 
     // threshold at which to stop the reconstruction of the displacement field
-    // the value must be between 0 and 1 (th->0 = more accuracy)
-    const double threshold = 0.;
+    // the value must be between 0 and 1 (th->0 = more accuracy, 0.001 is fine)
+    const double threshold = 0.001;
 
     // conditions for print the displacement and the divergence field 
-    vector<bool> print={true,true}
+    vector<bool> print={true,true};
+
+    // random seed
+    unsigned int seed=0;
 
     // catalogue constructor
-    Catalogue void_catalogue = Catalogue(VoidAlgorithm::_LaZeVo_, tracer_catalogue, random_catalogue, dir_output, output, cellsize, n_rec, step_size, threshold, print);
-
+    Catalogue void_catalogue = Catalogue(VoidAlgorithm::_LaZeVo_, tracer_catalogue, random_catalogue, dir_output, output, sigma, cellsize, n_rec, step_size, threshold, print, seed);
   }
   
   catch (cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }

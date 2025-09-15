@@ -74,10 +74,9 @@ namespace cbl {
     };
 
     /**
-     * @brief return a vector containing the
-     * DistributionType names
-     * @return a vector containing the
-     * DistributionType names
+     * @brief return a vector containing the DistributionType names
+     *
+     * @return a vector containing the DistributionType names
      */
     inline std::vector<std::string> DistributionTypeNames () { return {"Constant", "Uniform", "Gaussian", "Poisson", "Custom", "Interpolated", "Discrete"}; }
 

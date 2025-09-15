@@ -1,0 +1,43 @@
+# Parameter file for sky_ng_sim
+
+nsmax = 32
+#Maximum multipole number
+nlmax = 80
+
+#Input power spectrum file
+# This can either be a fits file or a .dat file
+infile = cl.fits
+#Name of output map
+outfile = !ng_sim.fits
+
+#FWHM of Gaussian beam in arcminutes
+fwhm_arcmin = 0.0
+
+#Name of file containing symmetric beam
+#Legendre transform (overrides Gaussian beam
+#if present)
+beam_file = ''
+
+#pdf_choice is 1 if using SHO pdf
+#2 if using powers of Gaussian
+pdf_choice = 1
+
+#Value of random number seed
+#idum = 600
+iseed = 600
+
+#Set plot to .FALSE. if want to run completely
+#non-interactively
+plot = .FALSE.
+
+#Parameters needed if pdf_choice = 1
+# Order of highest non-zero alpha
+#NB can only calculate moments for na up to 3
+na = 3
+
+alpha_1 = 0.0
+alpha_2 = 0.0
+alpha_3 = 0.27
+
+#Parameter needed if pdf_choice = 2
+npower = 2

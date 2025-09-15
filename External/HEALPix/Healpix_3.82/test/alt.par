@@ -1,0 +1,33 @@
+# HEALPix 3.82
+# parameter file for synfast
+# This parameter file is used by "make test".
+
+infile_alms = alm.fits
+
+fwhm_arcmin_in =    30.0
+
+# beam_file_in
+
+fwhm_arcmin_out = 0
+
+beam_file_out = ''
+
+# coord_in
+
+epoch_in =    2000.0
+
+# coord_out
+
+epoch_out =    2000.0
+
+nsmax_out =          128
+
+nlmax_out =          256
+
+outfile_alms = !test_almdec.fits
+
+#winfiledir_in
+#windowfile_in
+#winfiledir_out
+#windowfile_out
+

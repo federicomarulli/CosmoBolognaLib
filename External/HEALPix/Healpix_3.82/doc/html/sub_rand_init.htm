@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>rand_init</TITLE>
+<META NAME="description" CONTENT="rand_init">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_rand_uni.htm">
+<LINK REL="previous" HREF="sub_rand_gauss.htm">
+<LINK REL="next" HREF="sub_rand_uni.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_rand_gauss.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_rand_uni.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html473"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_rand_gauss.htm">rand_gauss</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_rand_uni.htm">rand_uni</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION8300"></A>
+<A ID="sub:rand_init"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">rand_init</SPAN></div><hr>
+<H3>This routine initializes, with up to 4 seeds, a randomn number sequence. 
+ The generator being primed is an F90 port of an xorshift generator described
+  in Marsaglia, Journal of Statistical Software 2003, vol 8.
+  It has a theoretical period of <!-- MATH
+ $2^{128} - 1 \approx 3.4 10^{38}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.29ex; " SRC="sub_img263.png"
+ ALT="$2^{128} - 1 \approx 3.4 10^{38}$"></SPAN>.
+Please refer to the &ldquo;Comment on Random Number Generator&rdquo;
+  in the Fortran90 facilities guidelines.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/rngmod.f90"><strong>src/f90/mod/rngmod.f90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">rand_init</SPAN>(
+<A HREF="#sub:rand_init:rng_handle">rng_handle</A>, [<A HREF="#sub:rand_init:seed1">seed1</A>, <A HREF="#sub:rand_init:seed2">seed2</A>, <A HREF="#sub:rand_init:seed3">seed3</A>, <A HREF="#sub:rand_init:seed4">seed4</A>]
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:75px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:75px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+rng_handle<A ID="sub:rand_init:rng_handle"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:75px">planck_rng</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">structure of type <SPAN style="font-family:monospace">planck_rng</SPAN>
+                   containing on output all information necessary to continue same random sequence.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">seed1<A ID="sub:rand_init:seed1"></A> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:75px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">first seed of the random sequence. Can be of arbitray
+                   sign. If set to
+                   zero or not provided will be replaced internally by a non-zero hard coded value.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">seed2<A ID="sub:rand_init:seed2"></A> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:75px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">second seed. Same properties as above</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">seed3<A ID="sub:rand_init:seed3"></A> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:75px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">third seed. Same as above.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">seed4<A ID="sub:rand_init:seed4"></A> (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:75px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">fourth seed. Same as above.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use rngmod 
+<BR>
+type(planck_rng) :: rng_handle 
+<BR>
+call rand_init(rng_handle, 12345, 6789012)  
+<BR></div>
+<blockquote>
+initiates a random sequence with the pair of seeds (12345, 6789012).
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">rand_init</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_planck_rng_derived_type.htm#sub:planck_rng">planck_rng</A></B>
+<DD>derived type describing RNG state
+  <DT>
+<B><A HREF="sub_rand_gauss.htm#sub:rand_gauss">rand_gauss</A></B>
+<DD>function which returns a  random normal deviate.
+  <DT>
+<B><A HREF="sub_rand_uni.htm#sub:rand_uni">rand_uni</A></B>
+<DD>function which returns a random uniform deviate.
+</DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_rand_gauss.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_rand_uni.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html473"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_rand_gauss.htm">rand_gauss</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_rand_uni.htm">rand_uni</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

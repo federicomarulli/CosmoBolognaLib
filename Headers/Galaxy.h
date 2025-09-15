@@ -53,7 +53,7 @@ namespace cbl {
      */
     class Galaxy : public Object {
     
-    private :
+    private:
 
       /// mass
       double m_mass = par::defaultDouble;      
@@ -71,7 +71,10 @@ namespace cbl {
       double m_magnitudeR = par::defaultDouble; 
       
       /// i-band magnitude
-      double m_magnitudeI = par::defaultDouble; 
+      double m_magnitudeI = par::defaultDouble;  
+      
+      /// g-band magnitude
+      double m_magnitudeZ = par::defaultDouble; 
 
       /// star formation rate
       double m_SFR = par::defaultDouble; 
@@ -106,6 +109,7 @@ namespace cbl {
       /// infall mass of substructure
       double m_massinfall = par::defaultDouble;
 
+      
     public:
 
       /**
@@ -119,17 +123,6 @@ namespace cbl {
        */
       Galaxy ()
 	: Object() {}
-
-      /**
-       * @brief function that allows copying private variables of the class 
-       * when an object of class Catalogue is copied
-       * 
-       * @return a shared pointer to the Object
-       *
-       */	
-      std::shared_ptr<Object> getShared() {
-        return std::make_shared<Galaxy>(*this);
-      }
 
       /**
        *  @brief constructor that uses comoving coordinates
@@ -192,8 +185,8 @@ namespace cbl {
        *  @param mstar the galaxy stellar mass
        *  
        */
-      Galaxy (const comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
-	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
+      Galaxy (const glob::comovingCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
+      : Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
 
       /**
        *  @brief constructor that uses comoving coordinates and a
@@ -202,8 +195,8 @@ namespace cbl {
        *  @param coord structure containing the comoving coordinates
        *  {x, y, z}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param z1_guess minimum prior on the redshift
        *
@@ -264,8 +257,8 @@ namespace cbl {
        *  @param mstar the galaxy stellar mass
        *  
        */
-      Galaxy (const comovingCoordinates coord, const cosmology::Cosmology &cosm, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
-	: Object(coord, cosm, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
+      Galaxy (const glob::comovingCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double z1_guess=0., const double z2_guess=10., const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
+      : Object(coord, cosmology, z1_guess, z2_guess, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
 
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -328,8 +321,8 @@ namespace cbl {
        *  @param mstar the galaxy stellar mass
        *  
        */
-      Galaxy (const observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
-	: Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
+      Galaxy (const glob::observedCoordinates coord, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
+      : Object(coord, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
       
       /**
        *  @brief constructor that uses observed coordinates in any
@@ -395,8 +388,8 @@ namespace cbl {
        *  @param mstar the galaxy stellar mass
        *
        */
-      Galaxy (const observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
-	: Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
+      Galaxy (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
+      : Object(coord, inputUnits, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
       
       /**
        *  @brief constructor that uses observed coordinates in radians
@@ -406,8 +399,8 @@ namespace cbl {
        *  @param coord structure containing the observed coordinates
        *  {R.A., Dec, redshift}
        *
-       *  @param cosm object of class Cosmology, used to estimate
-       *  comoving distances
+       *  @param cosmology pointer to an object of class Cosmology,
+       *  used to estimate comoving distances
        *
        *  @param weight weight
        *
@@ -464,8 +457,8 @@ namespace cbl {
        *  @param mstar the galaxy stellar mass
        *
        */
-      Galaxy (const observedCoordinates coord, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
-	: Object(coord, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
+      Galaxy (const glob::observedCoordinates coord, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
+      : Object(coord, cosmology, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
 
       /**
        *  @brief constructor that uses observed coordinates and a
@@ -476,7 +469,8 @@ namespace cbl {
        *
        *  @param inputUnits the units of the input coordinates
        *
-       *  @param cosm object of class Cosmology, used to estimate comoving distances
+       *  @param cosmology object of class Cosmology, used to estimate
+       *  comoving distances
        *
        *  @param weight weight
        *
@@ -533,8 +527,8 @@ namespace cbl {
        *  @param mstar the galaxy stellar mass
        *
        */
-      Galaxy (const observedCoordinates coord, const CoordinateUnits inputUnits, const cosmology::Cosmology &cosm, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
-	: Object(coord, inputUnits, cosm, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
+      Galaxy (const glob::observedCoordinates coord, const CoordinateUnits inputUnits, const std::shared_ptr<cosmology::Cosmology> cosmology, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
+      : Object(coord, inputUnits, cosmology, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
 
       /**
        *  @brief constructor that uses both comoving and observed
@@ -608,7 +602,7 @@ namespace cbl {
        *
        */
       Galaxy (const double xx, const double yy, const double zz, const double ra, const double dec, const double redshift, const double weight=1., const long region=par::defaultLong, const int ID=par::defaultInt, const std::string field=par::defaultString, const double x_displacement=par::defaultDouble, const double y_displacement=par::defaultDouble, const double z_displacement=par::defaultDouble, const double redshiftMin=par::defaultDouble, const double redshiftMax=par::defaultDouble, const double sn=par::defaultDouble, const double mass=par::defaultDouble, const double magnitude=par::defaultDouble, const double magnitudeU=par::defaultDouble, const double magnitudeG=par::defaultDouble, const double magnitudeR=par::defaultDouble, const double magnitudeI=par::defaultDouble, const double SFR=par::defaultDouble, const double sSFR=par::defaultDouble, const double odds=par::defaultDouble, const double shear1=par::defaultDouble, const double shear2=par::defaultDouble, const double lensingWeight=par::defaultDouble, const double lensingCalib=par::defaultDouble, const int IDHost=par::defaultInt, const double galaxyTag= par::defaultDouble, const double mstar=par::defaultDouble, const double massinfall=par::defaultDouble) 
-	: Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
+      : Object(xx, yy, zz, ra, dec, redshift, weight, region, ID, field, x_displacement, y_displacement, z_displacement, redshiftMin, redshiftMax, sn), m_mass(mass), m_magnitude(magnitude), m_magnitudeU(magnitudeU), m_magnitudeG(magnitudeG), m_magnitudeR(magnitudeR), m_magnitudeI(magnitudeI), m_SFR(SFR), m_sSFR(sSFR), m_shear1(shear1), m_shear2(shear2), m_odds(odds), m_lensingWeight(lensingWeight), m_lensingCalib(lensingCalib), m_IDHost(IDHost), m_galaxyTag(galaxyTag), m_mstar(mstar), m_massinfall(massinfall) {}
       
       /**
        *  @brief default destructor
@@ -622,7 +616,18 @@ namespace cbl {
        *  @name Member functions used to get the private members 
        */
       ///@{
-    
+
+      /**
+       * @brief function that allows copying private variables of the
+       * class when an object of class Catalogue is copied
+       * 
+       * @return a shared pointer to the Object
+       */	
+      std::shared_ptr<Object> ptrObject () override
+      {
+        return std::make_shared<Galaxy>(*this);
+      }
+      
       /**
        *  @brief get the private member \e m_mass
        *  @return the mass of the galaxy
@@ -664,6 +669,13 @@ namespace cbl {
        */
       double magnitudeI () const override
       { return m_magnitudeI; }
+      
+      /**
+       *  @brief get the private member \e m_magnitudeZ
+       *  @return the z-band magnitude of the galaxy
+       */
+      double magnitudeZ () const override
+      { return m_magnitudeZ; }
       
       /**
        *  @brief get the private member \e m_odds
@@ -791,6 +803,13 @@ namespace cbl {
        */
       void set_magnitudeI (const double magnitudeI=par::defaultDouble) override
       { m_magnitudeI = magnitudeI; }
+      
+      /**
+       *  @brief set the private member \e m_magnitudeZ
+       *  @param magnitudeZ z-band magnitude the magnitude of the galaxy
+       */
+      void set_magnitudeZ (const double magnitudeZ=par::defaultDouble) override
+      { m_magnitudeZ = magnitudeZ; }
       
       /**
        *  @brief set the private member \e m_odds
@@ -924,6 +943,14 @@ namespace cbl {
        */
       bool isSet_magnitudeI () override
       { return (cbl::isSet(m_magnitudeI)) ? true : false; }
+      
+      /**
+       *  @brief check if the private member \e m_magnitudeZ is set
+       *  
+       *  @return true if the z magnitude is set; false otherwise
+       */
+      bool isSet_magnitudeZ () override
+      { return (cbl::isSet(m_magnitudeZ)) ? true : false; }
 
       /**
        *  @brief check if the private member \e m_odds is set

@@ -47,7 +47,7 @@ using namespace modelling::numbercounts;
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Redshift::set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior)
+void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Redshift::set_model_NumberCounts_cosmology (const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior)
 {
   m_data_model.Cpar = cosmo_param;
 
@@ -58,7 +58,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Redshift::set_model_
   vector<string> cosmoPar_string(nParams);
 
   for (size_t i=0; i<nParams; i++)
-    cosmoPar_string[i] = CosmologicalParameter_name(cosmo_param[i]);
+    cosmoPar_string[i] = cosmo_param[i];
 
   // input data used to construct the model
   auto inputs = make_shared<STR_NC_data_model>(m_data_model);

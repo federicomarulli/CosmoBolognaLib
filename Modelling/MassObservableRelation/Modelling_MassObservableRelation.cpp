@@ -44,9 +44,9 @@ using namespace cbl;
 
 // ===========================================================================================
 
-void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_data_model (const cosmology::Cosmology cosmology, const std::vector<double> redshift, const double redshift_pivot, const double proxy_pivot, const double log_base)
+void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_data_model (const std::shared_ptr<cosmology::Cosmology> cosmology, const std::vector<double> redshift, const double redshift_pivot, const double proxy_pivot, const double log_base)
 {
-  m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  m_data_model.cosmology = move(cosmology);
   m_data_model.cosmology->set_unit(true); // Force cosmological units
   
   m_data_model.redshift = redshift;
@@ -60,9 +60,9 @@ void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_data_mode
 // ===========================================================================================
 
 
-void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_data_model (const cosmology::Cosmology cosmology, const std::vector<double> redshift, const double redshift_pivot, const double proxy_pivot, const double log_base, const std::vector<double> Nclusters)
+void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_data_model (const std::shared_ptr<cosmology::Cosmology> cosmology, const std::vector<double> redshift, const double redshift_pivot, const double proxy_pivot, const double log_base, const std::vector<double> Nclusters)
 {
-  m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  m_data_model.cosmology = move(cosmology);
   m_data_model.cosmology->set_unit(true); // Force cosmological units
   
   m_data_model.redshift = redshift;
@@ -82,7 +82,7 @@ void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_data_mode
 // ===========================================================================================
 
 
-void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_model_MassObservableRelation_cosmology (const std::string z_evo, const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior)
+void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_model_MassObservableRelation_cosmology (const std::string z_evo, const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_prior, const statistics::PriorDistribution alpha_prior, const statistics::PriorDistribution beta_prior, const statistics::PriorDistribution gamma_prior, const statistics::PriorDistribution scatter0_prior, const statistics::PriorDistribution scatterM_prior, const statistics::PriorDistribution scatterM_exponent_prior, const statistics::PriorDistribution scatterz_prior, const statistics::PriorDistribution scatterz_exponent_prior)
 {
   m_data_model.Cpar = cosmo_param;
 
@@ -94,7 +94,7 @@ void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_model_Mas
 
   // Set the names and priors of the cosmological parameters
   for (size_t i=0; i<cosmo_param.size(); i++){
-    Par_string[i] = CosmologicalParameter_name(cosmo_param[i]);
+    Par_string[i] = cosmo_param[i];
     param_prior[i] = cosmo_prior[i];
   }
 
@@ -117,10 +117,21 @@ void cbl::modelling::massobsrel::Modelling_MassObservableRelation::set_model_Mas
   param_prior[cosmo_param.size()+7] = scatterz_exponent_prior;
 
   // set the redshift evolution function
+  
   if (z_evo == "E_z")
-    m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo) {cbl::cosmology::Cosmology cosmology = *std::static_pointer_cast<cbl::cosmology::Cosmology>(cosmo); return cosmology.HH(z)/cosmology.HH(z_piv);};
+    m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo)
+      {
+	auto cosmology = std::static_pointer_cast<cbl::cosmology::Cosmology>(cosmo); 
+	return cosmology->Hubble(z)/cosmology->Hubble(z_piv);
+      };
+  
   else if (z_evo == "direct")
-    m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo) {(void)cosmo; return (1+z)/(1+z_piv);};
+    m_data_model.fz = [] (const double z, const double z_piv, const std::shared_ptr<void> cosmo)
+      {
+	(void)cosmo;
+	return (1+z)/(1+z_piv);
+      };
+  
   else
     ErrorCBL("Wrong redshift evolution!","set_model_MassObservableRelation_cosmology","Modelling_MassObservableRelation.cpp"); 
 
@@ -155,17 +166,17 @@ std::vector<double> cbl::modelling::massobsrel::model_scaling_relation (const st
   shared_ptr<STR_MOrelation_data_model> pp = static_pointer_cast<STR_MOrelation_data_model>(inputs);
 
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
+  std::shared_ptr<cosmology::Cosmology> cosmo = pp->cosmology->clone();
 
   // set the cosmological parameters
-  for (size_t i=0; i<pp->Cpar.size(); ++i)
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
+  for (size_t i=0; i<pp->Cpar.size(); ++i) {
+    cosmo->set_parameter(pp->Cpar[i], parameter[i]);
+  }
 
-  auto cosmo_ptr = std::make_shared<cbl::cosmology::Cosmology>(cosmo);
   std::vector<double> res(proxy.size());
   for (size_t j=0; j<proxy.size(); j++) {
     double log1 = log(proxy[j]/pp->proxy_pivot)/log(pp->log_base);
-    double log2 = log(pp->fz(pp->redshift[j], pp->redshift_pivot, cosmo_ptr))/log(pp->log_base);
+    double log2 = log(pp->fz(pp->redshift[j], pp->redshift_pivot, cosmo))/log(pp->log_base);
     res[j] = scaling_relation(parameter[pp->Cpar.size()], parameter[pp->Cpar.size()+1], parameter[pp->Cpar.size()+2], log1, log2);
   }
 
@@ -181,13 +192,11 @@ std::vector<double> cbl::modelling::massobsrel::model_scaling_relation_int (cons
   shared_ptr<STR_MOrelation_data_model> pp = static_pointer_cast<STR_MOrelation_data_model>(inputs);
 
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
+  auto cosmology = pp->cosmology->clone();
 
   // set the cosmological parameters
   for (size_t i=0; i<pp->Cpar.size(); ++i)
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
-  
-  auto cosmo_ptr = std::make_shared<cbl::cosmology::Cosmology>(cosmo);
+    cosmology->set_parameter(pp->Cpar[i], parameter[i]);
   
   // define the integrand
 
@@ -195,17 +204,17 @@ std::vector<double> cbl::modelling::massobsrel::model_scaling_relation_int (cons
   std::shared_ptr<void> ptr;
   
   auto integrand = [&] (const std::vector<double> x)
-		   {		     
-		     // Compute P(M|lambda,z)
-		     double log_lambda = log(dummy_proxy_eff/pp->proxy_pivot)/log(pp->log_base);
-		     double log_f_z = log( pp->fz(dummy_z_eff, pp->redshift_pivot, cosmo_ptr) )/log(pp->log_base);
+  {		     
+    // Compute P(M|lambda,z)
+    double log_lambda = log(dummy_proxy_eff/pp->proxy_pivot)/log(pp->log_base);
+    double log_f_z = log( pp->fz(dummy_z_eff, pp->redshift_pivot, cosmology) )/log(pp->log_base);
       
-		     double mean = parameter[pp->Cpar.size()] + parameter[pp->Cpar.size()+1]*log_lambda + parameter[pp->Cpar.size()+2]*log_f_z;
-		     double sigma = parameter[pp->Cpar.size()+3] + parameter[pp->Cpar.size()+4]*pow(log_lambda, parameter[pp->Cpar.size()+5]) + parameter[pp->Cpar.size()+6]*pow(log_f_z, parameter[pp->Cpar.size()+7]);
-		     double P_M__lambda_z = (cbl::gaussian(x[0], ptr, {mean,sigma/dummy_Nclusters}));
+    double mean = parameter[pp->Cpar.size()] + parameter[pp->Cpar.size()+1]*log_lambda + parameter[pp->Cpar.size()+2]*log_f_z;
+    double sigma = parameter[pp->Cpar.size()+3] + parameter[pp->Cpar.size()+4]*pow(log_lambda, parameter[pp->Cpar.size()+5]) + parameter[pp->Cpar.size()+6]*pow(log_f_z, parameter[pp->Cpar.size()+7]);
+    double P_M__lambda_z = (cbl::gaussian(x[0], ptr, {mean,sigma/dummy_Nclusters}));
       
-		     return  x[0] * P_M__lambda_z;
-		   };
+    return  x[0] * P_M__lambda_z;
+  };
 
   // compute the model  
   std::vector<double> model(proxy.size());
@@ -216,7 +225,7 @@ std::vector<double> cbl::modelling::massobsrel::model_scaling_relation_int (cons
     dummy_Nclusters = pp->Nclusters[j];
 
     double logLambda = log(proxy[j]/pp->proxy_pivot)/log(pp->log_base);
-    double logFz = log(pp->fz(pp->redshift[j], pp->redshift_pivot, cosmo_ptr))/log(pp->log_base);
+    double logFz = log(pp->fz(pp->redshift[j], pp->redshift_pivot, cosmology))/log(pp->log_base);
 
     double logM = parameter[pp->Cpar.size()] + parameter[pp->Cpar.size()+1]*logLambda + parameter[pp->Cpar.size()+2]*logFz;
     double sigma_intr = parameter[pp->Cpar.size()+3] + parameter[pp->Cpar.size()+4]*pow(logLambda, parameter[pp->Cpar.size()+5]) + parameter[pp->Cpar.size()+6]*pow(logFz, parameter[pp->Cpar.size()+7]);

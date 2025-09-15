@@ -531,7 +531,7 @@ namespace cbl {
       /**
        * @brief initialize the chains reading from an input file 
        *
-       * the starting values of the chain are get from the last lines
+       * the starting values of the chain are got from the last lines
        * of an input chain file; it can be used to continue an MCMC
        * sampling computation
        *
@@ -739,7 +739,7 @@ namespace cbl {
        * samples used to estimate the covariance matrix) and nb
        * (number of data measurements, e.g. the bins of the dataset)
        * are provided (>0), then the parameter errors (\f$\sigma_p\f$)
-       * will be corrected to take into account the uncertainities in
+       * will be corrected to take into account the uncertainties in
        * the covariance estimate (Percival et al. 2014):
        *
        * \f[ \sigma_p = \sqrt{\frac{1+B(n_b-n_p)}{1+A+B(n_p+1)}} \f]
@@ -751,7 +751,7 @@ namespace cbl {
        * \f[ B = \frac{(n_s-n_b-2)}{(n_s-n_b-1)(n_s-n_b-4)} \,. \f]
        *
        * this correction can be applied only if the likelihood is
-       * Gaussian. Morever, the inverce covariance matrix estimator
+       * Gaussian. Morever, the inverse covariance matrix estimator
        * has to be corrected to take into account the inverse
        * Wishart distribution (Hartlap, Simon and Schneider 2006).
        *
@@ -778,18 +778,17 @@ namespace cbl {
        * @brief store the results of the MCMC sampling to file
        * 
        * this function stores to file the posterior mean, the
-       * posterior standard deviation, the posterior median, 18th
-       * and 82th posterior percentiles, and, optionally, the
-       * posterior mode.
+       * posterior standard deviation, the posterior median, 16th and
+       * 84th posterior percentiles, and, optionally, the posterior
+       * mode.
        *
        * If the covariance matrix has been estimated from a set of
        * mock catalogues, and the input parameters ns (number of
        * samples used to estimate the covariance matrix) and nb
        * (number of data measurements, e.g. the bins of the dataset)
-       * are provided (>0), then the parameter errors
-       * (\f$\sigma_p\f$) will be corrected to take into account the
-       * uncertainities in the covariance estimate (Percival et
-       * al. 2014):
+       * are provided (>0), then the parameter errors (\f$\sigma_p\f$)
+       * will be corrected to take into account the uncertainties in
+       * the covariance estimate (Percival et al. 2014):
        *
        * \f[ \sigma_p = \sqrt{\frac{1+B(n_b-n_p)}{1+A+B(n_p+1)}} \f]
        *
@@ -800,7 +799,7 @@ namespace cbl {
        * \f[ B = \frac{(n_s-n_b-2)}{(n_s-n_b-1)(n_s-n_b-4)} \,. \f]
        *
        * this correction can be applied only if the likelihood is
-       * Gaussian. Morever, the inverce covariance matrix estimator
+       * Gaussian. Morever, the inverse covariance matrix estimator
        * has to be corrected to take into account the inverse
        * Wishart distribution (Hartlap, Simon and Schneider 2006).
        *

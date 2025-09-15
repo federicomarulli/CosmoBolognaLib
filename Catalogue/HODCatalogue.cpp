@@ -19,7 +19,7 @@
  ********************************************************************/
 
 /**
- *  @file Catalogue/Catalogue.cpp
+ *  @file Catalogue/HODCatalogue.cpp
  *
  *  @brief Methods of the class Catalogue 
  *
@@ -81,49 +81,49 @@ double cbl::catalogue::Average_s_Zehavi_2005 (const double x, const double M1, c
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosmology::Cosmology &cosm, const HODType HOD_Type, const double threshold, const bool substructures, std::vector<double> parameter)
+cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const std::shared_ptr<cosmology::Cosmology> cosmology, const HODType HOD_Type, const double threshold, const bool substructures, std::vector<double> parameter)
 {
   // MOSTER 10 model:
 
   // Compute sigma_c scatter for lognormal distribution Moster2010 for central galaxies, eq. 4.3.7
   auto fsigma_c = [](double x)
-		  {
-		    // All the parameters below depend on Halo Mass
-		    const double sigma_infinity = 0.1592;	        // 0.0569;
-		    const double sigma_1 = 0.0460;			// 0.1204;
-		    const double chsi = 4.2503;		     	// 6.3020;
-		    const double M_2 = pow(10, 11.8045);       	// pow(10.,11.9652);
-		    //sigma_c SHMR:
-		    return sigma_infinity + sigma_1 * (1. - (2. / cbl::par::pi) * atan(chsi * log10(x / M_2)));
-		  };
+  {
+    // All the parameters below depend on Halo Mass
+    const double sigma_infinity = 0.1592;	        // 0.0569;
+    const double sigma_1 = 0.0460;			// 0.1204;
+    const double chsi = 4.2503;		     	// 6.3020;
+    const double M_2 = pow(10, 11.8045);       	// pow(10.,11.9652);
+    //sigma_c SHMR:
+    return sigma_infinity + sigma_1 * (1. - (2. / cbl::par::pi) * atan(chsi * log10(x / M_2)));
+  };
 
   // Phi_s normalization of modified Schechter for satellite galaxies, Moster2010
   auto fPhi_s = [](double x)
-		{
-		  const double lamda = 0.8032;		       //0.8285;
-		  const double phi_0 = pow(10., -10.8924);         //pow(10.,-11.1622);
+  {
+    const double lamda = 0.8032;		       //0.8285;
+    const double phi_0 = pow(10., -10.8924);         //pow(10.,-11.1622);
 
-		  return phi_0 * pow(x, lamda);
-		};
+    return phi_0 * pow(x, lamda);
+  };
 
   // compute alpha index for the modified Schechter
   auto falpha_s = [](double x)
-		  {
-		    const double alpha_infinity = -1.3676;       //-1.3740;
-		    const double alpha_1 = -0.0524;		   //-0.0309;
-		    const double zeta = 9.5727;		   //4.3629;
-		    const double M_3 = pow(10, 12.3646);         //pow(10,12.5730);
+  {
+    const double alpha_infinity = -1.3676;       //-1.3740;
+    const double alpha_1 = -0.0524;		   //-0.0309;
+    const double zeta = 9.5727;		   //4.3629;
+    const double M_3 = pow(10, 12.3646);         //pow(10,12.5730);
 
-		    return alpha_infinity + alpha_1 * (1. - (2. / cbl::par::pi) * atan(zeta * log10(x / M_3)));
-		  };
+    return alpha_infinity + alpha_1 * (1. - (2. / cbl::par::pi) * atan(zeta * log10(x / M_3)));
+  };
 
   // compute minumum stellar mass, in h unit i.e. the minimum stellar
   // mass of the galaxy sample eq.5.1.6
-  auto mag_mstar = [&cosm](double x)
-		   {
-		     const double MoverL = 1.;
-		     return MoverL*pow(10., (4.77-x)/2.5);
-		   };
+  auto mag_mstar = [&] (const double x)
+  {
+    const double MoverL = 1.;
+    return MoverL*pow(10., (4.77-x)/2.5);
+  };
 
   auto startTimer = chrono::steady_clock::now();
 
@@ -335,7 +335,7 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
     if (parameter[9] == -99)
       {
 	// sigma_c, default value setted from halo mass
-	//cout << par::col_green << "Using default sigma_c" << par::col_default << endl;
+	//coutCBL << par::col_green << "Using default sigma_c" << par::col_default << endl;
 	//parameter[ii]=sigma_c(;
       }
     if (parameter[10] == -99)
@@ -349,14 +349,14 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
     if (parameter[14] == -99)
       { // PHI_s, default value setted from halo mass
 
-	//cout << par::col_green << "Using default Phi_s" << par::col_default << endl;
+	//coutCBL << par::col_green << "Using default Phi_s" << par::col_default << endl;
 	//parameter[ii]=Phi_s;
       }
     if (parameter[15] == -99)
       { 
 	// alpha_s, default value setted from halo mass
 	//
-	//cout << par::col_green << "Using default alpha_s" << par::col_default << endl;
+	//coutCBL << par::col_green << "Using default alpha_s" << par::col_default << endl;
 	// parameter[ii]=alpha_s;
       }
 
@@ -382,28 +382,28 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
     Phi_s = parameter[14];
     alpha_s = parameter[15];
 
-    cout << " Chosen parameters for HOD: " << endl;
-    cout << " LogMmin = " << logMmin << endl;
-    cout << " Logsigma_c = " << logsigma_c << endl;
-    cout << " M0 = " << M0 << " M_sun/h" << endl;
-    cout << " M1 = " << M1 << " M_sun/h" << endl;
-    cout << " alpha = " << alpha << endl;
-    cout << " Minimum stellar mass = " << starMass_threshold << " M_sun/h" << endl
+    coutCBL << " Chosen parameters for HOD: " << endl;
+    coutCBL << " LogMmin = " << logMmin << endl;
+    coutCBL << " Logsigma_c = " << logsigma_c << endl;
+    coutCBL << " M0 = " << M0 << " M_sun/h" << endl;
+    coutCBL << " M1 = " << M1 << " M_sun/h" << endl;
+    coutCBL << " alpha = " << alpha << endl;
+    coutCBL << " Minimum stellar mass = " << starMass_threshold << " M_sun/h" << endl
 	 << endl;
 
-    cout << " Chosen parameters for stellar masses: " << endl;
-    cout << " k_c = " << k_c << endl;
-    cout << " M1_c = " << M1_c << " M_sun" << endl;
-    cout << " beta_c = " << beta_c << endl;
-    cout << " gamma_c = " << gamma_c << endl;
-    cout << " sigma_c  = " << sigma_c << endl;
+    coutCBL << " Chosen parameters for stellar masses: " << endl;
+    coutCBL << " k_c = " << k_c << endl;
+    coutCBL << " M1_c = " << M1_c << " M_sun" << endl;
+    coutCBL << " beta_c = " << beta_c << endl;
+    coutCBL << " gamma_c = " << gamma_c << endl;
+    coutCBL << " sigma_c  = " << sigma_c << endl;
 
-    cout << " k_s = " << k_s << endl;
-    cout << " M1_s = " << M1_s << " M_sun" << endl;
-    cout << " beta_s = " << beta_s << endl;
-    cout << " gamma_s = " << gamma_s << endl;
-    cout << " Phi_s = " << Phi_s << endl;
-    cout << " alpha_s = " << alpha_s << endl
+    coutCBL << " k_s = " << k_s << endl;
+    coutCBL << " M1_s = " << M1_s << " M_sun" << endl;
+    coutCBL << " beta_s = " << beta_s << endl;
+    coutCBL << " gamma_s = " << gamma_s << endl;
+    coutCBL << " Phi_s = " << Phi_s << endl;
+    coutCBL << " alpha_s = " << alpha_s << endl
 	 << endl;
   }
 
@@ -510,7 +510,7 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
       parameter[6] = 0.5611; //gamma_c SHMR_c
     if (parameter[7] == -99)
       {
-	//cout << par::col_green << "If sigma_c=-99 it will be setted using the halo mass..." << par::col_default << endl;
+	//coutCBL << par::col_green << "If sigma_c=-99 it will be setted using the halo mass..." << par::col_default << endl;
 	//parameter[ii]=sigma_c(;
       }
     if (parameter[8] == -99)
@@ -524,12 +524,12 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
     if (parameter[12] == -99)
       {
 	// PHI_s, default value setted from halo mass
-	//cout << par::col_green << "Using default PHI_s" << par::col_default << endl;
+	//coutCBL << par::col_green << "Using default PHI_s" << par::col_default << endl;
 	//parameter[ii]=Phi_s;
       }
     if (parameter[13] == -99)
       { // alpha_s
-	//cout << par::col_green << "If alpha_s=-99 it will be setted using the halo mass..." << par::col_default << endl;
+	//coutCBL << par::col_green << "If alpha_s=-99 it will be setted using the halo mass..." << par::col_default << endl;
 	// parameter[ii]=alpha_s;
       }
 
@@ -555,7 +555,7 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
     coutCBL << " M1 = " << M1 << " M_sun/h" << endl;
     coutCBL << " alpha = " << alpha << endl;
     coutCBL << " Minimum stellar mass = " << starMass_threshold << "M_sun/h" << endl
-	 << endl;
+	    << endl;
 
     coutCBL << " Chosen parameters for stellar masses: " << endl;
     coutCBL << " k_c = " << k_c << endl;
@@ -593,7 +593,7 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
 	parameter[3] = 0.6310; //← w scatter// 0.5611; //gamma_c SHMR_c   //
       if (parameter[4] == -99)
 	{
-	  //cout << par::col_green << "If sigma_c=-99 it will be setted using the halo mass..." << par::col_default << endl;
+	  //coutCBL << par::col_green << "If sigma_c=-99 it will be setted using the halo mass..." << par::col_default << endl;
 	  //parameter[ii]=sigma_c;
 	}
       if (parameter[5] == -99)
@@ -607,12 +607,12 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
       if (parameter[9] == -99)
 	{ // PHI_s
 
-	  //cout << par::col_green << "If Phi_s= -99 it will be setted using the halo mass..." << par::col_default << endl;
+	  //coutCBL << par::col_green << "If Phi_s= -99 it will be setted using the halo mass..." << par::col_default << endl;
 	  //parameter[ii]=Phi_s;
 	}
       if (parameter[10] == -99)
 	{ // alpha_s
-	  //cout << par::col_green << "If alpha_s=-99 it will be setted using the halo mass..." << par::col_default << endl;
+	  //coutCBL << par::col_green << "If alpha_s=-99 it will be setted using the halo mass..." << par::col_default << endl;
 	  // parameter[ii]=alpha_s;
 	}
 
@@ -659,32 +659,32 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
   vector<double> par_stellar_c = {k_c, M1_c, beta_c, gamma_c, sigma_c};
 
   // Conditional mass function Moster2010 for central galaxies, eq:4.3.6
-  const cbl::distribution_func CMF_c = [&cosm, &fsigma_c, &starMass_threshold] (double x, const shared_ptr<void> modelInput, vector<double> par_stellar_c)
-				       {
-					 const vector<double> fix_par = *static_pointer_cast<std::vector<double>>(modelInput);
-					 if (par_stellar_c[4] == -99)
-					   par_stellar_c[4] = fsigma_c(fix_par[0]);
-					 double m_c = 2. * fix_par[0] * par_stellar_c[0] * pow(pow(fix_par[0] / par_stellar_c[1], -par_stellar_c[2]) + pow(fix_par[0] / par_stellar_c[1], par_stellar_c[3]), -1);
+  const cbl::distribution_func CMF_c = [&fsigma_c, &starMass_threshold] (double x, const shared_ptr<void> modelInput, vector<double> par_stellar_c)
+  {
+    const vector<double> fix_par = *static_pointer_cast<std::vector<double>>(modelInput);
+    if (par_stellar_c[4] == -99)
+      par_stellar_c[4] = fsigma_c(fix_par[0]);
+    double m_c = 2. * fix_par[0] * par_stellar_c[0] * pow(pow(fix_par[0] / par_stellar_c[1], -par_stellar_c[2]) + pow(fix_par[0] / par_stellar_c[1], par_stellar_c[3]), -1);
 
-					 return (1. / (par_stellar_c[4] * sqrt(2. * cbl::par::pi) * x * log(10))) * exp(-pow(log10(x / m_c) / (sqrt(2) * par_stellar_c[4]), 2.));
-				       };
+    return (1. / (par_stellar_c[4] * sqrt(2. * cbl::par::pi) * x * log(10))) * exp(-pow(log10(x / m_c) / (sqrt(2) * par_stellar_c[4]), 2.));
+  };
 
   // Moster et al 2010 distribution probability of stellar mass for satellite galaxies, IMF: Kroupa
-
+  
   vector<double> par_stellar_s = {k_s, M1_s, beta_s, gamma_s, Phi_s, alpha_s};
 
   //Conditional mass function Moster2010 for satellite galaxies
-  const cbl::distribution_func CMF_s = [&cosm, &fPhi_s, &falpha_s](double x, const shared_ptr<void> modelInput, vector<double> par_stellar_s)
-				       {
-					 const vector<double> fix_par = *static_pointer_cast<std::vector<double>>(modelInput);
-					 if (par_stellar_s[4] == -99)
-					   par_stellar_s[4] = fPhi_s(fix_par[0]);
-					 if (par_stellar_s[5] == -99)
-					   par_stellar_s[5] = falpha_s(fix_par[0]);
-					 double m_s = 2. * fix_par[0] * par_stellar_s[0] * pow(pow(fix_par[0] / par_stellar_s[1], -par_stellar_s[2]) + pow(fix_par[0] / par_stellar_s[1], par_stellar_s[3]), -1.);
+  const cbl::distribution_func CMF_s = [&fPhi_s, &falpha_s](double x, const shared_ptr<void> modelInput, vector<double> par_stellar_s)
+  {
+    const vector<double> fix_par = *static_pointer_cast<std::vector<double>>(modelInput);
+    if (par_stellar_s[4] == -99)
+      par_stellar_s[4] = fPhi_s(fix_par[0]);
+    if (par_stellar_s[5] == -99)
+      par_stellar_s[5] = falpha_s(fix_par[0]);
+    double m_s = 2. * fix_par[0] * par_stellar_s[0] * pow(pow(fix_par[0] / par_stellar_s[1], -par_stellar_s[2]) + pow(fix_par[0] / par_stellar_s[1], par_stellar_s[3]), -1.);
 
-					 return (par_stellar_s[4] / m_s) * pow(x / m_s, par_stellar_s[5]) * exp(-pow((x / m_s), 2.));
-				       };
+    return (par_stellar_s[4] / m_s) * pow(x / m_s, par_stellar_s[5]) * exp(-pow((x / m_s), 2.));
+  };
 
   
   // -------------------------------------------------
@@ -693,26 +693,26 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
 
   //Average numbers of galaxies from CMF for central and satellite galaxies Moster et. al 2010
 
-  auto Average_c_Moster_2010 = [&cosm, &fsigma_c] (double x, double star_threshold, double k_c, double M1_c, double beta_c, double gamma_c, double sigma_c)
-			       {
-				 if (sigma_c == -99)
-				   sigma_c = fsigma_c(x);
-				 double m_c = 2. * x * k_c / (pow(x / M1_c, -beta_c) + pow(x / M1_c, gamma_c));
+  auto Average_c_Moster_2010 = [&fsigma_c] (double x, double star_threshold, double k_c, double M1_c, double beta_c, double gamma_c, double sigma_c)
+  {
+    if (sigma_c == -99)
+      sigma_c = fsigma_c(x);
+    double m_c = 2. * x * k_c / (pow(x / M1_c, -beta_c) + pow(x / M1_c, gamma_c));
 
-				 return 0.5 * (1 - erf(log10(star_threshold / m_c) / (sqrt(2) * sigma_c))); //threshold
-			       };
+    return 0.5 * (1 - erf(log10(star_threshold / m_c) / (sqrt(2) * sigma_c))); //threshold
+  };
 
   auto Average_s_Moster_2010 = [&fPhi_s, &falpha_s](double x, double star_threshold, double k_s, double M1_s, double beta_s, double gamma_s, double Phi_s, double alpha_s)
-			       {
-				 if (Phi_s == -99)
-				   Phi_s = fPhi_s(x);
-				 if (alpha_s == -99)
-				   alpha_s = falpha_s(x);
-				 double m_s = 2. * x * k_s * pow(pow(x / M1_s, -beta_s) + pow(x / M1_s, gamma_s), -1.);
-				 double lower = pow(star_threshold / m_s, 2.);
+  {
+    if (Phi_s == -99)
+      Phi_s = fPhi_s(x);
+    if (alpha_s == -99)
+      alpha_s = falpha_s(x);
+    double m_s = 2. * x * k_s * pow(pow(x / M1_s, -beta_s) + pow(x / M1_s, gamma_s), -1.);
+    double lower = pow(star_threshold / m_s, 2.);
 
-				 return (Phi_s / 2.) * gsl_sf_gamma_inc(0.5 * alpha_s + 0.5, lower);
-			       };
+    return (Phi_s / 2.) * gsl_sf_gamma_inc(0.5 * alpha_s + 0.5, lower);
+  };
 
   
   //-------------------------------------------------------
@@ -733,41 +733,42 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
   vector<double> par_SubHalo{A, zres, alpha_SubHalo, betha_SubHalo};
 
   const cbl::distribution_func SubMass = [&] (double lx, const shared_ptr<void> modelInput, const vector<double> par_SubHalo)
-					 {
-					   const std::vector<double> fix_par_h = *static_pointer_cast<std::vector<double>>(modelInput);
-					   double x = pow(10., lx);
-					   return pow(x, par_SubHalo[2] + 1) * exp(par_SubHalo[3] * pow(x, 3));
-					 };
+  {
+    const std::vector<double> fix_par_h = *static_pointer_cast<std::vector<double>>(modelInput);
+    double x = pow(10., lx);
+    return pow(x, par_SubHalo[2] + 1) * exp(par_SubHalo[3] * pow(x, 3));
+  };
 
   
   //-------------------------------------------------
   // --------------- galaxy positions ---------------
   //-------------------------------------------------
-
-  const cbl::distribution_func NFW_profile = [&cosm] (double x, const shared_ptr<void> modelInput, const vector<double> parameter_NFW)
-					     {
-					       const vector<double> fix_par_h = *static_pointer_cast<std::vector<double>>(modelInput);
-					       double r_vir = cosm.r_vir(fix_par_h[0], parameter_NFW[0]);
-					       double c_vir = cosm.concentration_NFW_Duffy(fix_par_h[0], parameter_NFW[0]);
-					       double r_s = r_vir / c_vir;
-					       double A = pow(r_s + r_vir, 2) / pow(r_s, 2);
-
-					       return A * x / (pow(1 + x * c_vir, 2));
-					     };
-
+  
+  cbl::cosmology::HaloProfile HP(cosmology);
+  
+  const cbl::distribution_func NFW_profile = [&HP] (double x, const shared_ptr<void> modelInput, const vector<double> parameter_NFW)
+  {
+    const vector<double> fix_par_h = *static_pointer_cast<std::vector<double>>(modelInput);
+    double r_vir = HP.r_vir(fix_par_h[0], parameter_NFW[0]);
+    double c_vir = HP.concentration_NFW_Duffy(fix_par_h[0], parameter_NFW[0]);
+    double r_s = r_vir / c_vir;
+    double A = pow(r_s + r_vir, 2) / pow(r_s, 2);
+    return A * x / (pow(1 + x * c_vir, 2));
+  };
+  
 
   // -------------------------------------------
   // --------------- infall mass ---------------
   // -------------------------------------------
-	
-  auto InfallMass = [&cosm] (double x, const shared_ptr<void> modelInput, const vector<double> par_infall)
-		    {
-		      const vector<double> fix_par_h = *static_pointer_cast<std::vector<double>>(modelInput);
-		      const double z = 0;
-		      double M_infall = par_infall[0] * pow(pow(x / cosm.r_vir(fix_par_h[0], z), 2. / 3.), -1); //0.65!!
+  
+  auto InfallMass = [&HP] (double x, const shared_ptr<void> modelInput, const vector<double> par_infall)
+  {
+    const vector<double> fix_par_h = *static_pointer_cast<std::vector<double>>(modelInput);
+    const double z = 0;
+    double M_infall = par_infall[0] * pow(pow(x / HP.r_vir(fix_par_h[0], z), 2. / 3.), -1); //0.65!!
 
-		      return M_infall;
-		    };
+    return M_infall;
+  };
 
   
   //-------------------------------------------------------------------------------------------------------------------
@@ -781,7 +782,7 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
   const int rule = 6;
   const double prec = 1.e-5;
   // set h of the input cosmology
-  const double h = cosm.hh();
+  const double h = cosmology->little_h();
 
   const double x_NFW_min = 1.e-5; //r/r_vir
   const double x_NFW_max = 1.;	//r/r_vir
@@ -902,11 +903,11 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
 	if (number_s > 0) {
 
 	  std::function<double(double)> shmf = [&par_SubHalo, &vect_h](const double lx)
-					       {
-						 double x = pow(10., lx);
+	  {
+	    double x = pow(10., lx);
 
-						 return (x * vect_h[0]) * par_SubHalo[0] * par_SubHalo[1] * pow(x * vect_h[0], par_SubHalo[2]) * exp(par_SubHalo[3] * pow(x, 3)) * log(10);
-					       };
+	    return (x * vect_h[0]) * par_SubHalo[0] * par_SubHalo[1] * pow(x * vect_h[0], par_SubHalo[2]) * exp(par_SubHalo[3] * pow(x, 3)) * log(10);
+	  };
 
 	  double MinLogExtraction = log10(starMass_threshold / halo_mass);
 	  //double f_min=log10(1.e10/halo_mass);
@@ -981,7 +982,7 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
 	      auto galaxy_s = std::make_shared<cbl::catalogue::Galaxy>();
 
 	      vector<double> par_infall{subhalomass[j]};
-	      const double radius = cosm.r_vir(halo_mass, z) * Radius();
+	      const double radius = HP.r_vir(halo_mass, z) * Radius();
 	      const double theta = Theta();
 	      const double phi = Phi();
 	      double M_infall = InfallMass(radius, fix_par_h, par_infall);
@@ -1045,5 +1046,4 @@ cbl::catalogue::Catalogue::Catalogue (const Catalogue halo_catalogue, const cosm
 
   // Close the timeLog file
   timeLogFile.close();
-  
 }

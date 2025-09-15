@@ -54,156 +54,151 @@ namespace cbl {
      */
     class FuncGrid_Bspline
     {
-      private:
+    private:
 
-        /// x values
-	std::vector<double> m_x;
+      /// x values
+      std::vector<double> m_x;
 
-        /// fx values
-	std::vector<double> m_fx;
+      /// fx values
+      std::vector<double> m_fx;
 
-	/// number of breakpoints
-	int m_nbreakpoints;
+      /// number of breakpoints
+      int m_nbreakpoints;
 
-	/// number of coefficients;
-	int m_ncoefficients;
+      /// number of coefficients;
+      int m_ncoefficients;
 
-	/// basis spline order
-	int m_order;
+      /// basis spline order
+      int m_order;
 
-	/// pointer to GSL bspline workspace 
-  	std::shared_ptr<gsl_bspline_workspace> m_bspline;
+      /// pointer to GSL bspline workspace 
+      std::shared_ptr<gsl_bspline_workspace> m_bspline;
 
-	/// pointer to GSL vector containing the basis spline coefficients
-  	std::shared_ptr<gsl_vector> m_Bcoeff; 
+      /// pointer to GSL vector containing the basis spline coefficients
+      std::shared_ptr<gsl_vector> m_Bcoeff; 
   	
-	/// pointer to GSL vector containing the basis spline weights
-	std::shared_ptr<gsl_vector> m_weights; 
+      /// pointer to GSL vector containing the basis spline weights
+      std::shared_ptr<gsl_vector> m_weights; 
 	
-	/// pointer to GSL matrix containing the linear fit covariance
-	std::shared_ptr<gsl_matrix> m_covariance;
+      /// pointer to GSL matrix containing the linear fit covariance
+      std::shared_ptr<gsl_matrix> m_covariance;
 
-	/// Integral of the function over the m_x range
-	double m_integral;
+      /// Integral of the function over the m_x range
+      double m_integral;
 
       /**
        *  @name Functions to set internal variables
        */
       ///@{
-	/**
-	 * @brief set internal variables 
-	 * for gsl bspline wrapping
-	 *
-	 * Function that sets internal variables 
-	 * for gsl bspline wrapping
-	 *
-	 * @param x vector containing the x values
-	 * @param fx vector containing the f(x) values
-	 * @param nbreakpoints number of breakpoints
-	 * @param order the basis spline order.
-	 *
-	 * 
-	 */
-	void m_set_bspline(const std::vector<double> x, const std::vector<double> fx, const int nbreakpoints, const int order);
+      /**
+       * @brief set internal variables 
+       * for gsl bspline wrapping
+       *
+       * Function that sets internal variables 
+       * for gsl bspline wrapping
+       *
+       * @param x vector containing the x values
+       * @param fx vector containing the f(x) values
+       * @param nbreakpoints number of breakpoints
+       * @param order the basis spline order.
+       *
+       * 
+       */
+      void m_set_bspline(const std::vector<double> x, const std::vector<double> fx, const int nbreakpoints, const int order);
 
-	/**
-	 * @brief set the b-spline knots
-	 *
-	 * set the knots uniformely spaced on a grid
-	 *
-	 * @param xmin minimum breakpoint
-	 * @param xmax maximum breakpoint
-	 *
-	 * 
-	 */
-	void m_set_knots (const double xmin=cbl::par::defaultDouble, const double xmax=cbl::par::defaultDouble);
+      /**
+       * @brief set the b-spline knots
+       *
+       * set the knots uniformely spaced on a grid
+       *
+       * @param xmin minimum breakpoint
+       * @param xmax maximum breakpoint
+       *
+       * 
+       */
+      void m_set_knots (const double xmin=cbl::par::defaultDouble, const double xmax=cbl::par::defaultDouble);
 
-	/**
-	 * @brief set the b-spline knots
-	 *
-	 * set the knots from a vector of breakpoints
-	 * knots are the 
-	 *
-	 * @param breakpoints the breakpoints
-	 *
-	 * 
-	 */
-	void m_set_knots (const std::vector<double> breakpoints);
+      /**
+       * @brief set the b-spline knots
+       *
+       * set the knots from a vector of breakpoints
+       * knots are the 
+       *
+       * @param breakpoints the breakpoints
+       *
+       * 
+       */
+      void m_set_knots (const std::vector<double> breakpoints);
 
-	/**
-	 * @brief compute basis spline coefficients
-	 * via a linear fit
-	 *
-	 * The fit uses an error: frac*f(x)
-	 * with frac given in input. Default value is 0.1
-	 *
-	 * @param frac fraction of the fx to use as fit error.
-	 * Default value is 0.1
-	 *
-	 * 
-	 */
-	void m_linear_fit (const double frac=0.1);
+      /**
+       * @brief compute basis spline coefficients
+       * via a linear fit
+       *
+       * The fit uses an error: frac*f(x)
+       * with frac given in input. Default value is 0.1
+       *
+       * @param frac fraction of the fx to use as fit error.
+       * Default value is 0.1
+       *
+       * 
+       */
+      void m_linear_fit (const double frac=0.1);
 
-	/**
-	 * @brief compute the integral of the function over the range
-	 * [Min(m_x)-Max(m_x)] and set internal variable m_integral
-	 * This is used to renormalize the output
-	 *
-	 * 
-	 */
-	void m_compute_func_integral ();
+      /**
+       * @brief compute the integral of the function over the range
+       * [Min(m_x)-Max(m_x)] and set internal variable m_integral
+       * This is used to renormalize the output
+       *
+       * 
+       */
+      void m_compute_func_integral ();
 	
       ///@}
 
-      public:
+    public:
       /**
        *  @name Constructors/destructors
        */
       ///@{
 
-	/**
-	 * @brief default constructor
-	 * @return Object of type FuncGrid_Bspline
-	 */
-	FuncGrid_Bspline () {}
+      /**
+       * @brief default constructor
+       */
+      FuncGrid_Bspline () {}
 
-	/**
-	 * @brief constructor
-	 *
-	 * @param x vector containing the x values
-	 * @param fx vector containing the f(x) values
-	 * @param nbreakpoints number of breakpoints
-	 * @param order the basis spline order.
-	 * Default is 4, leading to cubic basis spline
-	 * @param frac fraction of the fx to use as fit error.
-	 * Default is 0.1
-	 * @param xmin minimum breakpoint
-	 * @param xmax maximum breakpoint
-	 *
-	 * @return Object of type FuncGrid_Bspline
-	 */
-	FuncGrid_Bspline (const std::vector<double> x, const std::vector<double> fx, const int nbreakpoints, const int order=4, const double frac=0.1, const double xmin=cbl::par::defaultDouble, const double xmax=cbl::par::defaultDouble);
+      /**
+       * @brief constructor
+       *
+       * @param x vector containing the x values
+       * @param fx vector containing the f(x) values
+       * @param nbreakpoints number of breakpoints
+       * @param order the basis spline order.
+       * Default is 4, leading to cubic basis spline
+       * @param frac fraction of the fx to use as fit error.
+       * Default is 0.1
+       * @param xmin minimum breakpoint
+       * @param xmax maximum breakpoint
+       */
+      FuncGrid_Bspline (const std::vector<double> x, const std::vector<double> fx, const int nbreakpoints, const int order=4, const double frac=0.1, const double xmin=cbl::par::defaultDouble, const double xmax=cbl::par::defaultDouble);
 
-	/**
-	 * @brief constructor
-	 *
-	 * @param x vector containing the x values
-	 * @param fx vector containing the f(x) values
-	 * @param breakpoints vector containing the breakpoints
-	 * @param order the basis spline order.
-	 * Default is 4, leading to cubic basis spline
-	 * @param frac fraction of the fx to use as fit error.
-	 * Default is 0.1
-	 *
-	 * @return Object of type FuncGrid_Bspline
-	 */
-	FuncGrid_Bspline (const std::vector<double> x, const std::vector<double> fx, const std::vector<double> breakpoints, const int order=4, const double frac=0.1);
+      /**
+       * @brief constructor
+       *
+       * @param x vector containing the x values
+       * @param fx vector containing the f(x) values
+       * @param breakpoints vector containing the breakpoints
+       * @param order the basis spline order.
+       * Default is 4, leading to cubic basis spline
+       * @param frac fraction of the fx to use as fit error.
+       * Default is 0.1
+       */
+      FuncGrid_Bspline (const std::vector<double> x, const std::vector<double> fx, const std::vector<double> breakpoints, const int order=4, const double frac=0.1);
 
-	/**
-	 *  @brief default destructor
-	 *  
-	 */
-	~FuncGrid_Bspline () = default;
+      /**
+       *  @brief default destructor
+       *  
+       */
+      ~FuncGrid_Bspline () = default;
 
       ///@}
 
@@ -212,37 +207,37 @@ namespace cbl {
        */
       ///@{
 
-	/**
-	 * @brief set internal members
-	 *
-	 * @param x vector containing the x values
-	 * @param fx vector containing the f(x) values
-	 * @param nbreakpoints number of breakpoints
-	 * @param order the basis spline order
-	 * Default is 4, leading to cubic basis spline
-	 * @param frac fraction of the fx to use as fit error.
-	 * Default is 0.1
-	 * @param xmin minimum breakpoint
-	 * @param xmax maximum breakpoint
-	 *
-	 * 
-	 */
-	void set (const std::vector<double> x, const std::vector<double> fx, const int nbreakpoints, const int order=4, const double frac=0.1, const double xmin=cbl::par::defaultDouble, const double xmax=cbl::par::defaultDouble);
+      /**
+       * @brief set internal members
+       *
+       * @param x vector containing the x values
+       * @param fx vector containing the f(x) values
+       * @param nbreakpoints number of breakpoints
+       * @param order the basis spline order
+       * Default is 4, leading to cubic basis spline
+       * @param frac fraction of the fx to use as fit error.
+       * Default is 0.1
+       * @param xmin minimum breakpoint
+       * @param xmax maximum breakpoint
+       *
+       * 
+       */
+      void set (const std::vector<double> x, const std::vector<double> fx, const int nbreakpoints, const int order=4, const double frac=0.1, const double xmin=cbl::par::defaultDouble, const double xmax=cbl::par::defaultDouble);
 
-        /**
-	 * @brief set internal members
-	 *
-	 * @param x vector containing the x values
-	 * @param fx vector containing the f(x) values
-	 * @param breakpoints vector containing the breakpoints
-	 * @param order the basis spline order
-	 * Default is 4, leading to cubic basis spline
-	 * @param frac fraction of the fx to use as fit error.
-	 * Default is 0.1
-	 *
-	 * 
-	 */
-	void set (const std::vector<double> x, const std::vector<double> fx, const std::vector<double> breakpoints, const int order=4, const double frac=0.1);
+      /**
+       * @brief set internal members
+       *
+       * @param x vector containing the x values
+       * @param fx vector containing the f(x) values
+       * @param breakpoints vector containing the breakpoints
+       * @param order the basis spline order
+       * Default is 4, leading to cubic basis spline
+       * @param frac fraction of the fx to use as fit error.
+       * Default is 0.1
+       *
+       * 
+       */
+      void set (const std::vector<double> x, const std::vector<double> fx, const std::vector<double> breakpoints, const int order=4, const double frac=0.1);
       	
       ///@}
 
@@ -251,23 +246,23 @@ namespace cbl {
        */
       ///@{
 
-      	/**
-       	 *  @brief overloading of the () operator
-         *  @param xx the value at which the function will be
-         *  evaluated
-	 *  @param integral output value of the function integral
-         *  @return the function evaluated at xx
-         */   
-      	double operator () (const double xx, const double integral=cbl::par::defaultDouble) const;
+      /**
+       *  @brief overloading of the () operator
+       *  @param xx the value at which the function will be
+       *  evaluated
+       *  @param integral output value of the function integral
+       *  @return the function evaluated at xx
+       */   
+      double operator () (const double xx, const double integral=cbl::par::defaultDouble) const;
 
-        /**
-         *  @brief evaluate the function at the xx points
-         *  @param xx the values at which the function will be
-         *  evaluated
-	 *  @param integral output value of the function integral
-         *  @return the function evaluated at the xx points
-         */   
-        std::vector<double> eval_func (const std::vector<double> xx, const double integral=cbl::par::defaultDouble) const;
+      /**
+       *  @brief evaluate the function at the xx points
+       *  @param xx the values at which the function will be
+       *  evaluated
+       *  @param integral output value of the function integral
+       *  @return the function evaluated at the xx points
+       */   
+      std::vector<double> eval_func (const std::vector<double> xx, const double integral=cbl::par::defaultDouble) const;
       	
       ///@}
     };

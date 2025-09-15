@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>mollcursor</TITLE>
+<META NAME="description" CONTENT="mollcursor">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_mollview.htm">
+<LINK REL="previous" HREF="idl_median_filter.htm">
+<LINK REL="next" HREF="idl_mollview.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_median_filter.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_mollview.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html395"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_median_filter.htm">median_filter</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_mollview.htm">mollview</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4300"></A>
+<A ID="idl:mollcursor"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">mollcursor</SPAN></div><hr>
+<H3>This IDL facility provides a point-and-click interface for finding
+the astronomical location, value and pixel index of the pixels nearest 
+to the pointed position on a Mollweide projection of a <strong>HEALPix</strong> map.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/visu/mollcursor.pro"><strong>src/idl/visu/mollcursor.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+MOLLCURSOR, [<A HREF="#idl:mollcursor:cursor_type">cursor_type=</A>, <A HREF="#idl:mollcursor:file_out">file_out=</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>cursor_type=</B>
+<DD><A ID="idl:mollcursor:cursor_type"></A> cursor type to be used 
+<BR>	<b>default:</b>34
+ 	<DT>
+<B>file_out=</B>
+<DD><A ID="idl:mollcursor:file_out"></A> file containing on output the list of
+ 	point selected with the cursor. 
+<BR>
+If set to 1, the file will
+ 	take its default name: 'cursor_catalog.txt'. 
+<BR>
+If set to a non-empty character string, the file name will be that string
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+mollcursor should be run immediately following mollview. It gives the
+longitude, latitude, map value and pixel number
+corresponding to the cursor position in the window containing the map generated
+by mollview. Mouse buttons are used to select the function :  
+<br><br>left button = display the information relative to the current cursor position, 
+<br><br>middle button = print out this information in the IDL command window 
+<br><br>right button = quit mollcursor
+<BR>
+<BR><B>Note on Mac OS X, X11 and IDL cursor:</B> 
+depending on the Mac OS X version<A ID="tex2html54"
+  HREF="idl_footnode.htm#foot11277"><SUP><SPAN CLASS="arabic">2</SPAN></SUP></A>and most importantly on the X Window System being used,<A ID="tex2html55"
+  HREF="idl_footnode.htm#foot11278"><SUP><SPAN CLASS="arabic">3</SPAN></SUP></A>the IDL function <SPAN style="font-family:monospace">cursor</SPAN>, and therefore <strong>HEALPix</strong> <SPAN CLASS="colordoc">mollcursor</SPAN>,
+gnomcursor, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 0.23ex; vertical-align: -0.10ex; " SRC="idl_img6.png"
+ ALT="$\ldots$"></SPAN> will not
+work properly under X11. To solve this problem, type the relevant line below at your X11 prompt and restart X11.
+<BR>
+If you are using Apple's X11, type under Tiger (10.4): 
+<BR><SPAN CLASS="FOOTNOTESIZE"><SPAN style="font-family:monospace">defaults write com.apple.x11 wm_click_through -bool true</SPAN></SPAN> 
+<BR>
+or, under Leopard (10.5), Snow Leopard (10.6), Lion (10.7): 
+<BR><SPAN CLASS="FOOTNOTESIZE"><SPAN style="font-family:monospace">defaults write org.x.x11 wm_click_through -bool true</SPAN></SPAN> 
+<BR>
+If you are using Xquartz (for eg, Montain Lion (10.8), Mavericks (10.9),
+Yosemite (10.10), El Capitan (10.11), Sierra (10.12), High Sierra (10.13),
+Mojave (10.14), Catalina (10.15), Big Sur (11.0) or Monterey (12)): 
+<BR><SPAN CLASS="FOOTNOTESIZE"><SPAN style="font-family:monospace">defaults write org.macosforge.xquartz.X11 wm_click_through -bool true</SPAN></SPAN>
+<BR>
+and if you are using MacPort's X11 (package xorg-server):
+<BR><SPAN CLASS="FOOTNOTESIZE"><SPAN style="font-family:monospace">defaults write org.macports.X11 wm_click_through -bool true</SPAN></SPAN>
+<BR>(see
+<A ID="tex2html56"
+  HREF="http://www.idlcoyote.com/misc_tips/maccursor.html"><SPAN CLASS="SPAN">http://www.idlcoyote.com/misc_tips/maccursor.html</SPAN></A>
+and the section <A HREF="./install.htm#install:macos_idl_cursor">Mac OS X,  X11 and IDL cursor</A> in <A ID="tex2html57"
+  HREF="install.htm">&rdquo;<strong>HEALPix</strong> Installation Documentation&rdquo;</A>). 
+<BR>
+And finally, <SPAN CLASS="colordoc">mollcursor</SPAN> obviously requires the '3 button mouse' to be enabled,
+which can be done in the X11 Preferences menu, or if Xquartz is used (see <SPAN style="font-family:monospace">man Xquartz</SPAN>) via:
+<BR><SPAN CLASS="FOOTNOTESIZE"><SPAN style="font-family:monospace">defaults write org.macosforge.xquartz.X11 enable_fake_buttons
+-bool true</SPAN></SPAN>
+
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">mollcursor</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">mollcursor</SPAN>
+  <DT>
+<B>ghostview</B>
+<DD>ghostview or a similar facility is required to view
+	  the Postscript image generated by <SPAN CLASS="colordoc">mollcursor</SPAN>.
+  <DT>
+<B>xv</B>
+<DD>xv or a similar facility is required to view the
+            GIF/PNG image generated by <SPAN CLASS="colordoc">mollcursor</SPAN>  (a browser can also 
+            be used).
+  <DT>
+<B>synfast</B>
+<DD>This <strong>HEALPix</strong> facility will generate the FITS format 
+            sky map to be input to <SPAN CLASS="colordoc">mollcursor</SPAN>.
+  <DT>
+<B><A HREF="idl_cartview.htm#idl:cartview">cartview</A></B>
+<DD>IDL facility to generate a Cartesian projection of
+  	a <strong>HEALPix</strong> map.
+  <DT>
+<B><A HREF="idl_cartcursor.htm#idl:cartcursor">cartcursor</A></B>
+<DD>interactive cursor to be used with cartview
+  <DT>
+<B><A HREF="idl_gnomview.htm#idl:gnomview">gnomview</A></B>
+<DD>IDL facility to generate a gnomonic projection of
+  	a <strong>HEALPix</strong> map.
+  <DT>
+<B><A HREF="idl_gnomcursor.htm#idl:gnomcursor">gnomcursor</A></B>
+<DD>interactive cursor to be used with gnomview
+  <DT>
+<B><A HREF="idl_mollview.htm#idl:mollview">mollview</A></B>
+<DD>IDL facility to generate a Mollweide projection of
+  	a <strong>HEALPix</strong> map.
+  <DT>
+<B><A HREF="#idl:mollcursor">mollcursor</A></B>
+<DD>interactive cursor to be used with mollview
+  <DT>
+<B><A HREF="idl_orthview.htm#idl:orthview">orthview</A></B>
+<DD>IDL facility to generate an orthographic projection of
+  	a <strong>HEALPix</strong> map.
+  <DT>
+<B><A HREF="idl_orthcursor.htm#idl:orthcursor">orthcursor</A></B>
+<DD>interactive cursor to be used with orthview
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">mollcursor</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>After mollview reads in a map and generates
+its mollweide projection, mollcursor is run to know the
+position and flux of bright synchrotron sources, for example.</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_median_filter.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_mollview.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html395"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_median_filter.htm">median_filter</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_mollview.htm">mollview</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

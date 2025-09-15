@@ -2,7 +2,11 @@
 // Example code: how to measure the projected two-point correlation function
 // =========================================================================
 
+#include "LCDM.h"
 #include "TwoPointCorrelation1D.h"
+
+using namespace std;
+
 
 int main () {
 
@@ -12,14 +16,14 @@ int main () {
     // ---------------- use default cosmological parameters ------------
     // -----------------------------------------------------------------
   
-    const cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
 
   
     // ---------------------------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) --------------------------------
     // ---------------------------------------------------------------------------------------------------------------------------
 
-    const std::string file_catalogue = "../input/cat.dat";
+    const string file_catalogue = "../input/cat.dat";
 
     const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -50,8 +54,8 @@ int main () {
     
     const double piMax_integral = 50.; // upper limit of the integral
     
-    const std::string dir = "../output/";
-    const std::string file = "xi_projected.dat";
+    const string dir = "../output/";
+    const string file = "xi_projected.dat";
   
 
     // measure the projected two-point correlation function
@@ -63,7 +67,7 @@ int main () {
     TwoP->write(dir, file);
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

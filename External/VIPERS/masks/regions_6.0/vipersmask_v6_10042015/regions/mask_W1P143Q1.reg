@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileMP2BLC.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(33.531577,-5.203367,33.630783,-5.20312,33.63976,-5.201863,33.639769,-5.08384,33.631492,-5.075964,33.531739,-5.076703,33.522709,-5.083886,33.523077,-5.2033864) # color=red dash=1

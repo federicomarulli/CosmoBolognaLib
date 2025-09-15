@@ -48,19 +48,20 @@ std::vector<double> cbl::modelling::numbercounts::mass_function_mass (const std:
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
 
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
+  auto cosmo = pp->cosmology->clone();
 
   // input likelihood parameters
 
   // set the cosmological parameters used to compute the dark matter
   // two-point correlation function in real space
   for (size_t i=0; i<pp->Cpar.size(); ++i)
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
+    cosmo->set_parameter(pp->Cpar[i], parameter[i]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  cosmology::PkXi PX(cosmo);
+  vector<double> Pk = PX.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
-  return cbl::modelling::numbercounts::mass_function (mass, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, pp->kk, Pk, "Spline", pp->k_max);
+  return modelling::numbercounts::mass_function (mass, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, pp->kk, Pk, "Spline", pp->k_max);
 }
 
 
@@ -73,23 +74,24 @@ std::vector<double> cbl::modelling::numbercounts::number_density_mass (const std
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
 
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
+  auto cosmo = pp->cosmology->clone();
 
   // input likelihood parameters
 
   // set the cosmological parameters used to compute the dark matter
   // two-point correlation function in real space
   for (size_t i=0; i<pp->Cpar.size(); ++i)
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
+    cosmo->set_parameter(pp->Cpar[i], parameter[i]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  cosmology::PkXi PX(cosmo);
+  vector<double> Pk = PX.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
-  std::vector<double> mass_function = cbl::modelling::numbercounts::mass_function (pp->Mass_vector, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, pp->kk, Pk, "Spline", pp->k_max);
+  vector<double> mass_function = modelling::numbercounts::mass_function (pp->Mass_vector, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, pp->kk, Pk, "Spline", pp->k_max);
 
   glob::FuncGrid interp_MF (pp->Mass_vector, mass_function, "Spline");
 
-  std::vector<double> number_density(mass.size());
+  vector<double> number_density(mass.size());
 
   for (size_t i=0; i<mass.size(); i++) 
     number_density[i] = interp_MF.integrate_qag(pp->edges_x[i], pp->edges_x[i+1]);
@@ -109,24 +111,34 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_mass (const std:
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
 
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
+  auto cosmo = pp->cosmology->clone();
 
   // input likelihood parameters
 
   // set the cosmological parameters used to compute the dark matter
   // two-point correlation function in real space
   for (size_t i=0; i<pp->Cpar.size(); ++i)
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
+    cosmo->set_parameter(pp->Cpar[i], parameter[i]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  cosmology::PkXi PX(cosmo);
+  vector<double> Pk = PX.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
-  const std::vector<cbl::glob::FuncGrid> interp = cbl::modelling::numbercounts::sigmaM_dlnsigmaM (pp->Mass_vector, cosmo, pp->kk, Pk, "Spline", pp->k_max);
+  // interpolate sigmaM and its derivative
+  const vector<glob::FuncGrid> interp = modelling::numbercounts::sigmaM_dlnsigmaM (pp->Mass_vector, cosmo, pp->kk, Pk, "Spline", pp->k_max);
 
-  std::vector<double> number_counts(pp->edges_x.size()-1);
+  // interpolate the growth factor
+  const std::vector<double> z_for_DN = cbl::linear_bin_vector(200, 0.0001, 3.);
+  std::vector<double> DN (z_for_DN.size(), 0.);
+  for (size_t i=0; i<z_for_DN.size(); i++)
+    DN[i] = cosmo->DN(z_for_DN[i]);
+  cbl::glob::FuncGrid DN_interp (z_for_DN, DN, "Spline");
+
+  // compute the counts
+  vector<double> number_counts(pp->edges_x.size()-1);
 
   for (size_t j=0; j<pp->edges_x.size()-1; j++) {
-    number_counts[j] = cbl::modelling::numbercounts::number_counts(pp->z_min, pp->z_max, pp->edges_x[j], pp->edges_x[j+1], cosmo, pp->area_rad, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, interp[0], interp[1]);
+    number_counts[j] = modelling::numbercounts::number_counts(pp->z_min, pp->z_max, pp->edges_x[j], pp->edges_x[j+1], cosmo, pp->area_rad, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, interp[0], interp[1], DN_interp);
   }
 
   return number_counts;
@@ -144,23 +156,24 @@ std::vector<double> cbl::modelling::numbercounts::number_counts_mass_snapshot (c
   shared_ptr<STR_NC_data_model> pp = static_pointer_cast<STR_NC_data_model>(inputs);
 
   // redefine the cosmology
-  cbl::cosmology::Cosmology cosmo = *pp->cosmology;
+  auto cosmo = pp->cosmology->clone();
 
   // input likelihood parameters
 
   // set the cosmological parameters used to compute the dark matter
   // two-point correlation function in real space
   for (size_t i=0; i<pp->Cpar.size(); ++i)
-    cosmo.set_parameter(pp->Cpar[i], parameter[i]);
+    cosmo->set_parameter(pp->Cpar[i], parameter[i]);
 
   // compute the power spectrum
-  std::vector<double> Pk = cosmo.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
+  cosmology::PkXi PX(cosmo);
+  vector<double> Pk = PX.Pk_matter(pp->kk, pp->method_Pk, false, 0., pp->store_output, pp->output_root, pp->norm, pp->k_min, pp->k_max, pp->prec, pp->file_par, true);
 
-  std::vector<double> mass_function = cbl::modelling::numbercounts::mass_function (pp->Mass_vector, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, pp->kk, Pk, "Spline", pp->k_max);
+  vector<double> mass_function = modelling::numbercounts::mass_function (pp->Mass_vector, cosmo, pp->redshift, pp->model_MF, pp->store_output, pp->Delta, pp->isDelta_critical, pp->kk, Pk, "Spline", pp->k_max);
 
-  glob::FuncGrid interp_MF (pp->Mass_vector, mass_function, "Spline");
+  glob::FuncGrid interp_MF(pp->Mass_vector, mass_function, "Spline");
 
-  std::vector<double> number_counts(pp->edges_x.size()-1);
+  vector<double> number_counts(pp->edges_x.size()-1);
 
   for (size_t i=0; i<pp->edges_x.size()-1; i++) {
     number_counts[i] = pp->Volume*interp_MF.integrate_qag(pp->edges_x[i], pp->edges_x[i+1]); //*(maxM-minM);

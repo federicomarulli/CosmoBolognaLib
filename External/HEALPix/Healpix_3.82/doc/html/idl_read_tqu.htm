@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>read_tqu</TITLE>
+<META NAME="description" CONTENT="read_tqu">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_remove_dipole.htm">
+<LINK REL="previous" HREF="idl_read_fits_s.htm">
+<LINK REL="next" HREF="idl_remove_dipole.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_read_fits_s.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_remove_dipole.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html439"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_read_fits_s.htm">read_fits_s</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_remove_dipole.htm">remove_dipole</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION6500"></A>
+<A ID="idl:read_tqu"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">read_tqu</SPAN></div><hr>
+<H3>This IDL facility reads a temperature+polarization Healpix map
+(T,Q,U) from a binary table FITS file, 
+with optionally the error (dT,dQ,dU) and correlation (dQU, dTU, dTQ)
+from separate extensions
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/fits/read_tqu.pro"><strong>src/idl/fits/read_tqu.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+READ_TQU , <A HREF="#idl:read_tqu:File">File</A>, <A HREF="#idl:read_tqu:TQU">TQU</A>, [<A HREF="#idl:read_tqu:Extension">Extension=</A>, <A HREF="#idl:read_tqu:Hdr">Hdr=</A>, <A HREF="#idl:read_tqu:Xhdr">Xhdr=</A>, <A HREF="#idl:read_tqu:HELP">/HELP</A>, <A HREF="#idl:read_tqu:Nside">Nside=</A>, <A HREF="#idl:read_tqu:Ordering">Ordering=</A>, <A HREF="#idl:read_tqu:Coordsys">Coordsys=</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>File</B>
+<DD><A ID="idl:read_tqu:File"></A>          name of a FITS file from which the maps are to be read
+
+<P>
+<DT>
+<B>TQU</B>
+<DD><A ID="idl:read_tqu:TQU"></A> : 
+array of Healpix maps of size (<!-- MATH
+ $N_{\mathrm{pix}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>pix</SUB></SPAN>,3,<SPAN style="font-family:monospace">n_ext</SPAN>) where <!-- MATH
+ $N_{\mathrm{pix}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>pix</SUB></SPAN> is the total
+   number of Healpix pixels on the sky, and <SPAN style="font-family:monospace">n_ext</SPAN> <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.41ex; " SRC="idl_img113.png"
+ ALT="$\le$"></SPAN> 3 is
+   the number of extensions read
+<BR>
+Three maps are available in each extension of the FITS file : 
+<BR>      -the temperature+polarization Stokes parameters maps (T,Q,U) in
+   extension 0 
+<BR>      -the error maps (dT,dQ,dU) in extension 1 (if applicable)
+<BR>      -the correlation maps (dQU, dTU, dTQ) in extension 2 (if applicable)
+
+<P>
+<DT>
+<B>Extension=</B>
+<DD><A ID="idl:read_tqu:Extension"></A>		(optional), 
+<BR>
+extension unit to be read from FITS file: 
+ either its 0-based ID number (ie, 0 for first extension <EM>after</EM> primary array) 
+ or the case-insensitive value of its EXTNAME keyword.
+	If absent, all available extensions are read.
+
+<P>
+<DT>
+<B>Hdr=</B>
+<DD><A ID="idl:read_tqu:Hdr"></A>		  (optional), 
+<BR>
+string variable containing on output  the contents of the primary header. (If already present, FITS reserved
+		  keywords will be automatically updated).
+
+<P>
+<DT>
+<B>Xhdr=</B>
+<DD><A ID="idl:read_tqu:Xhdr"></A>		  (optional), 
+<BR>
+string variable containing on output the contents of the
+		  extension header. If 
+                  several extensions are read, then the extension 
+                  headers are returned appended into one string array.
+
+<P>
+<DT>
+<B>Nside=</B>
+<DD><A ID="idl:read_tqu:Nside"></A>		(optional), 
+<BR>
+returns on output the <strong>HEALPix</strong> resolution parameter, as read
+		from the FITS header. Set to -1 if not found
+
+<P>
+<DT>
+<B>Ordering=</B>
+<DD><A ID="idl:read_tqu:Ordering"></A>	        (optional), 
+<BR>
+returns on output the pixel ordering, as read from the FITS
+	        header. Either 'RING' or 'NESTED' or ' ' (if not found).
+
+<P>
+<DT>
+<B>Coordsys=</B>
+<DD><A ID="idl:read_tqu:Coordsys"></A>	        (optional), 
+<BR>
+returns on output the astrophysical coordinate system used, 
+		as read from FITS header (value of keywords COORDSYS or SKYCOORD)
+
+<P>
+</DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>/HELP</B>
+<DD><A ID="idl:read_tqu:HELP"></A> if set, an extensive help is displayed and no
+	file is read
+   </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">read_tqu</SPAN> reads out Stokes parameters (T,Q,U) maps for the whole
+sky into a FITS file. It is also possible to read the error per pixel for each
+map and the correlation between fields, as subsequent extensions of the same FITS
+file (see qualifiers above). Therefore the file may have up to three extensions with three
+maps in each. Extensions can be written together or one by one (in
+their physical order) using the Extension option.
+<BR>
+For more information on the FITS file format supported in <strong>HEALPix</strong>, 
+including the one implemented in read_tqu ,
+see <kbd><A ID="tex2html95"
+  HREF="https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf">https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf</A></kbd>.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">read_tqu</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">read_tqu</SPAN>
+  <DT>
+<B>synfast</B>
+<DD>This <strong>HEALPix</strong> f90 facility can be used to generate
+  temperature+polarization maps that can be read with <SPAN CLASS="colordoc">read_tqu</SPAN>
+  <DT>
+<B><A HREF="idl_write_tqu.htm#idl:write_tqu">write_tqu</A></B>
+<DD>This <strong>HEALPix</strong> IDL facility can be used to write
+  out temperature+polarization that can be read by <SPAN CLASS="colordoc">read_tqu</SPAN>.
+<DT>
+<B><A HREF="idl_read_fits_cut4.htm#idl:read_fits_cut4">read_fits_cut4</A>,
+<A HREF="idl_read_fits_partial.htm#idl:read_fits_partial">read_fits_partial</A>,
+<A HREF="idl_read_fits_map.htm#idl:read_fits_map">read_fits_map</A></B>
+<DD><DT>
+<B><A HREF="#idl:read_tqu">read_tqu</A>,
+<A HREF="idl_read_fits_s.htm#idl:read_fits_s">read_fits_s</A></B>
+<DD><strong>HEALPix</strong> IDL routines to read cut-sky maps and partial maps, full-sky maps, polarized full-sky maps and
+arbitrary data sets from FITS files
+  <DT>
+<B><A HREF="idl_read_fits_s.htm#idl:read_fits_s">read_fits_s</A></B>
+<DD>This general purpose <strong>HEALPix</strong> IDL facility can be used to read
+  into an IDL structure maps contained in binary table FITS files.
+  <DT>
+<B>sxpar</B>
+<DD>This IDL routine (included in <strong>HEALPix</strong> package) can be
+  used to extract FITS keywords from the header(s) HDR or XHDR read with <SPAN CLASS="colordoc">read_tqu</SPAN>.
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">read_tqu, 'map_polarization.fits', TQU, xhdr=xhdr</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+Reads into <SPAN style="font-family:monospace">TQU</SPAN> the polarization maps contained in the FITS file
+'map_polarization.fits'.
+The variable <SPAN style="font-family:monospace">xhdr</SPAN> will contain the extension(s) header.
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_read_fits_s.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_remove_dipole.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html439"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_read_fits_s.htm">read_fits_s</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_remove_dipole.htm">remove_dipole</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

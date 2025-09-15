@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>mpi_alm_tools*</TITLE>
+<META NAME="description" CONTENT="mpi_alm_tools*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_mpi_alm2map.htm">
+<LINK REL="previous" HREF="sub_merge_headers.htm">
+<LINK REL="next" HREF="sub_mpi_alm2map.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_merge_headers.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_mpi_alm2map.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html417"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_merge_headers.htm">merge_headers</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_mpi_alm2map.htm">mpi_alm2map*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION5500"></A>
+<A ID="sub:mpi_alm_tools"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">mpi_alm_tools*</SPAN></div><hr>
+<H3>This module implements MPI parallelization of the alm2map and map2alm routines. 
+It is not compiled by default during installation, but rather intended for
+users who need massive parallelization in their own programming. Typical
+applications are Monte Carlo simulations and Markov chain type
+analyses.
+<br><br>The routines can be called in two modes, either simple or
+advanced. The former mimics the interface of the standard routines,
+but with an additional MPI handle as a first argument, and is intended
+for applications which requires only one or a few transforms. The
+latter interface provides both more flexibility (in particular the
+option of pre-computation of the Legendre polynomials) and a simpler
+interface when multiple transforms are required. This interface is
+particularly well suited for Monte Carlo simulations and Markov chain
+type analyses.  </H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/mpi_alm_tools.f90"><strong>src/f90/mod/mpi_alm_tools.f90</strong></a>&nbsp;  
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">
+<UL>
+<LI>Simple one-line interfaces:
+<UL>
+<LI>mpi_map2alm_simple
+</LI>
+<LI>mpi_alm2map_simple
+</LI>
+</UL>
+<P>
+</LI>
+<LI>Three-step advanced interfaces:
+<OL>
+<LI>Initialization: 
+<BR>
+mpi_initialize_alm_tools
+</LI>
+<LI>Execution of spherical harmonics transforms   
+<UL>
+<LI>mpi_map2alm (root processor)
+</LI>
+<LI>mpi_alm2map (root processor)
+</LI>
+<LI>mpi_map2alm_slave (slave processor)
+</LI>
+<LI>mpi_alm2map_slave (slave processor)    
+</LI>
+</UL>
+</LI>
+<LI>Finalizing: 
+<BR>
+mpi_cleanup_alm_tools
+</LI>
+</OL>
+</LI>
+</UL></div>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_merge_headers.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_mpi_alm2map.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html417"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_merge_headers.htm">merge_headers</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_mpi_alm2map.htm">mpi_alm2map*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

@@ -2,7 +2,11 @@
 // Example code: how to model the Cartesian 2D two-point correlation function to constrain the linear bias and sigmav
 // ===================================================================================================================
 
+#include "LCDM.h"
 #include "Modelling_TwoPointCorrelation2D_cartesian.h"
+
+using namespace std;
+
 
 int main () {
 
@@ -12,15 +16,15 @@ int main () {
     // ---------------- use default cosmological parameters and set sigma8 ------------
     // --------------------------------------------------------------------------------
   
-    cbl::cosmology::Cosmology cosmology;
-    cosmology.set_sigma8(0.8);
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
+    cosmology->set_parameter("sigma8",0.8);
 
   
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
 
-    const std::string file_catalogue = "../input/cat.dat";
+    const string file_catalogue = "../input/cat.dat";
   
     const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -45,8 +49,8 @@ int main () {
     const int nbins = 10;     // number of bins
     const double shift = 0.5; // spatial shift used to set the bin centre 
 
-    const std::string dir = "../output/";
-    const std::string file = "xi2D.dat";
+    const string dir = "../output/";
+    const string file = "xi2D.dat";
 
   
     // measure the 2D Cartesian two-point correlation function and estimate Poissonian errors
@@ -65,15 +69,15 @@ int main () {
 
   
     // flat prior for f*sigma8
-    const std::vector<double> fsigma8_limits = {0., 1.}; 
+    const vector<double> fsigma8_limits = {0., 1.}; 
     const cbl::statistics::PriorDistribution fsigma8_prior {cbl::glob::DistributionType::_Uniform_, fsigma8_limits[0], fsigma8_limits[1], 413414}; 
   
     // flat prior for b*sigma8
-    const std::vector<double> bsigma8_limits = {0.8*cosmology.sigma8(), 3.*cosmology.sigma8()}; 
+    const vector<double> bsigma8_limits = {0.8*cosmology->sigma8(), 3.*cosmology->sigma8()}; 
     const cbl::statistics::PriorDistribution bsigma8_prior {cbl::glob::DistributionType::_Uniform_, bsigma8_limits[0], bsigma8_limits[1], 63656}; 
   
     // flat prior for sigmav
-    //const std::vector<double> sigmav_limits = {1., 1000.}; 
+    //const vector<double> sigmav_limits = {1., 1000.}; 
     const cbl::statistics::PriorDistribution sigmav_prior {cbl::glob::DistributionType::_Constant_, 0.};// sigmav_limits[0], sigmav_limits[1], 5411}; 
 
     // mean redshift of the sample
@@ -97,9 +101,9 @@ int main () {
     const int nwalkers = 10;
     const int seed = 666;
 
-    std::vector<double> starting_parameters = {0.5, 1.5, 100.};
+    vector<double> starting_parameters = {0.5, 1.5, 100.};
     
-    const std::string chain_file = "chain_cartesian_bias_sigmav.dat";
+    const string chain_file = "chain_cartesian_bias_sigmav.dat";
     
     model_twop.set_likelihood(cbl::statistics::LikelihoodType::_Gaussian_Error_);
     
@@ -107,13 +111,14 @@ int main () {
 
     const int burn_in = 0;
     const int thin = 1; 
+    vector<double> xx={}, yy={};
     model_twop.show_results(burn_in, thin);
     model_twop.write_chain(dir, chain_file, burn_in, thin);
-    model_twop.write_model_from_chains(dir, "model", {}, {}, burn_in, thin);
+    model_twop.write_model_from_chains(dir, "model", xx, yy, burn_in, thin);
 
   }
   
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

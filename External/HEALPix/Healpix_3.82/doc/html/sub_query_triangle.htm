@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>query_triangle</TITLE>
+<META NAME="description" CONTENT="query_triangle">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_rand_gauss.htm">
+<LINK REL="previous" HREF="sub_query_strip.htm">
+<LINK REL="next" HREF="sub_rand_gauss.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_query_strip.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_rand_gauss.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html469"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_query_strip.htm">query_strip</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_rand_gauss.htm">rand_gauss</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION8100"></A>
+<A ID="sub:query_triangle"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">query_triangle</SPAN></div><hr>
+<H3>Routine to find the index of all pixels enclosed in a spherical triangle described by its three vertices. The output indices can be either in the RING or NESTED scheme</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/pix_tools.F90"><strong>src/f90/mod/pix_tools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">query_triangle</SPAN>(
+<A HREF="#sub:query_triangle:nside">nside</A>, <A HREF="#sub:query_triangle:v1">v1</A>, <A HREF="#sub:query_triangle:v2">v2</A>, <A HREF="#sub:query_triangle:v3">v3</A>, <A HREF="#sub:query_triangle:listpix">listpix</A>, <A HREF="#sub:query_triangle:nlist">nlist</A>[, <A HREF="#sub:query_triangle:nest">nest</A>, <A HREF="#sub:query_triangle:inclusive">inclusive</A>]
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:140px"><SPAN  CLASS="textbf">name&amp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:235px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">
+nside<A ID="sub:query_triangle:nside"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">the <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> parameter of the map.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">v1<A ID="sub:query_triangle:v1"></A>(3)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">cartesian vector pointing at the triangle first vertex.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">v2<A ID="sub:query_triangle:v2"></A>(3)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">cartesian vector pointing at the triangle second vertex.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">v3<A ID="sub:query_triangle:v3"></A>(3)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">cartesian vector pointing at the triangle third vertex.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">listpix<A ID="sub:query_triangle:listpix"></A>(0:*)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B/ I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">the index for all pixels enclosed in the triangle. Make sure that the size of the array is big enough to contain all pixels.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">nlist<A ID="sub:query_triangle:nlist"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B/ I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">The number of pixels listed in <SPAN style="font-family:monospace">listpix</SPAN>.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">nest<A ID="sub:query_triangle:nest"></A>  (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">The pixel indices are in the NESTED numbering scheme if nest=1, and in RING scheme otherwise.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">inclusive<A ID="sub:query_triangle:inclusive"></A>  (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">If set to 1, all the pixels overlapping
+                   (even partially)
+                   with the triangle are listed, otherwise only those whose
+                   center lies within the triangle are listed.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">call query_triangle(256,(/1,0,0/),(/0,1,0/),(/0,0,1/),listpix,nlist)  
+<BR></div>
+<blockquote>
+Returns the RING pixel index of the (98560) pixels in the octant (<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.55ex; " SRC="sub_img262.png"
+ ALT="$x,y,z&gt;0$"></SPAN>) in a <!-- MATH
+ $N_{\mathrm{side}}=256$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img152.png"
+ ALT="$N_{\mathrm{side}}=256$"></SPAN> map.
+</blockquote>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">query_triangle</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><A HREF="sub_in_ring.htm#sub:in_ring">in_ring</A></B>
+<DD>routine to find the pixels in a certain slice of a given ring.		
+ <DT>
+<B>intrs_intrv</B>
+<DD>routine to compute the intersection of 2 intervals on a circle
+ <DT>
+<B><A HREF="sub_ring_num.htm#sub:ring_num">ring_num</A></B>
+<DD>function to return the ring number corresponding to the coordinate <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img259.png"
+ ALT="$z$"></SPAN>
+ <DT>
+<B><A HREF="sub_vect_prod.htm#sub:vect_prod">vect_prod</A></B>
+<DD>routine to compute the vectorial product of two 3D vectors
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">query_triangle</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm#sub:pix_tools">pix2ang</A>, <A HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm#sub:pix_tools">ang2pix</A></B>
+<DD>convert between angle and pixel number.
+  <DT>
+<B><A HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm#sub:pix_tools">pix2vec</A>, <A HREF="sub_pix2xxx_ang2xxx_vec2xxx_nes.htm#sub:pix_tools">vec2pix</A></B>
+<DD>convert between a cartesian vector and pixel number.
+  <DT>
+<B><A HREF="sub_query_disc.htm#sub:query_disc">query_disc</A>, <A HREF="sub_query_polygon.htm#sub:query_polygon">query_polygon</A>,</B>
+<DD><DT>
+<B><A HREF="sub_query_strip.htm#sub:query_strip">query_strip</A>, query_triangle</B>
+<DD>render the list of pixels enclosed
+  respectively in a given disc, polygon, latitude strip and triangle
+  <DT>
+<B><A HREF="sub_surface_triangle.htm#sub:surface_triangle">surface_triangle</A></B>
+<DD>computes the surface
+in steradians of a spherical triangle defined by 3 vertices
+
+<P>
+</DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_query_strip.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_rand_gauss.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html469"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_query_strip.htm">query_strip</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_rand_gauss.htm">rand_gauss</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

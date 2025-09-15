@@ -1,0 +1,306 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>parse_init, parse_int, , parse_finish</TITLE>
+<META NAME="description" CONTENT="parse_init, parse_int, , parse_finish">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_pixel_window.htm">
+<LINK REL="previous" HREF="sub_output_map.htm">
+<LINK REL="next" HREF="sub_pixel_window.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_output_map.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_pixel_window.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html453"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_output_map.htm">output_map*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_pixel_window.htm">pixel_window</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION7300"></A>
+<A ID="sub:parse_xxx"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">parse_init,&nbsp;parse_int,&nbsp;...,&nbsp;parse_finish</SPAN></div><hr>
+<H3>The Fortran90 module paramfile_io contains functions to obtain
+parameters from parameter files or interactively</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/paramfile_io.F90"><strong>src/f90/mod/paramfile_io.F90</strong></a>&nbsp;  
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&amp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:225px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+fname</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">file containing the simulation parameters.
+                   If empty, parameters are obtained interactively.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">handle</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">PMF</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">INOUT</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">Object of type (paramfile_handle) used to store parameter information</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">keyname</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">name of the required parameter</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">default</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">XXX</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">optional argument containing the default value for
+                     a given simulation parameter; must be of
+                     appropriate type.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">vmin</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">XXX</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">optional argument containing the minimum value for
+                     a given simulation parameter; must be of
+                     appropriate type.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">vmax</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">XXX</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">optional argument containing the maximum value for
+                     a given simulation parameter; must be of
+                     appropriate type.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">descr</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">optional argument containing a description of the
+                   required simulation parameter</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">filestatus</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">optional argument. If present, the parameter
+                   must be a valid filename. If filestatus=='new',
+                   the file must not exist; if filestatus=='old',
+                   the file must exist.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">code</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">optional argument. Contains the name of the executable.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">silent</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">LGT</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">optional argument. If set to <SPAN style="font-family:monospace">.true.</SPAN> the parsing
+routines will run silently in non-interactive mode (except for warning or error
+messages, which will always appear). This is mainly intended for MPI usage where
+many processors parse the same parameter file: <SPAN style="font-family:monospace">silent</SPAN> can be set to
+<SPAN style="font-family:monospace">.true.</SPAN> on all CPUs except one.</TD>
+</TR>
+</TABLE>
+
+<P>
+
+<SPAN CLASS="LARGE"><SPAN  CLASS="textbf">ROUTINES: </SPAN></SPAN>
+<BR>
+<SPAN style="font-family:monospace">handle = parse_init (fname [,silent])</SPAN> 
+
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;initializes the parser to work on the file fname, or interactively, if fname is empty
+
+<P>
+<SPAN style="font-family:monospace">intval = parse_int (handle, keyname [, default, vmin, vmax, descr])</SPAN> 
+
+<P>
+<SPAN style="font-family:monospace">longval = parse_long (handle, keyname [, default, vmin, vmax, descr])</SPAN> 
+
+<P>
+<SPAN style="font-family:monospace">realval = parse_real (handle, keyname [, default, vmin, vmax, descr])</SPAN> 
+
+<P>
+<SPAN style="font-family:monospace">doubleval = parse_double (handle, keyname [, default, vmin, vmax, descr])</SPAN> 
+
+<P>
+<SPAN style="font-family:monospace">stringval = parse_string (handle, keyname [, default, descr, filestatus])</SPAN> 
+
+<P>
+<SPAN style="font-family:monospace">logicval = parse_lgt (handle, keyname [, default, descr])</SPAN> 
+
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;These routines obtain integer(i4b), integer(i8b), real(sp), real(dp), character(len=*) and logical values,
+respectively. 
+<BR>
+Note: <SPAN style="font-family:monospace">parse_string</SPAN> will expand all environment variables of
+the form ${XXX} (eg: ${HOME}). It will also replace a <EM>leading</EM> 
+<SPAN  CLASS="texttt">~/</SPAN>
+by the user's home directory.
+
+<P>
+<SPAN style="font-family:monospace">call parse_summarize (handle [, code])</SPAN>
+
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;if the parameters were set interactively, this routine will print out a 
+parameter file performing the same settings.
+
+<P>
+<SPAN style="font-family:monospace">call parse_check_unused (handle [, code])</SPAN>
+
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;if a parameter file was read, this routine will print out all the parameters
+found in the file but not used by the code. Intended at detecting typos in
+parameter names.
+
+<P>
+<SPAN style="font-family:monospace">call parse_finish (handle)</SPAN>
+
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;frees the memory
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">program who_r_u 
+<BR>
+use healpix_types 
+<BR>
+use paramfile_io 
+<BR>
+use extension 
+<BR>
+<BR>
+implicit none 
+<BR>
+type(paramfile_handle) :: handle 
+<BR>
+character(len=256) :: parafile, name 
+<BR>
+real(DP) :: age 
+<BR>
+<BR>
+parafile = &rdquo;  
+<BR>
+if (<A HREF="sub_nArguments.htm#sub:narguments">nArguments()</A> == 1) call <A HREF="sub_getArgument.htm#sub:getargument">getArgument</A>(1, parafile)  
+<BR>
+handle = parse_init(parafile)  
+<BR>
+name  = parse_string(handle, 'name',descr='Enter your last name: ')  
+<BR>
+age   = parse_double(handle, 'age', descr='Enter your age in years: ', &amp;   
+<BR>&amp; default=18.d0,vmin=0.d0)  
+<BR>
+call parse_summarize(handle, 'who_r_u')  
+<BR>
+end program who_r_u</div>
+<blockquote>If a file is provided as command line argument when running the executable <SPAN style="font-family:monospace">who_r_u</SPAN>, that file
+  will be parsed in search of the lines starting with 'name =' and 'age =',
+  otherwise the same questions will be asked interactively.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">parse_init,&nbsp;parse_int,&nbsp;...,&nbsp;parse_finish</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_concatnl.htm#sub:concatnl">concatnl</A></B>
+<DD>generates from a set of strings the
+  multi-line description
+  <DT>
+<B><A HREF="sub_nArguments.htm#sub:narguments">nArguments</A></B>
+<DD>returns the number of
+  command line arguments
+  <DT>
+<B><A HREF="sub_getArgument.htm#sub:getargument">getArgument</A></B>
+<DD>returns the list of command line arguments
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_output_map.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_pixel_window.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html453"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_output_map.htm">output_map*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_pixel_window.htm">pixel_window</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

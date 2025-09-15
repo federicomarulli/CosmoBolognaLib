@@ -1,7 +1,8 @@
 /*------------------------------------------------------------------------------
-© A J S Hamilton 2001
+ï¿½ A J S Hamilton 2001
 ------------------------------------------------------------------------------*/
 #include "manglefn.h"
+#include <math.h>
 
 /*------------------------------------------------------------------------------
   Convert angle from specified unit to specified unit.
@@ -17,17 +18,14 @@ void scale(long double *angle, char from, char to)
 	*angle = *angle * HOUR;
 	break;
     case 'd':
-    case '°':
 	*angle = *angle * DEGREE;
 	break;
     case 'm':
     case '\'':
-    case '´':
 	*angle = *angle * MINUTE;
 	break;
     case 's':
     case '"':
-    case '¨':
     default:
 	*angle = *angle * SECOND;
 	break;
@@ -42,17 +40,14 @@ void scale(long double *angle, char from, char to)
 	*angle = *angle / HOUR;
 	break;
     case 'd':
-    case '°':
 	*angle = *angle / DEGREE;
 	break;
     case 'm':
     case '\'':
-    case '´':
 	*angle = *angle / MINUTE;
 	break;
     case 's':
     case '"':
-    case '¨':
     default:
 	*angle = *angle / SECOND;
 	break;

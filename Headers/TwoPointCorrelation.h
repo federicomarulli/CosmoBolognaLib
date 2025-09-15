@@ -774,9 +774,49 @@ namespace cbl {
 	 *  considered for the couples and can be setted by the user
 	 *  to optimize the count of the couples
 	 */
-	virtual void measurePoisson (const std::string dir_output_pairs = par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const double fact=0.1)
+	virtual void measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const double fact=0.1)
 	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)count_dd; (void)count_rr; (void)count_dr; (void)tcount; (void)estimator; (void)fact; cbl::ErrorCBL("", "measurePoisson", "TwoPointCorrelation.h"); }
 
+	/**
+	 *  @brief measure the two-point cross-correlation function with
+	 *  Poisson errors
+	 *
+	 *  @param dir_output_pairs output directory used to store the
+	 *  number of pairs
+	 *
+	 *  @param dir_input_pairs vector of input directories used to
+	 *  store the number of pairs (if the pairs are read from files)
+	 *
+	 *  @param count_d1d2 true &rarr; count the number of
+	 *  data1-data2 pairs; false &rarr; read the number of
+	 *  data1-data2 pairs from file
+	 *
+	 *  @param count_rr true &rarr; count the number of
+	 *  random-random pairs; false &rarr; read the number of
+	 *  random-random pairs from file
+	 *
+	 *  @param count_d1r true &rarr; count the number of
+	 *  data1-random pairs; false &rarr; read the number of
+	 *  data1-random pairs
+	 *
+	 *  @param count_d2r true &rarr; count the number of
+	 *  data2-random pairs; false &rarr; read the number of
+	 *  data2-random pairs
+	 *
+	 *  @param tcount true &rarr; activate the time counter; false
+	 *  &rarr; no time counter
+	 *
+	 *  @param estimator the estimator used to measure the two-point
+	 *  correlation function
+	 *
+	 *  @param fact factor used to compute the cell size of the
+	 *  chain mesh: it is multiplied by the maximum distance
+	 *  considered for the couples and can be setted by the user
+	 *  to optimize the count of the couples
+	 */
+	virtual void measurePoisson_cross (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs={}, const bool count_d1d2=true, const bool count_rr=true, const bool count_d1r=true, const bool count_d2r=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, double fact=0.1)
+	{ (void)dir_output_pairs; (void)dir_input_pairs; (void)count_d1d2; (void)count_rr; (void)count_d1r; (void)count_d2r; (void)tcount; (void)estimator; (void)fact; cbl::ErrorCBL("", "measurePoisson", "TwoPointCorrelation.h"); }
+	
 	/**
 	 *  @brief measure the two-point correlation function estimating
 	 *  the covariance with Jackknife resampling

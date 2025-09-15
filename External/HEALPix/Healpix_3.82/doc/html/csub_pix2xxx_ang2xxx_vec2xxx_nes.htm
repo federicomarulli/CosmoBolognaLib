@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>pix2xxx,&nbsp;ang2xxx,&nbsp;vec2xxx,&nbsp;nest2ring,&nbsp;ring2nest</TITLE>
+<META NAME="description" CONTENT="pix2xxx,&nbsp;ang2xxx,&nbsp;vec2xxx,&nbsp;nest2ring,&nbsp;ring2nest">
+<META NAME="keywords" CONTENT="csub">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="csub.css">
+
+<LINK REL="next" HREF="csub_read_healpix_map.htm">
+<LINK REL="previous" HREF="csub_nside2npix.htm">
+<LINK REL="next" HREF="csub_read_healpix_map.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="csub_nside2npix.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="csub_HEALPix_C_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="csub_read_healpix_map.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html48"
+  HREF="csub_Contents.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="csub_nside2npix.htm">nside2npix</A>
+
+<strong>Up:</strong> <A
+ HREF="csub_HEALPix_C_subroutines.htm">HEALPix/C subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="csub_read_healpix_map.htm">read_healpix_map</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION1000"></A>
+<A ID="csub:pix_tools"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">pix2xxx,&nbsp;ang2xxx,&nbsp;vec2xxx, nest2ring,&nbsp;ring2nest</SPAN></div><hr>
+<H3>These subroutines can be used to convert between pixel number in the
+<strong>HEALPix</strong> map and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="csub_img5.png"
+ ALT="$(\theta,\phi) $"></SPAN> coordinates on the sphere. This is only a
+subset of the routines equivalent in Fortran90 or in IDL. </H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/C/subs/chealpix.c"><strong>src/C/subs/chealpix.c</strong></a>&nbsp;  
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:140px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">type</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:235px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">
+nside</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">long</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:235px"><!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN> parameter for the <strong>HEALPix</strong> map.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">ipnest</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">long</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&mdash;</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">pixel identification number in NESTED scheme over the range {0,<!-- MATH
+ $N_{\mathrm{pix}}-1$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>pix</SUB>-1</SPAN>}.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">ipring</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">long</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&mdash;</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">pixel identification number in RING scheme over the range {0,<!-- MATH
+ $N_{\mathrm{pix}}-1$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>pix</SUB>-1</SPAN>}.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">theta</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">double</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&mdash;</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">colatitude in radians measured southward from north pole in [0,<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="csub_img2.png"
+ ALT="$\pi$"></SPAN>].</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">phi</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">double</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&mdash;</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">longitude in radians, measured eastward in [0,<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="csub_img9.png"
+ ALT="$2\pi$"></SPAN>].</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:140px">vector</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">double</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&mdash;</TD>
+<TD CLASS="LEFT TOP"  style="width:235px">3D cartesian position vector <SPAN CLASS="MATH">(<I>x</I>,<I>y</I>,<I>z</I>)</SPAN>. The north pole is <SPAN CLASS="MATH">(0,0,1)</SPAN>. An output vector is normalised to unity.</TD>
+</TR>
+</TABLE>
+
+<P>
+
+<SPAN CLASS="LARGE"><SPAN  CLASS="textbf">ROUTINES: </SPAN></SPAN>
+<BR>
+<SPAN style="font-family:monospace">void  pix2ang_ring(long nside, long ipring, double *theta, double *phi);</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">renders <EM>theta</EM> and <EM>phi</EM> coordinates of the nominal pixel center given the pixel number <EM>ipring</EM> and a map resolution parameter <EM>nside</EM>.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR><SPAN style="font-family:monospace">void  pix2vec_ring(long nside, long ipring, double *vector);</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">renders cartesian vector coordinates of the nominal pixel center given the pixel number <EM>ipring</EM> and a map resolution parameter <EM>nside</EM>.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR><SPAN style="font-family:monospace">void  ang2pix_ring(long nside, double theta, double phi, long *ipring);</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">renders the pixel number <EM>ipring</EM> for a pixel which, given the map resolution parameter <EM>nside</EM>, contains the point on the sphere at angular coordinates <EM>theta</EM> and <EM>phi</EM>.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR><SPAN style="font-family:monospace">void  vec2pix_ring(long nside, double *vector, long *ipring);</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">renders the pixel number <EM>ipring</EM> for a pixel which, given the map resolution parameter <EM>nside</EM>, contains the point on the sphere at cartesian coordinates <EM>vector</EM>.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR><SPAN style="font-family:monospace">void  pix2ang_nest(long nside, long ipnest, double *theta, double *phi);</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">renders <EM>theta</EM> and <EM>phi</EM> coordinates of the nominal pixel center given the pixel number <EM>ipnest</EM> and a map resolution parameter <EM>nside</EM>.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR><SPAN style="font-family:monospace">void  pix2vec_nest(long nside, long ipnest, double *vector);</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">renders cartesian vector coordinates of the nominal pixel center given the pixel number <EM>ipnest</EM> and a map resolution parameter <EM>nside</EM>.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR><SPAN style="font-family:monospace">void  ang2pix_nest(long nside, double theta, double phi, long *ipnest);</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">renders the pixel number <EM>ipnest</EM> for a pixel which, given the map resolution parameter <EM>nside</EM>, contains the point on the sphere at angular coordinates <EM>theta</EM> and <EM>phi</EM>.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR><SPAN style="font-family:monospace">void  vec2pix_nest(long nside, double *vector, long *ipnest)</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">renders the pixel number
+                        <EM>ipnest</EM> for a pixel which, given the map
+                        resolution parameter <EM>nside</EM>, contains the
+                        point on the sphere at cartesian coordinates
+                        <EM>vector</EM> .</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR>
+<P>
+<SPAN style="font-family:monospace">void  nest2ring(long nside, long ipnest, long *ipring);</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">performs conversion from NESTED to RING pixel number.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR><SPAN style="font-family:monospace">void  ring2nest(long nside, long ipring, long *ipnest);</SPAN> 
+
+<P>
+<TABLE class="PAD " style="">
+<TR><TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD><TD CLASS="LEFT TOP"  style="width:350px">performs conversion from RING to NESTED pixel number.</TD>
+<TD ALIGN="LEFT">&nbsp;</TD></TR>
+</TABLE>
+<BR>
+<BR>
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">pix2xxx,&nbsp;ang2xxx,&nbsp;vec2xxx, nest2ring,&nbsp;ring2nest</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B>mk_pix2xy, mk_xy2pix</B>
+<DD>routines used in the conversion between pixel values and &ldquo;cartesian&rdquo; coordinates on the Healpix face.
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">pix2xxx,&nbsp;ang2xxx,&nbsp;vec2xxx, nest2ring,&nbsp;ring2nest</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="csub_ang2vec.htm#csub:ang2vec">ang2vec</A></B>
+<DD>converts <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="csub_img5.png"
+ ALT="$(\theta,\phi) $"></SPAN> spherical coordinates into <SPAN CLASS="MATH">(<I>x</I>,<I>y</I>,<I>z</I>)</SPAN> cartesian coordinates.
+  <DT>
+<B><A HREF="csub_vec2ang.htm#csub:vec2ang">vec2ang</A></B>
+<DD>converts <SPAN CLASS="MATH">(<I>x</I>,<I>y</I>,<I>z</I>)</SPAN> cartesian coordinates into <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="csub_img5.png"
+ ALT="$(\theta,\phi) $"></SPAN> spherical coordinates.
+  <DT>
+<B><A HREF="csub_nside2npix.htm#csub:nside2npix">nside2npix</A></B>
+<DD>converts number of full sky
+pixels <!-- MATH
+ $N_{\mathrm{pix}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>pix</SUB></SPAN> into resolution parameter <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN>
+  <DT>
+<B><A HREF="csub_npix2nside.htm#csub:npix2nside">npix2nside</A></B>
+<DD>converts <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN> into number of
+full sky pixels <!-- MATH
+ $N_{\mathrm{pix}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>pix</SUB></SPAN>.
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="csub_nside2npix.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="csub_HEALPix_C_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="csub_read_healpix_map.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html48"
+  HREF="csub_Contents.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="csub_nside2npix.htm">nside2npix</A>
+
+<strong>Up:</strong> <A
+ HREF="csub_HEALPix_C_subroutines.htm">HEALPix/C subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="csub_read_healpix_map.htm">read_healpix_map</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

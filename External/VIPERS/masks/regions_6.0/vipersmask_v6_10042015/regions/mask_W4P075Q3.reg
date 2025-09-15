@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/file8umVNo.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(333.70795,1.765712,333.8014,1.7658932,333.81173,1.774634,333.81172,1.895585,333.69509,1.894905,333.69569,1.773488) # color=red dash=1

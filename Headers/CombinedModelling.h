@@ -167,7 +167,8 @@ namespace cbl {
        *  objects, for the computation of the \f$S_{ij}\f$ matrices. If, for example,
        *  the sets of probes A, B, C, are considered, and only for A and C the 
        *  super-sample covariance must be computed, then set the second element of
-       *  \e SSC equal to \e NULL.
+       *  \e SSC equal to a shared pointer of cbl::cosmology::SuperSampleCovariance
+       *  set equal to \e NULL.
        *
        */
       CombinedModelling (std::vector<std::vector<std::shared_ptr<modelling::Modelling>>> modelling, const std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={}, const std::vector<std::shared_ptr<cosmology::SuperSampleCovariance>> SSC={});
@@ -302,8 +303,8 @@ namespace cbl {
        *  @brief write the results of the MCMC sampling to file
        *  
        *  this function stores to file the posterior mean, the
-       *  posterior standard deviation, the posterior median, 18th and
-       *  82th posterior percentiles, and, optionally, the posterior
+       *  posterior standard deviation, the posterior median, 16th and
+       *  84th posterior percentiles, and, optionally, the posterior
        *  mode.
        *
        *  If the covariance matrix has been estimated from a set of
@@ -334,10 +335,10 @@ namespace cbl {
        *
        *  @param root_file the root of the output files: -
        *  file_root_parameters.dat file containing the output of the
-       *  MCMC sampling for each parameter -
-       *  file_root_covariance.dat file containing the covariance of
-       *  the parameters - file_root_chain file containing the
-       *  chains: the extention can be .dat or .fits
+       *  MCMC sampling for each parameter - file_root_covariance.dat
+       *  file containing the covariance of the parameters -
+       *  file_root_chain file containing the chains: the extention
+       *  can be .dat or .fits
        *
        *  @param start the minimum chain position to be written
        *

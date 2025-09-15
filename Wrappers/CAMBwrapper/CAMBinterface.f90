@@ -18,8 +18,13 @@
 ! 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.       *
 ! *****************************************************************
 
-! CAMB interface for C++
-! Author: Giorgio Lesci
+!>  @file Wrappers/CAMBwrapper/CAMBinterface.f90
+!>
+!>  @brief CAMB interface for C++
+!>
+!>  @author Giorgio Lesci 
+!>
+!>  @author giorgio.lesci2@unibo.it
 
 module CAMBinterface
   use camb

@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/fileCtHYBK.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(35.697757,-4.472477,35.796622,-4.473069,35.801824,-4.469343,35.801738,-4.3480593,35.687464,-4.346188,35.687451,-4.464857) # color=red dash=1

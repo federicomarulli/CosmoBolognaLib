@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<project name="HEALPix build file" default="all" basedir=".">
+  <property name="lib" value="${basedir}/lib"/>
+  <property name="classes" value="${basedir}/classes"/>
+  <property name="dist" value="${basedir}/dist"/>
+  <property name="src" value="${basedir}/src"/>
+  <property name="docs" value="${basedir}/doc"/>
+  <property name="junit.reports" value="${basedir}/reports"/>
+  <path id="cpfits">
+    <pathelement location="${classes}"/>
+    <fileset dir="${lib}" includes="nom-tam-fits*.jar"/>
+  </path>
+  <path id="cpjunit">
+    <pathelement location="${classes}"/>
+    <fileset dir="${lib}" includes="junit*.jar"/>
+  </path>
+  <target name="init" description="Initialize the build">
+    <mkdir dir="${classes}"/>
+    <mkdir dir="${dist}"/>
+    <mkdir dir="${docs}"/>
+  </target>
+  <target name="clean" depends="" description="Clean the build">
+    <delete dir="${dist}"/>
+    <delete dir="${classes}"/>
+    <delete dir="${junit.reports}"/>
+    <delete dir="${docs}"/>
+    <delete dir="${junit.reports}"/>
+  </target>
+  <target name="compile" depends="init" description="Compile the Java code">
+    <echo>building </echo>
+    <javac destdir="${classes}" includeAntRuntime="false"
+      srcdir="${src}" excludes="**/test/**" debug="on">
+      <compilerarg value="-Xlint"/>
+      <classpath refid="cpfits" />
+    </javac>
+  </target>
+  <target name="compile-nofits" depends="init" description="Compile the Java code without FITS support">
+    <echo>building </echo>
+    <javac destdir="${classes}" includeAntRuntime="false"
+      srcdir="${src}" excludes="**/test/**,**/*Fits*" debug="on">
+      <compilerarg value="-Xlint"/>
+    </javac>
+  </target>
+  <target name="testcompile" depends="init,compile" description="Compile the Java tests">
+    <echo>building </echo>
+    <javac destdir="${classes}" includeAntRuntime="false"
+      srcdir="${src}" includes="**/test/**" debug="on">
+      <compilerarg value="-Xlint"/>
+      <classpath refid="cpfits" />
+      <classpath refid="cpjunit" />
+    </javac>
+  </target>
+  <target name="test" depends="compile,testcompile" description="Test the Java code">
+    <delete dir="${junit.reports}"/>
+    <mkdir dir="${junit.reports}"/>
+    <junit errorProperty="junit.failed" failureProperty="junit.failed" fork="yes"
+      maxmemory="1g" printsummary="withOutAndErr" showoutput="yes">
+      <classpath refid="cpfits" />
+      <classpath refid="cpjunit" />
+      <formatter type="xml" usefile="true" />
+      <batchtest todir="${junit.reports}">
+        <fileset dir="${classes}" includes="**/test/*Test.class" excludes="**/test/*PerfTest.class" />
+      </batchtest>
+    </junit>
+    <junitreport todir="${junit.reports}">
+      <fileset dir="${junit.reports}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${junit.reports}/html"/>
+    </junitreport>
+    <fail message="Test Cases Failed" if="junit.failed"/>
+  </target>
+  <target name="perftest" depends="compile,testcompile" description="Measure the performance of the Java code">
+    <delete dir="${junit.reports}"/>
+    <mkdir dir="${junit.reports}"/>
+    <junit errorProperty="junit.failed" failureProperty="junit.failed" fork="yes"
+      maxmemory="1g" printsummary="withOutAndErr" showoutput="yes">
+      <classpath refid="cpjunit" />
+      <formatter type="xml" usefile="true" />
+      <batchtest todir="${junit.reports}">
+        <fileset dir="${classes}" includes="**/test/*PerfTest.class" />
+      </batchtest>
+    </junit>
+    <junitreport todir="${junit.reports}">
+      <fileset dir="${junit.reports}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${junit.reports}/html"/>
+    </junitreport>
+    <fail message="Test Cases Failed" if="junit.failed"/>
+  </target>
+  <target name="dist" depends="clean,compile,test" description="Build the JAR file">
+    <jar destfile="${dist}/jhealpix.jar">
+      <fileset dir="${classes}" excludes="**/test/**" />
+    </jar>
+  </target>
+  <target name="dist-notest" depends="clean,compile" description="Build the JAR file without testing">
+    <jar destfile="${dist}/jhealpix.jar">
+      <fileset dir="${classes}" excludes="**/test/**" />
+    </jar>
+  </target>
+  <target name="dist-nofits-notest" depends="clean,compile-nofits" description="Build the JAR file without testing and FITS support">
+    <jar destfile="${dist}/jhealpix_nofits.jar">
+      <fileset dir="${classes}" excludes="**/test/**" />
+    </jar>
+  </target>
+  <target name="docs" description="Create the Javadocs">
+   <javadoc destdir="${docs}" failonerror="true" use="true"
+      additionalparam='-breakiterator -quiet -tag copyright:a:"Copyright:" -link https://docs.oracle.com/en/java/javase/17/docs/api'
+      classpathref="cpfits">
+      <packageset dir="${src}" defaultexcludes="yes">
+        <exclude name="**/test/**" />
+      </packageset>
+<!--      <footer>"Built from revision ${svn.revision}"</footer> -->
+    </javadoc>
+  </target>
+  <target name="all" depends="dist,docs" description="Do everything"/>
+</project>

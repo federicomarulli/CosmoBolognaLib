@@ -1,12 +1,12 @@
 c-----------------------------------------------------------------------
-c © A J S Hamilton 2001
+c ï¿½ A J S Hamilton 2001
 c-----------------------------------------------------------------------
       subroutine gcmlim(rp,cm,np,rpi,cmimin,cmimax,tol,phi,iord)
       integer np
-      real*10 rp(3,np),cm(np),rpi(3),cmimin,cmimax,tol
+      real*16 rp(3,np),cm(np),rpi(3),cmimin,cmimax,tol
 c        work arrays (could be automatic if compiler supports it)
       integer iord(2*np)
-      real*10 phi(2,np)
+      real*16 phi(2,np)
 c
 c        parameters
       include 'pi.par'
@@ -15,12 +15,12 @@ c        intrinsics
 c        externals
       integer gsegij,gzeroar
 c        data variables
-      real*10 big
+      real*16 big
 c        local variables
       integer i,iseg,jm,jml,jmu,jp,jpl,jpu,ni,scmi
       integer km,kp
       logical inmax,inmin
-      real*10 cmi,cmik,cmim,dph,ph,phm,php,phimax,phimin,
+      real*16 cmi,cmik,cmim,dph,ph,phm,php,phimax,phimin,
      *  si,sik,xi(3),yi(3)
 c *
 c * Minimum and maximum values of cmi = 1-cos(th)
@@ -40,38 +40,38 @@ c            < 0 means region encloses limiting circle
 c            > 0 means region excludes limiting circle
 c Work arrays: phi and iord should be dimensioned at least 2*np
 c
-      data big /1.e6_10/
+      data big /1.e6_16/
 c
 c        check for zero area because one circle is null
       if (gzeroar(cm,np).eq.0) goto 410
-      cmimin=2._10
-      cmimax=0._10
+      cmimin=2._16
+      cmimax=0._16
       inmin=.true.
       inmax=.true.
 c--------identify boundary segments around each circle i in turn
       do 280 i=1,np
 c        cm(i).ge.2 means include whole sphere, which is no constraint
-        if (cm(i).ge.2._10) goto 280
+        if (cm(i).ge.2._16) goto 280
 c        scmi * cmi = 1-cos th(i)
-        if (cm(i).ge.0._10) then
+        if (cm(i).ge.0._16) then
           scmi=1
         else
           scmi=-1
         endif
         cmi=abs(cm(i))
 c        si = sin th(i)
-        si=sqrt(cmi*(2._10-cmi))
+        si=sqrt(cmi*(2._16-cmi))
 c        cmik = 1-cos th(ik), th(ik)=angle twixt rpi & rp(i)
         cmik=((rpi(1)-rp(1,i))**2+(rpi(2)-rp(2,i))**2
-     *    +(rpi(3)-rp(3,i))**2)/2._10
+     *    +(rpi(3)-rp(3,i))**2)/2._16
 c        sik = sin th(ik)
-        sik=sqrt(cmik*(2._10-cmik))
+        sik=sqrt(cmik*(2._16-cmik))
 c        min circle is outside area
-        if ((cm(i).ge.0._10.and.cmik.ge.cmi)
-     *    .or.(cm(i).lt.0._10.and.cmik.le.cmi)) inmin=.false.
+        if ((cm(i).ge.0._16.and.cmik.ge.cmi)
+     *    .or.(cm(i).lt.0._16.and.cmik.le.cmi)) inmin=.false.
 c        max circle is outside area
-        if ((cm(i).ge.0._10.and.cmik.le.2._10-cmi)
-     *    .or.(cm(i).lt.0._10.and.cmik.ge.2._10-cmi)) inmax=.false.
+        if ((cm(i).ge.0._16.and.cmik.le.2._16-cmi)
+     *    .or.(cm(i).lt.0._16.and.cmik.ge.2._16-cmi)) inmax=.false.
 c........cartesian axes with z-axis along rp(i), x-axis towards rpi
         call gaxisii(rpi,rp(1,i),xi,yi)
 c........angles phi about z-axis rp(i) of intersection of i & j circles
@@ -110,12 +110,12 @@ c        gone full circle
             if (iseg.eq.2) goto 240
             if (php.ge.phm) then
 c        segment contains nearest point in i circle, phi=0
-              if (phm.le.0._10.and.php.ge.0._10) phimin=0._10
+              if (phm.le.0._16.and.php.ge.0._16) phimin=0._16
             elseif (php.lt.phm) then
 c        segment contains nearest point in i circle, phi=0
-              if (phm.le.0._10.or.php.ge.0._10) phimin=0._10
+              if (phm.le.0._16.or.php.ge.0._16) phimin=0._16
 c        segment contains furthest point in i circle, phi=pi
-              phimax=0._10
+              phimax=0._16
             endif
 c        check if segment endpoints tighten limits
             phm=abs(phm)
@@ -144,8 +144,8 @@ c        region encloses limiting circle
       return
 c
 c        null area
-  410 cmimin=2._10
-      cmimax=2._10
+  410 cmimin=2._16
+      cmimax=2._16
       return
 c
   420 print *,'*** from gmclim: total failure at tol =',tol

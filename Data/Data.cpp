@@ -219,6 +219,33 @@ void cbl::data::Data::set_covariance (const std::string filename, const int cov_
 // ======================================================================================
 
 
+void cbl::data::Data::set_cov_matrix (const std::string filename)
+{  
+
+  ifstream fin(filename.c_str()); checkIO(fin, filename);
+  string line;
+  vector<double> covariance;
+  
+  while (getline(fin, line)) {
+    
+    stringstream ss(line);
+    double NN = par::defaultDouble;
+    while (ss>>NN) covariance.push_back(NN);
+
+  }
+    
+  fin.clear(); fin.close();
+
+  m_covariance = reshape(covariance, m_ndata, m_ndata);
+  
+  set_covariance(m_covariance);
+  set_error(m_covariance);
+}
+
+
+// ======================================================================================
+
+
 void cbl::data::Data::cut (const std::vector<bool> mask, std::vector<double> &data, std::vector<double> &error, std::vector<std::vector<double>> &covariance_matrix) const
 {
   checkDim (mask, m_ndata, "mask");

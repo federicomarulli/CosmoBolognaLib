@@ -21,18 +21,19 @@
 /**
  *  @file Cosmology/Lib/Velocities.cpp
  *
- *  @brief Methods of the class Cosmology used to model the peculiar
- *  velocities
+ *  @brief Methods of the class Velocities used to model the peculiar
+ *  velocity statistics of cosmic structure
  *
  *  This file contains the implementation of the methods of the class
- *  Cosmology used to model the cosmic peculiar velocities
+ *  Velocities used for calculations of the statistics of the cosmic
+ *  velocity field
  *
  *  @author Federico Marulli 
  *
  *  @author federico.marulli3@unibo.it
  */
 
-#include "Cosmology.h"
+#include "Velocities.h"
 
 using namespace std;
 
@@ -42,122 +43,177 @@ using namespace cbl;
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::square_bulk_flow (const double rr, const double k_int_min, const string method_Pk, const double redshift, const bool store_output, const string output_root, const double k_min, const double k_max, const double prec, const string file_par)
+double cbl::cosmology::Velocities::square_bulk_flow (const double rr, const double k_int_min, const string method_Pk, const double redshift, const bool store_output, const string output_root, const double k_min, const double k_max, const double prec, const string file_par)
 {
+  PkXi PX(m_cosmology);
+  
   double bulk = -1.;
-  Pk_0(method_Pk, redshift, store_output, output_root, k_min, k_max, prec, file_par); 
+  PX.Pk_0(method_Pk, redshift, store_output, output_root, k_min, k_max, prec, file_par); 
 
   function<double(double)> ff;
 
   if (method_Pk=="EisensteinHu") {
-    if (m_sigma8<0) ErrorCBL("sigma8 must be >0 using EisensteinHu!", "square_bulk_flow", "Velocities.cpp");
-    cbl::classfunc::func_V2 func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, rr, redshift, store_output);
+    if (m_cosmology->sigma8()<0) ErrorCBL("sigma8 must be >0 using EisensteinHu!", "square_bulk_flow", "Velocities.cpp");
 
-    ff = bind(&cbl::classfunc::func_V2::operator(), func, std::placeholders::_1);
+    PkXi PX(m_cosmology);
+    
+    function<double(double)> func = [&] (const double kk)
+    {
+      return pow(m_cosmology->linear_growth_rate(redshift, kk),2)*PX.Pk_matter({kk}, method_Pk, false, redshift, store_output)[0]*pow(cbl::TopHat_WF(kk*rr), 2);   
+    };
+
+    ff = func;
   }
 
   if (method_Pk=="CAMB" || method_Pk=="CLASS") {
     vector<double> lgkk, lgPk;
     bool do_nonlinear = 0; 
 
-    Table_PkCodes(method_Pk, do_nonlinear, lgkk, lgPk, redshift, store_output, output_root, k_max, file_par);
+    PkXi PX(m_cosmology);
+    
+    PX.Table_PkCodes(method_Pk, do_nonlinear, lgkk, lgPk, redshift, store_output, output_root, k_max, file_par);
+    
+    function<double(double)> func = [&] (const double kk) 
+    { 
+      double fact = (m_cosmology->unit()) ? 1. : m_cosmology->little_h();
+      double lgk = log10(kk/fact);
 
-    cbl::classfunc::func_V2_Table func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
+      double lgPkK = cbl::interpolated(lgk, lgkk, lgPk, "Linear");
 
-    ff = bind(&cbl::classfunc::func_V2_Table::operator(), func, std::placeholders::_1);
+      return pow(m_cosmology->linear_growth_rate(redshift, kk), 2)*pow(10., lgPkK)/pow(fact, m_cosmology->n_spec())*pow(cbl::TopHat_WF(kk*rr), 2);  
+    };
 
+    ff = func;
   }
-
+  
   double Int1 = wrapper::gsl::GSL_integrate_qag(ff, k_int_min, 1., 1.e-3);
   double Int2 = wrapper::gsl::GSL_integrate_qag(ff, 1., 1.e30, 1.e-3);
 
-  bulk = m_Pk0_EH*(Int1+Int2);
-  return pow(HH(redshift)/(1.+redshift),2)/(2.*par::pi*par::pi)*bulk;
+  bulk = PX.Pk0_EH()*(Int1+Int2);
+
+  return pow(m_cosmology->Hubble(redshift)/(1.+redshift), 2)/(2.*par::pi*par::pi)*bulk;
 }
 
 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::square_bulk_flow_Table (const double rr, const double k_int_min, const vector<double> lgkk, const vector<double> lgPk, const double redshift) const 
+double cbl::cosmology::Velocities::square_bulk_flow_Table (const double rr, const double k_int_min, const vector<double> lgkk, const vector<double> lgPk, const double redshift) const 
 {
-  cbl::classfunc::func_V2_Table func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
+  const double fact = (m_cosmology->unit()) ? 1. : m_cosmology->little_h();
 
-  function<double(double)> ff = bind(&cbl::classfunc::func_V2_Table::operator(), func, std::placeholders::_1);
+  function<double(double)> ff = [&] (const double kk)
+  { 
+    const double lgk = log10(kk/fact);
+    const double lgPkK = cbl::interpolated(lgk, lgkk, lgPk, "Linear");
+
+    return pow(m_cosmology->linear_growth_rate(redshift, kk), 2)*pow(10., lgPkK)/pow(fact, m_cosmology->n_spec())*pow(cbl::TopHat_WF(kk*rr), 2);  
+  };
 
   double Int1 = wrapper::gsl::GSL_integrate_qag(ff, k_int_min, 1., 1.e-3);
   double Int2 = wrapper::gsl::GSL_integrate_qag(ff, 1., 1.e30, 1.e-3);
 
-  return pow(HH(redshift)/(1.+redshift),2)/(2.*par::pi*par::pi)*(Int1+Int2);
+  return pow(m_cosmology->Hubble(redshift)/(1.+redshift),2)/(2.*par::pi*par::pi)*(Int1+Int2);
 }
 
 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::square_velocity_dispersion (const double rr, const double k_int_min, const string method_Pk, const double redshift, const bool store_output, const string output_root, const double k_min, const double k_max, const double prec, const string file_par)
+double cbl::cosmology::Velocities::square_velocity_dispersion (const double rr, const double k_int_min, const string method_Pk, const double redshift, const bool store_output, const string output_root, const double k_min, const double k_max, const double prec, const string file_par)
 {
   (void)k_int_min;
   
   double sigma2 = -1.;
-  Pk_0(method_Pk, redshift, store_output, output_root, k_min, k_max, prec, file_par); 
+
+  PkXi PX(m_cosmology);
+  
+  PX.Pk_0(method_Pk, redshift, store_output, output_root, k_min, k_max, prec, file_par); 
   function<double(double)> ff;
-
+    
   if (method_Pk=="EisensteinHu") {
-    if (m_sigma8<0) ErrorCBL("sigma8 must be >0 using EisensteinHu!", "square_velocity_dispersion", "Velocities.cpp");
-    cbl::classfunc::func_sigma2 func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, rr, redshift, store_output);
+    if (m_cosmology->sigma8()<0) ErrorCBL("sigma8 must be >0 using EisensteinHu!", "square_velocity_dispersion", "Velocities.cpp");
+    
+    function<double(double)> func_sigma2 = [&] (const double kk) 
+    {
+      return pow(m_cosmology->linear_growth_rate(redshift, kk),2)*PX.Pk_matter({kk}, method_Pk, false, redshift, store_output)[0]*(1.-pow(cbl::TopHat_WF(kk*rr), 2));
+    };
 
-    ff = bind(&cbl::classfunc::func_sigma2::operator(), func, std::placeholders::_1);
-
+    ff = func_sigma2;
   }
 
   if (method_Pk=="CAMB" || method_Pk=="CLASS") {
     vector<double> lgkk, lgPk;
-    bool do_nonlinear = 0; 
+    bool do_nonlinear = false; 
+    
+    PX.Table_PkCodes(method_Pk, do_nonlinear, lgkk, lgPk, redshift, store_output, output_root, k_max, file_par);
 
-    Table_PkCodes(method_Pk, do_nonlinear, lgkk, lgPk, redshift, store_output, output_root, k_max, file_par);
- 
-    cbl::classfunc::func_sigma2_Table func (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
-
-    ff = bind(&cbl::classfunc::func_sigma2_Table::operator(), func, std::placeholders::_1);
+    const double fact = (m_cosmology->unit()) ? 1. : m_cosmology->little_h();
+    
+    function<double(double)> func_sigma2_Table = [&] (const double kk) 
+    {
+      const double lgk = log10(kk/fact);
+      const double lgPkK = cbl::interpolated(lgk, lgkk, lgPk, "Linear");
+      return pow(m_cosmology->linear_growth_rate(redshift, kk), 2)*pow(10., lgPkK)/pow(fact, m_cosmology->n_spec())*(1.-pow(cbl::TopHat_WF(kk*rr), 2));  
+    };
+    
+    ff = func_sigma2_Table;
   }
 
-  return pow(HH(redshift)/(1.+redshift),2)/(2.*par::pi*par::pi)*sigma2;
+  return pow(m_cosmology->Hubble(redshift)/(1.+redshift), 2)/(2.*par::pi*par::pi)*sigma2;
 }
 
 
 // =====================================================================================
 
 
-double cbl::cosmology::Cosmology::CMN (const double rr, const double k_int_min, const string method_Pk, const double redshift, const bool store_output, const string output_root, const double k_max, const string file_par) const 
+double cbl::cosmology::Velocities::CMN (const double rr, const double k_int_min, const string method_Pk, const double redshift, const bool store_output, const string output_root, const double k_max, const string file_par) const 
 {
   double CMN = -1000.; 
 
-  function<double(double)> ff1;
-  function<double(double)> ff2;
+  PkXi PX(m_cosmology);
 
-  if (method_Pk=="EisensteinHu") {
+  function<double(double)> ff1 = [&] (const double kk) 
+  { 
+    return pow(m_cosmology->linear_growth_rate(redshift, kk), 2)*PX.Pk_matter({kk}, method_Pk, false, redshift, store_output)[0]*pow(cbl::TopHat_WF(kk*rr), 2);   
+  };
+  
 
-    cbl::classfunc::func_V2 func1 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, rr, redshift, store_output);
-    cbl::classfunc::func_sigma2 func2 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, method_Pk, rr, redshift, store_output);
-
-    ff1 = bind(&cbl::classfunc::func_V2::operator(), func1, std::placeholders::_1);
-    ff2 = bind(&cbl::classfunc::func_sigma2::operator(), func2, std::placeholders::_1);
-  }
+  function<double(double)> ff2 = [&] (const double kk) 
+  {
+    return pow(m_cosmology->linear_growth_rate(redshift, kk), 2)*PX.Pk_matter({kk}, method_Pk, false, redshift, store_output)[0]*(1.-pow(cbl::TopHat_WF(kk*rr), 2));
+  };
+    
 
   if (method_Pk=="CAMB" || method_Pk=="CLASS") {
 
     vector<double> lgkk, lgPk;
-    bool do_nonlinear = 0; 
+    bool do_nonlinear = false; 
 
-    Table_PkCodes(method_Pk, do_nonlinear, lgkk, lgPk, redshift, store_output, output_root, k_max, file_par);
+    PkXi PX(m_cosmology);
+    
+    PX.Table_PkCodes(method_Pk, do_nonlinear, lgkk, lgPk, redshift, store_output, output_root, k_max, file_par);
 
-    cbl::classfunc::func_V2_Table func1 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
-    cbl::classfunc::func_sigma2_Table func2 (m_Omega_matter, m_Omega_baryon, m_Omega_neutrinos, m_massless_neutrinos, m_massive_neutrinos, m_Omega_DE, m_Omega_radiation, m_hh, m_scalar_amp, m_scalar_pivot, m_n_spec, m_w0, m_wa, m_fNL, m_type_NG, m_tau, m_model, m_unit, lgkk, lgPk, rr, redshift);
+    const double fact = (m_cosmology->unit()) ? 1. : m_cosmology->little_h();
+    
+    function<double(double)> func_V2_Table = [&] (const double kk) 
+    { 
+      const double lgk = log10(kk/fact);
+      const double lgPkK = cbl::interpolated(lgk, lgkk, lgPk, "Linear");
+      
+      return pow(m_cosmology->linear_growth_rate(redshift, kk), 2)*pow(10.,lgPkK)/pow(fact, m_cosmology->n_spec())*pow(cbl::TopHat_WF(kk*rr), 2);  
+    };
 
-    ff1 = bind(&cbl::classfunc::func_V2_Table::operator(), func1, std::placeholders::_1);
-    ff2 = bind(&cbl::classfunc::func_sigma2_Table::operator(), func2, std::placeholders::_1);
+    function<double(double)> func_sigma2_Table = [&] (const double kk) 
+    { 
+      const double lgk = log10(kk/fact);
+      const double lgPkK = cbl::interpolated(lgk, lgkk, lgPk, "Linear");
+      
+      return pow(m_cosmology->linear_growth_rate(redshift, kk), 2)*pow(10., lgPkK)/pow(fact, m_cosmology->n_spec())*pow(cbl::TopHat_WF(kk*rr), 2);  
+    };
 
+    ff1 = func_V2_Table;
+    ff2 = func_sigma2_Table;
   }
 
   double i1 = wrapper::gsl::GSL_integrate_qag(ff1, k_int_min, 1.,1.e-3);

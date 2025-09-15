@@ -1,0 +1,299 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>fits2cl*</TITLE>
+<META NAME="description" CONTENT="fits2cl*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_gaussbeam.htm">
+<LINK REL="previous" HREF="sub_fits2alms.htm">
+<LINK REL="next" HREF="sub_gaussbeam.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_fits2alms.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_gaussbeam.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html369"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_fits2alms.htm">fits2alms*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_gaussbeam.htm">gaussbeam</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION3100"></A>
+<A ID="sub:fits2cl"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">fits2cl*</SPAN></div><hr>
+<H3>This routine reads a power spectrum or beam window function from a FITS ASCII
+or binary table. 
+The routine can read temperature coefficients <!-- MATH
+ $C_\ell^{TT}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img160.png"
+ ALT="$C_\ell^{TT}$"></SPAN> or both temperature and 
+polarisation coefficients <!-- MATH
+ $C_\ell^{TT}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img160.png"
+ ALT="$C_\ell^{TT}$"></SPAN>, <!-- MATH
+ $C_\ell^{EE}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img161.png"
+ ALT="$C_\ell^{EE}$"></SPAN>, <!-- MATH
+ $C_\ell^{BB}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img162.png"
+ ALT="$C_\ell^{BB}$"></SPAN>, <!-- MATH
+ $C_\ell^{TE}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img163.png"
+ ALT="$C_\ell^{TE}$"></SPAN> (and  
+<!-- MATH
+ $C_\ell^{TB}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img164.png"
+ ALT="$C_\ell^{TB}$"></SPAN>, 
+<!-- MATH
+ $C_\ell^{EB}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img165.png"
+ ALT="$C_\ell^{EB}$"></SPAN>, 
+<!-- MATH
+ $C_\ell^{ET}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img166.png"
+ ALT="$C_\ell^{ET}$"></SPAN>, 
+<!-- MATH
+ $C_\ell^{BT}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img167.png"
+ ALT="$C_\ell^{BT}$"></SPAN>, 
+<!-- MATH
+ $C_\ell^{BE}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.51ex; vertical-align: -0.67ex; " SRC="sub_img168.png"
+ ALT="$C_\ell^{BE}$"></SPAN> when applicable). If the 
+keyword PDMTYPE is found in the header, fits2cl assumes the table to be in the 
+special format used by <EM>Planck</EM> and will ignore the first data column. 
+If the input FITS file contains several
+extensions or HDUs, the one to be read can be specified thanks to the CFITSIO 
+<A ID="tex2html19"
+  HREF="https://heasarc.gsfc.nasa.gov/docs/software/fitsio/c/c_user/node81.html">Extended File Name Syntax</A>, using its number (eg, <SPAN style="font-family:monospace">file.fits[2]</SPAN> or <SPAN style="font-family:monospace">file.fits+2</SPAN>) or its
+<SPAN style="font-family:monospace">EXTNAME</SPAN> value (eg. <SPAN style="font-family:monospace">file.fits[beam_100x100]</SPAN>). By default, only the first valid
+extension will be read.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/fitstools.F90"><strong>src/f90/mod/fitstools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">fits2cl*</SPAN>(
+<A HREF="#sub:fits2cl:filename">filename</A>, <A HREF="#sub:fits2cl:clin">clin</A>, <A HREF="#sub:fits2cl:lmax">lmax</A>, <A HREF="#sub:fits2cl:ncl">ncl</A>, <A HREF="#sub:fits2cl:header">header</A>, [<A HREF="#sub:fits2cl:units">units</A>]
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">
+filename<A ID="sub:fits2cl:filename"></A>(LEN=<kbd>filenamelen</kbd>)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the FITS file containing the power spectrum.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">lmax<A ID="sub:fits2cl:lmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">Maximum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img33.png"
+ ALT="$\ell$"></SPAN> value to be read.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">ncl<A ID="sub:fits2cl:ncl"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">1 for temperature coeffecients only, 4 for polarisation.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">clin<A ID="sub:fits2cl:clin"></A>(0:lmax,1:ncl)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the power spectrum read from the file.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">header<A ID="sub:fits2cl:header"></A>(LEN=80) (1:)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the header read from the FITS-file.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:200px">units<A ID="sub:fits2cl:units"></A>(LEN=80) (1:)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">the column units read from the FITS-file.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use <A HREF="sub_healpix_modules_module.htm#sub:healpix_modules">healpix_modules</A>
+<BR>
+real(<A HREF="sub_healpix_types_module.htm#sub:healpix_types:sp">SP</A>), allocatable, dimension(:,:) :: cl 
+<BR>
+character(len=80), dimension(1:300) :: header 
+<BR>
+character(len=80), dimension(1:100) :: units 
+<BR>
+integer(<A HREF="sub_healpix_types_module.htm#sub:healpix_types:i4b">I4B</A>) :: lmax, ncl, np 
+<BR>
+character(len=<A HREF="sub_healpix_types_module.htm#sub:healpix_types:filenamelen">filenamelen</A>) :: fitsfile='cl.fits' 
+<BR>
+np = <A HREF="sub_getsize_fits.htm#sub:getsize_fits">getsize_fits</A>(fitsfile, nmaps=ncl, mlpol=lmax) 
+<BR>
+allocate(cl(0:lmax, 1:ncl)) 
+<BR>
+call fits2cl(fitsfile, cl, lmax, ncl, header, units)  
+<BR></div>
+<blockquote>
+Reads a power spectrum from the FITS file <SPAN style="font-family:monospace">`cl.fits'</SPAN> and stores the result in 
+<SPAN style="font-family:monospace"><A HREF="#sub:fits2cl:clin">cl</A>(0:lmax,1:ncl)</SPAN> 
+which are the <A HREF="#sub:fits2cl:ncl"><SPAN style="font-family:monospace">ncl</SPAN></A> <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img159.png"
+ ALT="$C_\ell$"></SPAN> coefficients up to 
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img169.png"
+ ALT="$\ell=$"></SPAN><A HREF="#sub:fits2cl:lmax"><SPAN style="font-family:monospace">lmax</SPAN></A>. 
+The FITS header is returned in <A HREF="#sub:fits2cl:header"><SPAN style="font-family:monospace">header</SPAN></A>, 
+the column units in <A HREF="#sub:fits2cl:units"><SPAN style="font-family:monospace">units</SPAN></A>.
+</blockquote>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">fits2cl*</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">fitstools</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B>printerror</B>
+<DD>routine for printing FITS error messages.
+  <DT>
+<B><SPAN  CLASS="textbf">cfitsio</SPAN></B>
+<DD>library for FITS file handling.		
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">fits2cl*</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_create_alm.htm#sub:create_alm">create_alm</A></B>
+<DD>Routine to create <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> values
+  from an input power spectrum.
+  <DT>
+<B><A HREF="sub_write_asctab.htm#sub:write_asctab">write_asctab</A></B>
+<DD>Routine to create an ascii
+  FITS file containing a power spectrum.
+  <DT>
+<B><A HREF="sub_getsize_fits.htm#sub:getsize_fits">getsize_fits</A></B>
+<DD>Routine to parse FITS file header, and determine the data storage features.
+<DT>
+<B><A HREF="sub_getnumext_fits.htm#sub:getnumext_fits">getnumext_fits</A></B>
+<DD>Routine to determine number of extensions of a FITS file.
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_fits2alms.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_gaussbeam.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html369"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_fits2alms.htm">fits2alms*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_gaussbeam.htm">gaussbeam</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

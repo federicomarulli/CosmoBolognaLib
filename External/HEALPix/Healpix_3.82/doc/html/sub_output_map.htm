@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>output_map*</TITLE>
+<META NAME="description" CONTENT="output_map*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_parse_init_parse_int_parse_.htm">
+<LINK REL="previous" HREF="sub_number_of_alms.htm">
+<LINK REL="next" HREF="sub_parse_init_parse_int_parse_.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_number_of_alms.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_parse_init_parse_int_parse_.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html451"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_number_of_alms.htm">number_of_alms</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_parse_init_parse_int_parse_.htm">parse_init, parse_int, , parse_finish</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION7200"></A>
+<A ID="sub:output_map"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">output_map*</SPAN></div><hr>
+<H3>This routine writes a full sky <strong>HEALPix</strong> map into a FITS file. The map can be
+  either single or double precision real. It <EM>has</EM> to be 2-dimensional.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/fitstools.F90"><strong>src/f90/mod/fitstools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">output_map*</SPAN>(
+<A HREF="#sub:output_map:map">map</A>, <A HREF="#sub:output_map:header">header</A>, <A HREF="#sub:output_map:filename">filename</A><i><font color="#224422">[,<A HREF="#sub:output_map:extno">extno</A>]</font></i>
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:250px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+map<A ID="sub:output_map:map"></A>(0:,1:)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">full sky map(s) to be output</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">header<A ID="sub:output_map:header"></A>(LEN=80)(1:)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">string array containing the
+                   FITS header to be included in the file</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">filename<A ID="sub:output_map:filename"></A>(LEN=*)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">filename of the FITS-file to
+                   contain <strong>HEALPix</strong> map(s).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">extno<A ID="sub:output_map:extno"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:250px">extension number in which to write the data (0
+                   based). <b>default:</b>0</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use healpix_types 
+<BR>
+use fits_tools, only : output_map 
+<BR>
+real(sp), dimension(0:12*16**2-1, 1:1) :: map 
+<BR>
+character(len=80), dimension(1:10) :: header 
+<BR>
+header(:) = &rdquo; 
+<BR>
+map(:,:) = 1. 
+<BR>
+call output_map(map, header, 'map.fits')</div>
+<blockquote>generates a simple map (made of 1s) and outputs it into the FITS file <SPAN style="font-family:monospace">map.fits</SPAN>
+</blockquote>
+
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">output_map*</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">fitstools</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B>printerror</B>
+<DD>routine for printing FITS error messages.
+  <DT>
+<B>write_bintab</B>
+<DD>routine to write a binary table into a FITS file.
+  <DT>
+<B><SPAN  CLASS="textbf">cfitsio</SPAN></B>
+<DD>library for FITS file handling.		
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">output_map*</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>anafast</B>
+<DD>executable that reads a <strong>HEALPix</strong> map from a FITS file
+  and analyses it. 
+  <DT>
+<B>synfast</B>
+<DD>executable that generate full sky <strong>HEALPix</strong> maps
+  <DT>
+<B><A HREF="sub_input_map.htm#sub:input_map">input_map</A></B>
+<DD>subroutine to read a <strong>HEALPix</strong> map from a a FITS file
+  <DT>
+<B><A HREF="sub_write_bintabh.htm#sub:write_bintabh">write_bintabh</A></B>
+<DD>subroutine to write a large
+  array into a FITS file piece by piece
+  <DT>
+<B><A HREF="sub_input_tod.htm#sub:input_tod">input_tod*</A></B>
+<DD>subroutine to read an arbitrary subsection of
+  a large binary table
+  <DT>
+<B><A HREF="sub_write_minimal_header.htm#sub:write_minimal_header">write_minimal_header</A></B>
+<DD>routine to
+write minimal FITS header
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_number_of_alms.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_parse_init_parse_int_parse_.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html451"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_number_of_alms.htm">number_of_alms</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_parse_init_parse_int_parse_.htm">parse_init, parse_int, , parse_finish</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

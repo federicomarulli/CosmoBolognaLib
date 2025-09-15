@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>template_pixel_nest &amp; template_pixel_ring</TITLE>
+<META NAME="description" CONTENT="template_pixel_nest &amp; template_pixel_ring">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_ud_grade.htm">
+<LINK REL="previous" HREF="idl_same_shape_pixels_nest_same.htm">
+<LINK REL="next" HREF="idl_ud_grade.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_same_shape_pixels_nest_same.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_ud_grade.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html449"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_same_shape_pixels_nest_same.htm">same_shape_pixels_nest &amp; same_shape_pixels_ring</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_ud_grade.htm">ud_grade</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION7000"></A>
+<A ID="idl:template_pixel_xxx"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">template_pixel_nest &amp; template_pixel_ring</SPAN></div><hr>
+<H3>These IDL facilities provide the index of the template pixel associated with a given
+  <strong>HEALPix</strong> pixel, for a resolution parameter <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN>. 
+<br><br></H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/toolkit/template_pixel_nest.pro"><strong>src/idl/toolkit/template_pixel_nest.pro</strong></a>&nbsp;  <a href="https://healpix.sourceforge.io/src/3.82/src/idl/toolkit/template_pixel_ring.pro"><strong>src/idl/toolkit/template_pixel_ring.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>template_pixel_ring, 
+<A HREF="#idl:template_pixel_xxx:nside">Nside</A>, 
+<A HREF="#idl:template_pixel_xxx:pixel_ring">Pixel_Ring</A>, 
+<A HREF="#idl:template_pixel_xxx:template">Template</A>, 
+<A HREF="#idl:template_pixel_xxx:reflexion">Reflexion</A>
+</h3><h3>IDL>template_pixel_nest, 
+<A HREF="#idl:template_pixel_xxx:nside">Nside</A>, 
+<A HREF="#idl:template_pixel_xxx:pixel_nest">Pixel_Nest</A>, 
+<A HREF="#idl:template_pixel_xxx:template">Template</A>, 
+<A HREF="#idl:template_pixel_xxx:reflexion">Reflexion</A></h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B><A ID="idl:template_pixel_xxx:nside"></A>Nside</B>
+<DD>(IN, scalar) the <strong>HEALPix</strong> <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN> parameter. 
+<DT>
+<B><A ID="idl:template_pixel_xxx:pixel_nest"></A>Pixel_Nest</B>
+<DD>(IN, scalar or vector) NESTED scheme pixel identification number(s) over the range {0,<!-- MATH
+ $12N_{\mathrm{side}}^2-1$
+ -->
+<SPAN CLASS="MATH">12<I>N</I><SUB>side</SUB><SUP><i>2</i></SUP>-1</SPAN>}.
+<DT>
+<B><A ID="idl:template_pixel_xxx:pixel_ring"></A>Pixel_Ring</B>
+<DD>(IN, scalar or vector) RING scheme pixel identification number(s) over the
+                   range {0,<!-- MATH
+ $12N_{\mathrm{side}}^2-1$
+ -->
+<SPAN CLASS="MATH">12<I>N</I><SUB>side</SUB><SUP><i>2</i></SUP>-1</SPAN>}.
+<DT>
+<B><A ID="idl:template_pixel_xxx:template"></A>Template</B>
+<DD>(OUT, scalar or vector) identification number(s) of the
+                   template matching in shape the pixel(s) provided (the numbering
+                   scheme of the pixel templates is the same for both routines). 
+<DT>
+<B><A ID="idl:template_pixel_xxx:reflexion"></A>Reflexion</B>
+<DD>(OUT, scalar or vector) in {0, 3} encodes the transformation(s) to
+                   apply to each pixel provided to match exactly in
+                   shape and position its respective template. 0: rotation around the polar axis only,
+                   1: rotation + East-West swap (ie, reflexion around meridian),
+                   2: rotation + North-South swap (ie, reflexion around
+                   Equator), 3: rotation + East-West and North-South swaps
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">template_pixel_nest &amp; template_pixel_ring</SPAN> provide the index of the template pixel associated with a given
+  <strong>HEALPix</strong> pixel, for a resolution parameter <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN>. 
+<br><br>Any pixel can be <EM>matched in shape</EM>
+  to a single of these templates by a combination of  a rotation around the polar axis with 
+  reflexion(s) around a meridian and/or the equator. 
+<br><br>The template pixels are all located in the Northern Hemisphere, or on the
+ Equator.
+They are chosen to have their center located at
+<BR>
+<DIV ALIGN="CENTER"><A ID="eq:template_pixel_xxx_idl"></A>
+<!-- MATH
+ \begin{eqnarray}
+z=\cos(\theta)\ge 2/3 \mycomma0< \phi \leq \pi/2,   \nonumber\\%[Nside*(Nside+2)/4]
+     2/3 > z \geq 0 \mycomma\phi=0, \quad{\rm or}\quad  \phi=\frac{\pi}{4N_{\mathrm{side}}}.%  \nonumber %[Nside]
+\end{eqnarray}
+ -->
+<SPAN CLASS="MATH">
+<TABLE CELLPADDING="0" ALIGN="CENTER" WIDTH="100%">
+<TR VALIGN="MIDDLE"><TD NOWRAP WIDTH="46%" ALIGN="RIGHT"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img118.png"
+ ALT="$\displaystyle z=\cos(\theta)\ge 2/3 \mycomma0&lt; \phi \leq \pi/2,$"></TD>
+<TD>&nbsp;</TD>
+<TD>&nbsp;</TD>
+<TD CLASS="eqno" WIDTH="8%" ALIGN="RIGHT">
+&nbsp;</TD></TR>
+<TR VALIGN="MIDDLE"><TD NOWRAP WIDTH="46%" ALIGN="RIGHT"><IMG
+ STYLE="height: 2.86ex; vertical-align: -1.16ex; " SRC="idl_img121.png"
+ ALT="$\displaystyle %[Nside*(Nside+2)/4]
+2/3 &gt; z \geq 0 \mycomma\phi=0, \quad{\rm or}\quad \phi=\frac{\pi}{4N_{\mathrm{side}}}.% \nonumber %[Nside]
+$"></TD>
+<TD>&nbsp;</TD>
+<TD>&nbsp;</TD>
+<TD CLASS="eqno" WIDTH="8%" ALIGN="RIGHT">
+(<SPAN CLASS="arabic">8</SPAN>)</TD></TR>
+</TABLE>
+</SPAN></DIV>
+<BR CLEAR="ALL"><P></P>
+They are numbered continuously from 0, starting at the North Pole, with the index
+ increasing in <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.10ex; vertical-align: -0.55ex; " SRC="idl_img120.png"
+ ALT="$\phi$"></SPAN>, and then increasing for decreasing <SPAN CLASS="MATH"><I>z</I></SPAN>.
+
+</blockquote>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">template_pixel_ring, 256, 500000, template, reflexion  
+<BR></div>
+<blockquote>
+Returns in <SPAN style="font-family:monospace">template</SPAN> the index of the template pixel (16663) whose shape matches
+that of the pixel #500000 for <!-- MATH
+ $N_{\mathrm{side}}=256$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB>=256</SPAN>. Upon return <SPAN style="font-family:monospace">reflexion</SPAN> will
+contain 2, meaning that the template must be reflected around a meridian and
+around the equator (and then rotated around the polar axis) in order to match
+the pixel.
+</blockquote>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">template_pixel_nest &amp; template_pixel_ring</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="idl_nside2ntemplates.htm#idl:nside2ntemplates">nside2templates</A></B>
+<DD>returns the
+  number of template pixel shapes available for a given <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN>.
+  <DT>
+<B><A HREF="idl_same_shape_pixels_nest_same.htm#idl:same_shape_pixels_xxx">same_shape_pixels_ring</A></B>
+<DD><DT>
+<B><A HREF="idl_same_shape_pixels_nest_same.htm#idl:same_shape_pixels_xxx">same_shape_pixels_nest</A></B>
+<DD>return
+  the ordered list of pixels having the same shape as a given pixel template
+  </DL>
+
+<P>
+
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_same_shape_pixels_nest_same.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_ud_grade.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html449"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_same_shape_pixels_nest_same.htm">same_shape_pixels_nest &amp; same_shape_pixels_ring</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_ud_grade.htm">ud_grade</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

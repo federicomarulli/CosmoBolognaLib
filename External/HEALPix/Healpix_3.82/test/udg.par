@@ -1,0 +1,8 @@
+# HEALPix 3.82
+# parameter file for the ud_grade test run used by 'make test'
+
+infile = map.fits
+
+nside_out =  4
+
+outfile = !test_LOres.fits

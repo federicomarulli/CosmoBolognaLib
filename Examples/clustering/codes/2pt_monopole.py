@@ -13,7 +13,7 @@ import numpy as np
 import CosmoBolognaLib as cbl 
 
 # define the cosmological model, with default parameters 
-cosmology = cbl.Cosmology(cbl.CosmologicalModel__Planck15_)
+cosmology = cbl.LCDM("Planck18")
 
 # Input/Output files and directories 
 file_catalogue = ("../input/cat.dat",)

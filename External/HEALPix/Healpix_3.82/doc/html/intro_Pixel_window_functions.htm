@@ -1,0 +1,359 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>Pixel window functions</TITLE>
+<META NAME="description" CONTENT="Pixel window functions">
+<META NAME="keywords" CONTENT="intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="intro.css">
+
+<LINK REL="next" HREF="intro_Comment_on_Random_Number_Ge.htm">
+<LINK REL="previous" HREF="intro_HEALPix_conventions.htm">
+<LINK REL="next" HREF="intro_Comment_on_Random_Number_Ge.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="intro_HEALPix_conventions.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_Comment_on_Random_Number_Ge.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html125"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_HEALPix_conventions.htm">HEALPix conventions</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_Comment_on_Random_Number_Ge.htm">A Comment on the Random Number</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION700">
+Pixel window functions</A>
+</H1>
+
+<P>
+A pixelated signal <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img227.png"
+ ALT="$f(p)$"></SPAN> is the average within each pixel <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="intro_img23.png"
+ ALT="$p$"></SPAN> (with surface
+area <!-- MATH
+ $\Omega_{\mathrm{pix}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.75ex; " SRC="intro_img228.png"
+ ALT="$\Omega_{\mathrm{pix}}$"></SPAN>) of the underlying signal 
+<P></P>
+<DIV CLASS="mathdisplay"><!-- MATH
+ \begin{equation}
+f(p) = \int d\u w_p(\u )f(\u )
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 4.31ex; vertical-align: -1.67ex; " SRC="intro_img229.png"
+ ALT="$\displaystyle f(p) = \int d\u w_p(\u )f(\u )$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">30</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+where <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.75ex; vertical-align: -0.75ex; " SRC="intro_img230.png"
+ ALT="$w_p$"></SPAN> is equal to <!-- MATH
+ $1/\Omega_{\mathrm{pix}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.75ex; " SRC="intro_img231.png"
+ ALT="$1/\Omega_{\mathrm{pix}}$"></SPAN> within the pixel, and equal to 0 outside, so
+that <!-- MATH
+ $\int d\u w_p(\u ) = 1$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.75ex; " SRC="intro_img232.png"
+ ALT="$\int d\u w_p(\u ) = 1$"></SPAN>.
+Eq.&nbsp;(<A HREF="intro_HEALPix_conventions.htm#eq:alms">4</A>) then becomes
+<P></P>
+<DIV CLASS="mathdisplay"><!-- MATH
+ \begin{equation}
+f(p) = \sum_{\ell =0}^{\ell_{\mathrm{max}}}\sum_{m}a_{\ell m}w_{\ell m}(p),
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 6.06ex; vertical-align: -2.66ex; " SRC="intro_img233.png"
+ ALT="$\displaystyle f(p) = \sum_{\ell =0}^{\ell_{\mathrm{max}}}\sum_{m}a_{\ell m}w_{\ell m}(p),$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">31</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+where
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:pixel_lmp"></A><!-- MATH
+ \begin{equation}
+w_{\ell m}(p) = \int d\u w_p(\u ) Y_{\ell m}(\u ),
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 4.31ex; vertical-align: -1.67ex; " SRC="intro_img234.png"
+ ALT="$\displaystyle w_{\ell m}(p) = \int d\u w_p(\u ) Y_{\ell m}(\u ),$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">32</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+is the Spherical Harmonic Transform of the pixel <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="intro_img23.png"
+ ALT="$p$"></SPAN>.
+
+<P>
+However, complete analysis of a pixelated map with the exact <!-- MATH
+ $w_{\ell m}(p)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img235.png"
+ ALT="$w_{\ell m}(p)$"></SPAN>
+defined above would be computationally intractable (because of azimutal
+variation of pixel shape over the polar caps of the <strong>HEALPix</strong> grid), 
+and some simplifying asumptions have to be
+made. If the pixel is small compared to the signal correlation length
+(determined by the beam size), the exact structure of the pixel can be ignored
+in the subsequent analysis and we can <EM>assume</EM>
+<P></P>
+<DIV CLASS="mathdisplay"><!-- MATH
+ \begin{equation}
+w_{\ell m}(p) = w_\ell(p) Y_{\ell m}(p)
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="intro_img236.png"
+ ALT="$\displaystyle w_{\ell m}(p) = w_\ell(p) Y_{\ell m}(p)$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">33</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+where we introduced the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="intro_img42.png"
+ ALT="$m$"></SPAN>-averaged window function
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:pixel_lp"></A><!-- MATH
+ \begin{equation}
+w_{\ell}(p) = \left(\frac{4 \pi}{2\ell+1}\sum_{m=-\ell}^{\ell} \left|w_{\ell m}(p)\right|^2\right)^{1/2},
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 7.58ex; vertical-align: -3.00ex; " SRC="intro_img237.png"
+ ALT="$\displaystyle w_{\ell}(p) = \left(\frac{4 \pi}{2\ell+1}\sum_{m=-\ell}^{\ell} \left\vert w_{\ell m}(p)\right\vert^2\right)^{1/2},$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">34</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+which is independent of the pixel location on the sky.
+
+<P>
+If we assume all the pixels to be identical, the power spectrum of the
+pixelated map, <!-- MATH
+ $C_{\ell}^{\mathrm{pix}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.80ex; vertical-align: -0.68ex; " SRC="intro_img238.png"
+ ALT="$C_{\ell}^{\mathrm{pix}}$"></SPAN>, is related to the hypothetical unpixelated
+one, <!-- MATH
+ $C_{\ell}^{\mathrm{unpix}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.80ex; vertical-align: -0.68ex; " SRC="intro_img239.png"
+ ALT="$C_{\ell}^{\mathrm{unpix}}$"></SPAN>, by 
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:cl_pixel"></A><!-- MATH
+ \begin{equation}
+C_{\ell}^\mathrm{pix} = w^2_{\ell} C_{\ell}^\mathrm{unpix}
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.80ex; vertical-align: -0.68ex; " SRC="intro_img240.png"
+ ALT="$\displaystyle C_{\ell}^\mathrm{pix} = w^2_{\ell} C_{\ell}^\mathrm{unpix}$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">35</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+where the effective pixel window function <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="intro_img241.png"
+ ALT="$w_{\ell}$"></SPAN> is defined as
+<P></P>
+<DIV CLASS="mathdisplay"><A ID="eq:pixel_l"></A><!-- MATH
+ \begin{equation}
+w_{\ell} = \left(\frac{1}{N_{\mathrm{pix}}}\sum_{p=0}^{N_{\mathrm{pix}}-1} w^2_{\ell}(p)\right)^{1/2}.
+\end{equation}
+ -->
+<TABLE CLASS="equation" >
+<TR>
+<TD  style="text-align:center;"><SPAN CLASS="MATH"><IMG
+ STYLE="height: 7.58ex; vertical-align: -3.00ex; " SRC="intro_img242.png"
+ ALT="$\displaystyle w_{\ell} = \left(\frac{1}{N_{\mathrm{pix}}}\sum_{p=0}^{N_{\mathrm{pix}}-1} w^2_{\ell}(p)\right)^{1/2}.$"></SPAN></TD>
+<TD  CLASS="eqno" style="text-align:right">
+(<SPAN CLASS="arabic">36</SPAN>)</TD></TR>
+</TABLE></DIV>
+<P></P>
+This function is provided with the <strong>HEALPix</strong> package for <!-- MATH
+ $\ell\le 4N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img243.png"
+ ALT="$\ell\le 4N_{\mathrm{side}}$"></SPAN> for each
+resolution parameter <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img9.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN>.
+
+<P>
+The pixel window functions are now available for both temperature and
+polarization.
+
+<P>
+For <!-- MATH
+ $N_{\mathrm{side}}\le 128$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img244.png"
+ ALT="$N_{\mathrm{side}}\le 128$"></SPAN>, those window functions are computed exactly using
+Eqs.&nbsp;(<A HREF="#eq:pixel_lp">34</A>) and (<A HREF="#eq:pixel_l">36</A>). For <!-- MATH
+ $N_{\mathrm{side}}> 128$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img245.png"
+ ALT="$N_{\mathrm{side}}&gt; 128$"></SPAN> the
+calculations are too costly to be done exactly at all <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img60.png"
+ ALT="$\ell$"></SPAN>. The temperature
+windows are
+extrapolated from the case <!-- MATH
+ $N_{\mathrm{side}}= 128$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img246.png"
+ ALT="$N_{\mathrm{side}}= 128$"></SPAN> assuming a scaling in <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img60.png"
+ ALT="$\ell$"></SPAN> similar
+to the one exhibited by the window of a tophat pixel. The polarization
+windows are assumed to be proportional to those for temperature, with a
+proportionality factor given by the exact calculation of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="intro_img241.png"
+ ALT="$w_{\ell}$"></SPAN> at low
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img60.png"
+ ALT="$\ell$"></SPAN>.
+
+<P>
+Because of a change of the extrapolation scheme used, the temperature window
+functions provided with <strong>HEALPix</strong> 1.2 and higher for <!-- MATH
+ $N_{\mathrm{side}}> 128$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img245.png"
+ ALT="$N_{\mathrm{side}}&gt; 128$"></SPAN> are slighty different from those
+provided with <strong>HEALPix</strong> 1.1. For a given <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img9.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN>, the relative difference
+increases almost linearly with <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="intro_img60.png"
+ ALT="$\ell$"></SPAN>, and is of the order of <!-- MATH
+ $\Delta w/w < 7\ 10^{-4}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="intro_img247.png"
+ ALT="$\Delta w/w &lt; 7\ 10^{-4}$"></SPAN> at
+<!-- MATH
+ $\ell=2N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img248.png"
+ ALT="$\ell=2N_{\mathrm{side}}$"></SPAN> and <!-- MATH
+ $\Delta w/w < 1.7\ 10^{-3}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="intro_img249.png"
+ ALT="$\Delta w/w &lt; 1.7\ 10^{-3}$"></SPAN> at <!-- MATH
+ $\ell=4N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="intro_img250.png"
+ ALT="$\ell=4N_{\mathrm{side}}$"></SPAN>.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="intro_HEALPix_conventions.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_Comment_on_Random_Number_Ge.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html125"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_HEALPix_conventions.htm">HEALPix conventions</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_Comment_on_Random_Number_Ge.htm">A Comment on the Random Number</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

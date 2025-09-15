@@ -1,0 +1,541 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>map2alm_iterative*</TITLE>
+<META NAME="description" CONTENT="map2alm_iterative*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_map2alm_spin.htm">
+<LINK REL="previous" HREF="sub_map2alm.htm">
+<LINK REL="next" HREF="sub_map2alm_spin.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_map2alm.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_map2alm_spin.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html405"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_map2alm.htm">map2alm*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_map2alm_spin.htm">map2alm_spin*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4900"></A>
+<A ID="sub:map2alm_iterative"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">map2alm_iterative</SPAN></div><hr>
+<H3>This routine covers and extends the functionalities of <A HREF="sub_map2alm.htm#sub:map2alm">map2alm</A>: it
+analyzes a (polarised) <strong>HEALPix</strong> <EM>RING ordered</EM> map and returns
+its <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients for temperature (and polarisation) up to a specified
+multipole, and use precomputed harmonics if those
+are provided, but it also can also perform an iterative (Jacobi) determination of the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>, and
+apply a pixel mask if one is provided.
+<BR>
+Denoting <!-- MATH
+ $\textbf{A}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.63ex; vertical-align: -0.10ex; " SRC="sub_img205.png"
+ ALT="$\textbf{A}$"></SPAN> and <!-- MATH
+ $\textbf{S}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img206.png"
+ ALT="$\textbf{S}$"></SPAN> the 
+analysis  (<A HREF="sub_map2alm.htm#sub:map2alm">map2alm</A>) and
+synthesis (<A HREF="sub_alm2map.htm#sub:alm2map">alm2map</A>)
+operators and  <!-- MATH
+ $\textbf{a}, \textbf{m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="sub_img207.png"
+ ALT="$\textbf{a}, \textbf{m}$"></SPAN> and <!-- MATH
+ $\textbf{w}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img208.png"
+ ALT="$\textbf{w}$"></SPAN>, the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>, map and pixel mask vectors, the
+Jacobi iterative process reads 
+<BR>
+<DIV CLASS="mathdisplay"><A ID="eq:map2alm_it_a"></A><!-- MATH
+ \begin{eqnarray}
+\textbf{a}^{(n)} = \textbf{a}^{(n-1)} + \textbf{A}. \left( \textbf{w}.\textbf{m}- \textbf{S}.\textbf{a}^{(n-1)} \right),
+\end{eqnarray}
+ -->
+<TABLE CELLPADDING="0" ALIGN="CENTER" WIDTH="100%">
+<TR VALIGN="MIDDLE"><TD NOWRAP WIDTH="50%" ALIGN="RIGHT"><IMG
+ STYLE="height: 3.56ex; vertical-align: -1.26ex; " SRC="sub_img209.png"
+ ALT="$\displaystyle \textbf{a}^{(n)} = \textbf{a}^{(n-1)} + \textbf{A}. \left( \textbf{w}.\textbf{m}- \textbf{S}.\textbf{a}^{(n-1)} \right),$"></TD>
+<TD>&nbsp;</TD>
+<TD>&nbsp;</TD>
+<TD CLASS="eqno" style="width:10px" ALIGN="RIGHT">
+(<SPAN CLASS="arabic">10</SPAN>)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL">
+
+with
+<BR>
+<DIV CLASS="mathdisplay"><A ID="eq:map2alm_it_b"></A><!-- MATH
+ \begin{eqnarray}
+\textbf{a}^{(0)} = \textbf{A}.\textbf{w}.\textbf{m}.
+\end{eqnarray}
+ -->
+<TABLE CELLPADDING="0" ALIGN="CENTER" WIDTH="100%">
+<TR VALIGN="MIDDLE"><TD NOWRAP WIDTH="50%" ALIGN="RIGHT"><IMG
+ STYLE="height: 2.16ex; vertical-align: -0.10ex; " SRC="sub_img210.png"
+ ALT="$\displaystyle \textbf{a}^{(0)} = \textbf{A}.\textbf{w}.\textbf{m}.$"></TD>
+<TD>&nbsp;</TD>
+<TD>&nbsp;</TD>
+<TD CLASS="eqno" style="width:10px" ALIGN="RIGHT">
+(<SPAN CLASS="arabic">11</SPAN>)</TD></TR>
+</TABLE></DIV>
+<BR CLEAR="ALL">
+
+During the processing, the standard deviation of the input map <!-- MATH
+ $\left(\textbf{w}.\textbf{m}\right)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img211.png"
+ ALT="$\left(\textbf{w}.\textbf{m}\right)$"></SPAN> 
+and the current residual map <!-- MATH
+ $\left(\textbf{w}.\textbf{m}- \textbf{S}.\textbf{a}^{(n-1)}\right)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 3.56ex; vertical-align: -1.26ex; " SRC="sub_img212.png"
+ ALT="$\left(\textbf{w}.\textbf{m}- \textbf{S}.\textbf{a}^{(n-1)}\right)$"></SPAN> is printed out, with the latter expected
+to get smaller and smaller as <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img141.png"
+ ALT="$n$"></SPAN> increases.
+<BR>
+The standard deviation of map <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img213.png"
+ ALT="$x$"></SPAN> has the usual definition
+<!-- MATH
+ $\sigma \equiv \sqrt{\sum_{p=1}^{N}\frac{(x(p)-\bar{x})^2}{N-1}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 3.56ex; vertical-align: -1.10ex; " SRC="sub_img214.png"
+ ALT="$\sigma \equiv \sqrt{\sum_{p=1}^{N}\frac{(x(p)-\bar{x})^2}{N-1}}$"></SPAN>, where the mean is
+<!-- MATH
+ $\bar{x} \equiv  \sum_{p=1}^{N} \frac{x(p)}{N}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 3.15ex; vertical-align: -0.97ex; " SRC="sub_img215.png"
+ ALT="$\bar{x} \equiv \sum_{p=1}^{N} \frac{x(p)}{N}$"></SPAN>, and the index <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="sub_img35.png"
+ ALT="$p$"></SPAN> runs over all pixels.
+<BR>
+In <A HREF="sub_Older_Changes.htm#sub:new3p50">version 3.50</A> a bug affecting previous versions of <SPAN CLASS="colordoc">map2alm_iterative</SPAN> has been fixed.
+(It occured when 
+<A HREF="#sub:map2alm_iterative:iter_order"><SPAN  CLASS="texttt">iter_order</SPAN></A><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.16ex; " SRC="sub_img12.png"
+ ALT="$&gt; 0$"></SPAN> 
+was used in conjonction with a 
+<A HREF="#sub:map2alm_iterative:mask"><SPAN  CLASS="texttt">mask</SPAN></A> 
+and/or a restrictive 
+<A HREF="#sub:map2alm_iterative:zbounds"><SPAN  CLASS="texttt">zbounds</SPAN></A>, 
+with a magnitude that depended on each of those factors and was larger for non-boolean masks (ie, <!-- MATH
+ $\textbf{w}^2 \ne \textbf{w}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.55ex; " SRC="sub_img216.png"
+ ALT="$\textbf{w}^2 \ne \textbf{w}$"></SPAN>).
+To assess the impact of this bug on previous results, the old implementation remains available in 
+<SPAN  CLASS="texttt">map2alm_iterative_old</SPAN>). 
+The result was correct when the mask (if any) was applied to the map prior to the 
+<SPAN CLASS="colordoc">map2alm_iterative</SPAN> calling, or when no iteration was requested.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/alm_tools.F90"><strong>src/f90/mod/alm_tools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">map2alm_iterative</SPAN>(
+<A HREF="#sub:map2alm_iterative:nsmax">nsmax</A>, <A HREF="#sub:map2alm_iterative:nlmax">nlmax</A>, <A HREF="#sub:map2alm_iterative:nmmax">nmmax</A>, <A HREF="#sub:map2alm_iterative:iter_order">iter_order</A>, <A HREF="#sub:map2alm_iterative:map_TQU">map_TQU</A>, <A HREF="#sub:map2alm_iterative:alm_TGC">alm_TGC</A>[, <A HREF="#sub:map2alm_iterative:zbounds">zbounds</A>, <A HREF="#sub:map2alm_iterative:w8ring_TQU">w8ring_TQU</A>,
+<A HREF="#sub:map2alm_iterative:plm">plm</A>, <A HREF="#sub:map2alm_iterative:mask">mask</A>]
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:190px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:35px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:190px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:190px">
+nsmax<A ID="sub:map2alm_iterative:nsmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">the <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> value of the map to analyse.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:190px">nlmax<A ID="sub:map2alm_iterative:nlmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">the maximum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img33.png"
+ ALT="$\ell$"></SPAN> value (<!-- MATH
+ $\ell_{\mathrm{max}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img217.png"
+ ALT="$\ell_{\mathrm{max}}$"></SPAN>) for the analysis.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:190px">nmmax<A ID="sub:map2alm_iterative:nmmax"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">the maximum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img34.png"
+ ALT="$m$"></SPAN> value for the analysis.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:190px">iter_order<A ID="sub:map2alm_iterative:iter_order"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">the order of Jacobi iteration. Increasing that order
+improves the accuracy of the final <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> but increases the computation time <!-- MATH
+ $T_{\mathrm{CPU}} \propto 1 + 2 \times$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.98ex; vertical-align: -0.45ex; " SRC="sub_img218.png"
+ ALT="$T_{\mathrm{CPU}} \propto 1 + 2 \times $"></SPAN>iter_order. 
+iter_order  <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img109.png"
+ ALT="$=0$"></SPAN> is a straight analysis, while iter_order <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img219.png"
+ ALT="$=3$"></SPAN> is usually a
+good compromise.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:190px">map_TQU<A ID="sub:map2alm_iterative:map_TQU"></A>(0:12*nsmax**2-1, 1:p)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">INOUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">input map. <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="sub_img35.png"
+ ALT="$p$"></SPAN> is 1 or 3
+depending if temperature (T) only or temperature and polarisation (T, Q, U) are
+to be analysed. It will be altered on output if a <A HREF="#sub:map2alm_iterative:mask">mask</A> is provided and/or if <A HREF="#sub:map2alm_iterative:iter_order">iter_order</A><SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.16ex; " SRC="sub_img12.png"
+ ALT="$&gt; 0$"></SPAN> and <A HREF="#sub:map2alm_iterative:zbounds">zbounds</A> is provided.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:190px">alm_TGC<A ID="sub:map2alm_iterative:alm_TGC"></A>(1:p, 0:nlmax, 0:nmmax)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SPC/ DPC</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">The <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> values output
+from the analysis. 
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="sub_img35.png"
+ ALT="$p$"></SPAN> is 1 or 3 depending on whether polarisation is included or not. In the former
+case, the first index is (1,2,3) corresponding to (T,E,B).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:190px">zbounds<A ID="sub:map2alm_iterative:zbounds"></A>(1:2), OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">section of the map on which to perform the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>
+                   analysis, expressed in terms of <!-- MATH
+ $z=\sin(\mathrm{latitude}) =
+                   \cos(\theta).$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img60.png"
+ ALT="$z=\sin(\mathrm{latitude}) =
+\cos(\theta).$"></SPAN> If zbounds(1)<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.28ex; vertical-align: -0.16ex; " SRC="sub_img61.png"
+ ALT="$&lt;$"></SPAN>zbounds(2), it is
+performed <EM>on</EM> the strip zbounds(1)<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.28ex; vertical-align: -0.16ex; " SRC="sub_img62.png"
+ ALT="$&lt;z&lt;$"></SPAN>zbounds(2); if not,
+it is performed <EM>outside</EM> the strip
+zbounds(2)<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.41ex; " SRC="sub_img63.png"
+ ALT="$\le z \le$"></SPAN>zbounds(1). If absent, the whole map is processed.
+</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:190px"></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+</TR>
+</TABLE>
+<TABLE class="PAD  BORDER" style="">
+<TR><TD CLASS="LEFT TOP"  style="width:190px">w8ring_TQU<A ID="sub:map2alm_iterative:w8ring_TQU"></A>(1:2*nsmax,1:p), OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">ring weights for
+quadrature corrections. p is 1 for a temperature analysis and 3 for (T,Q,U). If absent, the
+ring weights are all set to 1.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:190px">plm<A ID="sub:map2alm_iterative:plm"></A>(0:,1:p), OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">If this
+optional matrix is passed, precomputed scalar (and tensor) <!-- MATH
+ $P_{\ell m}(\theta)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img59.png"
+ ALT="$P_{\ell m}(\theta)$"></SPAN> are
+used instead of recursion.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:190px">mask<A ID="sub:map2alm_iterative:mask"></A>(0:12*nsmax**2-1,1:q), OPTIONAL</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:35px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">pixel mask,
+assumed to have the same resolution (and RING ordering) as the map. The map <SPAN style="font-family:monospace">map_TQU</SPAN> is
+multiplied by that mask before being analyzed, and will therefore be altered on
+output. 
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.55ex; " SRC="sub_img220.png"
+ ALT="$q$"></SPAN> should be in <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img221.png"
+ ALT="$\{1,2,3\}$"></SPAN>. If <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.55ex; " SRC="sub_img222.png"
+ ALT="$p=q=3$"></SPAN>, then each of
+the 3 masks is applied to the respective map. If <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.55ex; " SRC="sub_img39.png"
+ ALT="$p=3$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.55ex; " SRC="sub_img223.png"
+ ALT="$q=2$"></SPAN>, the first mask
+is applied to the first map, and the second mask to the second (Q) and third (U)
+map. If <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.55ex; " SRC="sub_img39.png"
+ ALT="$p=3$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.55ex; " SRC="sub_img224.png"
+ ALT="$q=1$"></SPAN>, the same mask is applied to the 3 maps. Note: the output
+<!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> are computed directly on the masked map, and are <EM>not</EM> corrected for the
+loss of power, correlation or leakage created by the mask.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use healpix_types
+<BR>
+use alm_tools
+<BR>
+use pix_tools
+<BR>
+integer(i4b) :: nside, lmax, npix, iter 
+<BR>
+real(sp), allocatable, dimension(:,:) :: map 
+<BR>
+real(sp), allocatable, dimension(:) :: mask 
+<BR>
+complex(spc), allocatable, dimension(:,:,:) :: alm 
+<BR>
+<BR>
+nside = 256 
+<BR>
+lmax = 512 
+<BR>
+iter = 2
+<BR>
+npix = nside2npix(nside) 
+<BR>
+allocate(map(0:npix-1,1:3)) 
+<BR>
+allocate(mask(0:npix-1)) 
+<BR>
+mask(0:) = 0. ! set unvalid pixels to 0
+<BR>
+mask(0:10000-1) = 1. ! valid pixels 
+<BR>
+allocate(alm(1:3, 0:lmax, 0:lmax)
+<BR>
+call map2alm_iterative(nside, lmax, lmax, iter, map, alm, mask=mask)  
+<BR></div>
+<blockquote>
+Analyses temperature and polarisation signals in the first 10000 pixels of <SPAN style="font-family:monospace">map</SPAN> (as
+determined by <SPAN style="font-family:monospace">mask</SPAN>). The map has
+an <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> of 256, and the analysis is supposed to be performed up
+to 512 in <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img33.png"
+ ALT="$\ell$"></SPAN> and <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img34.png"
+ ALT="$m$"></SPAN>. The resulting <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients for
+temperature and polarisation are returned in <SPAN style="font-family:monospace">alm</SPAN>. Uniform weights are
+assumed. In order to improve the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> accuracy, 2 Jacobi iterations are performed.
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">map2alm_iterative</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><A HREF="sub_map2alm.htm#sub:map2alm">map2alm</A></B>
+<DD>Performs the alm analysis
+  <DT>
+<B><A HREF="sub_alm2map.htm#sub:alm2map">alm2map</A></B>
+<DD>Performs the map synthesis
+  <DT>
+<B><SPAN  CLASS="textbf">misc_util</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B><A HREF="sub_assert_assert_alloc_assert_.htm#sub:assert">assert_alloc</A></B>
+<DD>routine to print error message when an array is not
+  properly allocated		
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">map2alm_iterative</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="./fac_anafast.htm#fac:anafast">anafast</A></B>
+<DD>executable using <SPAN CLASS="colordoc">map2alm_iterative</SPAN> to analyse maps.
+  <DT>
+<B><A HREF="sub_alm2map.htm#sub:alm2map">alm2map</A></B>
+<DD>routine performing the inverse transform of <SPAN CLASS="colordoc">map2alm_iterative</SPAN>.
+  <DT>
+<B><A HREF="sub_alm2map_spin.htm#sub:alm2map_spin">alm2map_spin</A></B>
+<DD>synthesize spin weighted
+maps.
+  <DT>
+<B><A HREF="sub_dump_alms.htm#sub:dump_alms">dump_alms</A></B>
+<DD>write <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients
+computed by <SPAN CLASS="colordoc">map2alm_iterative</SPAN> into a FITS file
+  <DT>
+<B><A HREF="sub_map2alm_spin.htm#sub:map2alm_spin">map2alm_spin</A></B>
+<DD>analyze spin weighted maps.
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_map2alm.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_map2alm_spin.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html405"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_map2alm.htm">map2alm*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_map2alm_spin.htm">map2alm_spin*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

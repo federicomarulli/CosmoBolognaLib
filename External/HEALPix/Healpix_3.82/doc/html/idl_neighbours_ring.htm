@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>neighbours_ring</TITLE>
+<META NAME="description" CONTENT="neighbours_ring">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_nest2uniq.htm">
+<LINK REL="previous" HREF="idl_neighbours_nest.htm">
+<LINK REL="next" HREF="idl_nest2uniq.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_neighbours_nest.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_nest2uniq.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html401"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_neighbours_nest.htm">neighbours_nest</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_nest2uniq.htm">nest2uniq</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4600"></A>
+<A ID="idl:neighbours_ring"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">neighbours_ring</SPAN></div><hr>
+<H3>This IDL facility returns the number and indices of the topological immediate neighbours 
+of a central pixel. The pixels
+are ordered in a clockwise sense (when watching the sphere from the outside) 
+about the central pixel with the
+southernmost pixel in first element. For the four pixels in the southern 
+corners of the
+equatorial faces which have two equally southern neighbours the
+routine returns the southwestern pixel first and proceeds clockwise.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/toolkit/neighbours_ring.pro"><strong>src/idl/toolkit/neighbours_ring.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+neighbours_ring (<A HREF="#idl:neighbours_ring:Nside">Nside</A>, <A HREF="#idl:neighbours_ring:Ipix0">Ipix0</A>, <A HREF="#idl:neighbours_ring:Listpix">Listpix</A>[,<A HREF="#idl:neighbours_ring:Nneigh">Nneigh</A>])
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>Nside</B>
+<DD><A ID="idl:neighbours_ring:Nside"></A> 
+<strong>HEALPix</strong> resolution parameter (scalar integer),
+         should be a valid Nside (power of 2)
+   <DT>
+<B>Ipix0</B>
+<DD><A ID="idl:neighbours_ring:Ipix0"></A>RING-scheme index of central pixel in [0,12*Nside<SPAN CLASS="MATH"><SUP><i>2</i></SUP></SPAN>-1]
+    <DT>
+<B>Listpix</B>
+<DD><A ID="idl:neighbours_ring:Listpix"></A>output: list of neighbouring pixel (RING scheme index) of
+size <SPAN style="font-family:monospace">Nneigh</SPAN>
+    <DT>
+<B>Nneigh</B>
+<DD><A ID="idl:neighbours_ring:Nneigh"></A> 
+optional output: number of neighbours of pixel <SPAN style="font-family:monospace">#Ipix0</SPAN>. 
+   Usually 8, sometimes 7 (for 8 particular pixels) or 6 (if Nside=1)
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+neighbours_ring calls ring2nest, neighbours_nest and nest2ring
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">neighbours_ring</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run neighbours_ring .
+    <DT>
+<B><A HREF="idl_neighbours_nest.htm#idl:neighbours_nest">neighbours_nest</A></B>
+<DD>returns topological immediate
+neighbouring pixels of a given central pixel, using NESTED indexing.
+    <DT>
+<B><A HREF="idl_query_disc.htm#idl:query_disc">query_disc</A>, 
+          <A HREF="idl_query_polygon.htm#idl:query_polygon">query_polygon</A>,</B>
+<DD><DT>
+<B><A HREF="idl_query_strip.htm#idl:query_strip">query_strip</A>, <A HREF="idl_query_triangle.htm#idl:query_triangle">query_triangle</A></B>
+<DD>render the list of pixels enclosed
+  respectively in a given disc, polygon, latitude strip and triangle
+    <DT>
+<B><A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools">nest2ring</A>, <A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools">ring2nest</A></B>
+<DD>conversion between NESTED and RING indices
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">neighbours_ring , 4, 1, list, nneigh</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT">print,nneigh,list</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+will return:8 16  6  5  0  3  2  8  7
+listing the RING-indexed 8 neighbors of pixel #1 for Nside=4
+</blockquote>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_neighbours_nest.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_nest2uniq.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html401"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_neighbours_nest.htm">neighbours_nest</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_nest2uniq.htm">nest2uniq</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

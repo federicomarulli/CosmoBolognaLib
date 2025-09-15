@@ -52,7 +52,6 @@ namespace cbl {
 
   namespace statistics {
   
-  
     /**
      *  @struct STR_DependentProbes_data_model
      *  @brief the structure STR_DependentProbes_data_model
@@ -176,33 +175,41 @@ namespace cbl {
        *
        *  @param posteriors pointers to Posterior objects
        *
-       *  @param repeated_par parameters shared by different probes, for which
-       *  the user wants different posteriors for each probe. For example, if
-       *  the probes A and B depend on the same parameter \f$p\f$, whose identification
-       *  string is "par", then "par" must be given in input if the user desires to have
-       *  different posteriors of \f$p\f$ for the two probes A and B. Every probe depending
-       *  on \f$p\f$ will provide a different posterior on \f$p\f$. This is useful
-       *  in the case of astrophysical parameters, e.g. the parameters describing
+       *  @param repeated_par parameters shared by different probes,
+       *  for which the user wants different posteriors for each
+       *  probe. For example, if the probes A and B depend on the same
+       *  parameter \f$p\f$, whose identification string is "par",
+       *  then "par" must be given in input if the user desires to
+       *  have different posteriors of \f$p\f$ for the two probes A
+       *  and B. Every probe depending on \f$p\f$ will provide a
+       *  different posterior on \f$p\f$. This is useful in the case
+       *  of astrophysical parameters, e.g. the parameters describing
        *  galaxy cluster profiles.
        *
-       *  @param common_repeated_par for each argument in repeated_par, a vector of vectors of
-       *  integers can be defined here. Such vectors define the sets of probes for which
-       *  the same priors and posteriors are provided for the same parameters. 
-       *  For example, let us consider the probes {A1, A2, A3, A4}, provided in the posteriors parameter.
-       *  All the probes (A1, A2, A3, A4) depend on the parameter \f$p\f$, 
-       *  whose identification string is "par", and we set repeated_par = {"par"}.
-       *  If we want the pair of probes {A1, A2}, {A3, A4}, to provide
-       *  a different posterior on \f$p\f$, we must set common_repeated_par = { { {0,1}, {2,3} } }.
-       *  This is useful when different probes in the same bin provide constraints
-       *  on the same parameters. 
-       *  If common_repeated_par is not provided, every probe depending on \f$p\f$ 
-       *  will provide a different posterior on \f$p\f$.
-       *  If two parameters are provided in repeated_par, e.g. repeated_par = {"par1", "par2"}, and
-       *  only "par2" must be shared by more than one probe, then leave blank the
-       *  vector of vectors corresponding to "par1" in common_repeated_par.
+       *  @param common_repeated_par for each argument in
+       *  repeated_par, a vector of vectors of integers can be defined
+       *  here. Such vectors define the sets of probes for which the
+       *  same priors and posteriors are provided for the same
+       *  parameters.  For example, let us consider the probes {A1,
+       *  A2, A3, A4}, provided in the posteriors parameter.  All the
+       *  probes (A1, A2, A3, A4) depend on the parameter \f$p\f$,
+       *  whose identification string is "par", and we set
+       *  repeated_par = {"par"}.  If we want the pair of probes {A1,
+       *  A2}, {A3, A4}, to provide a different posterior on \f$p\f$,
+       *  we must set common_repeated_par = { { {0,1}, {2,3} } }.
+       *  This is useful when different probes in the same bin provide
+       *  constraints on the same parameters.  If common_repeated_par
+       *  is not provided, every probe depending on \f$p\f$ will
+       *  provide a different posterior on \f$p\f$.  If two parameters
+       *  are provided in repeated_par, e.g. repeated_par = {"par1",
+       *  "par2"}, and only "par2" must be shared by more than one
+       *  probe, then leave blank the vector of vectors corresponding
+       *  to "par1" in common_repeated_par.
+       *
+       *  @param cosmology pointer to an object of class Cosmology
        *
        */
-      CombinedPosterior (const std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={});
+      CombinedPosterior (const std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={}, std::shared_ptr<cbl::cosmology::Cosmology> cosmology=NULL);
       
       /**
        *  @brief Constructor used to set the modelling of
@@ -257,15 +264,14 @@ namespace cbl {
        *  objects, for the computation of the \f$S_{ij}\f$ matrices. If, for example,
        *  the sets of probes A, B, C, are considered, and only for A and C the 
        *  super-sample covariance must be computed, then set the second element of
-       *  \e SSC equal to \e NULL.
+       *  \e SSC equal to a shared pointer of cbl::cosmology::SuperSampleCovariance
+       *  set equal to \e NULL.
        *
        */
       CombinedPosterior (const std::vector<std::vector<std::shared_ptr<Posterior>>> posteriors, const std::vector<std::shared_ptr<data::CovarianceMatrix>> covariance, const std::vector<cbl::statistics::LikelihoodType> likelihood_types, const std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={}, const std::vector<std::shared_ptr<cbl::cosmology::SuperSampleCovariance>> SSC={});
 
       /**
        *  @brief default destructor
-       *
-       *
        */
       ~CombinedPosterior () = default;
 
@@ -279,31 +285,31 @@ namespace cbl {
        * @param logpostA the first logposterior distribution
        *
        * @param logpostB the second logposterior distribution
-       *
        */
-      void set_log_posterior(const std::vector<double> logpostA, const std::vector<double> logpostB);
+      void set_log_posterior (const std::vector<double> logpostA, const std::vector<double> logpostB);
 
       /**
-       * @brief set the internal values of m_parameters as the concatenation
-       * of the parameters vectors of two cosmological chains
+       * @brief set the internal values of m_parameters as the
+       * concatenation of the parameters vectors of two cosmological
+       * chains
        *
        * @param parametersA the first parameters vector
        *
        * @param parametersB the second parameter vector
        *
        */
-      void set_parameters(const std::vector<std::vector<double>> parametersA, const std::vector<std::vector<double>> parametersB);
+      void set_parameters (const std::vector<std::vector<double>> parametersA, const std::vector<std::vector<double>> parametersB);
 
       /**
-       * @brief set the internal values of m_weight as the concatenation
-       * of the weights vectors of two MCMC chains
+       * @brief set the internal values of m_weight as the
+       * concatenation of the weights vectors of two MCMC chains
        *
        * @param weightsA the first weights vector
        *
        * @param weightsB the second weights vector
        *
        */
-      void set_weight(const std::vector<double> weightsA, const std::vector<double> weightsB);
+      void set_weight (const std::vector<double> weightsA, const std::vector<double> weightsB);
       
       /**
        * @brief check the repeated parameters
@@ -326,8 +332,8 @@ namespace cbl {
        *
        * @param repeated_par repeated parameters
        *
-       * @param common_repeated_par indices of the common 
-       * repeated parameters
+       * @param common_repeated_par indices of the common repeated
+       * parameters
        *
        */
       void m_check_common_repeated_par (int dummy_Nposteriors, std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par, std::vector<std::vector<std::vector<int>>> common_repeated_par);
@@ -335,8 +341,8 @@ namespace cbl {
       /**
        * @brief add a prior
        *
-       * @param par_is_repeated if true, the considered
-       * parameter is repeated
+       * @param par_is_repeated if true, the considered parameter is
+       * repeated
        *
        * @param posteriors pointer to the Posterior objects
        *
@@ -406,37 +412,44 @@ namespace cbl {
       void m_set_repeated_par (std::vector<std::shared_ptr<Posterior>> posteriors, const bool is_in_parnames, const int N, const int k, const std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par, std::vector<std::shared_ptr<cbl::statistics::PriorDistribution>> &prior_distributions, std::vector<std::string> &parameter_names, std::vector<std::string> &original_names, std::vector<ParameterType> &parameter_types);
       
       /**
-       * @brief set the parameters and the priors
+       *  @brief set the parameters and the priors
        *
-       * @param posteriors pointers to Posterior objects
+       *  @param posteriors pointers to Posterior objects
        *
-       *  @param repeated_par parameters shared by different probes, for which
-       *  the user wants different posteriors for each probe. For example, if
-       *  the probes A and B depend on the same parameter \f$p\f$, whose identification
-       *  string is "par", then "par" must be given in input if the user desires to have
-       *  different posteriors of \f$p\f$ for the two probes A and B. This is useful
-       *  in the case of astrophysical parameters, e.g. the parameters describing
-       *  galaxy cluster profiles.
+       *  @param repeated_par parameters shared by different probes,
+       *  for which the user wants different posteriors for each
+       *  probe. For example, if the probes A and B depend on the same
+       *  parameter \f$p\f$, whose identification string is "par",
+       *  then "par" must be given in input if the user desires to
+       *  have different posteriors of \f$p\f$ for the two probes A
+       *  and B. This is useful in the case of astrophysical
+       *  parameters, e.g. the parameters describing galaxy cluster
+       *  profiles.
        *
-       *  @param common_repeated_par for each argument in repeated_par, a vector of vectors of
-       *  integers can be defined here. Such vectors define the sets of probes for which
-       *  the same priors and posteriors are provided for the same parameters. 
-       *  For example, let us consider the two sets of probes {A1, A2, A3} and {B1, B2, B3}, provided
-       *  in the posteriors parameter.
-       *  All the probes (A1, A2, A3, B1, B2, B3) depend on the parameter \f$p\f$, 
-       *  whose identification string is "par", and we set repeated_par = {"par"}.
-       *  If we want each pair of probes {A1, B1}, {A2, B2}, {A3, B3}, to provide
-       *  a different posterior on \f$p\f$, we must set common_repeated_par = { { {0,1}, {2,3}, {4,5} } }.
-       *  This is useful when different probes in the same bin provide constraints
-       *  on the same parameters.
-       *  If common_repeated_par is not provided, every probe depending on \f$p\f$ 
-       *  will provide a different posterior on \f$p\f$.
-       *  If two parameters are provided in repeated_par, e.g. repeated_par = {"par1", "par2"}, and
-       *  only "par2" must be shared by more than one probe, then leave blank the
-       *  vector of vectors corresponding to "par1" in common_repeated_par.
+       *  @param common_repeated_par for each argument in
+       *  repeated_par, a vector of vectors of integers can be defined
+       *  here. Such vectors define the sets of probes for which the
+       *  same priors and posteriors are provided for the same
+       *  parameters.  For example, let us consider the two sets of
+       *  probes {A1, A2, A3} and {B1, B2, B3}, provided in the
+       *  posteriors parameter.  All the probes (A1, A2, A3, B1, B2,
+       *  B3) depend on the parameter \f$p\f$, whose identification
+       *  string is "par", and we set repeated_par = {"par"}.  If we
+       *  want each pair of probes {A1, B1}, {A2, B2}, {A3, B3}, to
+       *  provide a different posterior on \f$p\f$, we must set
+       *  common_repeated_par = { { {0,1}, {2,3}, {4,5} } }.  This is
+       *  useful when different probes in the same bin provide
+       *  constraints on the same parameters.  If common_repeated_par
+       *  is not provided, every probe depending on \f$p\f$ will
+       *  provide a different posterior on \f$p\f$.  If two parameters
+       *  are provided in repeated_par, e.g. repeated_par = {"par1",
+       *  "par2"}, and only "par2" must be shared by more than one
+       *  probe, then leave blank the vector of vectors corresponding
+       *  to "par1" in common_repeated_par.
        *
+       *  @param cosmology pointer to an object of class Cosmology
        */
-      void m_set_parameters_priors (std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={});
+      void m_set_parameters_priors (std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par={}, const std::vector<std::vector<std::vector<int>>> common_repeated_par={}, std::shared_ptr<cbl::cosmology::Cosmology> cosmology=NULL);
       
       
       /**
@@ -676,7 +689,6 @@ namespace cbl {
        *
        *  @param epsilon the simplex side
        *
-       *
        */
       void maximize (const std::vector<double> start, const unsigned int max_iter=10000, const double tol=1.e-6, const double epsilon=1.e-4);
 
@@ -684,9 +696,9 @@ namespace cbl {
        * @brief store the results of the MCMC sampling to file
        *
        * this function stores to file the posterior mean, the
-       * posterior standard deviation, the posterior median, 18th
-       * and 82th posterior percentiles, and, optionally, the
-       * posterior mode.
+       * posterior standard deviation, the posterior median, 16th and
+       * 84th posterior percentiles, and, optionally, the posterior
+       * mode.
        *
        * If the covariance matrix has been estimated from a set of
        * mock catalogues, and the input parameters ns (number of
@@ -733,8 +745,6 @@ namespace cbl {
        *
        * @param nb number of data measurements, e.g. the bins of the
        * dataset
-       *
-       *
        */
       void write_results (const std::string output_dir, const std::string root_file, const int start=0, const int thin=1, const int nbins=50, const bool fits=false, const bool compute_mode=false, const int ns=-1, const int nb=-1);
 

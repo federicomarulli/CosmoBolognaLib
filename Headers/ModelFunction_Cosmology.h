@@ -51,10 +51,10 @@ namespace cbl {
       struct STR_data_model_cosmology{
 
 	/// cosmology
-	std::shared_ptr<cbl::cosmology::Cosmology> cosmology;
+	std::shared_ptr<cosmology::Cosmology> cosmology;
 
 	/// cosmological parameters
-	std::vector<cbl::cosmology::CosmologicalParameter> Cpar;
+	std::vector<std::string> Cpar;
 
 	/// data type
 	std::vector<std::string> data_type;
@@ -66,53 +66,24 @@ namespace cbl {
       /**
        *  @brief generic cosmological measurements
        *
-       *  the function provides theoretical predictions for the following
-       *  quantities:
-       *
-       *  - DV
-       *  - DV/rs
-       *  - rs/DV
-       *  - F_AP
-       *  - DA
-       *  - DA/rs
-       *  - rs/DA
-       *  - HH
-       *  - HH*rs
-       *  - DH
-       *  - DH/rs
-       *  - rs/DH
-       *  - DL
+       *  the function provides theoretical predictions for the
+       *  cosmological parameters of the given cosmological model
        *
        *  @param redshift the redshift
+       *
        *  @param data_type the data type
+       *
        *  @param cosmology the cosmology
        *
        *  @return cosmological measurements
        */     
-      double cosmological_measurements(const double redshift, const std::string data_type, const cbl::cosmology::Cosmology cosmology);
+      double cosmological_measurements (const double redshift, const std::string data_type, const std::shared_ptr<cosmology::Cosmology>cosmology);
 
       /**
        *  @brief model for the generic cosmological measurements
        *
-       *  the function provides theoretical predictions for the following
-       *  quantities:
-       *
-       *  - \f$D_V\f$
-       *  - \f$D_V/r_s\f$
-       *  - \f$r_s/D_V\f$
-       *  - \f$F_{AP}\f$
-       *  - \f$D_A\f$
-       *  - \f$D_A/r_s\f$
-       *  - \f$r_s/D_A\f$
-       *  - \f$D_M\f$
-       *  - \f$D_M/r_s\f$
-       *  - \f$r_s/D_M\f$
-       *  - \f$HH\f$
-       *  - \f$HH*r_s\f$
-       *  - \f$D_H\f$
-       *  - \f$D_H/r_s\f$
-       *  - \f$r_s/D_H\f$
-       *  - \f$D_L\f$
+       *  the function provides theoretical predictions for some
+       *  cosmological parameters
        *
        *  @param redshift the redshift at which the model is computed
        *
@@ -129,24 +100,8 @@ namespace cbl {
        *  @brief model for the generic cosmological measurements plus distance
        *  prior from CMB experiments
        *
-       *  the function provides theoretical predictions for the following
-       *  quantities:
-       *
-       *  - \f$D_V\f$
-       *  - \f$D_V/r_s\f$
-       *  - \f$r_s/D_V\f$
-       *  - \f$D_A\f$
-       *  - \f$D_A/r_s\f$
-       *  - \f$r_s/D_A\f$
-       *  - \f$D_M\f$
-       *  - \f$D_M/r_s\f$
-       *  - \f$r_s/D_M\f$
-       *  - \f$HH\f$
-       *  - \f$HH*r_s\f$
-       *  - \f$D_H\f$
-       *  - \f$D_H/r_s\f$
-       *  - \f$r_s/D_H\f$
-       *  - \f$D_L\f$
+       *  the function provides theoretical predictions for some
+       *  cosmological parameters
        *
        *  @param redshift the redshift at which the model is computed
        *

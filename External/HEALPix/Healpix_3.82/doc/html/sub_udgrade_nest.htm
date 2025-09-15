@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>udgrade_nest*</TITLE>
+<META NAME="description" CONTENT="udgrade_nest*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_udgrade_ring.htm">
+<LINK REL="previous" HREF="sub_template_pixel_nest_templat.htm">
+<LINK REL="next" HREF="sub_udgrade_ring.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_template_pixel_nest_templat.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_udgrade_ring.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html515"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_template_pixel_nest_templat.htm">template_pixel_nest, template_pixel_ring</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_udgrade_ring.htm">udgrade_ring*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION10400"></A>
+<A ID="sub:udgrade_nest"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">udgrade_nest*</SPAN></div><hr>
+<H3>Routine to degrade or prograde the pixel size of a <strong>HEALPix</strong> map indexed with
+  the NESTED scheme. The degradation/progradation is done assuming an
+intensive quantity (like temperature) that does NOT scale with surface area. <BR>
+In case of degradation, a big pixel that contains one or several bad pixels will
+take the average of the valid small pixels, unless a 'pessimistic' behavior
+is assumed in which case the big pixel will take the bad pixel sentinel value.
+In case of progradation, a bad pixel only spawns bad pixels. <BR>
+The routine accepts both mono and bi-dimensional maps.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/udgrade_nr.F90"><strong>src/f90/mod/udgrade_nr.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">udgrade_nest*</SPAN>(
+<A HREF="#sub:udgrade_nest:map_in">map_in</A>, <A HREF="#sub:udgrade_nest:nside_in">nside_in</A>, <A HREF="#sub:udgrade_nest:map_out">map_out</A>, <A HREF="#sub:udgrade_nest:nside_out">nside_out</A><i><font color="#224422">[, <A HREF="#sub:udgrade_nest:fmissval">fmissval</A>, <A HREF="#sub:udgrade_nest:pessimistic">pessimistic</A>]</font></i>
+)</h3></blockquote>
+Arguments appearing in <i><font color="#224422">italic</font></i> are
+optional.
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:225px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+map_in<A ID="sub:udgrade_nest:map_in"></A>(0:12*nside_in**2-1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">mono-dimensional full sky map to be
+                   prograded or degraded.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">map_in                                  (0:12*nside_in**2-1,1:nd)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">bi-dimensional full sky map to be
+                   prograded or degraded. The routine finds the second
+                   dimension (nd) by itself.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">nside_in<A ID="sub:udgrade_nest:nside_in"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">the <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> resolution parameter of the input
+                   map. Must be a power of 2.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">map_out<A ID="sub:udgrade_nest:map_out"></A>(0:12*nside_out**2-1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">mono-dimensional full sky map after
+                   degradation or progradation.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">map_out                                   (0:12*nside_out**2-1,1:nd)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">bi-dimensional full sky map after
+                   degradation or progradation. The second dimension
+                   (nd) should match that of the input map.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">nside_out<A ID="sub:udgrade_nest:nside_out"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">the <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img24.png"
+ ALT="$N_{\mathrm{side}}$"></SPAN> resolution parameter of the output
+                   map. Must be a power of 2. If nside_out <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.28ex; vertical-align: -0.16ex; " SRC="sub_img294.png"
+ ALT="$&gt;$"></SPAN> nside_in, the
+                   map is prograded (ie, more and smaller pixels) with each
+                   pixel having the same value as its parent; otherwise, the
+                   map in degraded (ie, fewer larger pixels), with each pixel
+                   being the average of its <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img295.png"
+ ALT="$($"></SPAN>nside_in/nside_out<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="sub_img296.png"
+ ALT="$)^2$"></SPAN> components.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">fmissval<A ID="sub:udgrade_nest:fmissval"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">sentinel value given to bad pixels in input and output
+                   maps.<b>default:</b><A HREF="sub_healpix_types_module.htm#sub:healpix_types">\tt HPX_SBADVAL</A> or <A HREF="sub_healpix_types_module.htm#sub:healpix_types">\tt HPX_DBADVAL</A></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">pessimistic<A ID="sub:udgrade_nest:pessimistic"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">LGT</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:225px">if set to <SPAN style="font-family:monospace">.true.</SPAN>, during a degradation, a big pixel containing at least a small
+                   bad pixel will be returned as bad as well, instead of taking
+                   the average of the remaing valid pixels. <b>default:</b><SPAN style="font-family:monospace">.false.</SPAN></TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use udgrade_nr 
+<BR>
+call udgrade_nest(map_hi, 256, map_low, 64)  
+<BR></div>
+<blockquote>
+Degrades a NESTED ordered map with <!-- MATH
+ $N_{\mathrm{side}}=256$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img152.png"
+ ALT="$N_{\mathrm{side}}=256$"></SPAN> into a NESTED map with <!-- MATH
+ $N_{\mathrm{side}}=64$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img124.png"
+ ALT="$N_{\mathrm{side}}=64$"></SPAN>
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">udgrade_nest*</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_udgrade_ring.htm#sub:udgrade_ring">udgrade_ring</A></B>
+<DD>prograde or degrade a RING
+  ordered map.
+</DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_template_pixel_nest_templat.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_udgrade_ring.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html515"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_template_pixel_nest_templat.htm">template_pixel_nest, template_pixel_ring</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_udgrade_ring.htm">udgrade_ring*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

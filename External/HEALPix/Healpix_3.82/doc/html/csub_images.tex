@@ -1,0 +1,241 @@
+\batchmode
+
+
+\documentclass[12pt,twoside]{article}
+\RequirePackage{ifthen}
+
+
+\usepackage{healpix,html,makeidx}
+\usepackage{ae,lmodern}
+\usepackage[T1]{fontenc}
+%
+\renewcommand{\ell}{l}
+%
+\renewcommand{\lq}{`}%
+\providecommand{\hpxversion}{3.82}%
+\providecommand{\hpxverstex}{3\_82} 
+
+%
+\providecommand{\healpixmail}{{\em healpix-support} \texttt{at} {\em lists.sourceforge.net}} 
+
+%
+\providecommand{\hpxwebsite}{https://healpix.sourceforge.io}%
+\providecommand{\oldhpxwebsite}{http://healpix.sf.net} 
+
+%
+\providecommand{\healpixwebpage}{https://healpix.sourceforge.io}%
+\providecommand{\healpixsupport}{https://healpix.sourceforge.io/support.php} 
+
+%
+\providecommand{\defwebsite}{\website{\htmladdnormallink{https://healpix.sourceforge.io}{https://healpix.sourceforge.io}\\\htmladdnormallink{http://healpix.sf.net}{http://healpix.sf.net}}} 
+
+%
+\providecommand{\hpxfitsexamples}{https://healpix.sourceforge.io/data/examples}%
+\providecommand{\hpxfitsdoc}{https://healpix.sourceforge.io/data/examples/healpix\_fits\_specs.pdf}%%% TEXEXPAND: END FILE ./hpxwebsites.tex%
+\providecommand{\nside}{N_{\mathrm{side}}}%
+\providecommand{\npix}{N_{\mathrm{pix}}}%
+\providecommand{\doubledash}{-{}--}  %used in install.pdf%
+\providecommand{\myhtmlimage}[1]{ } 
+
+
+\hypersetup{%
+	pdftitle={HEALPix C Subroutines Overview},%
+	pdfauthor={E. Hivon et al},%
+	pdfkeywords={HEALPix, C},%
+	colorlinks=true}%
+
+
+\sloppy
+\setcounter{secnumdepth}{0}
+
+
+\usepackage{xcolor}
+
+
+
+\makeatletter
+
+\makeatletter
+\count@=\the\catcode`\_ \catcode`\_=8 
+\newenvironment{tex2html_wrap}{}{}%
+\catcode`\<=12\catcode`\_=\count@
+\newcommand{\providedcommand}[1]{\expandafter\providecommand\csname #1\endcsname}%
+\newcommand{\renewedcommand}[1]{\expandafter\providecommand\csname #1\endcsname{}%
+  \expandafter\renewcommand\csname #1\endcsname}%
+\newcommand{\newedenvironment}[1]{\newenvironment{#1}{}{}\renewenvironment{#1}}%
+\let\newedcommand\renewedcommand
+\let\renewedenvironment\newedenvironment
+\makeatother
+\let\mathon=$
+\let\mathoff=$
+\ifx\AtBeginDocument\undefined \newcommand{\AtBeginDocument}[1]{}\fi
+\newbox\sizebox
+\setlength{\hoffset}{0pt}\setlength{\voffset}{0pt}
+\addtolength{\textheight}{\footskip}\setlength{\footskip}{0pt}
+\addtolength{\textheight}{\topmargin}\setlength{\topmargin}{0pt}
+\addtolength{\textheight}{\headheight}\setlength{\headheight}{0pt}
+\addtolength{\textheight}{\headsep}\setlength{\headsep}{0pt}
+\setlength{\textwidth}{349pt}
+\newwrite\lthtmlwrite
+\makeatletter
+\let\realnormalsize=\normalsize
+\global\topskip=2sp
+\def\preveqno{}\let\real@float=\@float \let\realend@float=\end@float
+\def\@float{\let\@savefreelist\@freelist\real@float}
+\def\liih@math{\ifmmode$\else\bad@math\fi}
+\def\end@float{\realend@float\global\let\@freelist\@savefreelist}
+\let\real@dbflt=\@dbflt \let\end@dblfloat=\end@float
+\let\@largefloatcheck=\relax
+\let\if@boxedmulticols=\iftrue
+\def\@dbflt{\let\@savefreelist\@freelist\real@dbflt}
+\def\adjustnormalsize{\def\normalsize{\mathsurround=0pt \realnormalsize
+ \parindent=0pt\abovedisplayskip=0pt\belowdisplayskip=0pt}%
+ \def\phantompar{\csname par\endcsname}\normalsize}%
+\def\lthtmltypeout#1{{\let\protect\string \immediate\write\lthtmlwrite{#1}}}%
+\usepackage[tightpage,active]{preview}
+\newbox\lthtmlPageBox
+\newdimen\lthtmlCropMarkHeight
+\newdimen\lthtmlCropMarkDepth
+\long\def\lthtmlTightVBoxA#1{\def\lthtmllabel{#1}
+    \setbox\lthtmlPageBox\vbox\bgroup\catcode`\_=8 }%
+\long\def\lthtmlTightVBoxZ{\egroup
+    \lthtmlCropMarkHeight=\ht\lthtmlPageBox \advance \lthtmlCropMarkHeight 6pt
+    \lthtmlCropMarkDepth=\dp\lthtmlPageBox
+    \lthtmltypeout{^^J:\lthtmllabel:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
+    \lthtmltypeout{^^J:\lthtmllabel:lthtmlCropMarkDepth:=\the\lthtmlCropMarkDepth:1ex:=\the \dimexpr 1ex}%
+    \begin{preview}\copy\lthtmlPageBox\end{preview}}%
+\long\def\lthtmlTightFBoxA#1{\def\lthtmllabel{#1}%
+    \adjustnormalsize\setbox\lthtmlPageBox=\vbox\bgroup %
+    \let\ifinner=\iffalse \let\)\liih@math %
+    \bgroup\catcode`\_=8 }%
+\long\def\lthtmlTightFBoxZ{\egroup
+    \@next\next\@currlist{}{\def\next{\voidb@x}}%
+    \expandafter\box\next\egroup %
+    \lthtmlCropMarkHeight=\ht\lthtmlPageBox \advance \lthtmlCropMarkHeight 6pt
+    \lthtmlCropMarkDepth=\dp\lthtmlPageBox
+    \lthtmltypeout{^^J:\lthtmllabel:lthtmlCropMarkHeight:=\the\lthtmlCropMarkHeight}%
+    \lthtmltypeout{^^J:\lthtmllabel:lthtmlCropMarkDepth:=\the\lthtmlCropMarkDepth:1ex:=\the \dimexpr 1ex}%
+    \begin{preview}\copy\lthtmlPageBox\end{preview}}%
+    \long\def\lthtmlinlinemathA#1#2\lthtmlindisplaymathZ{\lthtmlTightVBoxA{#1}{\hbox\bgroup#2\egroup}\lthtmlTightVBoxZ}
+    \def\lthtmlinlineA#1#2\lthtmlinlineZ{\lthtmlTightVBoxA{#1}{\hbox\bgroup#2\egroup}\lthtmlTightVBoxZ}
+    \long\def\lthtmldisplayA#1#2\lthtmldisplayZ{\lthtmlTightVBoxA{#1}{#2}\lthtmlTightVBoxZ}
+    \long\def\lthtmldisplayB#1#2\lthtmldisplayZ{\\edef\preveqno{(\theequation)}%
+        \lthtmlTightVBoxA{#1}{\let\@eqnnum\relax#2}\lthtmlTightVBoxZ}
+    \long\def\lthtmlfigureA#1{\let\@savefreelist\@freelist
+        \lthtmlTightFBoxA{#1}}
+    \long\def\lthtmlfigureZ{
+        \lthtmlTightFBoxZ\global\let\@freelist\@savefreelist}
+    \long\def\lthtmlpictureA#1{\let\@savefreelist\@freelist
+        \lthtmlTightVBoxA{#1}}
+    \long\def\lthtmlpictureZ{
+        \lthtmlTightVBoxZ\global\let\@freelist\@savefreelist}
+\def\lthtmlcheckvsize{\ifdim\ht\sizebox<\vsize 
+  \ifdim\wd\sizebox<\hsize\expandafter\hfill\fi \expandafter\vfill
+  \else\expandafter\vss\fi}%
+\providecommand{\selectlanguage}[1]{}%
+\makeatletter \tracingstats = 1 
+
+
+\begin{document}
+\pagestyle{empty}\thispagestyle{empty}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength hsize=\the\hsize}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength vsize=\the\vsize}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength hoffset=\the\hoffset}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength voffset=\the\voffset}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength topmargin=\the\topmargin}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength topskip=\the\topskip}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength headheight=\the\headheight}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength headsep=\the\headsep}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength parskip=\the\parskip}\lthtmltypeout{}%
+\lthtmltypeout{latex2htmlLength oddsidemargin=\the\oddsidemargin}\lthtmltypeout{}%
+\makeatletter
+\if@twoside\lthtmltypeout{latex2htmlLength evensidemargin=\the\evensidemargin}%
+\else\lthtmltypeout{latex2htmlLength evensidemargin=\the\oddsidemargin}\fi%
+\lthtmltypeout{}%
+\makeatother
+\setcounter{page}{1}
+\onecolumn
+
+% !!! IMAGES START HERE !!!
+
+\setcounter{secnumdepth}{0}
+\stepcounter{section}
+\stepcounter{section}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline105}%
+$\mathbf{\theta}$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline107}%
+$\pi$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline109}%
+$\mathbf{\phi}$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline111}%
+$\phi\in[0,2\pi[$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline256}%
+$(\theta,\phi) $%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline260}%
+$x = \sin\theta\cos\phi $%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline262}%
+$y=\sin\theta\sin\phi $%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline264}%
+$z=\cos\theta $%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+{\newpage\clearpage
+\lthtmlinlinemathA{tex2html_wrap_inline268}%
+$2\pi$%
+\lthtmlindisplaymathZ
+\lthtmlcheckvsize\clearpage}
+
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+\stepcounter{section}
+
+\end{document}

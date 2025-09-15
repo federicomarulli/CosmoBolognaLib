@@ -2,7 +2,8 @@
 // Example code: how to convert redshifts into comoving distances -- testing the performances of two different methods 
 // ===================================================================================================================
 
-#include "Cosmology.h"
+#include "LCDM.h"
+
 
 int main () {
 
@@ -15,16 +16,16 @@ int main () {
     // ---------------- set the cosmological parameters ------------
     // -------------------------------------------------------------
 
-    cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck18_};
+    cbl::cosmology::LCDM cosmology("Planck18");
 
 
     // ---------------------------------------------------------------------------------------
     // ---------------- set the redshifts to be converted into comoving distances ------------
     // ---------------------------------------------------------------------------------------
 
-    int step = 10000;
-    double z_min = 0.1;
-    double z_max = 2.;
+    const int step = 10000;
+    const double z_min = 0.1;
+    const double z_max = 2.;
     std::vector<double> redshift = cbl::linear_bin_vector<double>(step, z_min, z_max);
 
   

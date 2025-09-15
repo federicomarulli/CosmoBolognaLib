@@ -1,0 +1,328 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>write_minimal_header</TITLE>
+<META NAME="description" CONTENT="write_minimal_header">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_write_plm.htm">
+<LINK REL="previous" HREF="sub_write_fits_partial.htm">
+<LINK REL="next" HREF="sub_write_plm.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_write_fits_partial.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_write_plm.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html539"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_write_fits_partial.htm">write_fits_partial</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_write_plm.htm">write_plm</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION11600"></A>
+<A ID="sub:write_minimal_header"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">write_minimal_header</SPAN></div><hr>
+<H3>This routine writes the baseline FITS header 
+for the most common <strong>HEALPix</strong> data sets: (cut sky or full sky) map, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="sub_img14.png"
+ ALT="$C(\ell)$"></SPAN> power spectra and <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN>
+coefficients.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/head_fits.F90"><strong>src/f90/mod/head_fits.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">write_minimal_header</SPAN>(
+<A HREF="#sub:write_minimal_header:header">header</A>, <A HREF="#sub:write_minimal_header:dtype">dtype</A>, <i><font color="#224422">[<A HREF="#sub:write_minimal_header:append">append</A>, <A HREF="#sub:write_minimal_header:nside">nside</A>, <A HREF="#sub:write_minimal_header:order">order</A>, <A HREF="#sub:write_minimal_header:ordering">ordering</A>, <A HREF="#sub:write_minimal_header:coordsys">coordsys</A>, <A HREF="#sub:write_minimal_header:creator">creator</A>, <A HREF="#sub:write_minimal_header:version">version</A>, <A HREF="#sub:write_minimal_header:randseed">randseed</A>, <A HREF="#sub:write_minimal_header:beam_leg">beam_leg</A>, <A HREF="#sub:write_minimal_header:fwhm_degree">fwhm_degree</A>, <A HREF="#sub:write_minimal_header:units">units</A>, <A HREF="#sub:write_minimal_header:nlmax">nlmax</A>, <A HREF="#sub:write_minimal_header:polar">polar</A>, <A HREF="#sub:write_minimal_header:nmmax">nmmax</A>, <A HREF="#sub:write_minimal_header:bcross">bcross</A>, <A HREF="#sub:write_minimal_header:deriv">deriv</A>, <A HREF="#sub:write_minimal_header:asym_cl">asym_cl</A>]</font></i> 
+)</h3></blockquote>
+Arguments appearing in <i><font color="#224422">italic</font></i> are
+optional.
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:245px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+header<A ID="sub:write_minimal_header:header"></A>(LEN=80) DIMENSION(:)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">INOUT</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">The FITS header to fill in.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">dtype<A ID="sub:write_minimal_header:dtype"></A>(LEN=*)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">data to be put in the FITS file, must be
+one of 'ALM', 'CL', 'MAP', 'CUTMAP' (case un-sensitive).</TD>
+</TR>
+</TABLE>
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:245px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+<i><font color="#224422">append<A ID="sub:write_minimal_header:append"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">LGT</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">if set to TRUE, the keywords will be appended to the content of <SPAN style="font-family:monospace">header</SPAN>
+instead of written from scrath</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">nside<A ID="sub:write_minimal_header:nside"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">map resolution parameter;
+required for dtype='MAP' and dtype='CUTMAP'</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">order<A ID="sub:write_minimal_header:order"></A>  </font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">map ordering, either 1 (=ring) or 2
+(=nested); see <SPAN style="font-family:monospace">ordering</SPAN></TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">ordering(LEN=*)<A ID="sub:write_minimal_header:ordering"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">map ordering, either 'RING' or 
+'NESTED' (case un-sensitive); 
+either <SPAN style="font-family:monospace">order</SPAN> or <SPAN style="font-family:monospace">ordering</SPAN> is required for dtype='MAP' and dtype='CUTMAP'</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">coordsys<A ID="sub:write_minimal_header:coordsys"></A>(LEN=*)</font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">map coordinate system;
+Valid choices are 'G' = Galactic, 'E' = Ecliptic,  'C'/'Q' = Celestial =
+eQuatorial</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">creator<A ID="sub:write_minimal_header:creator"></A>(LEN=*)</font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">name of software generating the
+data set</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">version<A ID="sub:write_minimal_header:version"></A>(LEN=*)</font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">version of <SPAN style="font-family:monospace">creator</SPAN> software</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">randseed<A ID="sub:write_minimal_header:randseed"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">random number generator seed used to generate the data</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">beam_leg<A ID="sub:write_minimal_header:beam_leg"></A>(LEN=*)</font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">File containing Legendre transform of symmetric beam</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">fwhm_degree<A ID="sub:write_minimal_header:fwhm_degree"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">DP</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">FWHM in degrees of gaussian symmetric beam (FITS keyword: <SPAN style="font-family:monospace">FWHM</SPAN>)</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">units<A ID="sub:write_minimal_header:units"></A>(LEN=*)</font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">physical units of the data set (FITS keyword: <SPAN style="font-family:monospace">TUNIT*</SPAN>)</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">nlmax<A ID="sub:write_minimal_header:nlmax"></A>     </font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">maximum multipole order <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="sub_img310.png"
+ ALT="$l$"></SPAN> of the data set (FITS keyword: <SPAN style="font-family:monospace">MAX-LPOL</SPAN>)</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">polar<A ID="sub:write_minimal_header:polar"></A>     </font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">LGT</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">if set to <SPAN style="font-family:monospace">.TRUE.</SPAN>, the file to be written contains polarized data</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">nmmax<A ID="sub:write_minimal_header:nmmax"></A>     </font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">maximum degree <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.11ex; vertical-align: -0.10ex; " SRC="sub_img34.png"
+ ALT="$m$"></SPAN> of data set (FITS keyword: <SPAN style="font-family:monospace">MAX-MPOL</SPAN>)</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">bcross<A ID="sub:write_minimal_header:bcross"></A>    </font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">LGT</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">if set to <SPAN style="font-family:monospace">.TRUE.</SPAN>, the magnetic cross terms power spectra (TB and EB) are
+included;
+only applies to dtype='CL'</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">deriv<A ID="sub:write_minimal_header:deriv"></A>     </font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">order of derivatives to included in FITS file (0, 1 or 2); 
+only applies to dtype='MAP'</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">asym_cl<A ID="sub:write_minimal_header:asym_cl"></A>    </font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">LGT</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">if set to <SPAN style="font-family:monospace">.TRUE.</SPAN>, the asymmetric power spectra (ET, BT and BE on top of TE, TB and EB)
+are included;
+only applies to dtype='CL'</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use healpix_types 
+<BR>
+use head_fits 
+<BR>
+character(len=80), dimension(1:60) :: header 
+<BR>
+call <SPAN CLASS="colordoc">write_minimal_header</SPAN>(header, 'MAP', nside=256, ordering='Nested')  
+<BR>
+call add_card(header, 'HISTORY', 'Dummy map')
+<BR></div>
+<blockquote>
+Writes in <SPAN style="font-family:monospace">header</SPAN> a <strong>HEALPix</strong> compliant FITS header for a <!-- MATH
+ $N_{\mathrm{side}}=256$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img152.png"
+ ALT="$N_{\mathrm{side}}=256$"></SPAN> map with NESTED
+ordering. Further HISTORY information is added with <A HREF="sub_add_card.htm#sub:add_card">add_card</A>
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">write_minimal_header</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B>write_hl</B>
+<DD>more general routine for adding a keyword to a header.
+  <DT>
+<B><SPAN  CLASS="textbf">cfitsio</SPAN></B>
+<DD>library for FITS file handling.		
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">write_minimal_header</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_add_card.htm#sub:add_card">add_card</A></B>
+<DD>general purpose routine to write/edit an arbitrary
+keyword into a FITS file header.
+  <DT>
+<B><A HREF="sub_get_card.htm#sub:get_card">get_card</A></B>
+<DD>general purpose routine to read any keywords from a header in a FITS file.
+  <DT>
+<B><A HREF="sub_del_card.htm#sub:del_card">del_card</A></B>
+<DD>routine to discard a keyword from a FITS header
+  <DT>
+<B><A HREF="sub_read_par.htm#sub:read_par">read_par</A>, <A HREF="sub_number_of_alms.htm#sub:number_of_alms">number_of_alms</A></B>
+<DD>routines to read specific keywords from a
+  header in a FITS file.
+  <DT>
+<B><A HREF="sub_getsize_fits.htm#sub:getsize_fits">getsize_fits</A></B>
+<DD>function returning the size of the data set in a fits
+  file and reading some other useful FITS keywords
+  <DT>
+<B><A HREF="sub_merge_headers.htm#sub:merge_headers">merge_headers</A></B>
+<DD>routine to merge two FITS headers
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_write_fits_partial.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_write_plm.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html539"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_write_fits_partial.htm">write_fits_partial</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_write_plm.htm">write_plm</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

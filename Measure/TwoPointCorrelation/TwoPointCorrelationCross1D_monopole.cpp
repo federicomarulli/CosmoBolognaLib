@@ -129,7 +129,7 @@ void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::measure (const Er
   
   switch (errorType) {
   case (ErrorType::_Poisson_) :
-    measurePoisson(dir_output_pairs, dir_input_pairs, count_d1d2, count_rr, count_d1r, count_d2r, tcount, estimator, fact);
+    measurePoisson_cross(dir_output_pairs, dir_input_pairs, count_d1d2, count_rr, count_d1r, count_d2r, tcount, estimator, fact);
     break;
   default:
     ErrorCBL("unknown type of error!", "measure", "TwoPointCorrelationCross1D_monopole.cpp");
@@ -140,7 +140,7 @@ void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::measure (const Er
 // ============================================================================================
 
 
-void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::measurePoisson (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_d1d2, const bool count_rr, const bool count_d1r, const bool count_d2r, const bool tcount, const Estimator estimator, const double fact)
+void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::measurePoisson_cross (const string dir_output_pairs, const vector<string> dir_input_pairs, const bool count_d1d2, const bool count_rr, const bool count_d1r, const bool count_d2r, const bool tcount, const Estimator estimator, const double fact)
 {
   // ----------- count the data1-data2, random-random, data1-random and data2-random pairs, or read them from file ----------- 
   
@@ -152,6 +152,6 @@ void cbl::measure::twopt::TwoPointCorrelationCross1D_monopole::measurePoisson (c
   if (estimator==Estimator::_SzapudiSzalay_)
     m_dataset = correlation_SzapudiSzalayEstimator(m_d1d2, m_rr, m_d1r, m_d2r);
   else
-    ErrorCBL("the chosen estimator is not implemented!", "measurePoisson", "TwoPointCorrelationCross1D_monopole.cpp");
+    ErrorCBL("the chosen estimator is not implemented!", "measurePoisson_cross", "TwoPointCorrelationCross1D_monopole.cpp");
   
 }

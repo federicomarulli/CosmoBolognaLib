@@ -34,7 +34,7 @@
 #define __LOGNORMALF__
 
 #include "Catalogue.h"
-#include <fftw3.h>
+#include "PkXi.h"
 
 namespace cbl {
     
@@ -283,7 +283,7 @@ namespace cbl {
        *  @param n_redshift_bins the number or redshift bins
        *  @param author the linear power spectrum method
        */
-      LogNormalFull (const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int n_redshift_bins=500, const std::string author="CAMB");
+      LogNormalFull (const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const double redshift_min=0., const double redshift_max=10., const int n_redshift_bins=500, const std::string author="CAMB");
 
       /**
        *  @brief constructor
@@ -300,7 +300,7 @@ namespace cbl {
        *  @param n_redshift_bins the number or redshift bins
        *  @param author the linear power spectrum
        */
-      LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int n_redshift_bins=500, const std::string author="CAMB");
+      LogNormalFull (const double rmin, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const double redshift_min=0., const double redshift_max=10., const int n_redshift_bins=500, const std::string author="CAMB");
 
       /**
        *  @brief constructor
@@ -313,7 +313,7 @@ namespace cbl {
        *  @param n_redshift_bins the number or redshift bins
        *  @param author the linear power spectrum
        */
-      LogNormalFull (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad, const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int n_redshift_bins=500, const std::string author="CAMB");
+      LogNormalFull (const double rmin, const std::vector<std::shared_ptr<catalogue::Catalogue>> random, const double pad, const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const double redshift_min=0., const double redshift_max=10., const int n_redshift_bins=500, const std::string author="CAMB");
 
       /**
        *  @brief default destructor
@@ -328,7 +328,7 @@ namespace cbl {
        *  @param n_redshift_bins the number or redshift bins
        *  @param author the linear power spectrum
        */
-      void set_cosmo_function (const cosmology::Cosmology cosmology, const double redshift_min=0., const double redshift_max=10., const int n_redshift_bins=500, const std::string author="CAMB");
+      void set_cosmo_function (const std::shared_ptr<cbl::cosmology::Cosmology> cosmology, const double redshift_min=0., const double redshift_max=10., const int n_redshift_bins=500, const std::string author="CAMB");
 
       /**
        *  @brief set grid parameters

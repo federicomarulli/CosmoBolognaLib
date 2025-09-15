@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>mpi_map2alm_slave</TITLE>
+<META NAME="description" CONTENT="mpi_map2alm_slave">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_nArguments.htm">
+<LINK REL="previous" HREF="sub_mpi_map2alm_simple.htm">
+<LINK REL="next" HREF="sub_nArguments.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_mpi_map2alm_simple.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_nArguments.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html433"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_mpi_map2alm_simple.htm">mpi_map2alm_simple*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_nArguments.htm">nArguments</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION6300"></A>
+<A ID="sub:mpi_map2alm_slave"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">mpi_map2alm_slave</SPAN></div><hr>
+<H3>This subroutine complements the master routine mpi_map2alm, and
+should be run by all slaves in the current MPI communicator. It is run
+without arguments, but after an appropriate call to
+initialize_mpi_alm_tools. 
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/mpi_alm_tools.f90"><strong>src/f90/mod/mpi_alm_tools.f90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">mpi_map2alm_slave</SPAN>(
+
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+None.
+
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">call mpi_comm_rank(comm, myid, ierr)
+<BR>
+if (myid == root) then
+<BR>
+call mpi_initialize_alm_tools(comm, nsmax, nlmax, nmmax, 
+<BR>
+zbounds,polarization, precompute_plms)
+<BR>
+call mpi_map2alm(map, alms)
+<BR>
+else 
+<BR>
+call mpi_initialize_alm_tools(comm)
+<BR>
+call mpi_map2alm_slave
+<BR>
+end
+<BR>
+call mpi_cleanup_alm_tools
+<BR></div>
+<blockquote>
+This example 1) initializes the mpi_alm_tools module (i.e.,
+allocates internal arrays and defines required parameters), 2)
+executes a parallel map2alm operation, and 3) frees the previously
+allocated memory.
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">mpi_map2alm_slave</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">alm_tools</SPAN></B>
+<DD>module
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">mpi_map2alm_slave</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_mpi_cleanup_alm_tools.htm#sub:mpi_cleanup_alm_tools">mpi_cleanup_alm_tools</A></B>
+<DD>Frees memory that is allocated by the current routine. 
+   <DT>
+<B><A HREF="sub_mpi_initialize_alm_tools.htm#sub:mpi_initialize_alm_tools">mpi_initialize_alm_tools</A></B>
+<DD>Allocates memory and defines variables for the mpi_alm_tools module. 
+  <DT>
+<B><A HREF="sub_mpi_alm2map.htm#sub:mpi_alm2map">mpi_alm2map</A></B>
+<DD>Routine for executing a parallel inverse spherical harmonics transform (root processor interface)
+  <DT>
+<B><A HREF="sub_mpi_alm2map_slave.htm#sub:mpi_alm2map_slave">mpi_alm2map_slave</A></B>
+<DD>Routine for executing a parallel inverse spherical harmonics transform (slave processor interface)
+  <DT>
+<B><A HREF="sub_mpi_map2alm.htm#sub:mpi_map2alm">mpi_map2alm</A></B>
+<DD>Routine for executing a parallel spherical harmonics transform (root processor interface)
+  <DT>
+<B><A HREF="sub_mpi_alm2map_simple.htm#sub:mpi_alm2map_simple">mpi_alm2map_simple</A></B>
+<DD>One-line interface to the parallel inverse spherical harmonics transform 
+  <DT>
+<B><A HREF="sub_mpi_map2alm_simple.htm#sub:mpi_map2alm_simple">mpi_map2alm_simple</A></B>
+<DD>One-line interface to the parallel spherical harmonics transform 
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_mpi_map2alm_simple.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_nArguments.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html433"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_mpi_map2alm_simple.htm">mpi_map2alm_simple*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_nArguments.htm">nArguments</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

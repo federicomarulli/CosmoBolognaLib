@@ -1,0 +1,338 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>ismoothing</TITLE>
+<META NAME="description" CONTENT="ismoothing">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_isynfast.htm">
+<LINK REL="previous" HREF="idl_iprocess_mask.htm">
+<LINK REL="next" HREF="idl_isynfast.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_iprocess_mask.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_isynfast.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html387"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_iprocess_mask.htm">iprocess_mask</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_isynfast.htm">isynfast</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION3900"></A>
+<A ID="idl:ismoothing"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">ismoothing</SPAN></div><hr>
+<H3>This IDL facility provides an interface to F90 '<A HREF="./fac_smoothing.htm#fac:smoothing">smoothing</A>' facility. It can be
+used to smooth a <strong>HEALPix</strong> map by an arbitrary circular 'beam' defined by its
+Legendre window function (or its FWHM if it is assumed Gaussian)</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/interfaces/ismoothing.pro"><strong>src/idl/interfaces/ismoothing.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+ISMOOTHING, 
+<A HREF="#idl:ismoothing:map1_in">map1_in</A>,  
+<A HREF="#idl:ismoothing:map2_out">map2_out</A>,[
+<A HREF="#idl:ismoothing:beam_file">beam_file=</A>,
+<A HREF="#idl:ismoothing:binpath">binpath=</A>,
+<A HREF="#idl:ismoothing:double">/double</A>,
+<A HREF="#idl:ismoothing:fwhm_arcmin">fwhm_arcmin=</A>,
+<A HREF="#idl:ismoothing:help">/help</A>,
+<A HREF="#idl:ismoothing:iter_order">iter_order=</A>,
+<A HREF="#idl:ismoothing:keep_tmp_files">keep_tmp_files=</A>, 
+<A HREF="#idl:ismoothing:lmax">lmax=</A>,
+<A HREF="#idl:ismoothing:lmax">nlmax=</A>,
+<A HREF="#idl:ismoothing:nested">/nested</A>,
+<A HREF="#idl:ismoothing:ordering">ordering=</A>, 
+<A HREF="#idl:ismoothing:plmfile">plmfile=</A>,
+<A HREF="#idl:ismoothing:regression">regression=</A>,
+<A HREF="#idl:ismoothing:ring">/ring</A>,
+<A HREF="#idl:ismoothing:simul_type">simul_type=</A>,
+<A HREF="#idl:ismoothing:silent">/silent</A>,
+<A HREF="#idl:ismoothing:theta_cut_deg">theta_cut_deg=</A>,  
+<A HREF="#idl:ismoothing:tmpdir">tmpdir=</A>,
+<A HREF="#idl:ismoothing:won">/won</A>,
+<A HREF="#idl:ismoothing:w8file">w8file=</A>,
+<A HREF="#idl:ismoothing:w8dir">w8dir=</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>map1_in</B>
+<DD><A ID="idl:ismoothing:map1_in"></A> required input: input map, can be a FITS file, or a memory array containing the
+        map to smooth
+    <DT>
+<B>map2_out</B>
+<DD><A ID="idl:ismoothing:map2_out"></A> required output: output smoothed map, can be a FITS file, or a memory array
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>beam_file=</B>
+<DD><A ID="idl:ismoothing:beam_file"></A> beam window function, either a FITS file or an array
+		(see <A HREF="./fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:beamfiles">&rdquo;Beam window function files&rdquo;</A> section
+		in the <A ID="tex2html52"
+  HREF="facilities.htm"><strong>HEALPix</strong> Fortran Facilities document</A>). 
+
+<P>
+<DT>
+<B>binpath=</B>
+<DD><A ID="idl:ismoothing:binpath"></A> full path to back-end routine <b>default:</b>$HEXE/smoothing, then $HEALPIX/bin/smoothing
+<BR>              &ndash; a binpath starting with / (or <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img74.png"
+ ALT="$\backslash$"></SPAN>), <SPAN CLASS="MATH">&nbsp;</SPAN> or $ is interpreted as absolute
+<BR>              &ndash; a binpath starting with ./ is interpreted as relative to current directory
+<BR>              &ndash; all other binpaths are relative to $HEALPIX
+
+<P>
+<DT>
+<B>/double</B>
+<DD><A ID="idl:ismoothing:double"></A> if set, I/O is done in double precision <b>default:</b>single precision I/O
+
+<P>
+<DT>
+<B>fwhm_arcmin=</B>
+<DD><A ID="idl:ismoothing:fwhm_arcmin"></A> gaussian beam Full Width Half Maximum in arc-minutes <b>default:</b>0
+
+<P>
+<DT>
+<B>/help</B>
+<DD><A ID="idl:ismoothing:help"></A> if set, prints extended help
+
+<P>
+<DT>
+<B>iter_order=</B>
+<DD><A ID="idl:ismoothing:iter_order"></A> order of iteration in the analysis <b>default:</b>0
+
+<P>
+<DT>
+<B>/keep_tmp_files</B>
+<DD><A ID="idl:ismoothing:keep_tmp_files"></A> if set, temporary files are not discarded at the end of the
+                  run
+
+<P>
+<DT>
+<B>lmax=, nlmax=</B>
+<DD><A ID="idl:ismoothing:lmax"></A> maximum multipole of smoothing <b>default:</b>determined by back-end routine (ie, smoothing)
+
+<P>
+<DT>
+<B>/nested</B>
+<DD><A ID="idl:ismoothing:nested"></A> if set, signals that *all* maps and mask read online are in
+   NESTED scheme (does not apply to FITS file), 
+<A HREF="#idl:ismoothing:ring"><SPAN style="font-family:monospace">/ring</SPAN></A> and 
+<A HREF="#idl:ismoothing:ordering"><SPAN style="font-family:monospace">Ordering</SPAN></A>
+
+<P>
+<DT>
+<B>ordering=</B>
+<DD><A ID="idl:ismoothing:ordering"></A> either 'RING' or 'NESTED', ordering of online maps and masks,
+see 
+<A HREF="#idl:ismoothing:ring"><SPAN style="font-family:monospace">/ring</SPAN></A> and 
+<A HREF="#idl:ismoothing:nested"><SPAN style="font-family:monospace">/nested</SPAN></A>
+
+<P>
+<DT>
+<B>plmfile=</B>
+<DD><A ID="idl:ismoothing:plmfile"></A> FITS file containing precomputed Spherical Harmonics (deprecated) <b>default:</b>no file
+
+<P>
+<DT>
+<B>regression=</B>
+<DD><A ID="idl:ismoothing:regression"></A> 0, 1 or 2, regress out best fit monopole and/or dipole before
+    alm analysis
+  <b>default:</b>0, analyze raw map 
+
+<P>
+<DT>
+<B>/ring</B>
+<DD><A ID="idl:ismoothing:ring"></A> see 
+<A HREF="#idl:ismoothing:nested"><SPAN style="font-family:monospace">/nested</SPAN></A> and 
+<A HREF="#idl:ismoothing:ordering"><SPAN style="font-family:monospace">Ordering</SPAN></A> above
+
+<P>
+<DT>
+<B>simul_type=</B>
+<DD><A ID="idl:ismoothing:simul_type"></A> 1 or 2, analyze temperature only or temperature + polarization
+
+<P>
+<DT>
+<B>/silent</B>
+<DD><A ID="idl:ismoothing:silent"></A> if set, works silently
+
+<P>
+<DT>
+<B>theta_cut_deg=</B>
+<DD><A ID="idl:ismoothing:theta_cut_deg"></A> cut around the equatorial plane 
+
+<P>
+<DT>
+<B>tmpdir=</B>
+<DD><A ID="idl:ismoothing:tmpdir"></A> directory in which are written temporary files 
+<b>default:</b>IDL_TMPDIR (see IDL documentation)
+
+<P>
+<DT>
+<B>won=</B>
+<DD><A ID="idl:ismoothing:won"></A> 
+if set to 0, no weighting applied, if set to 1, a ring-based quadrature weighting scheme is applied,
+              if set to 2, a pixel-based quadrature weighting scheme is applied.
+    <b>default:</b>1: apply ring-based weighting
+
+<P>
+<DT>
+<B>w8file=</B>
+<DD><A ID="idl:ismoothing:w8file"></A> FITS file containing weights 
+     <b>default:</b>determined automatically by back-end routine.
+   Do not set this keyword unless you really know what you are doing
+
+<P>
+<DT>
+<B>w8dir=</B>
+<DD><A ID="idl:ismoothing:w8dir"></A> directory where the weights are to be found 
+        <b>default:</b>determined automatically by back-end routine
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">ismoothing</SPAN> is an interface to '<A HREF="./fac_smoothing.htm#fac:smoothing">smoothing</A>' F90 facility. It
+requires some disk space on which to write the parameter file and the other
+temporary files. Most data can be provided/generated as an external FITS
+file, or as a memory array.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">ismoothing</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">ismoothing</SPAN>.
+    <DT>
+<B>smoothing</B>
+<DD>F90 facility called by <SPAN CLASS="colordoc">ismoothing</SPAN>.
+    <DT>
+<B><A HREF="idl_beam2bl.htm#idl:beam2bl">beam2bl</A></B>
+<DD>This IDL facility computes a transfer
+(or window) function <SPAN CLASS="MATH"><I>b</I>(<I>l</I>)</SPAN> (such as the ones required by <SPAN CLASS="colordoc">ismoothing</SPAN>) for a given
+circular beam profile <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img36.png"
+ ALT="$b(\theta)$"></SPAN>
+    <DT>
+<B><A HREF="idl_ialteralm.htm#idl:ialteralm">ialteralm</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_alteralm.htm#fac:alteralm">alteralm</A>
+    <DT>
+<B><A HREF="idl_ianafast.htm#idl:ianafast">ianafast</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_anafast.htm#fac:anafast">anafast</A> and C++ anafast_cxx
+    <DT>
+<B><A HREF="idl_iprocess_mask.htm#idl:iprocess_mask">iprocess_mask</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_process_mask.htm#fac:process_mask">process_mask</A>
+<DT>
+<B><A HREF="idl_isynfast.htm#idl:isynfast">isynfast</A></B>
+<DD>IDL Interface to F90 <A HREF="./fac_synfast.htm#fac:synfast">synfast</A>
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">whitenoise = randomn(seed, <A HREF="idl_nside2npix.htm#idl:nside2npix">nside2npix</A>(256))</TD>
+</TR>
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">ismoothing</SPAN>, whitenoise, rednoise, fwhm=120, /ring, simul=1,/silent</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="idl_mollview.htm#idl:mollview">mollview</A>, whitenoise,title='White noise'</TD>
+</TR>
+<TR><TD CLASS="LEFT"><A HREF="idl_mollview.htm#idl:mollview">mollview</A>, rednoise,  title='Smoothed white Noise'</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+will generate and plot a white noise map and its smoothed version
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_iprocess_mask.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_isynfast.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html387"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_iprocess_mask.htm">iprocess_mask</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_isynfast.htm">isynfast</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

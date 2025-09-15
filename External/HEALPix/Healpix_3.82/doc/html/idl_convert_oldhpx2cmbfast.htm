@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>convert_oldhpx2cmbfast</TITLE>
+<META NAME="description" CONTENT="convert_oldhpx2cmbfast">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_euler_matrix_new.htm">
+<LINK REL="previous" HREF="idl_cl2fits.htm">
+<LINK REL="next" HREF="idl_euler_matrix_new.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_cl2fits.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_euler_matrix_new.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html349"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_cl2fits.htm">cl2fits</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_euler_matrix_new.htm">euler_matrix_new</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION2000"></A>
+<A ID="idl:convert_oldhpx2cmbfast"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">convert_oldhpx2cmbfast</SPAN></div><hr>
+<H3>This IDL facility provides a means to
+change the normalization of polarization power spectra in a FITS file
+from Healpix 1.1 convention to Healpix 1.2 (which is the same as CMBFAST).
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/fits/convert_oldhpx2cmbfast.pro"><strong>src/idl/fits/convert_oldhpx2cmbfast.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+CONVERT_OLDHPX2CMBFAST, <A HREF="#idl:convert_oldhpx2cmbfast:file_in">file_in</A>, [<A HREF="#idl:convert_oldhpx2cmbfast:file_out">file_out</A>, <A HREF="#idl:convert_oldhpx2cmbfast:NO_RENORM">NO_RENORM=</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>file_in<A ID="idl:convert_oldhpx2cmbfast:file_in"></A></B>
+<DD>String containing the name of the FITS file with the power
+    spectra to be read.
+    <DT>
+<B>file_out<A ID="idl:convert_oldhpx2cmbfast:file_out"></A></B>
+<DD>(OPTIONAL) String containing the name of the file to be
+    written after renormalization. If absent, <SPAN style="font-family:monospace">file_in</SPAN> will be used for output
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>NO_RENORM<A ID="idl:convert_oldhpx2cmbfast:NO_RENORM"></A>=</B>
+<DD>if set, the renormalization is not done.
+      but the keyword POLNORM = CMBFAST is added to the FITS header
+   (useful if the FITS file is already in CMBFAST format).
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+convert_oldhpx2cmbfast does the conversion from the polarization normalisation
+used in <strong>HEALPix</strong> 1.1 to the one used in <strong>HEALPix</strong> 1.2 
+(see the 
+<br><br><A ID="tex2html36"
+  HREF="intro.htm">Healpix primer document</A>).
+A keyword POLNORM = CMBFAST is added to the header to keep track of which
+files have been renormalized.  If this keyword is not present in the input FITS
+file, <SPAN  CLASS="textbf">synfast</SPAN> will issue a
+warning when simulating a polarization map from that power spectrum, but no
+attempt to renormalize the power spectra will be made. 
+
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">convert_oldhpx2cmbfast</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run convert_oldhpx2cmbfast.
+    <DT>
+<B><A HREF="idl_cl2fits.htm#idl:cl2fits">cl2fits</A></B>
+<DD>provides the a routine to write a
+      power spectrum to a FITS file.
+    <DT>
+<B><A HREF="idl_fits2cl.htm#idl:fits2cl">fits2cl</A></B>
+<DD>provides the complimentary routine to read in a
+      power spectrum from a FITS file.
+    <DT>
+<B>synfast</B>
+<DD>utilises the output file generated by convert_oldhpx2cmbfast.
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">convert_oldhpx2cmbfast, 'cl_flat.fits'</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+convert_oldhpx2cmbfast will renormalize the polarization power spectra read
+from 'cl_flat.fits', and write them in the same file.
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_cl2fits.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_euler_matrix_new.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html349"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_cl2fits.htm">cl2fits</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_euler_matrix_new.htm">euler_matrix_new</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

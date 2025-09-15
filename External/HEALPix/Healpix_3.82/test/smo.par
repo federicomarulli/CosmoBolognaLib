@@ -1,0 +1,25 @@
+# HEALPix 3.82
+# parameter file for smoothing
+# This parameter file is used by "make test".
+ 
+simul_type = 2
+
+infile = map.fits
+
+nlmax =      256
+
+regression = 2
+
+theta_cut_deg =   0.00
+
+iter_order =   0
+
+plmfile = ''
+
+fwhm_arcmin =    420.0
+
+beam_file = ''
+
+outfile = !test_sm.fits
+
+won = 1

@@ -120,7 +120,7 @@ namespace cbl {
 	 *  @param cosmo_param_prior vector containing the priors for
 	 *  the cosmological parameters
 	 */
-	void set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
+	void set_model_NumberCounts_cosmology (const std::vector<std::string> cosmo_param={}, const std::vector<statistics::PriorDistribution> cosmo_param_prior={});
 	///@}
 
       };

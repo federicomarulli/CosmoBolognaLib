@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>query_polygon </TITLE>
+<META NAME="description" CONTENT="query_polygon ">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_query_strip.htm">
+<LINK REL="previous" HREF="idl_query_disc.htm">
+<LINK REL="next" HREF="idl_query_strip.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_query_disc.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_query_strip.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html425"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_query_disc.htm">query_disc</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_query_strip.htm">query_strip</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION5800"></A>
+<A ID="idl:query_polygon"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">query_polygon </SPAN></div><hr>
+<H3>This IDL facility provides a means to find the index of all pixels belonging to
+a sperical polygon defined by its vertices
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/toolkit/query_polygon.pro"><strong>src/idl/toolkit/query_polygon.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+query_polygon , <A HREF="#idl:query_polygon:Nside">Nside</A>, <A HREF="#idl:query_polygon:Vlist">Vlist</A>, <A HREF="#idl:query_polygon:Listpix">Listpix</A>, [<A HREF="#idl:query_polygon:Nlist">Nlist</A>, <A HREF="#idl:query_polygon:HELP">HELP=</A>, <A HREF="#idl:query_polygon:NESTED">NESTED=</A>, <A HREF="#idl:query_polygon:INCLUSIVE">INCLUSIVE=</A>]
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>Nside<A ID="idl:query_polygon:Nside"></A></B>
+<DD><strong>HEALPix</strong> resolution parameter used to index the pixel list (scalar integer)
+    <DT>
+<B>Vlist<A ID="idl:query_polygon:Vlist"></A></B>
+<DD>3D cartesian position vector of the polygon vertices. Array of
+    dimension (n,3) where n is the number of vertices
+    <DT>
+<B>Listpix<A ID="idl:query_polygon:Listpix"></A></B>
+<DD>on output: list of ordered index for the pixels found 
+    in the polygon. The RING numbering scheme is used unless the keyword <SPAN style="font-family:monospace">NESTED</SPAN> is set.
+     (=-1 if the polygon is too small and no pixel is found)
+    <DT>
+<B>Nlist<A ID="idl:query_polygon:Nlist"></A></B>
+<DD>on output: number of pixels in Listpix (=0 if no pixel is found).
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>HELP<A ID="idl:query_polygon:HELP"></A>=</B>
+<DD>if set, the documentation header is printed out and the
+routine exits
+    <DT>
+<B>NESTED<A ID="idl:query_polygon:NESTED"></A>=</B>
+<DD>if set, the output list uses the NESTED numbering scheme
+    instead of the default RING
+    <DT>
+<B>INCLUSIVE<A ID="idl:query_polygon:INCLUSIVE"></A>= </B>
+<DD>if set, all the pixels overlapping (even partially)
+                   with the polygon are listed, otherwise only those whose
+                   center lies within the polygon are listed
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+query_polygon finds the pixels within the given polygon in a selective way WITHOUT
+scanning all the sky pixels. The polygon should be convex, 
+or have only one concave vertex. The edges should not intersect each other. 
+The numbering scheme of the output list and the
+inclusiveness of the polygon can be changed
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">query_polygon </SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run query_polygon .
+    <DT>
+<B>ang2pix, pix2ang</B>
+<DD>conversion between angles and pixel index
+    <DT>
+<B>vec2pix, pix2vec</B>
+<DD>conversion between vector and pixel index
+    <DT>
+<B><A HREF="idl_query_disc.htm#idl:query_disc">query_disc</A>, <A HREF="#idl:query_polygon">query_polygon</A>,</B>
+<DD><DT>
+<B><A HREF="idl_query_strip.htm#idl:query_strip">query_strip</A>, <A HREF="idl_query_triangle.htm#idl:query_triangle">query_triangle</A></B>
+<DD>render the list of pixels enclosed
+  respectively in a given disc, polygon, latitude strip and triangle
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">query_polygon ,  256L, [[0,1,1,0],[0,0,1,1],[1,0,-1,0]], listpix, nlist</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+On return listpix contains the index of the (131191) pixels contained in the
+polygon with vertices of cartesian coordinates (0,0,1), (1,0,0), (1,1,-1) and (0,1,0).
+The pixel indices correspond to the RING scheme with resolution 256.
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_query_disc.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_query_strip.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html425"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_query_disc.htm">query_disc</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_query_strip.htm">query_strip</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

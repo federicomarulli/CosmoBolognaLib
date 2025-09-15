@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>The HEALPix Primer</TITLE>
+<META NAME="description" CONTENT="The HEALPix Primer">
+<META NAME="keywords" CONTENT="intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="intro.css">
+
+<LINK REL="next" HREF="intro_TABLE_CONTENTS.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev_g.png"> 
+<A
+ HREF="main.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html48"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong>Up:</strong> <A
+ HREF="main.htm">Main Page</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<P>
+
+<P>
+<H1 class="center">The <strong>HEALPix</strong> Primer</H1>
+<div id=abstract class="center"><strong>HEALPix</strong> is a Hierarchical, Equal Area, and iso-Latitude Pixelation 
+of the sphere  designed to support efficiently
+(1) local operations on the pixel set,
+(2) a hierarchical tree structure for  multi-resolution applications, and
+(3) the global Fast Spherical Harmonic transform.
+<strong>HEALPix</strong> based mathematical software meets the challenges presented by
+high resolution and large volume data sets, such as
+the WMAP and Planck CMB mission products.
+</div>
+<P class="center"><STRONG>Krzysztof M.&nbsp;G&#243;rski, Benjamin D.&nbsp;Wandelt, Eric Hivon, Frode K.&nbsp;Hansen,
+and Anthony J. Banday</STRONG></P>
+<BR><P class="center"><I>Revision: </I>Version 3.82; July 28, 2022</P>
+<P class="center"><A ID="tex2html1"
+  HREF="https://healpix.sourceforge.io">https://healpix.sourceforge.io</A>
+<BR><A ID="tex2html2"
+  HREF="http://healpix.sf.net">http://healpix.sf.net</A></P>
+
+<BR><HR>
+<!--Table of Child-Links-->
+<A ID="CHILD_LINKS"></A>
+
+<UL CLASS="ChildLinks">
+<LI><A ID="tex2html50"
+  HREF="intro_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+<LI><A ID="tex2html51"
+  HREF="intro_Introduction.htm">Introduction</A>
+<LI><A ID="tex2html52"
+  HREF="intro_Discretisation_Functions_on.htm">Discretisation of Functions on the Sphere</A>
+<LI><A ID="tex2html53"
+  HREF="intro_Geometric_Algebraic_Propert.htm">Geometric and Algebraic Properties of <strong>HEALPix</strong> </A>
+<UL>
+<LI><A ID="tex2html54"
+  HREF="intro_Geometric_Algebraic_Propert.htm#SECTION410">RING and NESTED numbering schemes</A>
+<LI><A ID="tex2html55"
+  HREF="intro_Geometric_Algebraic_Propert.htm#SECTION420">The Unique Identifier scheme</A>
+</UL>
+<BR>
+<LI><A ID="tex2html56"
+  HREF="intro_HEALPix_Software_Package.htm">The <strong>HEALPix</strong> Software Package</A>
+<UL>
+<LI><A ID="tex2html57"
+  HREF="intro_HEALPix_Software_Package.htm#SECTION510">Contents and purposes</A>
+<LI><A ID="tex2html58"
+  HREF="intro_HEALPix_Software_Package.htm#SECTION520">Licensing</A>
+</UL>
+<BR>
+<LI><A ID="tex2html59"
+  HREF="intro_HEALPix_conventions.htm"><strong>HEALPix</strong> conventions</A>
+<UL>
+<LI><A ID="tex2html60"
+  HREF="intro_HEALPix_conventions.htm#SECTION610">Angular power spectrum conventions</A>
+<LI><A ID="tex2html61"
+  HREF="intro_HEALPix_conventions.htm#SECTION620"><strong>HEALPix</strong> and Boltzmann codes</A>
+<UL>
+<LI><A ID="tex2html62"
+  HREF="intro_HEALPix_conventions.htm#SECTION621">CMBFAST</A>
+<LI><A ID="tex2html63"
+  HREF="intro_HEALPix_conventions.htm#SECTION622">CAMB and CLASS</A>
+</UL>
+<LI><A ID="tex2html64"
+  HREF="intro_HEALPix_conventions.htm#SECTION630">Polarisation convention</A>
+<UL>
+<LI><A ID="tex2html65"
+  HREF="intro_HEALPix_conventions.htm#SECTION631">Internal convention</A>
+<LI><A ID="tex2html66"
+  HREF="intro_HEALPix_conventions.htm#SECTION632">Relation to previous releases</A>
+<LI><A ID="tex2html67"
+  HREF="intro_HEALPix_conventions.htm#SECTION633">Relation with IAU convention</A>
+<LI><A ID="tex2html68"
+  HREF="intro_HEALPix_conventions.htm#SECTION634">How <strong>HEALPix</strong> deals with these discrepancies: <SPAN  CLASS="texttt">POLCCONV</SPAN> keyword</A>
+</UL>
+<LI><A ID="tex2html69"
+  HREF="intro_HEALPix_conventions.htm#SECTION640">Spherical harmonic conventions</A>
+</UL>
+<BR>
+<LI><A ID="tex2html70"
+  HREF="intro_Pixel_window_functions.htm">Pixel window functions</A>
+<LI><A ID="tex2html71"
+  HREF="intro_Comment_on_Random_Number_Ge.htm">A Comment on the Random Number Generator</A>
+<LI><A ID="tex2html72"
+  HREF="intro_Finite_precision_cross_plat.htm">Finite precision and cross-platform reproducibility</A>
+<LI><A ID="tex2html73"
+  HREF="intro_Bibliography.htm">Bibliography</A>
+<LI><A ID="tex2html74"
+  HREF="intro_About_this_document.htm">About this document ...</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev_g.png"> 
+<A
+ HREF="main.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html48"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong>Up:</strong> <A
+ HREF="main.htm">Main Page</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

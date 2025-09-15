@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>write_bintab*</TITLE>
+<META NAME="description" CONTENT="write_bintab*">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_write_bintabh.htm">
+<LINK REL="previous" HREF="sub_write_asctab.htm">
+<LINK REL="next" HREF="sub_write_bintabh.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_write_asctab.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_write_bintabh.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html529"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_write_asctab.htm">write_asctab*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_write_bintabh.htm">write_bintabh*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION11100"></A>
+<A ID="sub:write_bintab"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">write_bintab*</SPAN></div><hr>
+<H3>This routine creates a binary FITS-file from a <strong>HEALPix</strong> map. The routine can save a temperature map or both temperature and polarisation maps (T,Q,U) to the file.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/fitstools.F90"><strong>src/f90/mod/fitstools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">write_bintab*</SPAN>(
+<A HREF="#sub:write_bintab:map">map</A>, <A HREF="#sub:write_bintab:npix">npix</A>, <A HREF="#sub:write_bintab:nmap">nmap</A>, <A HREF="#sub:write_bintab:header">header</A>, <A HREF="#sub:write_bintab:nlheader">nlheader</A>, <A HREF="#sub:write_bintab:filename">filename</A><i><font color="#224422">[, <A HREF="#sub:write_bintab:extno">extno</A>]</font></i>
+)</h3></blockquote>
+Arguments appearing in <i><font color="#224422">italic</font></i> are
+optional.
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:245px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+map<A ID="sub:write_bintab:map"></A>(0:npix-1,1:nmap)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">the map to write to the FITS-file.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">npix<A ID="sub:write_bintab:npix"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B/ I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">Number of pixels in the map.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">nmap<A ID="sub:write_bintab:nmap"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">number of maps to be written, 1 for temperature only, and 3 for (T,Q,U).</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">header<A ID="sub:write_bintab:header"></A>(LEN=80) (1:nlheader)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">The header for the FITS-file.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">nlheader<A ID="sub:write_bintab:nlheader"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">number of header lines to write to the file.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">filename<A ID="sub:write_bintab:filename"></A>(LEN=*)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">the map(s) is (are) written to a FITS-file with this filename.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">extno<A ID="sub:write_bintab:extno"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">extension number in which to write the data (0
+                   based). <b>default:</b>0</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">call write_bintab (map,12*32**2,3,header,120,'map.fits')  
+<BR></div>
+<blockquote>
+Makes a binary FITS-file called `map.fits' from the <strong>HEALPix</strong> maps (T,Q,U) in the array map(0:12*32**2-1,1:3). The number of pixels 12*32**2 corresponds to the number of pixels in a <!-- MATH
+ $N_{\mathrm{side}}=32$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="sub_img264.png"
+ ALT="$N_{\mathrm{side}}=32$"></SPAN> <strong>HEALPix</strong> map. The header for the FITS-file is given in the string array header and the number of lines in the header is 120. 
+</blockquote>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">write_bintab*</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">fitstools</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B>printerror</B>
+<DD>routine for printing FITS error messages.
+  <DT>
+<B><SPAN  CLASS="textbf">cfitsio</SPAN></B>
+<DD>library for FITS file handling.		
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">write_bintab*</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_input_map.htm#sub:input_map">input_map</A>, <A HREF="sub_read_bintab.htm#sub:read_bintab">read_bintab</A></B>
+<DD>routines which read a file created by <SPAN CLASS="colordoc">write_bintab*</SPAN>. 
+  <DT>
+<B><A HREF="sub_map2alm.htm#sub:map2alm">map2alm</A></B>
+<DD>subroutine which analyse a map and returns the <!-- MATH
+ $a_{\ell m}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="sub_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coeffecients.
+  <DT>
+<B><A HREF="sub_output_map.htm#sub:output_map">output_map</A></B>
+<DD>subroutine which calls <SPAN CLASS="colordoc">write_bintab*</SPAN>
+  <DT>
+<B><A HREF="sub_write_bintabh.htm#sub:write_bintabh">write_bintabh</A></B>
+<DD>subroutine to write a large
+array into a FITS file piece by piece
+  <DT>
+<B><A HREF="sub_input_tod.htm#sub:input_tod">input_tod*</A></B>
+<DD>subroutine to read an arbitrary subsection of
+  a large binary table
+  <DT>
+<B><A HREF="sub_write_minimal_header.htm#sub:write_minimal_header">write_minimal_header</A></B>
+<DD>routine to write minimal FITS header</DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_write_asctab.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_write_bintabh.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html529"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_write_asctab.htm">write_asctab*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_write_bintabh.htm">write_bintabh*</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

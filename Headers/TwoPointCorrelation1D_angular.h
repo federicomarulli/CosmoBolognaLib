@@ -102,7 +102,7 @@ namespace cbl {
 	 *
 	 *  
 	 */
-	void measurePoisson (const std::string dir_output_pairs=par::defaultString, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const double fact=0.1) override;
+	void measurePoisson (const std::string dir_output_pairs, const std::vector<std::string> dir_input_pairs={}, const bool count_dd=true, const bool count_rr=true, const bool count_dr=true, const bool tcount=true, const Estimator estimator=Estimator::_LandySzalay_, const double fact=0.1) override;
 
 	/**
 	 *  @brief measure the angular two-point correlation function

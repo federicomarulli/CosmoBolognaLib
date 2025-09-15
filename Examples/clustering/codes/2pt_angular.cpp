@@ -2,19 +2,31 @@
 // Example code: how to measure the angular two-point correlation function 
 // =======================================================================
 
+#include "LCDM.h"
 #include "TwoPointCorrelation1D_angular.h"
+
+using namespace std;
+
 
 int main () {
 
   try {
-  
+    
+    // --------------------------------------------------------------------
+    // ---------------- set the cosmological model to Planck18 ------------
+    // --------------------------------------------------------------------
+
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
+
+
     // -----------------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec) --------------------------------
     // -----------------------------------------------------------------------------------------------------------------
 
-    const std::string file_catalogue = "../input/cat2d.dat";
-  
-    const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}};
+    const string file_catalogue = "../input/cat2d.dat";
+    
+    const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
+    
 
   
     // ----------------------------------------------------------------
@@ -23,7 +35,7 @@ int main () {
 
     const double N_R = 1.; // random/data ratio
   
-    const cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::RandomType::_createRandom_square_, catalogue, N_R};
+    const cbl::catalogue::Catalogue random_catalogue {cbl::catalogue::RandomType::_createRandom_square_, catalogue, N_R, 10, cosmology};
     
   
     // ------------------------------------------------------------------------------------
@@ -38,8 +50,8 @@ int main () {
     const double shift = 0.5;                                                // shift used to set the bin centre 
     const cbl::CoordinateUnits angularUnits = cbl::CoordinateUnits::_degrees_; // angular units
 
-    const std::string dir = "../output/";
-    const std::string file = "xi_angular.dat";
+    const string dir = "../output/";
+    const string file = "xi_angular.dat";
 
   
     // measure the angular two-point correlation function and store the results
@@ -52,7 +64,7 @@ int main () {
 
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

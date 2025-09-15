@@ -43,23 +43,23 @@ namespace cbl {
     /**
      *  @brief The namespace of the <B> angular power spectrum </B>
      *  
-     *  The \e measure::twopt namespace contains all the functions and
-     *  classes to measure the angular power spectrum
+     *  The \e measure::angularpk namespace contains all the functions
+     *  and classes to measure the angular power spectrum
      */
     namespace angularpk {
       
       /**
-	 *  @brief read mixing matrix from file
-	 *
-	 *  @param dir input directory
-	 *
-	 *  @param file input file
-	 *
-	 *  @param ll vector of multipoles
-	 *
-	 *  @param matrix mixing_matrix
-	 *
-	 */
+       *  @brief read mixing matrix from file
+       *
+       *  @param dir input directory
+       *
+       *  @param file input file
+       *
+       *  @param ll vector of multipoles
+       *
+       *  @param matrix mixing_matrix
+       *
+       */
       void read_mixing_matrix (const std::string dir, const std::string file, std::vector<double> &ll, std::vector<std::vector<double>> &matrix);
        
       /**
@@ -452,7 +452,7 @@ namespace cbl {
 	 *  @param file_window_input input file harmonic coefficients of the mask 
 	 *
 	 */
-	void compute_mixing_matrix(std::string dir_window_input="", std::string file_window_input="");
+	void compute_mixing_matrix (std::string dir_window_input="", std::string file_window_input="");
 
 	/**
 	 *  @brief include the binary angular mask
@@ -464,7 +464,7 @@ namespace cbl {
 	 *  @return 0 if theta, RA is within a masked pixel, 1 otherwise
 	 *
 	 */
-	double angular_mask(double theta, double RA);
+	double angular_mask (double theta, double RA);
 
 	/**
 	 *  @name Input/Output methods
@@ -519,7 +519,7 @@ namespace cbl {
 	 *  @param n_lines_header the header lines to skip
 	 *
 	 */
-      void read (const std::string dir, const std::string file, const std::vector<int> column_x={1}, const std::vector<int> column_y={2}, const std::vector<int> column_error={3}, const int n_lines_header=1);
+	void read (const std::string dir, const std::string file, const std::vector<int> column_x={1}, const std::vector<int> column_y={2}, const std::vector<int> column_error={3}, const int n_lines_header=1);
 	
 	///@}
 	

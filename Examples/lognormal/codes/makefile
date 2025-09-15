@@ -1,6 +1,6 @@
 CXX = g++
 
-FLAGS0 = -std=c++11 -fopenmp 
+FLAGS0 = -std=c++17 -fopenmp 
 FLAGS = -O3 -unroll -Wall -Wextra -pedantic -Wfatal-errors -Werror
 
 dirLib = $(PWD)/../../../

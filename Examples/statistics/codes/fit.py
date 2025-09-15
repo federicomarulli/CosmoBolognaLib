@@ -131,7 +131,7 @@ burn_in = 0
 thin = 1
 
 # set the stuff used to construct the model: here an object of class cosmology, just as an example
-cosmology = cbl.Cosmology()
+cosmology = cbl.LCDM("Planck18")
 
 # construct the dataset by reading an input file
 data1 = cbl.Data1D(dir_input+file_data1)

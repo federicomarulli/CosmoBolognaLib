@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>read_fits_partial</TITLE>
+<META NAME="description" CONTENT="read_fits_partial">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_read_fits_s.htm">
+<LINK REL="previous" HREF="idl_read_fits_map.htm">
+<LINK REL="next" HREF="idl_read_fits_s.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_read_fits_map.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_read_fits_s.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html435"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_read_fits_map.htm">read_fits_map</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_read_fits_s.htm">read_fits_s</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION6300"></A>
+<A ID="idl:read_fits_partial"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">read_fits_partial</SPAN></div><hr>
+<H3>This IDL facility reads FITS file containing incomplete (polarized) sky map.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/fits/read_fits_partial.pro"><strong>src/idl/fits/read_fits_partial.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+READ_FITS_PARTIAL, <A HREF="#idl:read_fits_partial:File">File</A>, <A HREF="#idl:read_fits_partial:Pixel">Pixel</A>, <A HREF="#idl:read_fits_partial:IQU">IQU</A>[, <A HREF="#idl:read_fits_partial:COORDSYS">COORDSYS=</A>, <A HREF="#idl:read_fits_partial:EXTENSION">EXTENSION=</A>, <A HREF="#idl:read_fits_partial:HDR">HDR=</A>, <A HREF="#idl:read_fits_partial:HELP">HELP=</A>, <A HREF="#idl:read_fits_partial:NSIDE">NSIDE=</A>, <A HREF="#idl:read_fits_partial:ORDERING">ORDERING=</A>, <A HREF="#idl:read_fits_partial:UNITS">UNITS=</A>, <A HREF="#idl:read_fits_partial:XHDR">XHDR=</A>]
+
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>File</B>
+<DD><A ID="idl:read_fits_partial:File"></A>          name of a FITS file in which the map is to be written
+
+<P>
+<DT>
+<B>Pixel</B>
+<DD><A ID="idl:read_fits_partial:Pixel"></A>	 (OUT: INT, LONG or LONG64 vector of length <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.75ex; vertical-align: -0.75ex; " SRC="idl_img111.png"
+ ALT="$n_{\rm p}$"></SPAN>), 
+<BR>
+index of observed (or valid) pixels
+
+<P>
+<DT>
+<B>IQU</B>
+<DD><A ID="idl:read_fits_partial:IQU"></A>	 (OUT: FLOAT or DOUBLE array of size (<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.75ex; vertical-align: -0.75ex; " SRC="idl_img111.png"
+ ALT="$n_{\rm p}$"></SPAN>, <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="idl_img112.png"
+ ALT="$n_{\rm c}$"></SPAN>)), 
+<BR>
+value of <SPAN CLASS="MATH"><I>I</I></SPAN> or <SPAN CLASS="MATH"><I>I</I>,<I>Q</I>,<I>U</I></SPAN> signal in each observed pixel
+
+<P>
+</DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>COORDSYS=</B>
+<DD><A ID="idl:read_fits_partial:COORDSYS"></A>	        (OUT, optional), 
+<BR>
+returns on output the astrophysical coordinate system used, 
+		as read from FITS header (value of keywords COORDSYS or SKYCOORD)
+
+<P>
+<DT>
+<B>EXTENSION=</B>
+<DD><A ID="idl:read_fits_partial:EXTENSION"></A>(IN, optional), 
+<BR>
+0 based number of extension to read. <b>default:</b>0 
+
+<P>
+<DT>
+<B>HDR=</B>
+<DD><A ID="idl:read_fits_partial:HDR"></A>(OUT, optional), 
+<BR>
+String array containing the primary header. 
+
+<P>
+<DT>
+<B>HELP=</B>
+<DD><A ID="idl:read_fits_partial:HELP"></A>	        (IN, optional), 
+<BR>
+if set, an extensive help is displayed, and no file is read
+
+<P>
+<DT>
+<B>NSIDE=</B>
+<DD><A ID="idl:read_fits_partial:NSIDE"></A>		(OUT, optional), 
+<BR>
+returns on output the <strong>HEALPix</strong> resolution parameter, as read
+		from the FITS header. Set to -1 if not found
+
+<P>
+<DT>
+<B>ORDERING=</B>
+<DD><A ID="idl:read_fits_partial:ORDERING"></A>	        (OUT, optional), 
+<BR>
+returns on output the pixel ordering, as read from the FITS
+	        header. Either 'RING' or 'NESTED' or ' ' (if not found).
+
+<P>
+<DT>
+<B>UNITS=</B>
+<DD><A ID="idl:read_fits_partial:UNITS"></A>	        (OUT, optional), 
+<BR>
+physical units of each column of the table (except PIXEL)
+
+<P>
+<DT>
+<B>XHDR=</B>
+<DD><A ID="idl:read_fits_partial:XHDR"></A>(OUT, optional), 
+<BR>
+String array containing the extension header. 
+
+<P>
+</DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+For more information on the FITS file format supported in <strong>HEALPix</strong>, 
+including the one implemented in read_fits_partial,
+see <kbd><A ID="tex2html94"
+  HREF="https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf">https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf</A></kbd>
+<br><br></blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">read_fits_partial</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run read_fits_partial<DT>
+<B><A HREF="idl_write_fits_partial.htm#idl:write_fits_partial">write_fits_partial</A></B>
+<DD>This <strong>HEALPix</strong> IDL
+facility can be used to generate the FITS format partial maps complient
+with <strong>HEALPix</strong> convention and readable by read_fits_partial.
+<DT>
+<B><A HREF="idl_read_fits_cut4.htm#idl:read_fits_cut4">read_fits_cut4</A>,
+<A HREF="#idl:read_fits_partial">read_fits_partial</A>,
+<A HREF="idl_read_fits_map.htm#idl:read_fits_map">read_fits_map</A></B>
+<DD><DT>
+<B><A HREF="idl_read_tqu.htm#idl:read_tqu">read_tqu</A>,
+<A HREF="idl_read_fits_s.htm#idl:read_fits_s">read_fits_s</A></B>
+<DD><strong>HEALPix</strong> IDL routines to read cut-sky maps and partial maps, full-sky maps, polarized full-sky maps and
+arbitrary data sets from FITS files
+    <DT>
+<B>sxpar</B>
+<DD>This IDL routine (included in <strong>HEALPix</strong> package) can be
+  used to extract FITS keywords from the header(s) HDR or XHDR read with read_fits_partial.
+  </DL>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_read_fits_map.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_read_fits_s.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html435"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_read_fits_map.htm">read_fits_map</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_read_fits_s.htm">read_fits_s</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

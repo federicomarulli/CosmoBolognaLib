@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: /tmp/file3cCUAH.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(334.41723,1.639822,334.51738,1.639442,334.52547,1.64205,334.52548,1.755482,334.52529,1.7617178,334.51656,1.765254,334.51272,1.766697,334.42544,1.766736,334.42166,1.765477,334.40852,1.755981,334.40885,1.637556) # color=red dash=1

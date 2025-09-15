@@ -1,0 +1,242 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>write_fits_partial</TITLE>
+<META NAME="description" CONTENT="write_fits_partial">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_write_minimal_header.htm">
+<LINK REL="previous" HREF="sub_write_fits_cut4.htm">
+<LINK REL="next" HREF="sub_write_minimal_header.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_write_fits_cut4.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_write_minimal_header.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html537"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_write_fits_cut4.htm">write_fits_cut4</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_write_minimal_header.htm">write_minimal_header</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION11500"></A>
+<A ID="sub:write_fits_partial"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">write_fits_partial</SPAN></div><hr>
+<H3>This routine writes unpolarised or polarised partial sky <strong>HEALPix</strong> map into a FITS file.
+<BR>
+For more information on the FITS file format supported in <strong>HEALPix</strong>, 
+including the one implemented in <SPAN CLASS="colordoc">write_fits_partial</SPAN>,
+see <kbd><A ID="tex2html32"
+  HREF="https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf">https://healpix.sourceforge.io/data/examples/healpix_fits_specs.pdf</A></kbd>.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/fitstools.F90"><strong>src/f90/mod/fitstools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">write_fits_partial</SPAN>(
+<A HREF="#sub:write_fits_partial:filename">filename</A>, <A HREF="#sub:write_fits_partial:pixel">pixel</A>, <A HREF="#sub:write_fits_partial:cutmap">cutmap</A><i><font color="#224422">[, <A HREF="#sub:write_fits_partial:header">header</A>, <A HREF="#sub:write_fits_partial:coord">coord</A>, <A HREF="#sub:write_fits_partial:nside">nside</A>, <A HREF="#sub:write_fits_partial:order">order</A>, <A HREF="#sub:write_fits_partial:units">units</A>, <A HREF="#sub:write_fits_partial:extno">extno</A>]</font></i>
+)</h3></blockquote>
+Arguments appearing in <i><font color="#224422">italic</font></i> are
+optional.
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:40px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:245px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+filename<A ID="sub:write_fits_partial:filename"></A>(LEN=<A HREF="sub_healpix_types_module.htm#sub:healpix_types:filenamelen"><kbd>filenamelen</kbd></A>)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">FITS file in which the partial sky map will be written</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">pixel<A ID="sub:write_fits_partial:pixel"></A>(0:np-1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B/ I8B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">index of observed (or valid) pixels</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">cutmap<A ID="sub:write_fits_partial:cutmap"></A>(0:np-1,1:nc)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">value of polarised (if nc<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.57ex; vertical-align: -0.10ex; " SRC="sub_img219.png"
+ ALT="$=3$"></SPAN>) or unpolarised (if nc<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.52ex; vertical-align: -0.10ex; " SRC="sub_img172.png"
+ ALT="$= 1$"></SPAN>) map value in each observed pixel</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">header<A ID="sub:write_fits_partial:header"></A></font></i>(LEN=80)(1:)  (OPTIONAL)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">FITS extension header to be included in the FITS file</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">coord<A ID="sub:write_fits_partial:coord"></A></font></i>(LEN=1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">astrophysical coordinates ('C' or 'Q'
+                   Celestial/eQuatorial, 'G' for Galactic, 'E' for Ecliptic)</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">nside<A ID="sub:write_fits_partial:nside"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px"><strong>HEALPix</strong> resolution parameter of data set</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">order<A ID="sub:write_fits_partial:order"></A></font></i></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px"><strong>HEALPix</strong> ordering scheme, 1: RING, 2: NESTED</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">units<A ID="sub:write_fits_partial:units"></A></font></i>(LEN=20)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">maps physical units (applies to all columns except PIXEL)</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"><i><font color="#224422">extno</font></i><A ID="sub:write_fits_partial:extno"></A></TD>
+<TD CLASS="LEFT TOP"  style="width:25px">I4B</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">(0 based) extension number in which to write data. <b>default:</b>0.
+	  If set to 0 (or not set) <EM>a new file is written from scratch</EM>.
+	  If set to a value
+		  larger than 1, the corresponding extension is added or
+		  updated, as long as all previous extensions already exist.
+		  All extensions of the same file should use the same Nside,
+Order and Coord</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:40px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:245px">Note: the information relative to Nside, Order and Coord <EM>has</EM> to be
+                   given, either thru these keyword or via the FITS Header.</TD>
+</TR>
+</TABLE>
+
+<P>
+
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">write_fits_partial</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">fitstools</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B>printerror</B>
+<DD>routine for printing FITS error messages.
+  <DT>
+<B><SPAN  CLASS="textbf">cfitsio</SPAN></B>
+<DD>library for FITS file handling.		
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">write_fits_partial</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>anafast</B>
+<DD>executable that reads a <strong>HEALPix</strong> map and analyses it. 
+  <DT>
+<B>synfast</B>
+<DD>executable that generate full sky <strong>HEALPix</strong> maps
+  <DT>
+<B><A HREF="sub_getsize_fits.htm#sub:getsize_fits">getsize_fits</A></B>
+<DD>routine to know the size of a FITS file and its type (eg, full sky vs cut sky)
+  <DT>
+<B><A HREF="sub_input_map.htm#sub:input_map">input_map</A></B>
+<DD>all purpose routine to input a map of any kind from a FITS file
+  <DT>
+<B><A HREF="sub_output_map.htm#sub:output_map">output_map</A></B>
+<DD>subroutine to write a FITS file from a <strong>HEALPix</strong> map
+  <DT>
+<B><A HREF="sub_read_fits_partial.htm#sub:read_fits_partial">read_fits_partial</A></B>
+<DD>subroutine to read a <strong>HEALPix</strong> partial sky map from a FITS file
+  <DT>
+<B><A HREF="sub_write_minimal_header.htm#sub:write_minimal_header">write_minimal_header</A></B>
+<DD>routine to write minimal FITS header
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_write_fits_cut4.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_write_minimal_header.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html537"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_write_fits_cut4.htm">write_fits_cut4</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_write_minimal_header.htm">write_minimal_header</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

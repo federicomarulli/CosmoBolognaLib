@@ -1,5 +1,5 @@
 /********************************************************************
- *  Copyright (C) 2010 by Federico Marulli and Carlo Giocoli        *
+ *  Copyright (C) 2023 by Federico Marulli                          *
  *  federico.marulli3@unibo.it                                      *
  *                                                                  *
  *  This program is free software; you can redistribute it and/or   *
@@ -21,18 +21,18 @@
 /**
  *  @file Cosmology/Lib/MassGrowth.cpp
  *
- *  @brief Methods of the class Cosmology used to model the cosmic
+ *  @brief Methods of the class MassGrowth used to model the cosmic
  *  mass accretion history
  *
  *  This file contains the implementation of the methods of the class
- *  Cosmology used to model the cosmic mass accretion history
+ *  MassGrowth used to model the cosmic mass accretion history
  *
  *  @authors Federico Marulli, Carlo Giocoli 
  *
- *  @author federico.marulli3@unibo.it
+ *  @author federico.marulli3@unibo.it, carlo.giocoli@inaf.it
  */
 
-#include "Cosmology.h"
+#include "MassGrowth.h"
 
 using namespace std;
 
@@ -41,14 +41,8 @@ using namespace cbl;
 
 // =====================================================================================
 
-/* ======== Carlo Giocoli ======== */
 
-
-// -------- Halo Mass Growth History based on Giocoli et al. 2012, Nusser and Sheth, Lacey and Coles 1993 -------- 
-
-// Differential rescaled and generalized formation redshift distribution
-
-double cbl::cosmology::Cosmology::pw (const double ww, const double ff, const std::string author) const 
+double cbl::cosmology::MassGrowth::pw (const double ww, const double ff, const std::string author) const 
 {
   if (author=="NS") {
     if (ff<0.5) coutCBL <<"Warning you are calling pw function for NS with f = "<<ff<<endl;
@@ -66,15 +60,16 @@ double cbl::cosmology::Cosmology::pw (const double ww, const double ff, const st
 // =====================================================================================
 
 
-// Probability that a halo of a given mass m0 at redshift z0 make a mass fraction f at redshift z
-
-double cbl::cosmology::Cosmology::pz (const double m0, const double z0, const double frac, const double redshift, const std::string model_model, const std::string method_SS, const bool store_output, const std::string output_root) const
+double cbl::cosmology::MassGrowth::pz (const double m0, const double z0, const double frac, const double redshift, const std::string model_model, const std::string method_SS, const bool store_output, const std::string output_root) const
 {
-  double dcz0 = deltac(z0)/DN(z0);
-  double dcz = deltac(redshift)/DN(redshift);
-  double SS = sigma2M(m0, method_SS, redshift, store_output, output_root); 
+  double dcz0 = m_cosmology->deltac(z0)/m_cosmology->DN(z0);
+  double dcz = m_cosmology->deltac(redshift)/m_cosmology->DN(redshift);
+
+  Sigma SG(m_cosmology);
+  
+  double SS = SG.sigma2M({m0}, method_SS, redshift, store_output, output_root)[0]; 
   double mf = m0*frac;
-  double SSf = sigma2M(mf, method_SS, redshift, store_output, output_root);
+  double SSf = SG.sigma2M({mf}, method_SS, redshift, store_output, output_root)[0];
   double ww = (dcz-dcz0)/sqrt(SSf-SS);
   if (model_model=="NS"){
     if(frac<0.5) coutCBL <<"Warning you are calling pw function for NS with frac = "<<frac<<endl;
@@ -91,10 +86,8 @@ double cbl::cosmology::Cosmology::pz (const double m0, const double z0, const do
 
 // =====================================================================================
 
-
-// Cumulative rescaled and generalized formation redshift distribution
  
-double cbl::cosmology::Cosmology::cumPw (const double ww, const double ff, const std::string author) const
+double cbl::cosmology::MassGrowth::cumPw (const double ww, const double ff, const std::string author) const
 {
   if(author=="NS"){
     if(ff<0.5) coutCBL <<"Warning you are calling cumPw function for NS with f = "<<ff<<endl;
@@ -115,7 +108,7 @@ double cbl::cosmology::Cosmology::cumPw (const double ww, const double ff, const
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::medianwf (const double ff, const std::string model_model, vector<double> &wf) const
+void cbl::cosmology::MassGrowth::medianwf (const double ff, const std::string model_model, vector<double> &wf) const
 {
   wf.resize(3);
 
@@ -147,39 +140,40 @@ void cbl::cosmology::Cosmology::medianwf (const double ff, const std::string mod
 
 // =====================================================================================
 
-// Conditional variable w = \delta_c(zf) - \delta_c(z)/\sqrt(s(fm)-s(m))
-// we recall that \delta_c(z) = delta_c0(z)/D+(z)
 
-double cbl::cosmology::Cosmology::wf (const double mm, const double redshift, const double ff, const double zf, const std::string method_SS, const bool store_output, const std::string output_root) const
+double cbl::cosmology::MassGrowth::wf (const double mm, const double redshift, const double ff, const double zf, const std::string method_SS, const bool store_output, const std::string output_root) const
 {
-  double deltacz = deltac(redshift)/DN(redshift);
-  double deltaczf = deltac(zf)/DN(zf);
-  double SS = sigma2M(mm, method_SS, redshift, store_output, output_root); 
+  Sigma SG(m_cosmology);
+  
+  double deltacz = m_cosmology->deltac(redshift)/m_cosmology->DN(redshift);
+  double deltaczf = m_cosmology->deltac(zf)/m_cosmology->DN(zf);
+  double SS = SG.sigma2M({mm}, method_SS, redshift, store_output, output_root)[0]; 
   double mf = mm*ff;
-  double SSf = sigma2M(mf, method_SS, redshift, store_output, output_root); 
+  double SSf = SG.sigma2M({mf}, method_SS, redshift, store_output, output_root)[0]; 
   return (deltaczf-deltacz)/sqrt(SSf-SS);
 }
 
 
 // =====================================================================================
 
-// with this routine you can estimate the redshift from w given the parent halo mass (at z=z_0), z_0 and its assembled fraction f
 
-double cbl::cosmology::Cosmology::Redshift (const double mm, const double redshift, const double ff, const std::string method_SS, const double wwf, const bool store_output, const std::string output_root) const
+double cbl::cosmology::MassGrowth::Redshift (const double mm, const double redshift, const double ff, const std::string method_SS, const double wwf, const bool store_output, const std::string output_root) const
 {
+  Sigma SG(m_cosmology);
+  
   int const nn = 128;
   vector<double> lzi = linear_bin_vector(nn, 0., 1.7);
-  double dc0 = deltac(redshift)/DN(redshift);
-  double SS = sigma2M(mm, method_SS, redshift, store_output, output_root); 
+  double dc0 = m_cosmology->deltac(redshift)/m_cosmology->DN(redshift);
+  double SS = SG.sigma2M({mm}, method_SS, redshift, store_output, output_root)[0]; 
   double mf = mm*ff;
-  double SSf = sigma2M(mf, method_SS, redshift, store_output, output_root); 
+  double SSf = SG.sigma2M({mf}, method_SS, redshift, store_output, output_root)[0]; 
   double dd = wwf*sqrt(SSf-SS) + dc0;
   
   vector<double> dci(nn);
 
   for (int i=0; i<nn; i++) {
     double zi = -1 + pow(10.,lzi[i]);
-    dci[i] = deltac(zi)/DN(zi);
+    dci[i] = m_cosmology->deltac(zi)/m_cosmology->DN(zi);
   }
   
   return -1.+pow(10.,interpolated(dd, dci, lzi, "Poly"));
@@ -189,7 +183,7 @@ double cbl::cosmology::Cosmology::Redshift (const double mm, const double redshi
 // =====================================================================================
 
 
-void cbl::cosmology::Cosmology::medianzf (const double ff, const double mass, const double z0, const std::string model_model, const std::string method_SS, std::vector<double> &zf, const bool store_output, const std::string output_root) const
+void cbl::cosmology::MassGrowth::medianzf (const double ff, const double mass, const double z0, const std::string model_model, const std::string method_SS, std::vector<double> &zf, const bool store_output, const std::string output_root) const
 {
   vector<double> wf;
   zf.resize(3);

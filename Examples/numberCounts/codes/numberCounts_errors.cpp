@@ -2,8 +2,11 @@
 // Example code: how to measure the number counts of a catalogue, i.e. the redshift distribution, computing Possonian errors
 // =========================================================================================================================
 
+#include "LCDM.h"
 #include "NumberCounts1D_Redshift.h"
 #include "GlobalFunc.h"
+
+using namespace std;
 
 int main () {
 
@@ -13,21 +16,21 @@ int main () {
     // ---------------- use default cosmological parameters ------------
     // -----------------------------------------------------------------
 
-    const cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck15_};
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
 
     
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
   
-    const std::string file_catalogue = "../input/cat.dat";
+    const string file_catalogue = "../input/cat.dat";
 
     cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
     
     // construct the sub-regions used for jackknife and bootstrap
 
-    std::cout << "I'm constructing the sub-regions used for jackknife and bootstrap..." << std::endl;
+    cout << "I'm constructing the sub-regions used for jackknife and bootstrap..." << endl;
     const int nCells_Ra = 3;
     const int nCells_Dec = 3;
     cbl::set_ObjectRegion_RaDec(catalogue, nCells_Ra, nCells_Dec);
@@ -40,7 +43,7 @@ int main () {
     // binning parameters and output data
 
     const int nbin = 10;
-    const std::string dir = "../output/";
+    const string dir = "../output/";
 
     
     // measure the redshift distribution anc compute Poisson errors
@@ -68,7 +71,7 @@ int main () {
     
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

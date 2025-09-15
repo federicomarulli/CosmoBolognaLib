@@ -40,6 +40,7 @@ using namespace std;
 using namespace cbl;
 using namespace catalogue;
 using namespace chainmesh;
+using namespace glob;
 
 
 // ============================================================================
@@ -53,7 +54,6 @@ template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::Galaxy>);
 template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::Cluster>);
 template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::Void>);
 template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::HostHalo>);
-template cbl::catalogue::Catalogue::Catalogue (vector<cbl::catalogue::ChainMeshCell>);
 
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::RandomObject);
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Mock);
@@ -62,7 +62,6 @@ template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Galaxy);
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Cluster);
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::Void);
 template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::HostHalo);
-template void cbl::catalogue::Catalogue::add_object (cbl::catalogue::ChainMeshCell);
 
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::RandomObject>);
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Mock>);
@@ -71,7 +70,6 @@ template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Gal
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Cluster>);
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::Void>);
 template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::HostHalo>);
-template void cbl::catalogue::Catalogue::add_objects (vector<cbl::catalogue::ChainMeshCell>);
 
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::RandomObject>);
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::Mock>);
@@ -80,15 +78,109 @@ template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue:
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::Cluster>);
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::Void>);
 template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::HostHalo>);
-template void cbl::catalogue::Catalogue::replace_objects (vector<cbl::catalogue::ChainMeshCell>);
 
 /// @endcond
 
 
 // ============================================================================
+ 
+
+cbl::catalogue::Catalogue::Catalogue (const Catalogue& obj)
+{
+  // the copied object is emptied to avoid conflicts 
+  // (e.g. for the subCatalogue function)
+  std::vector<bool> mask(m_object.size(), true);  
+  remove_objects(mask);
+  
+  // m_objects is copied through the use of the ptrObject() function
+  // which allows us to copy also the variables of the derived Object
+  // classes
+  for (size_t i=0; i<obj.m_object.size(); ++i) 
+    m_object.emplace_back(obj.m_object[i]->ptrObject());
+  
+  m_nRegions = obj.m_nRegions;
+}
 
 
-cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<double> coord1, const std::vector<double> coord2, const std::vector<double> coord3, const std::vector<double> weight, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits)
+// ============================================================================
+
+
+cbl::catalogue::Catalogue::Catalogue (Catalogue&& obj) 
+{
+  // the copied object is emptied to avoid conflicts 
+  // (e.g. for the subCatalogue function)
+  std::vector<bool> mask(m_object.size(), true);
+  remove_objects(mask);
+  
+  // m_objects is copied through the use of the ptrObject() function
+  // which allows us to copy also the variables of the derived Object
+  // classes
+  for (size_t i=0; i<obj.m_object.size(); ++i) {
+    m_object.emplace_back(obj.m_object[i]->ptrObject());
+    
+    // 0riginal object pointers are reset
+    obj.m_object[i].reset();
+  }
+  
+  m_nRegions = std::move(obj.m_nRegions);
+}
+
+
+// ============================================================================
+
+
+cbl::catalogue::Catalogue& cbl::catalogue::Catalogue::operator= (const cbl::catalogue::Catalogue& obj) 
+{
+  // the copied object is emptied to avoid conflicts 
+  // (e.g. for the subCatalogue function)
+  std::vector<bool> mask(m_object.size(), true);
+  remove_objects(mask);
+  
+  // m_objects is copied through the use of the ptrObject() function
+  // which allows us to copy also the variables of the derived Object
+  // classes
+  for (size_t i=0; i<obj.m_object.size(); ++i)
+    m_object.emplace_back(obj.m_object[i]->ptrObject());
+  
+  m_nRegions = obj.m_nRegions;
+  
+  return *this;
+}
+
+
+// ============================================================================
+
+
+cbl::catalogue::Catalogue& cbl::catalogue::Catalogue::operator= (cbl::catalogue::Catalogue&& obj) noexcept
+{
+  if (this == &obj) return *this;
+  
+  // the copied object is emptied to avoid conflicts 
+  // (e.g. for the subCatalogue function)
+  std::vector<bool> mask(m_object.size(), true);
+  remove_objects(mask);
+  
+  // m_objects is copied through the use of the ptrObject() function
+  // which allows us to copy also the variables of the derived Object
+  // classes
+  for (size_t i=0; i<obj.m_object.size(); ++i) {
+    
+    // Original object pointers are reset
+    m_object.emplace_back(obj.m_object[i]->ptrObject());
+    obj.m_object[i].reset();
+    
+  }
+  
+  m_nRegions = std::move(obj.m_nRegions);
+  
+  return *this;
+}
+
+
+// ============================================================================
+
+
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<double> coord1, const std::vector<double> coord2, const std::vector<double> coord3, const std::vector<double> weight, const std::shared_ptr<cosmology::Cosmology> cosmology, const CoordinateUnits inputUnits)
 { 
   // check the vector dimensions
   if (!(coord1.size()==coord2.size() && coord2.size()==coord3.size()))
@@ -109,7 +201,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
     }
     else if (coordinateType==cbl::CoordinateType::_observed_) { // observed coordinates (R.A., Dec, redshift)
       observedCoordinates coord = {coord1[i], coord2[i], coord3[i]};
-      m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosm, _weight[i])));
+      m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosmology, _weight[i])));
     }
     else ErrorCBL("CoordinateType is not valid!", "Catalogue", "Catalogue.cpp");
 
@@ -121,7 +213,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const int col1, const int col2, const int col3, const int colWeight, const int colRegion, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const CharEncode charEncode, const std::string comment, const int seed) 
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<std::string> file, const int col1, const int col2, const int col3, const int colWeight, const int colRegion, const double nSub, const double fact, const std::shared_ptr<cosmology::Cosmology> cosmology, const CoordinateUnits inputUnits, const CharEncode charEncode, const std::string comment, const int seed) 
 { 
   // parameters for random numbers used in case nSub!=1
   random::UniformRandomNumbers ran(0., 1., seed);
@@ -163,13 +255,14 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 	    }
 
 	    else if (coordinateType==cbl::CoordinateType::_observed_) { // observed coordinates (R.A., Dec (redshift))
+	      if (cosmology==nullptr) ErrorCBL("The Cosmology object must be provided when the coordinates are of type _observed_!", "Catalogue", "Catalogue.cpp"); 
 	      observedCoordinates coord;
 	      coord.ra = value[col1-1]*fact;
 	      coord.dec = value[col2-1]*fact;
 	      coord.redshift = ((int)value.size()>=col3) ? value[col3-1] : 1.;
 	      Weight = (colWeight!=-1 && colWeight-1<(int)value.size()) ? value[colWeight-1] : 1.;
 	      Region = (colRegion!=-1 && colRegion-1<(int)value.size()) ? (long)value[colRegion-1] : 0;
-	      m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosm, Weight, Region)));
+	      m_object.push_back(move(Object::Create(objectType, coord, inputUnits, cosmology, Weight, Region)));
 	    }
 	  
 	    else ErrorCBL("CoordinateType is not valid!", "Catalogue", "Catalogue.cpp");	
@@ -242,7 +335,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 // ============================================================================
 
 
-cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments, const double nSub, const double fact, const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits, const char delimiter, const int seed) 
+cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const CoordinateType coordinateType, const std::vector<Var> attribute, const std::vector<int> column, const std::vector<std::string> file, const int comments, const double nSub, const double fact, const std::shared_ptr<cosmology::Cosmology> cosmology, const CoordinateUnits inputUnits, const char delimiter, const int seed) 
 {
 
   // preliminary check on vector sizes
@@ -283,7 +376,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 	  m_object.push_back(move(Object::Create(objectType, defaultComovingCoord, 1.)));
 	  
 	else if (coordinateType==cbl::CoordinateType::_observed_)
-	  m_object.push_back(move(Object::Create(objectType, defaultObservedCoord, inputUnits, cosm, 1.)));
+	  m_object.push_back(move(Object::Create(objectType, defaultObservedCoord, inputUnits, cosmology, 1.)));
 
 	else ErrorCBL("CoordinateType is not valid!", "Catalogue", "Catalogue.cpp");
 	
@@ -329,7 +422,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
 	      set_var(ii, varMap[column[index]],
 		      ((varMap[column[index]]==Var::_X_) || (varMap[column[index]]==Var::_Y_) || (varMap[column[index]]==Var::_Z_)) ?
 		      Value_d*fact : Value_d,
-		      cosm);
+		      cosmology);
 	      index++;
 	    }
 	  }
@@ -340,7 +433,7 @@ cbl::catalogue::Catalogue::Catalogue (const ObjectType objectType, const Coordin
     finr.clear(); finr.close();
   }
 }
-    
+
 // ============================================================================
 
 
@@ -547,6 +640,10 @@ double cbl::catalogue::Catalogue::var (int index, Var var_name) const
   case Var::_MagnitudeI_:
     vv = m_object[index]->magnitudeI();
     break;
+    
+  case Var::_MagnitudeZ_:
+    vv = m_object[index]->magnitudeZ();
+    break;
 
   case Var::_SFR_:
     vv = m_object[index]->SFR();
@@ -696,7 +793,7 @@ double cbl::catalogue::Catalogue::var (int index, Var var_name) const
 
 int cbl::catalogue::Catalogue::var_int (int index, Var var_name) const
 {
-	int vv;
+  int vv;
 
   switch (var_name) {
 
@@ -704,11 +801,11 @@ int cbl::catalogue::Catalogue::var_int (int index, Var var_name) const
     vv = m_object[index]->ID();
     break;
   
-		default:
+  default:
     ErrorCBL("no such a variable in the list!", "var", "Catalogue.cpp");
   }
 
-	return vv;
+  return vv;
 }
 
 // ============================================================================
@@ -810,6 +907,9 @@ bool cbl::catalogue::Catalogue::isSetVar (int index, Var var_name) const
     
   else if (var_name==Var::_MagnitudeI_)
     return m_object[index]->isSet_magnitudeI();
+    
+  else if (var_name==Var::_MagnitudeZ_)
+    return m_object[index]->isSet_magnitudeZ();
 
   else if (var_name==Var::_SFR_)
     return m_object[index]->isSet_SFR();
@@ -975,7 +1075,7 @@ void cbl::catalogue::Catalogue::set_field (const std::vector<std::string> field)
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, const double value, const cosmology::Cosmology cosmology, const bool update_coordinates)
+void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, const double value, const std::shared_ptr<cosmology::Cosmology> cosmology, const bool update_coordinates)
 {
   switch (var_name) {
 
@@ -1065,6 +1165,10 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
     
   case Var::_MagnitudeI_:
     m_object[index]->set_magnitudeI(value);
+    break;
+    
+  case Var::_MagnitudeZ_:
+    m_object[index]->set_magnitudeZ(value);
     break;
 
   case Var::_SFR_:
@@ -1201,7 +1305,7 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, const int value, const cosmology::Cosmology cosmology)
+void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, const int value, const std::shared_ptr<cosmology::Cosmology> cosmology)
 {
   switch (var_name) {
 
@@ -1221,10 +1325,11 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
 
 }
 
+
 // ============================================================================
 
 
-// void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, const double value, const cosmology::Cosmology cosmology)
+// void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, const double value, const std::shared_ptr<cosmology::Cosmology> cosmology)
 // {
 //   switch (var_name) {
 
@@ -1240,10 +1345,11 @@ void cbl::catalogue::Catalogue::set_var (const int index, const Var var_name, co
 
 // }
 
+
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<double> var, const cosmology::Cosmology cosmology, const bool update_coordinates)
+void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<double> var, const std::shared_ptr<cosmology::Cosmology> cosmology, const bool update_coordinates)
 {
   if (m_object.size()!=var.size()) ErrorCBL("m_object.size()!=var.size()!", "set_var", "Catalogue.cpp");
   
@@ -1335,6 +1441,10 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<d
     
   case Var::_MagnitudeI_:
     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_magnitudeI(var[i]);
+    break;
+    
+  case Var::_MagnitudeZ_:
+    for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_magnitudeZ(var[i]);
     break;
 
   case Var::_SFR_:
@@ -1471,10 +1581,11 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<d
 
 }
 
+
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<int> var, const cosmology::Cosmology cosmology)
+void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<int> var, const std::shared_ptr<cosmology::Cosmology> cosmology)
 {
   if (m_object.size()!=var.size()) ErrorCBL("m_object.size()!=var.size()!", "set_var", "Catalogue.cpp");
   
@@ -1495,25 +1606,6 @@ void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<i
   }
 }
 
-//==============================================================================
-
-
-// void cbl::catalogue::Catalogue::set_var (const Var var_name, const std::vector<std::string> var, const cosmology::Cosmology cosmology)
-// {
-//   if (m_object.size()!=var.size()) ErrorCBL("m_object.size()!=var.size()!", "set_var", "Catalogue.cpp");
-  
-//   switch (var_name) {
-    
-//   case Var::_GalaxyTag_:
-//     for (size_t i=0; i<nObjects(); ++i) m_object[i]->set_galaxyTag(var[i]);
-//     (void)cosmology;
-//     break;
-
-//   default:
-//     ErrorCBL("no such a variable in the list!", "set_var", "Catalogue.cpp");
-//   }
-
-// }
 
 // ============================================================================
 
@@ -1550,7 +1642,7 @@ void cbl::catalogue::Catalogue::var_distr (const Var var_name, std::vector<doubl
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::computeComovingCoordinates (const cosmology::Cosmology &cosm, const CoordinateUnits inputUnits)
+void cbl::catalogue::Catalogue::computeComovingCoordinates (const std::shared_ptr<cosmology::Cosmology> cosmology, const CoordinateUnits inputUnits)
 {
   double red, xx, yy, zz;
 
@@ -1570,7 +1662,7 @@ void cbl::catalogue::Catalogue::computeComovingCoordinates (const cosmology::Cos
   for (size_t i=0; i<nObjects(); ++i) {
 
     red = redshift(i);
-    m_object[i]->set_dc(cosm.D_C(red));
+    m_object[i]->set_dc(cosmology->D_C(red));
     
     cartesian_coord(RA[i], DEC[i], dc(i), xx, yy, zz);
     
@@ -1632,10 +1724,11 @@ void cbl::catalogue::Catalogue::computePolarCoordinates (const CoordinateUnits o
   
 }
 
+
 // ============================================================================
 
 
-void cbl::catalogue::Catalogue::computePolarCoordinates (const cosmology::Cosmology &cosmology, const double z1, const double z2, const CoordinateUnits outputUnits)
+void cbl::catalogue::Catalogue::computePolarCoordinates (const std::shared_ptr<cosmology::Cosmology> cosmology, const double z1, const double z2, const CoordinateUnits outputUnits)
 {
   double ra, dec, dc;
 
@@ -1647,7 +1740,7 @@ void cbl::catalogue::Catalogue::computePolarCoordinates (const cosmology::Cosmol
     m_object[i]->set_ra(ra); 
     m_object[i]->set_dec(dec); 
     m_object[i]->set_dc(dc);
-    m_object[i]->set_redshift(cosmology.Redshift(dc, z1, z2), cosmology);
+    m_object[i]->set_redshift(cosmology->Redshift(dc, z1, z2), cosmology);
   }
 
   
@@ -1677,6 +1770,7 @@ void cbl::catalogue::Catalogue::computePolarCoordinates (const cosmology::Cosmol
   }
   
 }
+
 
 // ============================================================================
 
@@ -1832,7 +1926,7 @@ void cbl::catalogue::Catalogue::write_data (const std::string outputFile, const 
 
     for (size_t i=0; i<nObjects(); ++i) {
       for (size_t j=0; j<data.size(); j++)
-				fout << data[j][i] << sep;
+	fout << data[j][i] << sep;
       fout << endl;
     }
     
@@ -2070,6 +2164,7 @@ Catalogue cbl::catalogue::Catalogue::mangle_cut (const std::string mangle_mask, 
   return Catalogue{objects};
 }
 
+
 // ============================================================================
 
 
@@ -2122,7 +2217,7 @@ double cbl::catalogue::Catalogue::angsep_xyz (const int i, shared_ptr<Object> ob
 // ============================================================================
 
 
-shared_ptr<Catalogue> cbl::catalogue::Catalogue::smooth (const double gridsize, const cosmology::Cosmology cosmology, const std::vector<Var> vars, const int SUB)
+shared_ptr<Catalogue> cbl::catalogue::Catalogue::smooth (const double gridsize, const std::shared_ptr<cosmology::Cosmology> cosmology, const std::vector<Var> vars, const int SUB)
 {
   (void)vars;
   
@@ -2565,8 +2660,8 @@ void cbl::catalogue::Catalogue::shuffle (const int seed)
 }
 
 
-
 // ============================================================================
+
 
 std::vector<double> cbl::catalogue::Catalogue::compute_catalogueProperties_box (const double boxside)
 {
@@ -2590,9 +2685,11 @@ std::vector<double> cbl::catalogue::Catalogue::compute_catalogueProperties_box (
   return prop;
 }
 
+
 // ============================================================================
 
-std::vector<std::vector<double>> cbl::catalogue::Catalogue::compute_catalogueProperties_lightCone (cbl::cosmology::Cosmology cosmology, const std::vector<double> RA_range, const std::vector<double> DEC_range, const unsigned int nbin)
+
+std::vector<std::vector<double>> cbl::catalogue::Catalogue::compute_catalogueProperties_lightCone (const std::shared_ptr<cosmology::Cosmology> cosmology, const std::vector<double> RA_range, const std::vector<double> DEC_range, const unsigned int nbin)
 {
   std::vector<vector<double>> prop(7, vector<double>(nbin));
   prop[0] = z_bins(nbin); 
@@ -2606,7 +2703,7 @@ std::vector<std::vector<double>> cbl::catalogue::Catalogue::compute_cataloguePro
     auto temp_cat = sub_catalogue(Var::_Redshift_, bin_limits[i], bin_limits[i+1]);
     prop[1][i]=temp_cat.nObjects(); //number of objects
     prop[2][i]=(-(std::cos(THETA_max)-std::cos(THETA_min))*delta_PHI)/(4*cbl::par::pi)*
-            (volume_sphere(cosmology.D_C(bin_limits[i+1]))-volume_sphere(cosmology.D_C(bin_limits[i]))); //volume
+      (volume_sphere(cosmology->D_C(bin_limits[i+1]))-volume_sphere(cosmology->D_C(bin_limits[i]))); //volume
     prop[3][i]=temp_cat.nObjects()/prop[2][i]; //numdensity
     prop[4][i]=pow(prop[3][i], -1./3.);  //mps
     vol = vol + prop[2][i];

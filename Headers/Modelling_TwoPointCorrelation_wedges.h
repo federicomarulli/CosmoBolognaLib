@@ -151,9 +151,9 @@ namespace cbl {
         virtual void write_model (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const std::vector<double> parameter) override;
 
         /**
-         *  @brief write the model at xx with best-fit parameters
-         *  obtained from likelihood maximization
-         *
+	 *  @brief write the model at xx with best-fit parameters
+	 *  obtained from likelihood maximization
+	 *
 	 *  @param output_dir the output directory
 	 *
 	 *  @param output_file the output file
@@ -163,17 +163,23 @@ namespace cbl {
         void write_model_at_bestfit (const std::string output_dir, const std::string output_file, const std::vector<double> xx) override;
 
         /**
-         *  @brief write the model at xx computing 16th, 50th and 84th
-         *  percentiles from the chains
-         *
-         *  @param output_dir the output directory
-         *  @param output_file the output file
-         *  @param xx vector of points at which the model is computed,
-         *  @param start the starting position for each chain
-         *  @param thin the position step
+	 *  @brief write the model at xx computing 16th, 50th and 84th
+	 *  percentiles from the chains
+	 *
+	 *  @param output_dir the output directory
+	 *
+	 *  @param output_file the output file 
+	 *
+	 *  @param xx vector of points at which the model is computed
+	 *
+	 *  @param start the starting position for each chain 
+	 *
+	 *  @param thin the position step
          */
         void write_model_from_chains (const std::string output_dir, const std::string output_file, const std::vector<double> xx, const int start=0, const int thin=1) override;
 
+	using Modelling::write_model_from_chains;
+	
 	///@}
 	
 
@@ -265,7 +271,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::xiWedges, where the
 	 *  power spectrum is computed with the de-wiggled model by
 	 *  cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_PkDM
-	 *  with cbl::modelling::twopt::Pkmu_DeWiggled
+	 *  with cbl::modelling::powspec::Pkmu_DeWiggled
 	 *
 	 *  the model has 7 parameters: 
 	 *    - \f$\alpha_{\perp}\f$
@@ -313,7 +319,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::xiWedges, where the
 	 *  power spectrum is computed with the mode-coupling model by
 	 *  cbl::modelling::twopt::Modelling_TwoPointCorrelation_wedges::set_fiducial_PkDM
-	 *  with cbl::modelling::twopt::Pkmu_ModeCoupling
+	 *  with cbl::modelling::powspec::Pkmu_ModeCoupling
 	 *
 	 *  the model has 6 parameters: 
 	 *    - \f$\alpha_{\perp}\f$
@@ -357,7 +363,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::xiWedges, in which the
 	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
 	 *  modelled with the so-called dispersion model, computed by
-	 *  cbl:modelling::twopt::Pkmu_dispersion (see e.g. Pezzotta
+	 *  cbl::modelling::powspec::Pkmu_dispersion (see e.g. Pezzotta
 	 *  et al. 2017, https://arxiv.org/abs/1612.05645)
 	 *
 	 *  the model has 5 parameters:
@@ -404,7 +410,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::xiWedges, in which the
 	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
 	 *  modelled with the Scoccimarro model, computed by
-	 *  cbl:modelling::twopt::Pkmu_Scoccimarro (see Scoccimarro et
+	 *  cbl::modelling::powspec::Pkmu_Scoccimarro (see Scoccimarro et
 	 *  al. 2004, https://arxiv.org/abs/astro-ph/0407214)
 	 *
 	 *  the model has 5 parameters:
@@ -451,7 +457,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::xiWedges, in which the
 	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
 	 *  modelled with the Scoccimarro model, computed by
-	 *  cbl:modelling::twopt::Pkmu_Scoccimarro_fitPezzotta (see
+	 *  cbl::modelling::powspec::Pkmu_Scoccimarro_fitPezzotta (see
 	 *  Scoccimarro et al. 2004,
 	 *  https://arxiv.org/abs/astro-ph/0407214; Pezzotta et al.,
 	 *  2017, https://arxiv.org/abs/1612.05645)
@@ -506,7 +512,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::xiWedges, in which the
 	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
 	 *  modelled with the Scoccimarro model, computed by
-	 *  cbl:modelling::twopt::Pkmu_Scoccimarro_fitBel (see
+	 *  cbl::modelling::powspec::Pkmu_Scoccimarro_fitBel (see
 	 *  Scoccimarro et al. 2004,
 	 *  https://arxiv.org/abs/astro-ph/0407214; Bel et al. 2019,
 	 *  https://arxiv.org/abs/1809.09338)
@@ -570,7 +576,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::xiWedges, in which the
 	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
 	 *  modelled with the TNS model model, computed by
-	 *  cbl:modelling::twopt::Pkmu_TNS (see Taruya et al.  2010,
+	 *  cbl::modelling::powspec::Pkmu_TNS (see Taruya et al.  2010,
 	 *  https://arxiv.org/abs/1006.0699)
 	 *
 	 *  the model has 5 parameters:
@@ -618,7 +624,7 @@ namespace cbl {
 	 *  computed by cbl::modelling::twopt::Xi_l, in which the
 	 *  redshift-space matter power spectrum \f$P(k, \mu)\f$ is
 	 *  modelled with the extended TNS model model, computed by
-	 *  cbl:modelling::twopt::Pkmu_eTNS (see Taruya et al. 2010,
+	 *  cbl::modelling::powspec::Pkmu_eTNS (see Taruya et al. 2010,
 	 *  https://arxiv.org/abs/1006.0699; Beutler et al. 2013,
 	 *  https://arxiv.org/abs/1312.4611)
 	 *

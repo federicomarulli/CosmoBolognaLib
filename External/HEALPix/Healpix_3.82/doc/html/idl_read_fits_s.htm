@@ -1,0 +1,225 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>read_fits_s </TITLE>
+<META NAME="description" CONTENT="read_fits_s ">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_read_tqu.htm">
+<LINK REL="previous" HREF="idl_read_fits_partial.htm">
+<LINK REL="next" HREF="idl_read_tqu.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_read_fits_partial.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_read_tqu.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html437"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_read_fits_partial.htm">read_fits_partial</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_read_tqu.htm">read_tqu</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION6400"></A>
+<A ID="idl:read_fits_s"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">read_fits_s </SPAN></div><hr>
+<H3>This IDL facility reads a FITS file into an IDL structure.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/fits/read_fits_s.pro"><strong>src/idl/fits/read_fits_s.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+READ_FITS_S , <A HREF="#idl:read_fits_s:File">File</A>, <A HREF="#idl:read_fits_s:Prim_stc">Prim_stc</A>, [<A HREF="#idl:read_fits_s:Xten_stc">Xten_stc</A>, <A HREF="#idl:read_fits_s:COLUMNS">COLUMNS=</A>, <A HREF="#idl:read_fits_s:EXTENSION">EXTENSION=</A>, <A HREF="#idl:read_fits_s:HELP">/HELP</A>, <A HREF="#idl:read_fits_s:MERGE">/MERGE</A>]
+
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>File</B>
+<DD><A ID="idl:read_fits_s:File"></A>          name of a FITS file containing 
+               the healpix map(s) in an extension or in the image field 
+
+<P>
+<DT>
+<B>Prim_stc</B>
+<DD><A ID="idl:read_fits_s:Prim_stc"></A>	variable containing on output an IDL structure with the following fields: 
+<BR>		- primary header (tag : 0, tag name : HDR) 
+<BR>		- primary image (if any, tag : 1, tag name : IMG)
+
+<P>
+<DT>
+<B>Xten_stc</B>
+<DD><A ID="idl:read_fits_s:Xten_stc"></A>		  (optional), 
+<BR>
+variable containing on output an IDL structure with the following fields: 
+<BR>		- extension header (tag : 0, tag name : HDR) 
+<BR>		- data column 1 (if any, tag : 1, tag name given by TTYPE1 (with all
+                    spaces removed and only letters, digits and underscore) 
+<BR>		- data column 2 (if any, tag : 2, tag name given by TTYPE2)  
+<BR>		...
+
+<P>
+<DT>
+<B>COLUMNS=</B>
+<DD><A ID="idl:read_fits_s:COLUMNS"></A>		(optional), 
+<BR>
+list of columns to be read from a binary table 
+        can be a list of integer (1 based) indexing the columns positions
+        or a list of names matching the TTYPE* of the columns
+        by default, all columns are read
+
+<P>
+<DT>
+<B>EXTENSION=</B>
+<DD><A ID="idl:read_fits_s:EXTENSION"></A>		(optional), 
+<BR>
+extension unit to be read from FITS file: 
+ either its 0-based ID number (ie, 0 for first extension <EM>after</EM> primary array) 
+ or the case-insensitive value of its EXTNAME keyword.
+	<b>default:</b>0
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>/HELP</B>
+<DD><A ID="idl:read_fits_s:HELP"></A> if set, an extensive help is displayed and no
+	file is read
+	<DT>
+<B>/MERGE</B>
+<DD><A ID="idl:read_fits_s:MERGE"></A>	if set <SPAN style="font-family:monospace">Prim_stc</SPAN> contains : 
+<BR>		- the concatenated primary and extension header (tag name : HDR) 
+<BR>		- primary image (if any, tag name : IMG) 
+<BR>		- data column 1 ... 
+<BR>
+and <SPAN style="font-family:monospace">Exten_stc</SPAN> is set to 0 
+<BR>	<b>default:</b>: not set (or set to 0)
+   </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">read_fits_s </SPAN> reads in any type of FITS file (Image, Binary table or Ascii table) 
+and outputs the data in IDL structures
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">read_fits_s </SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">read_fits_s </SPAN>
+  <DT>
+<B>synfast</B>
+<DD>This <strong>HEALPix</strong> facility will generate the FITS format 
+            sky map that can be read by <SPAN CLASS="colordoc">read_fits_s </SPAN>.
+<DT>
+<B><A HREF="idl_read_fits_cut4.htm#idl:read_fits_cut4">read_fits_cut4</A>,
+<A HREF="idl_read_fits_partial.htm#idl:read_fits_partial">read_fits_partial</A>,
+<A HREF="idl_read_fits_map.htm#idl:read_fits_map">read_fits_map</A></B>
+<DD><DT>
+<B><A HREF="idl_read_tqu.htm#idl:read_tqu">read_tqu</A>,
+<A HREF="#idl:read_fits_s">read_fits_s</A></B>
+<DD><strong>HEALPix</strong> IDL routines to read cut-sky maps and partial maps, full-sky maps, polarized full-sky maps and
+arbitrary data sets from FITS files
+  <DT>
+<B><A HREF="idl_write_fits_sb.htm#idl:write_fits_sb">write_fits_sb</A></B>
+<DD>This <strong>HEALPix</strong> IDL facility can be used to generate FITS format 
+            sky maps readable by <SPAN CLASS="colordoc">read_fits_s </SPAN>.
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">read_fits_s </SPAN>,  'dmr_skymap_90a_4yr.fits', pdata, xdata</TD>
+</TR>
+</TABLE></div>
+<blockquote><SPAN CLASS="colordoc">read_fits_s </SPAN> reads in the file 'dmr_skymap_90a_4yr.fits'. On output, pdata
+contains the primary header and xdata is a structure whose first field is the
+extension header, and the other fields are vectors with respective tag names 
+PIXEL, SIGNAL, N_OBS, SERROR, ... (see <SPAN style="font-family:monospace">help,/struc,xdata</SPAN>)</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_read_fits_partial.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_read_tqu.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html437"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_read_fits_partial.htm">read_fits_partial</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_read_tqu.htm">read_tqu</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

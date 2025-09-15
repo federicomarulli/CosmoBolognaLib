@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>npix2nside </TITLE>
+<META NAME="description" CONTENT="npix2nside ">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_nside2npix.htm">
+<LINK REL="previous" HREF="idl_nest2uniq.htm">
+<LINK REL="next" HREF="idl_nside2npix.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_nest2uniq.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_nside2npix.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html405"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_nest2uniq.htm">nest2uniq</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_nside2npix.htm">nside2npix</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION4800"></A>
+<A ID="idl:npix2nside"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">npix2nside </SPAN></div><hr>
+<H3>This IDL facility provides the <strong>HEALPix</strong> resolution parameter Nside corresponding to Npix
+pixels over the full sky.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/toolkit/npix2nside.pro"><strong>src/idl/toolkit/npix2nside.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+<A HREF="#idl:npix2nside:Nside">Nside=</A>NPIX2NSIDE (<A HREF="#idl:npix2nside:Npix">Npix</A>
+ [, <A HREF="#idl:npix2nside:ERROR">ERROR=</A>])
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>Npix<A ID="idl:npix2nside:Npix"></A></B>
+<DD>number of pixels over the full sky (scalar integer),
+         should be a valid Npix 
+	(<!-- MATH
+ $N_{\mathrm{pix}}= 12N_{\mathrm{side}}^2$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>pix</SUB>= 12<I>N</I><SUB>side</SUB><SUP><i>2</i></SUP></SPAN> with <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN> power of 2 in <!-- MATH
+ $\{1,\ldots,2^{29}\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="idl_img93.png"
+ ALT="$\{1,\ldots,2^{29}\}$"></SPAN>)
+    <DT>
+<B>Nside<A ID="idl:npix2nside:Nside"></A></B>
+<DD>on output: resolution parameter if Npix is valid, -1 otherwise
+  </DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>ERROR<A ID="idl:npix2nside:ERROR"></A>=</B>
+<DD>error flag, set to 1 on output if Npix is NOT valid, or
+    stays to 0 otherwise.
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+npix2nside checks that the given Npix is valid 
+(<!-- MATH
+ $N_{\mathrm{pix}}= 12N_{\mathrm{side}}^2$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>pix</SUB>= 12<I>N</I><SUB>side</SUB><SUP><i>2</i></SUP></SPAN> with <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN> a power of 2 in
+<!-- MATH
+ $\{1,\ldots,2^{29}\}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="idl_img93.png"
+ ALT="$\{1,\ldots,2^{29}\}$"></SPAN>) and then computes the
+corresponding resolution parameter <!-- MATH
+ $N_{\mathrm{side}}$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB></SPAN>.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">npix2nside </SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run npix2nside .	
+    <DT>
+<B><A HREF="idl_nside2npix.htm#idl:nside2npix">nside2npix</A></B>
+<DD>computes Npix corresponding to Nside 
+    <DT>
+<B><A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools">pix2xxx</A>, <A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools">ang2xxx</A>, <A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools">vec2xxx</A>, ... </B>
+<DD>conversion between vector or angles and pixel index and vice-versa
+    <DT>
+<B><A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools">vec2pix</A>, <A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools">pix2vec</A></B>
+<DD>conversion between vector and pixel index
+    <DT>
+<B><A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools">nest2ring</A>, <A HREF="idl_pix2xxx_ang2xxx_vec2xxx_nes.htm#idl:pix_tools">ring2nest</A></B>
+<DD>conversion between NESTED and RING indices
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">Nside = npix2nside(49152, ERROR=error)</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+Nside will be 64 because 49152 is a valid pixel number (=12*64<SPAN CLASS="MATH"><SUP><i>2</i></SUP></SPAN> and 64 is a power of 2), and error will be 0</blockquote>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">Nside = npix2nside(49151, ERROR=error)</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+Nside will be -1 and error: 1, because 49151 is not a valid number of <strong>HEALPix</strong> 
+pixels over the full sky.</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_nest2uniq.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_nside2npix.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html405"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_nest2uniq.htm">nest2uniq</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_nside2npix.htm">nside2npix</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,265 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>read_fits_map</TITLE>
+<META NAME="description" CONTENT="read_fits_map">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_read_fits_partial.htm">
+<LINK REL="previous" HREF="idl_read_fits_cut4.htm">
+<LINK REL="next" HREF="idl_read_fits_partial.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_read_fits_cut4.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_read_fits_partial.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html433"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_read_fits_cut4.htm">read_fits_cut4</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_read_fits_partial.htm">read_fits_partial</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION6200"></A>
+<A ID="idl:read_fits_map"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">read_fits_map</SPAN></div><hr>
+<H3>This IDL facility reads in a <strong>HEALPix</strong> map from a FITS file.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/fits/read_fits_map.pro"><strong>src/idl/fits/read_fits_map.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+READ_FITS_MAP , <A HREF="#idl:read_fits_map:File">File</A>, <A HREF="#idl:read_fits_map:T_sky">T_sky</A>, [<A HREF="#idl:read_fits_map:Hdr">Hdr</A>, <A HREF="#idl:read_fits_map:Exthdr">Exthdr</A>, <A HREF="#idl:read_fits_map:PIXEL">PIXEL=</A>, <A HREF="#idl:read_fits_map:SILENT">SILENT=</A>, <A HREF="#idl:read_fits_map:NSIDE">NSIDE=</A>, <A HREF="#idl:read_fits_map:ORDERING">ORDERING=</A>,
+<A HREF="#idl:read_fits_map:COORDSYS">COORDSYS=</A>, <A HREF="#idl:read_fits_map:EXTENSION">EXTENSION=</A>, <A HREF="#idl:read_fits_map:HELP">HELP=</A>]
+
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>File</B>
+<DD><A ID="idl:read_fits_map:File"></A>          name of a FITS file containing 
+               the <strong>HEALPix</strong> map in an extension or in the image field 
+
+<P>
+<DT>
+<B>T_sky</B>
+<DD><A ID="idl:read_fits_map:T_sky"></A>	variable containing on output the <strong>HEALPix</strong> map
+
+<P>
+<DT>
+<B>Hdr</B>
+<DD><A ID="idl:read_fits_map:Hdr"></A>		  (optional), 
+<BR>
+string variable containing on output
+		  the FITS primary header
+
+<P>
+<DT>
+<B>Exthdr</B>
+<DD><A ID="idl:read_fits_map:Exthdr"></A>		  (optional), 
+<BR>
+string variable containing on output
+		  the FITS extension header
+
+<P>
+<DT>
+<B>PIXEL=</B>
+<DD><A ID="idl:read_fits_map:PIXEL"></A>		(optional), 
+<BR>
+pixel number to read from or pixel range to read
+                 (in the order of appearance in the file), starting from 0. 
+<BR>
+if <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.87ex; vertical-align: -0.41ex; " SRC="idl_img98.png"
+ ALT="$\ge$"></SPAN> 0 scalar        : read from pixel to the end of the file 
+<BR>
+if two elements array : reads from pixel[0] to pixel[1]
+		(included) 
+<BR>
+if absent             : read the whole file
+
+<P>
+<DT>
+<B>NSIDE=</B>
+<DD><A ID="idl:read_fits_map:NSIDE"></A>		(optional), 
+<BR>
+returns on output the <strong>HEALPix</strong> resolution parameter, as read
+		from the FITS header. Set to -1 if not found
+
+<P>
+<DT>
+<B>ORDERING=</B>
+<DD><A ID="idl:read_fits_map:ORDERING"></A>	        (optional), 
+<BR>
+returns on output the pixel ordering, as read from the FITS
+	        header. Either 'RING' or 'NESTED' or ' ' (if not found).
+
+<P>
+<DT>
+<B>COORDSYS=</B>
+<DD><A ID="idl:read_fits_map:COORDSYS"></A>	        (optional), 
+<BR>
+returns on output the astrophysical coordinate system used, 
+		as read from FITS header (value of keywords COORDSYS or SKYCOORD)
+
+<P>
+<DT>
+<B>EXTENSION=</B>
+<DD><A ID="idl:read_fits_map:EXTENSION"></A>		(optional), 
+<BR>
+extension unit to be read from FITS file: 
+ either its 0-based ID number (ie, 0 for first extension <EM>after</EM> primary array) 
+ or the case-insensitive value of its EXTNAME keyword.
+	If absent, all available extensions are read.
+
+<P>
+</DL>
+
+<P>
+<hr><H2>KEYWORDS</H2>
+
+  <DL COMPACT><DT>
+<B>HELP=</B>
+<DD><A ID="idl:read_fits_map:HELP"></A> if set, an extensive help is displayed and no
+	file is read
+  <DT>
+<B>SILENT=</B>
+<DD><A ID="idl:read_fits_map:SILENT"></A> if set, no message is issued during normal execution
+   </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+<SPAN CLASS="colordoc">read_fits_map</SPAN> reads in a <strong>HEALPix</strong> sky map from a FITS file, and outputs
+the variable <A HREF="#idl:read_fits_map:T_sky"><SPAN style="font-family:monospace">T_sky</SPAN></A>, where the optional variables <A HREF="#idl:read_fits_map:Hdr"><SPAN style="font-family:monospace">Hdr</SPAN></A> 
+and <A HREF="#idl:read_fits_map:Exthdr"><SPAN style="font-family:monospace">Exthdr</SPAN></A> contain
+respectively the primary and extension headers. According to <strong>HEALPix</strong> 
+convention, the map should be is stored as a FITS file binary table
+extension. Note:the routine <A HREF="idl_read_tqu.htm#idl:read_tqu">read_tqu</A> which requires less
+memory is recommended when reading <EM>large polarized</EM> maps.
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">read_fits_map</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run <SPAN CLASS="colordoc">read_fits_map</SPAN>
+<DT>
+<B><A HREF="idl_read_fits_cut4.htm#idl:read_fits_cut4">read_fits_cut4</A>,
+<A HREF="idl_read_fits_partial.htm#idl:read_fits_partial">read_fits_partial</A>,
+<A HREF="#idl:read_fits_map">read_fits_map</A></B>
+<DD><DT>
+<B><A HREF="idl_read_tqu.htm#idl:read_tqu">read_tqu</A>,
+<A HREF="idl_read_fits_s.htm#idl:read_fits_s">read_fits_s</A></B>
+<DD><strong>HEALPix</strong> IDL routines to read cut-sky maps and partial maps, full-sky maps, polarized full-sky maps and
+arbitrary data sets from FITS files
+    <DT>
+<B>sxpar</B>
+<DD>This IDL routine (included in <strong>HEALPix</strong> package) can be
+  used to extract FITS keywords from the header(s) <A HREF="#idl:read_fits_map:Hdr"><SPAN style="font-family:monospace">Hdr</SPAN></A> 
+or <A HREF="#idl:read_fits_map:Exthdr"><SPAN style="font-family:monospace">Exthdr</SPAN></A> read with <SPAN CLASS="colordoc">read_fits_map</SPAN>.
+  <DT>
+<B>synfast</B>
+<DD>This <strong>HEALPix</strong> facility will generate the FITS format 
+            sky map that can be read by <SPAN CLASS="colordoc">read_fits_map</SPAN>.
+  <DT>
+<B><A HREF="idl_write_fits_map.htm#idl:write_fits_map">write_fits_map</A></B>
+<DD>This <strong>HEALPix</strong> IDL facility can be used to generate the FITS format 
+            sky maps complient with <strong>HEALPix</strong> convention and readable by <SPAN CLASS="colordoc">read_fits_map</SPAN>.
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT"><SPAN CLASS="colordoc">read_fits_map</SPAN>, 'planck100GHZ-LFI.fits', map, hdr, xhdr, /silent</TD>
+</TR>
+</TABLE></div>
+<blockquote><SPAN CLASS="colordoc">read_fits_map</SPAN> reads in the file 'planck100GHZ-LFI.fits' and outputs the
+<strong>HEALPix</strong> map in <SPAN style="font-family:monospace">map</SPAN>, the primary header in <SPAN style="font-family:monospace">hdr</SPAN> and the extension
+header in <SPAN style="font-family:monospace">xhdr</SPAN>.
+</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_read_fits_cut4.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_read_fits_partial.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html433"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_read_fits_cut4.htm">read_fits_cut4</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_read_fits_partial.htm">read_fits_partial</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

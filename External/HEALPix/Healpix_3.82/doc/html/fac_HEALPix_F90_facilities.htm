@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>HEALPix/F90 facilities</TITLE>
+<META NAME="description" CONTENT="HEALPix/F90 facilities">
+<META NAME="keywords" CONTENT="facilities">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="facilities.css">
+
+<LINK REL="next" HREF="fac_TABLE_CONTENTS.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev_g.png"> 
+<A
+ HREF="main.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html27"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong>Up:</strong> <A
+ HREF="main.htm">Main Page</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<A ID="fac:facilities"></A>
+
+<P>
+<H1 class="center"><strong>HEALPix</strong> Fortran Facility User Guidelines</H1>
+<div id=abstract class="center">This document describes the <strong>HEALPix</strong> Fortran stand-alone facilities</div>
+<P class="center"><STRONG>Eric Hivon, Frode K.&nbsp;Hansen, Benjamin D.&nbsp;Wandelt, Krzysztof M.&nbsp;G&#243;rski,
+Anthony J.&nbsp;Banday, Martin Reinecke</STRONG></P>
+<BR><P class="center"><I>Revision: </I>Version 3.82; July 28, 2022</P>
+<P class="center"><A ID="tex2html1"
+  HREF="https://healpix.sourceforge.io">https://healpix.sourceforge.io</A>
+<BR><A ID="tex2html2"
+  HREF="http://healpix.sf.net">http://healpix.sf.net</A></P>
+
+<BR><HR>
+<!--Table of Child-Links-->
+<A ID="CHILD_LINKS"></A>
+
+<UL CLASS="ChildLinks">
+<LI><A ID="tex2html29"
+  HREF="fac_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+<LI><A ID="tex2html30"
+  HREF="fac_Using_HEALPix_Fortran_90_fa.htm">Using the <strong>HEALPix</strong> Fortran 90 facilities</A>
+<UL>
+<LI><A ID="tex2html31"
+  HREF="fac_Using_HEALPix_Fortran_90_fa.htm#SECTION210">Default file names and directories</A>
+<LI><A ID="tex2html32"
+  HREF="fac_Using_HEALPix_Fortran_90_fa.htm#SECTION220">Double/Single precision mode</A>
+<LI><A ID="tex2html33"
+  HREF="fac_Using_HEALPix_Fortran_90_fa.htm#SECTION230">Beam window function files</A>
+</UL>
+<BR>
+<LI><A ID="tex2html34"
+  HREF="fac_Changes_between_releases_3_.htm">Changes between releases 3.80 and 3.82</A>
+<LI><A ID="tex2html35"
+  HREF="fac_Older_Changes.htm">Older Changes</A>
+<UL>
+<LI><A ID="tex2html36"
+  HREF="fac_Older_Changes.htm#SECTION401">Version 3.80</A>
+<LI><A ID="tex2html37"
+  HREF="fac_Older_Changes.htm#SECTION402">Version 3.70</A>
+<LI><A ID="tex2html38"
+  HREF="fac_Older_Changes.htm#SECTION403">Version 3.60</A>
+<LI><A ID="tex2html39"
+  HREF="fac_Older_Changes.htm#SECTION404">Version 3.50</A>
+<LI><A ID="tex2html40"
+  HREF="fac_Older_Changes.htm#SECTION405">Version 3.40</A>
+<LI><A ID="tex2html41"
+  HREF="fac_Older_Changes.htm#SECTION406">Version 3.31</A>
+<LI><A ID="tex2html42"
+  HREF="fac_Older_Changes.htm#SECTION407">Version 3.30</A>
+<LI><A ID="tex2html43"
+  HREF="fac_Older_Changes.htm#SECTION408">Version 3.20</A>
+<LI><A ID="tex2html44"
+  HREF="fac_Older_Changes.htm#SECTION409">Version 3.11</A>
+<LI><A ID="tex2html45"
+  HREF="fac_Older_Changes.htm#SECTION4010">Version 3.10</A>
+<LI><A ID="tex2html46"
+  HREF="fac_Older_Changes.htm#SECTION410">Changes up to release 3.00</A>
+<UL>
+<LI><A ID="tex2html47"
+  HREF="fac_Older_Changes.htm#SECTION411">Version 3.00</A>
+<LI><A ID="tex2html48"
+  HREF="fac_Older_Changes.htm#SECTION412">Version 2.20</A>
+<LI><A ID="tex2html49"
+  HREF="fac_Older_Changes.htm#SECTION413">Version 2.14</A>
+<LI><A ID="tex2html50"
+  HREF="fac_Older_Changes.htm#SECTION414">Version 2.10</A>
+<LI><A ID="tex2html51"
+  HREF="fac_Older_Changes.htm#SECTION415">Version 2.00</A>
+</UL>
+</UL>
+<BR>
+<LI><A ID="tex2html52"
+  HREF="fac_alteralm.htm">alteralm</A>
+<LI><A ID="tex2html53"
+  HREF="fac_anafast.htm">anafast</A>
+<LI><A ID="tex2html54"
+  HREF="fac_hotspot.htm">hotspot</A>
+<LI><A ID="tex2html55"
+  HREF="fac_map2gif.htm">map2gif</A>
+<LI><A ID="tex2html56"
+  HREF="fac_median_filter.htm">median_filter</A>
+<LI><A ID="tex2html57"
+  HREF="fac_plmgen.htm">plmgen</A>
+<LI><A ID="tex2html58"
+  HREF="fac_process_mask.htm">process_mask</A>
+<LI><A ID="tex2html59"
+  HREF="fac_sky_ng_sim.htm">sky_ng_sim</A>
+<LI><A ID="tex2html60"
+  HREF="fac_smoothing.htm">smoothing</A>
+<LI><A ID="tex2html61"
+  HREF="fac_synfast.htm">synfast</A>
+<LI><A ID="tex2html62"
+  HREF="fac_ud_grade.htm">ud_grade</A>
+<LI><A ID="tex2html63"
+  HREF="fac_Appendix.htm">Appendix</A>
+<UL>
+<LI><A ID="tex2html64"
+  HREF="fac_Appendix.htm#SECTION1610">Bug Correction in synfast 2.14</A>
+</UL>
+<BR>
+<LI><A ID="tex2html65"
+  HREF="fac_About_this_document.htm">About this document ...</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev_g.png"> 
+<A
+ HREF="main.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html27"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong>Up:</strong> <A
+ HREF="main.htm">Main Page</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

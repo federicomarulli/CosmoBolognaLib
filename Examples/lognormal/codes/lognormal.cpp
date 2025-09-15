@@ -2,7 +2,10 @@
 // Example code: how to construct a log-normal density field catalogue
 // ===================================================================
 
+#include "LCDM.h"
 #include "LogNormal.h"
+
+using namespace std;
 
 int main () {
 
@@ -12,9 +15,9 @@ int main () {
     // ----- set the cosmological model -----
     // --------------------------------------
     
-    const cbl::cosmology::Cosmology cosmology {cbl::cosmology::CosmologicalModel::_Planck18_};
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
 
-
+    
     // -------------------------------------------------------------
     // ----- set the object to construct log-normal catalogues -----
     // -------------------------------------------------------------
@@ -45,11 +48,11 @@ int main () {
     
     logNormal.generate(1, "../output/");
 
-    std::cout << "The number of objects in the log-normal catalogue is " << logNormal.catalogue(0)->nObjects() << std::endl;
+    cout << "The number of objects in the log-normal catalogue is " << logNormal.catalogue(0)->nObjects() << endl;
     
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
 
   return 0;
 }

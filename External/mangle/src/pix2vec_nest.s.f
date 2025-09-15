@@ -16,7 +16,7 @@
       !=========================================================================
       IMPLICIT none
       INTEGER ipix, nside
-      REAL*10 vector_x, vector_y, vector_z, vertex_n_x, 
+      REAL*16 vector_x, vector_y, vector_z, vertex_n_x, 
      & vertex_n_y, vertex_n_z, vertex_e_x, vertex_e_y, 
      & vertex_e_z, vertex_s_x, vertex_s_y, vertex_s_z, 
      & vertex_w_x, vertex_w_y, vertex_w_z
@@ -24,8 +24,8 @@
       INTEGER npix, npface, ipf, ip_low, ip_trunc, ip_med, 
      & ip_hi, jrt, jr, nr, jpt, jp, kshift, nl4, ns_max
       parameter(ns_max=8192) ! 2^13 : largest nside allowed
-      REAL*10 z, fn, fact1, fact2, sth, phi, PI
-      parameter(PI=3.141592653589793238462643383279502884197_10)
+      REAL*16 z, fn, fact1, fact2, sth, phi, PI
+      parameter(PI=3.141592653589793238462643383279502884197_16)
       INTEGER pix2x(0:1023), pix2y(0:1023)
       INTEGER ix, iy, face_num
       ! common /xy_nest/ ix, iy, face_num ! can be useful to calling routine
@@ -33,7 +33,7 @@
       INTEGER jrll(1:12)
       INTEGER jpll(1:12)
 
-      REAL*10 phi_nv, phi_wv, phi_sv, phi_ev, phi_up, phi_dn, 
+      REAL*16 phi_nv, phi_wv, phi_sv, phi_ev, phi_up, phi_dn, 
      & z_nv, z_sv, sth_nv, sth_sv, hdelta_phi
       INTEGER iphi_mod, iphi_rat, kpix, jpix, ix_mk, 
      & iy_mk, ip_mk, id_mk, i
@@ -121,8 +121,8 @@
       endif
 
       fn = DBLE(nside)
-      fact1 = 1.0_10/(3.0_10*fn*fn)
-      fact2 = 2.0_10/(3.0_10*fn)
+      fact1 = 1.0_16/(3.0_16*fn*fn)
+      fact2 = 2.0_16/(3.0_16*fn)
       nl4   = 4*nside
 
       !    finds the face, and the number in the face
@@ -155,23 +155,23 @@
       z_nv = (2*nside-jr+1)*fact2
       z_sv = (2*nside-jr-1)*fact2
       if (jr.eq.nside) then ! northern transition
-         z_nv = 1.0_10 - (nside-1)**2 * fact1
+         z_nv = 1.0_16 - (nside-1)**2 * fact1
       elseif (jr.eq.3*nside) then  ! southern transition
-         z_sv = -1.0_10 + (nside-1)**2 * fact1
+         z_sv = -1.0_16 + (nside-1)**2 * fact1
       endif
 
       if (jr.lt.nside) then     ! north pole region
          nr = jr
-         z = 1.0_10 - nr*nr*fact1
+         z = 1.0_16 - nr*nr*fact1
          kshift = 0
-         z_nv = 1.0_10 - (nr-1)**2 * fact1
-         z_sv = 1.0_10 - (nr+1)**2 * fact1
+         z_nv = 1.0_16 - (nr-1)**2 * fact1
+         z_sv = 1.0_16 - (nr+1)**2 * fact1
       elseif (jr.gt.3*nside) then ! south pole region
          nr = nl4 - jr
-         z = -1.0_10 + nr*nr*fact1
+         z = -1.0_16 + nr*nr*fact1
          kshift = 0
-         z_nv = -1.0_10 + (nr+1)**2 * fact1
-         z_sv = -1.0_10 + (nr-1)**2 * fact1
+         z_nv = -1.0_16 + (nr+1)**2 * fact1
+         z_sv = -1.0_16 + (nr-1)**2 * fact1
       endif
 
       !     computes the phi coordinate on the sphere, in [0,2Pi]
@@ -179,9 +179,9 @@
       if (jp.gt.nl4) jp = jp - nl4
       if (jp.lt.1)   jp = jp + nl4
 
-      phi = (jp - (kshift+1)*0.5_10) * (PI/(2.0_10*nr))
+      phi = (jp - (kshift+1)*0.5_16) * (PI/(2.0_16*nr))
 
-      sth = SQRT((1.0_10-z)*(1.0_10+z))
+      sth = SQRT((1.0_16-z)*(1.0_16+z))
       vector_x = sth * COS(phi)
       vector_y = sth * SIN(phi)
       vector_z = z
@@ -189,11 +189,11 @@
       phi_nv = phi
       phi_sv = phi
 
-      phi_up = 0.0_10
+      phi_up = 0.0_16
       iphi_mod = MOD(jp-1,nr) ! in {0,1,... nr-1}
       iphi_rat = (jp-1) / nr  ! in {0,1,2,3}
-      if (nr.gt.1) phi_up=(PI/2.0_10)*(iphi_rat+iphi_mod/(DBLE(nr-1)))
-      phi_dn         =(PI/2.0_10)*(iphi_rat+(iphi_mod+1)/(DBLE(nr+1)))
+      if (nr.gt.1) phi_up=(PI/2.0_16)*(iphi_rat+iphi_mod/(DBLE(nr-1)))
+      phi_dn         =(PI/2.0_16)*(iphi_rat+(iphi_mod+1)/(DBLE(nr+1)))
       if (jr.lt.nside) then          ! North polar cap
          phi_nv = phi_up
          phi_sv = phi_dn
@@ -206,7 +206,7 @@
          phi_sv = phi_up
       endif
 
-      hdelta_phi = PI / (4.0_10*nr)
+      hdelta_phi = PI / (4.0_16*nr)
 
       ! west vertex
       phi_wv     = phi - hdelta_phi
@@ -221,13 +221,13 @@
       vertex_e_z = z
 
       ! north vertex
-      sth_nv = SQRT((1.0_10-z_nv)*(1.0_10+z_nv))
+      sth_nv = SQRT((1.0_16-z_nv)*(1.0_16+z_nv))
       vertex_n_x = sth_nv * COS(phi_nv)
       vertex_n_y = sth_nv * SIN(phi_nv)
       vertex_n_z = z_nv
 
       ! south vertex
-      sth_sv = SQRT((1.0_10-z_sv)*(1.0_10+z_sv))
+      sth_sv = SQRT((1.0_16-z_sv)*(1.0_16+z_sv))
       vertex_s_x = sth_sv * COS(phi_sv)
       vertex_s_y = sth_sv * SIN(phi_sv)
       vertex_s_z = z_sv

@@ -20,6 +20,10 @@
 #include "CombinedPosterior.h"
   
 #include "Modelling_DensityProfile.h"
+#include "Modelling_DensityProfile_Auxiliary.h"
+#include "Modelling_DensityProfile_Combined.h"
 %}
 
 %include "Modelling_DensityProfile.h"
+%include "Modelling_DensityProfile_Auxiliary.h"
+%include "Modelling_DensityProfile_Combined.h"

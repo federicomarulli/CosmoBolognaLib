@@ -1,0 +1,498 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>Older Changes</TITLE>
+<META NAME="description" CONTENT="Older Changes">
+<META NAME="keywords" CONTENT="facilities">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="facilities.css">
+
+<LINK REL="next" HREF="fac_alteralm.htm">
+<LINK REL="previous" HREF="fac_Changes_between_releases_3_.htm">
+<LINK REL="next" HREF="fac_alteralm.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="fac_Changes_between_releases_3_.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="fac_HEALPix_F90_facilities.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_alteralm.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html109"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="fac_Changes_between_releases_3_.htm">Changes between releases 3.80 and 3.82</A>
+
+<strong>Up:</strong> <A
+ HREF="fac_HEALPix_F90_facilities.htm">HEALPix/F90 facilities</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_alteralm.htm">alteralm</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A ID="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A ID="tex2html111"
+  HREF="fac_Older_Changes.htm#SECTION401">Version 3.80</A>
+<LI><A ID="tex2html112"
+  HREF="fac_Older_Changes.htm#SECTION402">Version 3.70</A>
+<LI><A ID="tex2html113"
+  HREF="fac_Older_Changes.htm#SECTION403">Version 3.60</A>
+<LI><A ID="tex2html114"
+  HREF="fac_Older_Changes.htm#SECTION404">Version 3.50</A>
+<LI><A ID="tex2html115"
+  HREF="fac_Older_Changes.htm#SECTION405">Version 3.40</A>
+<LI><A ID="tex2html116"
+  HREF="fac_Older_Changes.htm#SECTION406">Version 3.31</A>
+<LI><A ID="tex2html117"
+  HREF="fac_Older_Changes.htm#SECTION407">Version 3.30</A>
+<LI><A ID="tex2html118"
+  HREF="fac_Older_Changes.htm#SECTION408">Version 3.20</A>
+<LI><A ID="tex2html119"
+  HREF="fac_Older_Changes.htm#SECTION409">Version 3.11</A>
+<LI><A ID="tex2html120"
+  HREF="fac_Older_Changes.htm#SECTION4010">Version 3.10</A>
+</UL>
+<BR>
+<LI><A ID="tex2html121"
+  HREF="fac_Older_Changes.htm#SECTION410">Changes up to release 3.00</A>
+<UL>
+<LI><A ID="tex2html122"
+  HREF="fac_Older_Changes.htm#SECTION411">Version 3.00</A>
+<LI><A ID="tex2html123"
+  HREF="fac_Older_Changes.htm#SECTION412">Version 2.20</A>
+<LI><A ID="tex2html124"
+  HREF="fac_Older_Changes.htm#SECTION413">Version 2.14</A>
+<LI><A ID="tex2html125"
+  HREF="fac_Older_Changes.htm#SECTION414">Version 2.10</A>
+<LI><A ID="tex2html126"
+  HREF="fac_Older_Changes.htm#SECTION415">Version 2.00</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A ID="SECTION400">
+Older Changes</A>
+</H1>
+
+<P>
+
+<H3><A ID="SECTION401">
+Version 3.80</A>
+</H3> 
+<UL>
+<LI>correction of bugs preventing the compilation with versions 10.* of <SPAN  CLASS="texttt">gfortran</SPAN>,
+</LI>
+<LI>fixed bug affecting <A HREF="fac_map2gif.htm#fac:map2gif"><SPAN style="font-family:monospace">map2gif</SPAN></A> when compiled with versions 10.* of <SPAN style="font-family:monospace">gfortran</SPAN> and <SPAN style="font-family:monospace">gcc</SPAN>.
+</LI>
+</UL>
+<H3><A ID="SECTION402">
+Version 3.70</A>
+</H3> 
+<UL>
+<LI>Addition of the subroutines
+<A HREF="./sub_read_fits_partial.htm#sub:read_fits_partial"><SPAN  CLASS="texttt">read_fits_partial</SPAN></A>,
+and 
+<A HREF="./sub_write_fits_partial.htm#sub:write_fits_partial"><SPAN  CLASS="texttt">write_fits_partial</SPAN></A>,
+to read and write
+polarized or unpolarized map defined on a fraction of the sky.
+</LI>
+</UL>
+<H3><A ID="SECTION403">
+Version 3.60</A>
+</H3>
+
+<UL>
+<LI>Faster Spherical Harmonics Transforms 
+in 
+<A HREF="fac_anafast.htm#fac:anafast"><SPAN  CLASS="texttt">anafast</SPAN></A>,
+<A HREF="fac_smoothing.htm#fac:smoothing"><SPAN  CLASS="texttt">smoothing</SPAN></A>,
+and <A HREF="fac_synfast.htm#fac:synfast"><SPAN  CLASS="texttt">synfast</SPAN></A>
+thanks to the <A HREF="./install.htm#install:libsharp:config">new <SPAN  CLASS="texttt">libsharp</SPAN> library</A>.
+</LI>
+</UL>
+<H3><A ID="SECTION404">
+Version 3.50</A>
+</H3>
+
+<UL>
+<LI>correction of a bug in <A HREF="fac_anafast.htm#fac:anafast"><SPAN  CLASS="texttt">anafast</SPAN></A> when
+<A HREF="fac_anafast.htm#fac:anafast:maskfile"><SPAN  CLASS="texttt">maskfile</SPAN></A> or 
+<A HREF="fac_anafast.htm#fac:anafast:theta_cut_deg"><SPAN  CLASS="texttt">theta_cut_deg</SPAN></A>
+are used in combination with 
+<A HREF="fac_anafast.htm#fac:anafast:iter_order"><SPAN  CLASS="texttt">iter_order</SPAN></A><SPAN CLASS="MATH">&gt;0</SPAN>,
+</LI>
+<LI>addition of <A HREF="./sub_alm2map.htm#sub:alm2map:zbounds"><SPAN  CLASS="texttt">zbounds</SPAN></A> in 
+<A HREF="./sub_alm2map.htm#sub:alm2map"><SPAN  CLASS="texttt">alm2map</SPAN></A>,
+<A HREF="./sub_alm2map_der.htm#sub:alm2map_der"><SPAN  CLASS="texttt">alm2map_der</SPAN></A>,
+<A HREF="./sub_alm2map_spin.htm#sub:alm2map_spin"><SPAN  CLASS="texttt">alm2map_spin</SPAN></A>,
+in order to simulate (faster) a signal on only a fraction of the sphere,
+</LI>
+<LI><A ID="tex2html3"
+  HREF="https://sourceforge.net/p/healpix/bugs/78">improved support for version 18 and more of Intel C and F90 compilers</A>
+in <SPAN  CLASS="texttt">configure</SPAN> script,
+</LI>
+<LI><A ID="tex2html4"
+  HREF="https://sourceforge.net/p/healpix/bugs/84">edition to fitstools.F90</A>
+allowing a proper compilation with g95.
+</LI>
+</UL>
+
+<P>
+
+<H3><A ID="SECTION405">
+Version 3.40</A>
+</H3>
+
+<P>
+
+<UL>
+<LI>The facilities 
+<A HREF="fac_anafast.htm#fac:anafast"><SPAN  CLASS="texttt">anafast</SPAN></A> and 
+<A HREF="fac_smoothing.htm#fac:smoothing"><SPAN  CLASS="texttt">smoothing</SPAN></A> now support pixel-based quadrature weights.
+Introduction of the supporting 
+<A HREF="./sub_nside2npweights.htm#sub:nside2npweights"><SPAN  CLASS="texttt">nside2npweights</SPAN></A>,
+<A HREF="./sub_unfold_weightsfile.htm#sub:unfold_weightsfile"><SPAN  CLASS="texttt">unfold_weightsfile</SPAN></A>,
+<A HREF="./sub_get_healpix_pixel_weight_fi.htm#sub:get_healpix_xxx_file:ghw8f"><SPAN  CLASS="texttt">get_healpix_weight_file</SPAN></A>,
+<A HREF="./sub_get_healpix_pixel_weight_fi.htm#sub:get_healpix_xxx_file:ghpw8f"><SPAN  CLASS="texttt">get_healpix_pixel_weight_file</SPAN></A>.
+</LI>
+<LI>The facilities 
+<A HREF="fac_anafast.htm#fac:anafast"><SPAN  CLASS="texttt">anafast</SPAN></A>,
+<A HREF="fac_median_filter.htm#fac:median_filter"><SPAN  CLASS="texttt">median_filter</SPAN></A>,
+<A HREF="fac_smoothing.htm#fac:smoothing"><SPAN  CLASS="texttt">smoothing</SPAN></A>, and
+<A HREF="fac_ud_grade.htm#fac:ud_grade"><SPAN  CLASS="texttt">ud_grade</SPAN></A> 
+test the value of the <SPAN  CLASS="texttt">POLCCONV</SPAN> FITS keyword when reading a polarized map,
+and interpret the polarization accordingly, 
+as described in the <A HREF="./intro_HEALPix_conventions.htm#intro:polcconv">note on POLCCONV</A> in <A ID="tex2html5"
+  HREF="intro.htm">The <strong>HEALPix</strong> Primer</A>.
+</LI>
+<LI><A HREF="fac_median_filter.htm#fac:median_filter"><SPAN  CLASS="texttt">median_filter</SPAN></A> faster by moving an internal array from heap to stack; does not crash anymore when dealing with empty data sets; 
+slightly different output when median is computed over an even number of pixels <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.41ex; " SRC="fac_img12.png"
+ ALT="$n\ge 100$"></SPAN>, sorted in <SPAN CLASS="MATH">[1,<I>n</I>]</SPAN>,
+the output is <SPAN CLASS="MATH"><I>d</I>(<I>n</I>/2)</SPAN> instead of <!-- MATH
+ $(d(n/2)+d(n/2+1))/2$
+ -->
+<SPAN CLASS="MATH">(<I>d</I>(<I>n</I>/2)+<I>d</I>(<I>n</I>/2+1))/2</SPAN> previously. Result remains <SPAN CLASS="MATH"><I>d</I>(<I>n</I>/2+1)</SPAN> for odd <SPAN CLASS="MATH"><I>n</I></SPAN>.
+</LI>
+</UL>
+
+<P>
+
+<H3><A ID="SECTION406">
+Version 3.31</A>
+</H3>
+
+<UL>
+<LI>Bug correction in <A HREF="./sub_input_map.htm#sub:input_map"><SPAN style="font-family:monospace">input_map</SPAN></A> routine for reading of polarized multi-HDU cut sky FITS files;
+</LI>
+<LI>Introduction of 
+<A HREF="fac_alteralm.htm#fac:alteralm:winfiledir_in"><SPAN style="font-family:monospace">winfiledir_*</SPAN></A> and 
+<A HREF="fac_alteralm.htm#fac:alteralm:windowfile_in"><SPAN style="font-family:monospace">windowfile_*</SPAN></A> qualifiers in <A HREF="fac_alteralm.htm#fac:alteralm"><SPAN style="font-family:monospace">alteralm</SPAN></A> facility.
+</LI>
+</UL>
+
+<P>
+
+<H3><A ID="SECTION407">
+Version 3.30</A>
+</H3>
+
+<UL>
+<LI><A HREF="fac_anafast.htm#fac:anafast"><SPAN style="font-family:monospace">anafast</SPAN></A> now produces nine spectra 
+	(TT, EE, BB, TE, TB, EB, ET, BT and BE), instead of six previously,
+          when analyzing two polarized maps
+</LI>
+<LI>CFITSIO version 3.20 (August 2009) or more now required
+</LI>
+</UL>
+
+<P>
+
+<H3><A ID="SECTION408">
+Version 3.20</A>
+</H3>
+
+<UL>
+<LI><strong>HEALPix</strong>-F90 routines and facilities can now also be compiled with
+the free Fortran95 compiler <SPAN  CLASS="textbf">g95</SPAN> (<A ID="tex2html6"
+  HREF="http://www.g95.org/">www.g95.org</A>)
+</LI>
+<LI>a separate <SPAN style="font-family:monospace">build</SPAN> directory is used to store the objects,
+modules, ... produced during the compilation of the source codes
+</LI>
+<LI>improved handling of long FITS keywords, now producing FITS files
+fully compatible with the
+<A ID="tex2html7"
+  HREF="https://pypi.org/project/pyfits/3.3"><SPAN style="font-family:monospace">PyFITS</SPAN></A>
+and 
+<SPAN style="font-family:monospace">Astropy</SPAN> (<A ID="tex2html8"
+  HREF="https://www.astropy.org/">https://www.astropy.org</A>)
+<SPAN style="font-family:monospace">Python</SPAN> libraries
+</LI>
+<LI>improved FITS file parsing in 
+<A HREF="./sub_generate_beam.htm#sub:generate_beam"><SPAN style="font-family:monospace">generate_beam</SPAN></A>,
+affecting the external <SPAN CLASS="MATH"><I>B</I>(<I>l</I>)</SPAN> reading in the F90 facilities 
+<A HREF="fac_alteralm.htm#fac:alteralm"><SPAN style="font-family:monospace">alteralm</SPAN></A>, 
+<A HREF="fac_synfast.htm#fac:synfast"><SPAN style="font-family:monospace">synfast</SPAN></A>, 
+<A HREF="fac_sky_ng_sim.htm#fac:sky_ng_sim"><SPAN style="font-family:monospace">sky_ng_sim</SPAN></A>, 
+<A HREF="fac_smoothing.htm#fac:smoothing"><SPAN style="font-family:monospace">smoothing</SPAN></A>.
+</LI>
+</UL>
+
+<P>
+
+<H3><A ID="SECTION409">
+Version 3.11</A>
+</H3>
+
+<UL>
+<LI><SPAN style="font-family:monospace">libsharp</SPAN> C routines used for Spherical Harmonics Transforms 
+and introduced in <strong>HEALPix</strong>  3.10
+can now be compiled with any <SPAN style="font-family:monospace">gcc</SPAN> version.
+</LI>
+</UL>
+
+<P>
+
+<H3><A ID="SECTION4010">
+Version 3.10</A>
+</H3>
+
+<UL>
+<LI>all Fortran facilities now support most of <SPAN style="font-family:monospace">cfitsio</SPAN>'s &rdquo;<A ID="tex2html11"
+  HREF="https://heasarc.gsfc.nasa.gov/docs/software/fitsio/filters.html">Extended File
+Name Syntax</A>&rdquo; features,
+allowing the reading and processing of an arbitrary HDU and table column out of
+remote, compressed FITS files. For example, setting 
+<BR><SPAN style="font-family:monospace">infile = </SPAN><SPAN style="font-family:monospace">ftp://</SPAN><I>url/file.fits</I><SPAN style="font-family:monospace">.gz</SPAN><SPAN style="font-family:monospace">[</SPAN><I>extn</I><SPAN style="font-family:monospace">]</SPAN><SPAN style="font-family:monospace">[col </SPAN><I>colname</I><SPAN style="font-family:monospace">]</SPAN>  
+<BR>
+in <A HREF="fac_anafast.htm#fac:anafast"><SPAN style="font-family:monospace">anafast</SPAN></A>
+will download the FITS file <I>file.fits.gz</I> from <I>url</I>, 
+uncompress it, open the HDU (extension) featuring keyword <SPAN style="font-family:monospace">EXTNAME=</SPAN><I>extn</I>, or the one with 1-based rank number <I>extn</I>, read the table column
+with <SPAN style="font-family:monospace">TTYPE*=</SPAN><I>colname</I> out of it and will analyze it.
+<BR>
+It is also possible to perform a remote <A HREF="fac_anafast.htm#fac:anafast"><SPAN style="font-family:monospace">anafast</SPAN></A> analysis of a 
+<A ID="tex2html12"
+  HREF="https://pla.esac.esa.int/pla/#home">Planck Legacy Archive (PLA)</A>
+sky map named <I>map.fits</I> via the PLA <A ID="tex2html13"
+  HREF="https://pla.esac.esa.int/pla/#aio">AIO Subsystem</A>
+by simply setting
+<SPAN style="font-family:monospace">infile=https://pla.esac.esa.int/pla/aio/product-action?MAP.MAP_ID=</SPAN><I>map.fits</I>
+as input map file.
+</LI>
+<LI>yet faster 
+<A HREF="fac_synfast.htm#fac:synfast"><SPAN style="font-family:monospace">synfast</SPAN></A>,
+<A HREF="fac_anafast.htm#fac:anafast"><SPAN style="font-family:monospace">anafast</SPAN></A>,
+<A HREF="fac_smoothing.htm#fac:smoothing"><SPAN style="font-family:monospace">smoothing</SPAN></A> thanks to <A ID="tex2html14"
+  HREF="https://sourceforge.net/projects/libsharp"><SPAN style="font-family:monospace">libsharp</SPAN></A>
+routines<A ID="tex2html9"
+
+HREF="fac_footnode.htm#foot522"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A>. 
+<BR><EM>Note that 
+some <A ID="tex2html10"
+  HREF="https://gcc.gnu.org/releases.html"><SPAN style="font-family:monospace">gcc</SPAN> versions</A>
+(4.4.1 to 4.4.6) crash with an internal compiler error during compilation of <SPAN style="font-family:monospace">libsharp</SPAN></EM>. 
+The problem has been fixed in <SPAN style="font-family:monospace">gcc</SPAN> 4.4.7, 4.5.*, 4.6.*, 4.7.* and
+newer versions and was not present in versions 4.2.* and 4.3.*.
+</LI>
+</UL>
+
+<P>
+
+<H2><A ID="SECTION410">
+Changes up to release 3.00</A>
+</H2>
+
+<H3><A ID="SECTION411">
+Version 3.00</A>
+</H3>
+
+<UL>
+<LI>all <EM>input</EM> FITS files can now be compressed (with a 
+<SPAN style="font-family:monospace">.gz</SPAN>, <SPAN style="font-family:monospace">.Z</SPAN>, <SPAN style="font-family:monospace">.z</SPAN>, or <SPAN style="font-family:monospace">.zip</SPAN> 
+extension) and/or remotely located (with a <SPAN style="font-family:monospace">ftp://</SPAN> or <SPAN style="font-family:monospace">http://</SPAN> prefix).
+<EM>Version 3.14 (March 2009) or newer of CFITSIO is required for <strong>HEALPix</strong> 3.0.</EM>
+</LI>
+<LI>introduction of <A HREF="fac_process_mask.htm#fac:process_mask"><SPAN style="font-family:monospace">process_mask</SPAN></A> 
+facility to compute the angular distance of valid
+pixels to the closest invalid pixels for a input binary mask,
+</LI>
+<LI><A HREF="fac_sky_ng_sim.htm#fac:sky_ng_sim"><SPAN style="font-family:monospace">sky_ng_sim</SPAN></A> now allows the computation
+of the spatial derivatives of the non Gaussian map being produced, and the
+output of the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients of that map,
+</LI>
+<LI><A HREF="fac_anafast.htm#fac:anafast"><SPAN style="font-family:monospace">anafast</SPAN></A> now allows the
+pro/down-grading of the input mask to match the resolution of the map(s) being
+analyzed.
+</LI>
+</UL>
+
+<P>
+
+<H3><A ID="SECTION412">
+Version 2.20</A>
+</H3>
+
+<UL>
+<LI>faster 
+<A HREF="fac_synfast.htm#fac:synfast"><SPAN style="font-family:monospace">synfast</SPAN></A>,
+<A HREF="fac_anafast.htm#fac:anafast"><SPAN style="font-family:monospace">anafast</SPAN></A>,
+<A HREF="fac_smoothing.htm#fac:smoothing"><SPAN style="font-family:monospace">smoothing</SPAN></A> thanks to 
+<A ID="tex2html15"
+  HREF="http://libpsht.sourceforge.net/"><SPAN style="font-family:monospace">libpsht</SPAN></A>
+routines. 
+</LI>
+<LI>most facilities can handle maps with <!-- MATH
+ $N_{\mathrm{side}}> 8192$
+ -->
+<SPAN CLASS="MATH"><I>N</I><SUB>side</SUB>&gt; 8192</SPAN>, ie more than
+805,306,368 pixels.
+</LI>
+</UL>
+See
+<A ID="tex2html16"
+  HREF="subroutines.htm">&rdquo;F90 Subroutines Overview&rdquo;</A>
+for details.
+
+<P>
+
+<H3><A ID="SECTION413">
+Version 2.14</A>
+</H3>
+
+<UL>
+<LI>In <A HREF="fac_synfast.htm#fac:synfast"><SPAN style="font-family:monospace">synfast</SPAN></A> facility, a numerical bug affecting the accuracy of the Stokes parameter derivatives 
+<!-- MATH
+ $\partial X/\partial\theta$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="fac_img14.png"
+ ALT="$\partial X/\partial\theta$"></SPAN>, 
+<!-- MATH
+ $\partial^2 X/(\partial\theta\partial\phi\sin\theta)$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="fac_img15.png"
+ ALT="$\partial^2 X/(\partial\theta\partial\phi\sin\theta)$"></SPAN>, 
+<!-- MATH
+ $\partial^2 X/\partial \theta^2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="fac_img16.png"
+ ALT="$\partial^2 X/\partial \theta^2$"></SPAN>, 
+for <SPAN CLASS="MATH"><I>X</I>=<I>Q</I>,<I>U</I></SPAN> has been corrected. See <A HREF="fac_Appendix.htm#fac:sec:bug_synder">this appendix</A> for details.
+</LI>
+</UL>
+
+<P>
+
+<H3><A ID="SECTION414">
+Version 2.10</A>
+</H3>
+
+<UL>
+<LI>The <A HREF="fac_anafast.htm#fac:anafast"><SPAN style="font-family:monospace">anafast</SPAN></A> facility can now compute the cross-correlations of two different
+maps. 
+</LI>
+<LI>The <A HREF="fac_sky_ng_sim.htm#fac:sky_ng_sim"><SPAN style="font-family:monospace">sky_ng_sim</SPAN></A> facility (Rocha et al, 2005), to produce non-Gaussian CMB temperature maps,
+has been added.
+</LI>
+</UL>
+
+<P>
+
+<H3><A ID="SECTION415">
+Version 2.00</A>
+</H3>
+
+<UL>
+<LI>faster implementation of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> related facilities, generalization of
+  OpenMP parallelization, and availability of MPI parallelized routines (see
+  mpi_* routines in <B>Fortran90 Subroutines Overview</B> document).
+</LI>
+<LI>introduction of <A HREF="fac_alteralm.htm#fac:alteralm"><SPAN style="font-family:monospace">alteralm</SPAN></A> facility to modify and/or rotate the spherical
+  harmonics coefficients <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> and greater flexibility for constraining
+  <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> in <SPAN style="font-family:monospace">synfast</SPAN>
+</LI>
+<LI>single and double precision implementation of most facilities (see <B>Input and Output Precision</B>
+  page&nbsp;<A HREF="fac_Using_HEALPix_Fortran_90_fa.htm#page:ioprec"><IMG  ALT="[*]" SRC="crossref.png"></A>)
+</LI>
+</UL>
+
+<P>
+
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="fac_Changes_between_releases_3_.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="fac_HEALPix_F90_facilities.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_alteralm.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html109"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="fac_Changes_between_releases_3_.htm">Changes between releases 3.80 and 3.82</A>
+
+<strong>Up:</strong> <A
+ HREF="fac_HEALPix_F90_facilities.htm">HEALPix/F90 facilities</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_alteralm.htm">alteralm</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

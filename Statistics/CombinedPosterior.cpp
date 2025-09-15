@@ -44,30 +44,29 @@ using namespace cbl;
 // ============================================================================================
 
 
-cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par)
+cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par, std::shared_ptr<cbl::cosmology::Cosmology> cosmology)
 {      
   m_posteriors = posteriors;
   m_Nposteriors = m_posteriors.size();
   std::vector<bool> is_from_chain(m_Nposteriors);
 
-  for(int N=0; N<m_Nposteriors; N++)
-    if(m_posteriors[N]->m_get_seed() != -1) is_from_chain[N] = true;
+  for (int N=0; N<m_Nposteriors; N++)
+    if (m_posteriors[N]->m_get_seed() != -1) is_from_chain[N] = true;
     else is_from_chain[N] = false;
 
-  if(std::find(is_from_chain.begin(), is_from_chain.end(), false) == is_from_chain.end()) {    // All false
-    m_set_parameters_priors(m_posteriors, repeated_par, common_repeated_par);
+  if (std::find(is_from_chain.begin(), is_from_chain.end(), false) == is_from_chain.end()) { // All false
+    m_set_parameters_priors(m_posteriors, repeated_par, common_repeated_par, cosmology);
     m_set_independent_probes();
   }
 
-  else if (std::find(is_from_chain.begin(), is_from_chain.end(), true) == is_from_chain.end()) // All true
-    {
-      impsampling = true;
-      for(int N=1; N<m_Nposteriors; N++)
-	if(m_posteriors[N]->get_Nparameters()!=m_posteriors[0]->get_Nparameters())
-	  ErrorCBL("Different number of parameters for the combination", "CombinedPosterior", "CombinedPosterior.cpp");
-      m_Nparameters = m_posteriors[0]->get_Nparameters();
-      m_model_parameters = m_posteriors[0]->get_model_parameters();
-    }
+  else if (std::find(is_from_chain.begin(), is_from_chain.end(), true) == is_from_chain.end()) { // All true
+    impsampling = true;
+    for (int N=1; N<m_Nposteriors; N++)
+      if (m_posteriors[N]->get_Nparameters()!=m_posteriors[0]->get_Nparameters())
+	ErrorCBL("Different number of parameters for the combination", "CombinedPosterior", "CombinedPosterior.cpp");
+    m_Nparameters = m_posteriors[0]->get_Nparameters();
+    m_model_parameters = m_posteriors[0]->get_model_parameters();
+  }
 
   // at least one is false
   else
@@ -162,7 +161,7 @@ cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::ve
     for (size_t j=0; j<posteriors[i].size(); j++)
       dummy_posteriors.emplace_back(posteriors[i][j]);
 
-  m_set_parameters_priors(dummy_posteriors, repeated_par, common_repeated_par);
+  m_set_parameters_priors(dummy_posteriors, repeated_par, common_repeated_par, SSC[0]->cosmology());
 
   m_parameter_indexes2.resize(dummy_posteriors.size());
 
@@ -202,7 +201,7 @@ cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::ve
 	  m_datasets.emplace_back(posteriors[i][j]->get_m_data()); // Used only for writing the models at percentiles
 	  inputs->xx[j] = posteriors[i][j]->get_m_data()->xx();
 	  for (size_t k=0; k<posteriors[i][j]->get_model_parameters()->name().size(); k++)
-	    for(int rr=0; rr<m_Nparameters; rr++)
+	    for (int rr=0; rr<m_Nparameters; rr++)
 	      if (m_parameter_names[name_idx][k] == m_model_parameters->name(rr)) {
 		inputs->par_indexes[j].emplace_back(rr);
 		m_parameter_indexes2[name_idx].emplace_back(rr);
@@ -222,7 +221,7 @@ cbl::statistics::CombinedPosterior::CombinedPosterior (const std::vector<std::ve
       case (LikelihoodType::_UserDefined_):
 
 	for (size_t k=0; k<m_parameter_names[name_idx].size(); k++)
-	  for(int j=0; j<m_Nparameters; j++)
+	  for (int j=0; j<m_Nparameters; j++)
 	    if (m_parameter_names[name_idx][k] == m_model_parameters->name(j)) {
 	      m_parameter_indexes[i].emplace_back(j);
 	      m_parameter_indexes2[name_idx].emplace_back(j);
@@ -427,7 +426,7 @@ void cbl::statistics::CombinedPosterior::m_set_repeated_par (std::vector<std::sh
 // ============================================================================================
 
 
-void cbl::statistics::CombinedPosterior::m_set_parameters_priors (std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par)
+void cbl::statistics::CombinedPosterior::m_set_parameters_priors (std::vector<std::shared_ptr<Posterior>> posteriors, std::vector<std::string> repeated_par, const std::vector<std::vector<std::vector<int>>> common_repeated_par, std::shared_ptr<cosmology::Cosmology> cosmology)
 {
   const int dummy_Nposteriors = (int)(posteriors.size());
 
@@ -556,22 +555,24 @@ void cbl::statistics::CombinedPosterior::m_set_parameters_priors (std::vector<st
     if (j == parameter_names.size()-1)
       std::cout<<parameter_names[j]<<std::endl<<std::endl;
     else if (j==0)
-      coutCBL<<parameter_names[j]<<", ";
+      coutCBL<<parameter_names[j] << ", ";
     else
-      std::cout<<parameter_names[j]<<", ";
+      cout<<parameter_names[j] << ", ";
 
   
   // Find the indexes of the cosmological parameters, if any.
   // This is useful for the super-sample covariance.
-  std::vector<std::string> cosmoNames = cbl::cosmology::CosmologicalParameterNames();
-  for (size_t i=0; i<parameter_names.size(); i++)
-    if (std::count(cosmoNames.begin(), cosmoNames.end(), parameter_names[i]))
-      m_cosmoPar_indexes.emplace_back(i);
+  if (cosmology != NULL) {
+    std::vector<std::string> cosmoNames = cosmology->cosmological_parameter_names();
+    for (size_t i=0; i<parameter_names.size(); i++)
+      if (std::count(cosmoNames.begin(), cosmoNames.end(), parameter_names[i]))
+	m_cosmoPar_indexes.emplace_back(i);
 
-  // Check if any cosmological parameter is repeated
-  for (size_t i=0; i<repeated_par.size(); i++)
-    if (std::count(cosmoNames.begin(), cosmoNames.end(), repeated_par[i]))
-      ErrorCBL("You cannot have more than one posterior for a cosmological parameter ("+repeated_par[i]+" in this case)!", "m_set_parameters_priors", "CombinedPosterior.cpp");
+    // Check if any cosmological parameter is repeated
+    for (size_t i=0; i<repeated_par.size(); i++)
+      if (std::count(cosmoNames.begin(), cosmoNames.end(), repeated_par[i]))
+	ErrorCBL("You cannot have more than one posterior for a cosmological parameter ("+repeated_par[i]+" in this case)!", "m_set_parameters_priors", "CombinedPosterior.cpp");
+  }
 }
 
 
@@ -589,7 +590,7 @@ void cbl::statistics::CombinedPosterior::m_set_independent_probes ()
   m_likelihood_functions.resize(m_Nposteriors);
   m_likelihood_functions_grid.resize(m_Nposteriors);
 
-  for(int N=0; N<m_Nposteriors; N++) {
+  for (int N=0; N<m_Nposteriors; N++) {
     m_use_grid[N] = m_posteriors[N]->get_m_use_grid();
     m_models[N] = m_posteriors[N]->get_m_model();
     m_datasets[N] = m_posteriors[N]->get_m_data();
@@ -606,9 +607,9 @@ void cbl::statistics::CombinedPosterior::m_set_independent_probes ()
   // Set the parameter indexes
   m_parameter_indexes.resize(m_Nposteriors);
   m_parameter_indexes2.resize(m_Nposteriors);
-  for(int N=0; N<m_Nposteriors; N++) {
+  for (int N=0; N<m_Nposteriors; N++) {
     for (size_t k=0; k<m_parameter_names[N].size(); k++) {
-      for(int j=0; j<m_Nparameters; j++) {
+      for (int j=0; j<m_Nparameters; j++) {
 	if (m_parameter_names[N][k] == m_model_parameters->name(j)) {
 	  m_parameter_indexes[N].emplace_back(j);
 	  m_parameter_indexes2[N].emplace_back(j);
@@ -626,7 +627,7 @@ void cbl::statistics::CombinedPosterior::m_set_independent_probes ()
 void cbl::statistics::CombinedPosterior::set_parameters (const std::vector<std::vector<double>> parametersA, const std::vector<std::vector<double>> parametersB)
 {
   std::vector<std::vector<double>> parameters (m_Nparameters);
-  for(int N=0; N<m_Nparameters; N++){
+  for (int N=0; N<m_Nparameters; N++) {
     parameters[N].insert(parameters[N].end(), parametersA[N].begin(), parametersA[N].end());
     parameters[N].insert(parameters[N].end(), parametersB[N].begin(), parametersB[N].end());
   }
@@ -686,21 +687,21 @@ void cbl::statistics::CombinedPosterior::importance_sampling (const int distNum,
   std::vector<double> weights_A(logpostA.size());
   std::vector<double> weights_B(logpostB.size());
 
-  for(size_t ii=0; ii<logpostA.size(); ii++) weights_A[ii] = exp(logpostB_interpolated[ii] - logpostA[ii] + shift_A);
-  for(size_t ii=0; ii<logpostB.size(); ii++) weights_B[ii] = exp(logpostA_interpolated[ii] - logpostB[ii] + shift_B);
+  for (size_t ii=0; ii<logpostA.size(); ii++) weights_A[ii] = exp(logpostB_interpolated[ii] - logpostA[ii] + shift_A);
+  for (size_t ii=0; ii<logpostB.size(); ii++) weights_B[ii] = exp(logpostA_interpolated[ii] - logpostB[ii] + shift_B);
 
   // cut weights distribution if cut_sigma!=-1
-  if(cut_sigma>0)
+  if (cut_sigma>0)
     {
       const double mean_A = cbl::Average(weights_A);
       const double mean_B = cbl::Average(weights_B);
       const double sigma_A = cbl::Sigma(weights_A);
       const double sigma_B = cbl::Sigma(weights_B);
 
-      for(size_t ii=0; ii<weights_A.size(); ii++)
-	if(weights_A[ii]>mean_A+cut_sigma*sigma_A) weights_A[ii] = mean_A;
-      for(size_t ii=0; ii<weights_B.size(); ii++)
-	if(weights_B[ii]>mean_B+cut_sigma*sigma_B) weights_B[ii] = mean_B;
+      for (size_t ii=0; ii<weights_A.size(); ii++)
+	if (weights_A[ii]>mean_A+cut_sigma*sigma_A) weights_A[ii] = mean_A;
+      for (size_t ii=0; ii<weights_B.size(); ii++)
+	if (weights_B[ii]>mean_B+cut_sigma*sigma_B) weights_B[ii] = mean_B;
     }
 
   set_weight(weights_A, weights_B);
@@ -712,7 +713,7 @@ void cbl::statistics::CombinedPosterior::importance_sampling (const int distNum,
 
 void cbl::statistics::CombinedPosterior::importance_sampling (const std::string output_path, const std::string model_nameA, const std::string model_nameB, const std::vector<double> start, const int chain_size, const int nwalkers, const int burn_in, const int thin)
 {
-  if(m_Nposteriors != 2) ErrorCBL("You can't do importance sampling for a number of probes > 2", "importance_sampling", "CombinedPosterior.cpp");
+  if (m_Nposteriors != 2) ErrorCBL("You can't do importance sampling for a number of probes > 2", "importance_sampling", "CombinedPosterior.cpp");
 
   impsampling = true;
   std::vector<std::string> modelnames(m_Nposteriors);
@@ -722,7 +723,7 @@ void cbl::statistics::CombinedPosterior::importance_sampling (const std::string 
   std::string file_AB = model_nameA+"_post_"+model_nameB;
   std::string file_BA = model_nameB+"_post_"+model_nameA;
 
-  for(int N=0; N<m_Nposteriors; N++){
+  for (int N=0; N<m_Nposteriors; N++) {
     m_posteriors[N]->initialize_chains(chain_size, nwalkers, 1.e-5, start);
     coutCBL << "Sampling the posterior distribution for " << modelnames[N] << endl << endl;
     m_posteriors[N]->sample_stretch_move(2);
@@ -749,8 +750,8 @@ void cbl::statistics::CombinedPosterior::importance_sampling (const std::string 
   std::vector<double> weightsAB = m_posteriors[0]->weight();
   std::vector<double> weightsBA = m_posteriors[1]->weight();
 
-  for(int N=1; N<m_Nparameters+1; N++){
-    for(size_t ii=0; ii<chainA.size(); ii++){
+  for (int N=1; N<m_Nparameters+1; N++) {
+    for (size_t ii=0; ii<chainA.size(); ii++) {
       parametersA[N-1][ii] = chainA[ii][N];
       parametersB[N-1][ii] = chainB[ii][N];
     }
@@ -889,9 +890,9 @@ double cbl::statistics::CombinedPosterior::operator () (std::vector<double> &pp)
 
   double val = 1.;
 
-  for(int N=0; N<m_Nposteriors; N++)
+  for (int N=0; N<m_Nposteriors; N++)
     {
-      if(prior<=0)
+      if (prior<=0)
 	{
 	  val = 0.;
 	  break;
@@ -901,7 +902,7 @@ double cbl::statistics::CombinedPosterior::operator () (std::vector<double> &pp)
 	pp_single[ii] = pp[m_parameter_indexes[N][ii]];
       val *= (m_use_grid[N]) ? m_likelihood_functions_grid[N](pp_single, m_likelihood_inputs[N]) : m_likelihood_functions[N](pp_single, m_likelihood_inputs[N]);
       for (size_t ii=0; ii<pp_single.size(); ii++)
-	  pp[m_parameter_indexes[N][ii]] = pp_single[ii]; // this is necessary in presence of derived parameters
+	pp[m_parameter_indexes[N][ii]] = pp_single[ii]; // this is necessary in presence of derived parameters
     }
   
   return val*prior;
@@ -919,7 +920,7 @@ double cbl::statistics::CombinedPosterior::log (std::vector<double> &pp) const
 
   double val = 0.;
   
-  for(int N=0; N<m_Nposteriors; N++)
+  for (int N=0; N<m_Nposteriors; N++)
     {
       if (logprior>par::defaultDouble) {
 	std::vector<double> pp_single (m_parameter_indexes[N].size(), 0);
@@ -964,12 +965,12 @@ void cbl::statistics::CombinedPosterior::maximize (const std::vector<double> sta
   // extra check on epsilon
 
   function<bool(vector<double> &)> checkWrong = [&] (vector<double> &pp)
-						{
-						  bool ch = true;
-						  if (post(pp)<-par::defaultDouble)
-						    ch = false;
-						  return ch;
-						};
+  {
+    bool ch = true;
+    if (post(pp)<-par::defaultDouble)
+      ch = false;
+    return ch;
+  };
 
   vector<double> par = starting_par;
   if (checkWrong(par))
@@ -988,7 +989,7 @@ void cbl::statistics::CombinedPosterior::maximize (const std::vector<double> sta
   vector<double> result = cbl::wrapper::gsl::GSL_minimize_nD(post, starting_par, {}, max_iter, tol, epsilon);
   // check if the result is inside the prior ranges
 
-  if(m_model_parameters->prior()->log(result)<=par::defaultDouble)
+  if (m_model_parameters->prior()->log(result)<=par::defaultDouble)
     ErrorCBL("the maximization ended with parameter values out of the priors: check your inputs or change the epsilon value!", "maximize", "CombinedPosterior.cpp");
 
   coutCBL << "Done!" << endl << endl;
@@ -1006,9 +1007,9 @@ void cbl::statistics::CombinedPosterior::maximize (const std::vector<double> sta
 
 void cbl::statistics::CombinedPosterior::show_results (const int start, const int thin, const int nbins, const bool show_mode, const int ns, const int nb)
 {
-  if(!impsampling) Posterior::show_results(start, thin, nbins, show_mode, ns, nb);
+  if (!impsampling) Posterior::show_results(start, thin, nbins, show_mode, ns, nb);
   else{
-    for (int i=0; i<m_Nparameters; i++){
+    for (int i=0; i<m_Nparameters; i++) {
       coutCBL << "Parameter: " << par::col_yellow << this->parameters()->name(i) << par::col_default << endl;
       coutCBL << "Weighted Average: " << cbl::Average(m_parameters[i], m_weight) << endl;
       coutCBL << "Standard Deviation: " << cbl::Sigma(m_parameters[i], m_weight) << endl << endl;
@@ -1020,7 +1021,7 @@ void cbl::statistics::CombinedPosterior::show_results (const int start, const in
 
 void cbl::statistics::CombinedPosterior::write_results (const string output_dir, const string root_file, const int start, const int thin, const int nbins, const bool fits, const bool compute_mode, const int ns, const int nb)
 {
-  if(!impsampling){
+  if (!impsampling) {
     const string extension = (fits) ? "_chain.fits" : "_chain.dat";
     write_chain(output_dir, root_file+extension, start, thin, fits);
     m_model_parameters->write_results(output_dir, root_file, start, thin, nbins, m_generate_seed(), compute_mode, ns, nb, weight(start, thin));
@@ -1030,7 +1031,7 @@ void cbl::statistics::CombinedPosterior::write_results (const string output_dir,
     ofstream fout(file.c_str()); checkIO(fout, file);
 
     fout << "# step" << setw(25);
-    for (int k=0; k<m_Nparameters; k++){
+    for (int k=0; k<m_Nparameters; k++) {
       fout << this->parameters()->name(k) << setw(25);
     }
     fout << "log(Posterior)" << setw(25) << "Weight" << endl;
@@ -1038,14 +1039,14 @@ void cbl::statistics::CombinedPosterior::write_results (const string output_dir,
     fout << std::fixed;
     fout << setprecision(7);
 
-    for(size_t ii=0; ii<m_weight.size(); ii++)
-      {
-	fout << ii;
-	for(int N=0; N<m_Nparameters; N++){
-	  fout << setw(25) << std::fixed << m_parameters[N][ii];
-	}
-	fout << setw(25) << std::fixed << m_log_posterior[ii] << setw(25) << std::scientific << m_weight[ii] << endl;
-      }
+    for (size_t ii=0; ii<m_weight.size(); ii++) {
+      fout << ii;
+
+      for (int N=0; N<m_Nparameters; N++) 
+	fout << setw(25) << std::fixed << m_parameters[N][ii];
+	
+      fout << setw(25) << std::fixed << m_log_posterior[ii] << setw(25) << std::scientific << m_weight[ii] << endl;
+    }
     fout.clear(); fout.close();
 
     coutCBL << "I wrote the file: " << file << endl;
@@ -1173,7 +1174,7 @@ void cbl::statistics::CombinedPosterior::write_chain_fits (const string output_d
 
 void cbl::statistics::CombinedPosterior::write_model_from_chain (const std::string output_dir, const std::string output_file, const int start, const int thin, const std::vector<double> xx, const std::vector<double> yy)
 {
-  for(size_t N=0; N<m_models.size(); N++) {
+  for (size_t N=0; N<m_models.size(); N++) {
   
     switch (m_models[N]->dimension()) {
 

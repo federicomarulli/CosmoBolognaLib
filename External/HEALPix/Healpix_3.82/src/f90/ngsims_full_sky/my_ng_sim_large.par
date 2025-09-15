@@ -1,0 +1,27 @@
+nsmax = 512
+nlmax =      1024
+infile = ~/Healpix/test/cl.fits
+# infile = ${HEALPIX}/test/cl.fits
+outfile = !/tmp/ng_map.fits
+fwhm_arcmin = 60.
+beam_file = ''
+#
+# pdf_choice: 1 = Simple Harmonic Oscillator,  2 = Power of Gauss
+#
+pdf_choice =            1
+#idum =            1
+iseed = 123
+sigma0 =    1.000000
+na =            3
+alpha_1 =   0.3000000E+00
+alpha_2 =   0.0000000E+00
+alpha_3 =   0.2000000E+00
+#
+# pdf_choice =            2
+# #idum =            1
+# iseed = 1
+# npower = 1
+#
+# plotting, only meaningful when linked with PGPLOT
+#
+plot = T

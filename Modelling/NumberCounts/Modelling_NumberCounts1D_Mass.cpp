@@ -47,11 +47,11 @@ using namespace modelling::numbercounts;
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_data_model_snapshot (const cosmology::Cosmology cosmology, const double redshift, const std::string method_Pk, const double k_min, const double k_max, const int step, const int norm, const double Delta, const bool isDelta_critical, const std::string model_MF, const double Volume, const double Mass_min, const double Mass_max, const int Mass_step, const double prec)
+void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_data_model_snapshot (const std::shared_ptr<cosmology::Cosmology> cosmology, const double redshift, const std::string method_Pk, const double k_min, const double k_max, const int step, const int norm, const double Delta, const bool isDelta_critical, const std::string model_MF, const double Volume, const double Mass_min, const double Mass_max, const int Mass_step, const double prec)
 {
   m_data_model.isSnapshot = true;
 
-  m_data_model.cosmology = make_shared<cosmology::Cosmology>(cosmology);
+  m_data_model.cosmology = move(cosmology);
   m_data_model.redshift = redshift;
   m_data_model.method_Pk = method_Pk;
   m_data_model.k_min = k_min;
@@ -81,7 +81,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_data_model
 // ===========================================================================================
 
 
-void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_model_NumberCounts_cosmology (const std::vector<cbl::cosmology::CosmologicalParameter> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior)
+void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_model_NumberCounts_cosmology (const std::vector<std::string> cosmo_param, const std::vector<statistics::PriorDistribution> cosmo_param_prior)
 {
   m_data_model.Cpar = cosmo_param;
 
@@ -91,7 +91,7 @@ void cbl::modelling::numbercounts::Modelling_NumberCounts1D_Mass::set_model_Numb
   vector<string> cosmoPar_string(nParams);
 
   for (size_t i=0; i<nParams; i++)
-    cosmoPar_string[i] = CosmologicalParameter_name(cosmo_param[i]);
+    cosmoPar_string[i] = cosmo_param[i];
 
   // input data used to construct the model
   auto inputs = make_shared<STR_NC_data_model>(m_data_model);

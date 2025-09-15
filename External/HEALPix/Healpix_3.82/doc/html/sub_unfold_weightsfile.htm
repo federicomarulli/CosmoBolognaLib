@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>unfold_weightsfile</TITLE>
+<META NAME="description" CONTENT="unfold_weightsfile">
+<META NAME="keywords" CONTENT="subroutines">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="subroutines.css">
+
+<LINK REL="next" HREF="sub_uniq2nest.htm">
+<LINK REL="previous" HREF="sub_udgrade_ring.htm">
+<LINK REL="next" HREF="sub_uniq2nest.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="sub_udgrade_ring.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_uniq2nest.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html519"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_udgrade_ring.htm">udgrade_ring*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_uniq2nest.htm">uniq2nest</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION10600"></A>
+<A ID="sub:unfold_weightsfile"></A>
+<BR>
+ 
+</H1>
+
+<P>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">unfold_weightsfile</SPAN></div><hr>
+<H3>This routine read a ring-based or pixel-based quadrature weight file and turn it 
+into a full sky (ring-ordered) <strong>HEALPix</strong> map.</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/mod/fitstools.F90"><strong>src/f90/mod/fitstools.F90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>call <SPAN CLASS="colordoc">unfold_weightsfile</SPAN>(
+<A HREF="#sub:unfold_weightsfile:w8file">w8file</A>, <A HREF="#sub:unfold_weightsfile:w8map">w8map</A>
+)</h3></blockquote>
+
+<P>
+<hr><H2>ARGUMENTS</H2>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">name&nbsp;&amp;&nbsp;dimensionality</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:25px"><SPAN  CLASS="textbf">kind</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">in/out</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:200px"><SPAN  CLASS="textbf">description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">
+w8file<A ID="sub:unfold_weightsfile:w8file"></A>(LEN=<kbd>filenamelen</kbd>)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">CHR</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">IN</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">filename of FITS-file containing a list of ring-ordered or pixel-ordered quadrature weights for some Nside.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:175px">w8map<A ID="sub:unfold_weightsfile:w8map"></A>(0:12*Nside**2-1)</TD>
+<TD CLASS="LEFT TOP"  style="width:25px">SP/ DP</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">OUT</TD>
+<TD CLASS="LEFT TOP"  style="width:200px">an array containing a full sky map of weights for the same Nside.</TD>
+</TR>
+</TABLE>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt">use <A HREF="sub_healpix_modules_module.htm#sub:healpix_modules">healpix_modules</A>
+<BR>
+real(DP), allocatable(:) :: w8map
+<BR>
+character(len=FILENAMELEN) :: dirname, filename 
+<BR>
+integer(I4B) :: nside, won
+<BR>
+won = 2
+<BR>
+nside = 128
+<BR>
+npix = <A HREF="sub_nside2npix.htm#sub:nside2npix">nside2npix</A>(nside)
+<BR>
+allocate(w8map(0:npix-1))
+<BR>
+dirname  = <A HREF="sub_get_healpix_data_dir_get_he.htm#sub:get_healpix_xxx_dir:ghdd">get_healpix_data_dir</A>()
+<BR>
+filename = <A HREF="sub_get_healpix_pixel_weight_fi.htm#sub:get_healpix_xxx_file:ghw8f">get_healpix_weights_file</A>(nside, won)
+<BR>
+filename = trim(dirname)//'/'//trim(filename)
+<BR>
+call <SPAN CLASS="colordoc">unfold_weightsfile</SPAN>(filename, w8map)</div>
+<blockquote>This code snippet looks for a pixel-based (<SPAN  CLASS="texttt">won=2</SPAN>) weights file in standard location, with a standard name, 
+for <SPAN  CLASS="texttt">nside=128</SPAN>, reads it and unfolds it into a full sky ring-ordered map named <SPAN  CLASS="texttt">w8map</SPAN>.
+</blockquote>
+
+<P>
+<hr><H2>MODULES & ROUTINES</H2><H3>This section lists the modules and routines used by <SPAN CLASS="colordoc">unfold_weightsfile</SPAN>.</h3>
+  <DL COMPACT><DT>
+<B><SPAN  CLASS="textbf">pixtools</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B><A HREF="sub_nside2npweights.htm#sub:nside2npweights">nside2npweights</A></B>
+<DD>function returning the number of pixel-based weights expected for a given Nside when stored in compact form
+  <DT>
+<B><A HREF="sub_nside2npix.htm#sub:nside2npix">nside2npix</A></B>
+<DD>function returning the number of pixels on the full sky, for a given Nside
+  <DT>
+<B><SPAN  CLASS="textbf">fitstools</SPAN></B>
+<DD>module, containing:
+  <DT>
+<B>printerror</B>
+<DD>routine for printing FITS error messages.
+  <DT>
+<B><A HREF="sub_getsize_fits.htm#sub:getsize_fits">getsize_fits</A></B>
+<DD>function returning the size of a FITS file, and parsing its header.
+  <DT>
+<B><A HREF="sub_input_map.htm#sub:input_map">input_map</A></B>
+<DD>routine to read FITS file.
+  <DT>
+<B><SPAN  CLASS="textbf">cfitsio</SPAN></B>
+<DD>library for FITS file handling.		
+  </DL>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">unfold_weightsfile</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B><A HREF="sub_get_healpix_data_dir_get_he.htm#sub:get_healpix_xxx_dir">get_healpix_data_dir</A></B>
+<DD>routine returning actual path to <SPAN  CLASS="texttt">data</SPAN> directory
+   <DT>
+<B><A HREF="sub_get_healpix_pixel_weight_fi.htm#sub:get_healpix_xxx_file:ghw8f">get_healpix_weights_file</A></B>
+<DD>routine returning the standard name of pre-computed weights file
+   <DT>
+<B><A HREF="./fac_anafast.htm#fac:anafast">anafast</A>, <A HREF="./fac_smoothing.htm#fac:smoothing">smoothing</A></B>
+<DD>these two facilities use <SPAN CLASS="colordoc">unfold_weightsfile</SPAN> to apply quadrature weighting to the maps they respectively 
+analyze and smooth
+  </DL>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+ 
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="sub_udgrade_ring.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="sub_HEALPix_F90_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="sub_uniq2nest.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html519"
+  HREF="sub_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="sub_udgrade_ring.htm">udgrade_ring*</A>
+
+<strong>Up:</strong> <A
+ HREF="sub_HEALPix_F90_subroutines.htm">HEALPix Fortran90 Subroutines Overview</A>
+
+<strong> Next:</strong> <A
+ HREF="sub_uniq2nest.htm">uniq2nest</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

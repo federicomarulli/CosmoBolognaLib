@@ -61,8 +61,6 @@ namespace cbl {
 
       /**
        *  @brief default constructor
-       *
-       *  
        */
       PriorDistribution () : CombinedDistribution () {}
 
@@ -72,7 +70,6 @@ namespace cbl {
        *  @param priorType the type of distribution to be created
        *
        *  @param value the value to be returned
-       *
        */
       PriorDistribution (const glob::DistributionType priorType, const double value) : CombinedDistribution(priorType, value) {}
 
@@ -86,7 +83,6 @@ namespace cbl {
        *  @param xmax upper limit of the distribution
        *
        *  @param seed the distribution seed for random sampling
-       *
        */
       PriorDistribution (const glob::DistributionType priorType, const double xmin, const double xmax, const int seed=1) : CombinedDistribution(priorType, xmin, xmax, seed) {}
 
@@ -103,7 +99,6 @@ namespace cbl {
        *  @param xmax upper limit of the distribution
        *
        *  @param seed the distribution seed for random sampling
-       *  
        */
       PriorDistribution (const glob::DistributionType priorType, const std::vector<double> prior_params, const double xmin, const double xmax, const int seed=1) : 
 	CombinedDistribution(priorType, prior_params, xmin, xmax, seed) {}
@@ -124,7 +119,6 @@ namespace cbl {
        *  @param xmax upper limit of the distribution
        *
        *  @param seed the distribution seed for random sampling
-       *  
        */
       PriorDistribution (const glob::DistributionType priorType, const distribution_func prior_func, const std::shared_ptr<void> prior_fixed_pars, const std::vector<double> prior_pars, const double xmin, const double xmax, const int seed=1)
 	: CombinedDistribution(priorType, prior_func, prior_fixed_pars, prior_pars, xmin, xmax, seed) {}
@@ -143,7 +137,7 @@ namespace cbl {
        */
       PriorDistribution (const glob::DistributionType priorType, const std::vector<double> discrete_values, const std::vector<double> weights, const int seed=1)
 	: CombinedDistribution(priorType, discrete_values, weights, seed) {}
-
+      
       /**
        * @brief constructor
        *
@@ -158,12 +152,10 @@ namespace cbl {
        * @param interpolationType the kind of interpolation
        *
        * @param seed the distribution seed for random sampling
-       * 
        */
       PriorDistribution (const glob::DistributionType priorType, const std::vector<double> var, const std::vector<double> dist, const int nbin, const std::string interpolationType, const int seed=1)
 	: CombinedDistribution(priorType, var, dist, nbin, interpolationType, seed) {}
 
-	
       /**
        * @brief constructor of multidimensional distributions
        *
@@ -179,12 +171,11 @@ namespace cbl {
        * @param xMaxVec vector containing the maxima of the distributions
        *
        * @param seed the distribution seed for random sampling
-       *
        */
-	PriorDistribution (const glob::DistributionType priorType, const std::vector<double> meanVec, const std::vector<std::vector<double>> covMat, const std::vector<double> xMinVec, const std::vector<double> xMaxVec, const int seed=3213)
+      PriorDistribution (const glob::DistributionType priorType, const std::vector<double> meanVec, const std::vector<std::vector<double>> covMat, const std::vector<double> xMinVec, const std::vector<double> xMaxVec, const int seed=3213)
 	: CombinedDistribution(priorType, meanVec, covMat, xMinVec, xMaxVec, seed) {}
 
-	/**
+      /**
        * @brief constructor of multidimensional distributions from
        * external chains
        *
@@ -214,15 +205,12 @@ namespace cbl {
        *
        * @param cell_size the size of cells of the normalised chain
        * mesh (each side has lenght 100)
-       *
        */
-	PriorDistribution (const std::string filename, const std::string path, const std::vector<int> columns_to_read, const int skip_nlines=0, const int type_data=0, const bool normalize=true, const int distNum=200, const double rMAX=2, const double cell_size=2)
-	  : CombinedDistribution(filename, path, columns_to_read, skip_nlines, type_data, normalize, distNum, rMAX, cell_size) {}
+      PriorDistribution (const std::string filename, const std::string path, const std::vector<int> columns_to_read, const int skip_nlines=0, const int type_data=0, const bool normalize=true, const int distNum=200, const double rMAX=2, const double cell_size=2)
+	: CombinedDistribution(filename, path, columns_to_read, skip_nlines, type_data, normalize, distNum, rMAX, cell_size) {}
 
       /**
        *  @brief default destructor
-       *
-       *  
        */
       ~PriorDistribution () = default;
 

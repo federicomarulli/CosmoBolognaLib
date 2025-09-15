@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>Using the HEALPix-IDL facilities</TITLE>
+<META NAME="description" CONTENT="Using the HEALPix-IDL facilities">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_What_is_available.htm">
+<LINK REL="previous" HREF="idl_TABLE_CONTENTS.htm">
+<LINK REL="next" HREF="idl_What_is_available.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_What_is_available.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html296"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_What_is_available.htm">What is available?</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A ID="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A ID="tex2html298"
+  HREF="idl_Using_HEALPix_IDL_facilitie.htm#SECTION210">Using <strong>HEALPix</strong>-IDL together with other IDL libraries</A>
+<LI><A ID="tex2html299"
+  HREF="idl_Using_HEALPix_IDL_facilitie.htm#SECTION220">Using GDL or FL instead of IDL</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A ID="SECTION200">
+Using the <strong>HEALPix</strong>-IDL facilities</A>
+</H1>
+
+<P>
+The current version of the <strong>HEALPix</strong> package provides
+an IDL startup file which defines various environment
+variables for your convenience, and adds the <strong>HEALPix</strong> 
+IDL directory tree to your <SPAN style="font-family:monospace">IDL_PATH</SPAN>. In order to utilise
+this feature, the user should invoke IDL using the
+commands <SPAN style="font-family:monospace">hidl</SPAN> or <SPAN style="font-family:monospace">hidlde</SPAN> which are aliases defined in the
+<strong>HEALPix</strong> profile created during the installation process 
+for the package (see <A ID="tex2html3"
+  HREF="install.htm">the Installation Document</A>).
+
+<P>
+
+<H2><A ID="SECTION210"></A>
+<A ID="idl:other_idl_libs"></A><A ID="idl:other_idl_libs"></A>
+<BR>
+Using <strong>HEALPix</strong>-IDL together with other IDL libraries
+</H2>
+Many users want to use <strong>HEALPix</strong>-IDL routines at the same time as other (home made
+or third party<A ID="tex2html4"
+  HREF="idl_footnode.htm#foot1157"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A>) 
+IDL routines. There are several ways to achieve this:
+<BR><EM>&ndash; with <SPAN style="font-family:monospace">hidl</SPAN>:</EM>
+<BR>
+before starting <SPAN style="font-family:monospace">hidl</SPAN> or <SPAN style="font-family:monospace">hidlde</SPAN>, (re)define the environment variable <SPAN style="font-family:monospace">$IDL_PATH</SPAN> so that it looks like:
+&rdquo;<SPAN style="font-family:monospace">+</SPAN><I>/path/to/my/idl/routines</I><SPAN style="font-family:monospace">:+</SPAN><I>/path/to/other/idl/routines</I>:<SPAN style="font-family:monospace">&lt;IDL_DEFAULT&gt;</SPAN>&rdquo;
+(where <SPAN style="font-family:monospace">&lt;IDL_DEFAULT&gt;</SPAN> should be typed literally and the <SPAN style="font-family:monospace">+</SPAN><I>/path</I> means that
+subdirectories of <EM>path</EM> will be searched recursively). For example, if
+young Albert types in Bourne shell:
+<BR><SPAN style="font-family:monospace">export IDL_PATH=</SPAN>&rdquo;<SPAN style="font-family:monospace">+/home/aeinstein/brownian:&lt;IDL_DEFAULT&gt;</SPAN>&rdquo;
+<BR><SPAN style="font-family:monospace">hidl</SPAN>
+<BR>
+he will start an IDL session in which the <strong>HEALPix</strong>-IDL routines are accessible, followed by all those located
+in subdirectories of <SPAN style="font-family:monospace">/home/aeinstein/brownian</SPAN>, followed by the standard
+IDL routines. If <SPAN style="font-family:monospace">.pro</SPAN> files of the same name are avaible at the different locations, the first
+one encountered will prevail;
+<BR><EM>&ndash; without <SPAN style="font-family:monospace">hidl</SPAN>:</EM>
+<BR>
+before starting IDL, the environment variables <SPAN style="font-family:monospace">$IDL_PATH</SPAN> and <SPAN style="font-family:monospace">$IDL_STARTUP</SPAN> must be defined. For instance, to emulate under (<SPAN style="font-family:monospace">ba</SPAN>)<SPAN style="font-family:monospace">sh</SPAN> the behavior of <SPAN style="font-family:monospace">hidl</SPAN> shown above, the same (bolder) Albert will type:
+<BR><SPAN style="font-family:monospace">export IDL_PATH=</SPAN>&rdquo;<SPAN style="font-family:monospace">+${HEALPIX}/src/idl:+/home/aeinstein/brownian:&lt;IDL_DEFAULT&gt;</SPAN>&rdquo;
+<BR><SPAN style="font-family:monospace">export IDL_STARTUP=</SPAN>&rdquo;<SPAN style="font-family:monospace">+${HEALPIX}/src/idl/HEALPix_startup</SPAN>&rdquo;
+<BR><SPAN style="font-family:monospace">idl</SPAN>
+
+<P>
+<SPAN  CLASS="textbf">FL users</SPAN> will do exactly the same thing, replacing <SPAN style="font-family:monospace">hidl</SPAN> with <SPAN style="font-family:monospace">hfl</SPAN> and <SPAN style="font-family:monospace">idl</SPAN> with <SPAN style="font-family:monospace">fl64_cmd</SPAN> (or <SPAN style="font-family:monospace">fl32_cmd</SPAN>). 
+<BR>
+As for <SPAN  CLASS="textbf">GDL users</SPAN>, they will replace
+ <SPAN style="font-family:monospace">hidl</SPAN>, <SPAN style="font-family:monospace">IDL_PATH</SPAN> and <SPAN style="font-family:monospace">IDL_STARTUP</SPAN> above
+with <SPAN style="font-family:monospace">hgdl</SPAN>, <SPAN style="font-family:monospace">GDL_PATH</SPAN> and <SPAN style="font-family:monospace">GDL_STARTUP</SPAN> respectively, 
+while <SPAN style="font-family:monospace">&lt;IDL_DEFAULT&gt;</SPAN> must be replaced by the default value of <SPAN style="font-family:monospace">${GDL_PATH}</SPAN>.
+<BR>
+Of course, <SPAN style="font-family:monospace">${HEALPIX}/src/idl</SPAN> (and all the <SPAN style="font-family:monospace">+</SPAN> signs) remain unchanged.
+
+<P>
+
+<H2><A ID="SECTION220">
+Using GDL or FL instead of IDL</A>
+</H2>
+See the sections 
+&rdquo;<A HREF="./install.htm#install:using_gdl">Using GDL instead of IDL</A>&rdquo;  or
+&rdquo;<A HREF="./install.htm#install:using_fl">Using FL instead of IDL</A>&rdquo; 
+in <A ID="tex2html9"
+  HREF="install.htm">the Installation Document</A>
+for more information on these topics.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_What_is_available.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html296"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_TABLE_CONTENTS.htm">TABLE OF CONTENTS</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_What_is_available.htm">What is available?</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

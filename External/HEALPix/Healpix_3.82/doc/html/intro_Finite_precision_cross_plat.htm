@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>Finite precision and cross-platform reproducibility</TITLE>
+<META NAME="description" CONTENT="Finite precision and cross-platform reproducibility">
+<META NAME="keywords" CONTENT="intro">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="intro.css">
+
+<LINK REL="next" HREF="intro_Bibliography.htm">
+<LINK REL="previous" HREF="intro_Comment_on_Random_Number_Ge.htm">
+<LINK REL="next" HREF="intro_Bibliography.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="intro_Comment_on_Random_Number_Ge.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_Bibliography.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html129"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_Comment_on_Random_Number_Ge.htm">A Comment on the Random Number</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_Bibliography.htm">Bibliography</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION900">
+Finite precision and cross-platform reproducibility</A>
+</H1>
+Note that, due to finite precision of floating-point arithmetics and
+differences between numerical libraries, the result of <strong>HEALPix</strong> functions
+like <SPAN  CLASS="texttt">ang2pix</SPAN> (which converts the angular coordinates of a point into the index 
+of the pixel to which it belongs) 
+may depend on the underlying hardware, compilers,
+compiler options and linked libraries, <EM>if</EM> the requested position is very
+close to (roughly <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.10ex; " SRC="intro_img253.png"
+ ALT="$10^{-15}$"></SPAN> radians or less) a pixel border. The result
+will always be one of the (two to four) adjacent pixels, and we are
+confident that it is strictly reproducible within the same binary on the
+same hardware platform, but if one of the components is changed, the
+result may change as well.
+This may be surprising when testing apparently "simple" locations like
+the poles.
+<BR>
+This issue is not specific to <strong>HEALPix</strong>, but shared by any library
+performing nontrivial floating-point operations, and in particular any
+pixelisation library or facility 
+(on any manifold, at any number of dimensions and for any practical pixelisation scheme), 
+<EM>in the vicinity of pixel boundaries</EM>.
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="intro_Comment_on_Random_Number_Ge.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="intro_Introduction_HEALPix.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="intro_Bibliography.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html129"
+  HREF="intro_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="intro_Comment_on_Random_Number_Ge.htm">A Comment on the Random Number</A>
+
+<strong>Up:</strong> <A
+ HREF="intro_Introduction_HEALPix.htm">The HEALPix Primer</A>
+
+<strong> Next:</strong> <A
+ HREF="intro_Bibliography.htm">Bibliography</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

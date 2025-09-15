@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/filekSDZYM.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(333.762756,2.237044,333.762556,2.362653,333.755636,2.369767,333.656376,2.369619,333.650216,2.366840,333.647386,2.363672,333.647426,2.238054) # color=red dash=1

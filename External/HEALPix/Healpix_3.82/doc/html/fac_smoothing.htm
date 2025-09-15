@@ -1,0 +1,373 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>smoothing</TITLE>
+<META NAME="description" CONTENT="smoothing">
+<META NAME="keywords" CONTENT="facilities">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="facilities.css">
+
+<LINK REL="next" HREF="fac_synfast.htm">
+<LINK REL="previous" HREF="fac_sky_ng_sim.htm">
+<LINK REL="next" HREF="fac_synfast.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="fac_sky_ng_sim.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="fac_HEALPix_F90_facilities.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_synfast.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html143"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="fac_sky_ng_sim.htm">sky_ng_sim</A>
+
+<strong>Up:</strong> <A
+ HREF="fac_HEALPix_F90_facilities.htm">HEALPix/F90 facilities</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_synfast.htm">synfast</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION1300"></A>
+<A ID="fac:smoothing"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">smoothing</SPAN></div><hr>
+<H3>This program can be used to convolve a map with a gaussian beam. 
+The input map can be given in RING or NESTED scheme and the smoothed map 
+is written 
+to a FITS file in the RING scheme.
+<BR>
+NOTE: This automated facility is susceptible to problems with non-commutativity
+of discrete spherical harmonics transforms, described in the Recommendations
+for Users of the <A HREF="fac_anafast.htm#fac:anafast">anafast</A> facility. 
+If very high accuracy of the results is
+required in the spectral regime of <!-- MATH
+ $\ell > 2\cdot nsmax$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.16ex; " SRC="fac_img80.png"
+ ALT="$\ell &gt; 2\cdot nsmax$"></SPAN>, it is recommended
+to choose an iterative computation of the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/f90/smoothing/smoothing.f90"><strong>src/f90/smoothing/smoothing.f90</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><blockquote><h3>%
+smoothing [options] [parameter_file]
+</h3></blockquote>
+
+<P>
+<hr><H2>COMMAND LINE OPTIONS</H2> 
+  <DL COMPACT><DT>
+<B><SPAN style="font-family:monospace">-d</SPAN></B>
+<DD><DT>
+<B><SPAN style="font-family:monospace">-</SPAN><SPAN style="font-family:monospace">-</SPAN><SPAN style="font-family:monospace">double</SPAN></B>
+<DD>double precision mode (see 
+  <A HREF="fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:ioprec">Notes on double/single precision modes</A>)
+    <DT>
+<B><SPAN style="font-family:monospace">-s</SPAN></B>
+<DD><DT>
+<B><SPAN style="font-family:monospace">-</SPAN><SPAN style="font-family:monospace">-</SPAN><SPAN style="font-family:monospace">single</SPAN></B>
+<DD>single precision mode (default)
+  </DL>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>simul_type = </B>
+<DD><A ID="fac:smoothing:simul_type"></A>Defines which map(s) to analyse, 1=temperature only, 2=temperature AND polarisation.
+(default= 1)
+    <DT>
+<B>infile = </B>
+<DD><A ID="fac:smoothing:infile"></A>Defines the filename for the FITS file containing the map to be smoothed. 
+	(default= 'map.fits')
+    <DT>
+<B>nlmax = </B>
+<DD><A ID="fac:smoothing:nlmax"></A>Defines the <!-- MATH
+ $\ell_{\mathrm{max}}$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img24.png"
+ ALT="$\ell_{\mathrm{max}}$"></SPAN> value for the application.
+(default= 64)
+    <DT>
+<B>iter_order = </B>
+<DD><A ID="fac:smoothing:iter_order"></A>Defines the maximum order of quadrature 
+      iteration to be used. (default=0, no iteration).
+For details, see the <A HREF="./sub_map2alm_iterative.htm#sub:map2alm_iterative"><SPAN style="font-family:monospace">map2alm_iterative</SPAN></A> routine
+described in the <A ID="tex2html23"
+  HREF="subroutines.htm">&rdquo;Fortran Subroutines&rdquo;</A>
+document.
+ <DT>
+<B>fwhm_arcmin = </B>
+<DD><A ID="fac:smoothing:fwhm_arcmin"></A>Defines the FWHM in arcminutes of the gaussian 
+beam for the convolution. (default=10)
+    <DT>
+<B>beam_file = </B>
+<DD>Defines the FITS file describing the
+    Legendre window
+    function of the circular beam to be used for the
+    simulation (see <A HREF="fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:beamfiles">&rdquo;Beam window function files&rdquo; in introduction</A>). 
+    If set to an existing file name, it will override the
+    <SPAN style="font-family:monospace">fhwm_arcmin</SPAN> given above. default=`'
+<DT>
+<B>outfile = </B>
+<DD><A ID="fac:smoothing:outfile"></A>Defines the filename for the file that will contain 
+the smoothed map. (default='map_smoothed.fits')
+     <DT>
+<B>plmfile = </B>
+<DD>Defines the name for an input file
+    containing  precomputed Legendre polynomials <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img49.png"
+ ALT="$P_{\ell m}$"></SPAN>.
+(default= no entry &mdash; <SPAN CLASS="colordoc">smoothing</SPAN> executes the recursive evaluation 
+of <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.04ex; vertical-align: -0.45ex; " SRC="fac_img49.png"
+ ALT="$P_{\ell m}$"></SPAN>s)
+<DT>
+<B>w8file = </B>
+<DD><A ID="fac:smoothing:w8file"></A>Defines name for an input file containing ring
+  weights in the improved quadrature mode (default= no entry &mdash;
+the name is assumed to be 'weight_ring_n0xxxx.fits' where xxxx is nsmax)
+<DT>
+<B>w8filedir = </B>
+<DD><A ID="fac:smoothing:w8filedir"></A>Gives the directory where the weight files are
+to be found (default= no entry &mdash; smoothing searches in the default
+directories, see <A HREF="fac_Using_HEALPix_Fortran_90_fa.htm#fac:subsec:defdir">&rdquo;Default file names and directories&rdquo; in introduction</A>)
+<DT>
+<B>won = </B>
+<DD><A ID="fac:smoothing:won"></A>Set this to 1 if ring-based quadrature weight files are to be used,
+ or to 2 to use pixel-based weight files instead;
+otherwise set it to 0. (default= 0)
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+
+A FITS file containing a <strong>HEALPix</strong> map in RING or NESTED scheme is read in.
+When dealing with polarized signal maps, the <SPAN CLASS="colordoc">smoothing</SPAN> behavior will depend on the value of the <SPAN  CLASS="texttt">POLCCONV</SPAN> FITS keyword
+(see <A HREF="./intro_HEALPix_conventions.htm#intro:polcconv">note on POLCCONV</A> in <A ID="tex2html24"
+  HREF="intro.htm">The <strong>HEALPix</strong> Primer</A>).
+The map is analysed and smoothed in fourier space with a  gaussian beam 
+of a given FHWM. 
+A new map is then synthesized using the smoothed <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.46ex; vertical-align: -0.45ex; " SRC="fac_img13.png"
+ ALT="$a_{\ell m}$"></SPAN> coefficients. 
+For a more accurate application, an iteration of arbitrary order can be applied. 
+The output map is stored in <EM>the same scheme</EM> as the input map.
+
+</blockquote>
+
+<P>
+<hr><H2>DATASETS</H2>
+<h3>The following datasets are involved in the <b><SPAN CLASS="colordoc">smoothing</SPAN></b>
+ processing.</h3>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:150px"><SPAN  CLASS="textbf">Dataset</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">Description</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">
+data/weight_ring_n0xxxx.fits</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">Files containing ring weights
+                   for the smoothing improved quadrature mode.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:150px"></TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+</TABLE>
+
+<P>
+<hr><H2>SUPPORT    </H2><H3>This section lists those routines and facilities (including those <i>external</i> to the <b>HEALPix</b> distribution) which can assist in the utilisation of <b><SPAN CLASS="colordoc">smoothing</SPAN></b>.</H3>
+  <DL COMPACT><DT>
+<B><A HREF="./sub_generate_beam.htm#sub:generate_beam">generate_beam</A></B>
+<DD>This <strong>HEALPix</strong> Fortran
+subroutine generates or reads the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="fac_img19.png"
+ ALT="$B(\ell)$"></SPAN> window function used in <SPAN CLASS="colordoc">smoothing</SPAN>
+  <DT>
+<B><A HREF="fac_map2gif.htm#fac:map2gif">map2gif</A></B>
+<DD>This <strong>HEALPix</strong> Fortran facility can be used to visualise the
+  input and output maps of <SPAN CLASS="colordoc">smoothing</SPAN>.
+  <DT>
+<B><A HREF="./idl_mollview.htm#idl:mollview">mollview</A></B>
+<DD>This <strong>HEALPix</strong> IDL facility can be used to visualise the
+  input and output maps of <SPAN CLASS="colordoc">smoothing</SPAN>.
+  <DT>
+<B><A HREF="fac_synfast.htm#fac:synfast">synfast</A></B>
+<DD>This <strong>HEALPix</strong> facility can generate a map and also do the smoothing.
+  <DT>
+<B><A HREF="fac_anafast.htm#fac:anafast">anafast</A></B>
+<DD>This <strong>HEALPix</strong> facility can analyse a smoothed map.		
+  </DL>
+
+<P>
+<hr><H2>EXAMPLE # 1:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">smoothing</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+Smoothing runs in interactive mode, self-explanatory. 
+</blockquote>
+
+<P>
+
+<P>
+<hr><H2>EXAMPLE # 2:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">smoothing  filename</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>When `filename' is present, smoothing enters the non-interactive mode and parses
+its inputs from the file `filename'. This has the following
+structure: the first entry is a qualifier which announces to the parser
+which input immediately follows. If this input is omitted in the
+input file, the parser assumes the default value.
+If the equality sign is omitted, then the parser ignores the entry.
+In this way comments may also be included in the file.
+In this example, the file contains the following
+qualifiers:
+<BR>
+<kbd><A HREF="#fac:smoothing:simul_type">simul_type</A>= 1</kbd><br>
+<kbd><A HREF="#fac:smoothing:nlmax">nlmax</A>= 64</kbd><br>
+<kbd><A HREF="#fac:smoothing:infile">infile</A>= map.fits</kbd><br>
+<kbd><A HREF="#fac:smoothing:outfile">outfile</A>= map_smoothed.fits</kbd><br>
+<kbd><A HREF="#fac:smoothing:fwhm_arcmin">fwhm_arcmin</A>= 10.</kbd><br>
+<kbd><A HREF="#fac:smoothing:iter_order">iter_order</A>= 1</kbd><br>
+smoothes the <strong>HEALPix</strong> temperature map contained in `map.fits' with 
+a 10 arcmin FWHM beam. The resulting map is saved 
+in `map_smoothed.fits'. The map analysis/synthesis was carried 
+out using fourier coeffecients up to an <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="fac_img5.png"
+ ALT="$\ell$"></SPAN> value of 64. A first
+order iteration of the quadrature was performed.</blockquote>
+
+<P>
+<hr><H2>RELEASE NOTES</H2><blockquote>
+  <DL COMPACT><DD>&#9632;  Initial release (<strong>HEALPix</strong> 0.90)
+    <DD>&#9632;  Extension to polarization and arbitrary <EM>circular</EM> beams (<strong>HEALPix</strong> 1.20)
+    <DD>&#9632;  Support for pixel-based quadrature weights when <A HREF="fac_anafast.htm#fac:anafast:won"><SPAN  CLASS="texttt">won=2</SPAN></A> (<strong>HEALPix</strong> 3.40)
+  </DL>
+</blockquote>
+
+<P>
+
+<hr><H2>MESSAGES</H2><h3>This section describes error messages generated by <b><SPAN CLASS="colordoc">smoothing</SPAN></b>
+</h3>
+
+<TABLE class="PAD  BORDER" style="">
+<TR><TH CLASS="LEFT TOP"  style="width:125px"><SPAN  CLASS="textbf">Message</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:50px"><SPAN  CLASS="textbf">Severity</SPAN></TH>
+<TH CLASS="LEFT TOP"  style="width:175px"><SPAN  CLASS="textbf">Text</SPAN></TH>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">
+can not allocate memory for array xxx</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">Fatal</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">You do not have
+                   sufficient system resources to run this
+                   facility at the map resolution you required. 
+  Try a lower map resolution.</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+<TR><TD CLASS="LEFT TOP"  style="width:125px"></TD>
+<TD CLASS="LEFT TOP"  style="width:50px">&nbsp;</TD>
+<TD CLASS="LEFT TOP"  style="width:175px">&nbsp;</TD>
+</TR>
+</TABLE>
+
+<P>
+
+<P>
+
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="fac_sky_ng_sim.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="fac_HEALPix_F90_facilities.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="fac_synfast.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html143"
+  HREF="fac_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="fac_sky_ng_sim.htm">sky_ng_sim</A>
+
+<strong>Up:</strong> <A
+ HREF="fac_HEALPix_F90_facilities.htm">HEALPix/F90 facilities</A>
+
+<strong> Next:</strong> <A
+ HREF="fac_synfast.htm">synfast</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

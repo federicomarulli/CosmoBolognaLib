@@ -1,0 +1,33 @@
+# -*- Makefile -*-
+
+VPATH	= $(BINDIR)
+exec1	= $(BINDIR)/sky_ng_sim
+src1	= sky_ng_sim
+#sky_ng_sim.F90  sky_ng_sim_bin.F90  sky_sub.f90  sub_ngpdf_powergauss.F90  sub_ngpdf_sho.F90
+obj1 	= sky_sub.o  sub_ngpdf_powergauss.o  sub_ngpdf_sho.o  sky_ng_sim.o
+
+# exec2	= $(BINDIR)/synfast
+# src2	= synfast.f90
+# obj2 	= synfast.o
+# inc     = syn_sub_inc.f90
+
+%.o: %.f90 #$(inc)
+	$(FC) $(FFLAGS) -c $< -o $@
+
+%.o: %.F90
+	case $(OS) in \
+	Darwin ) \
+	ln -s -f $< $*.junk.F90; \
+	$(FC) $(FFLAGS) $(PPFLAGS) -c $*.junk.F90 -o $@; \
+	rm $*.junk.F90;; \
+	OSF ) \
+	ln -s -f $< $*.f90; \
+	$(FC) $(FFLAGS) -cpp -c $(basename $<).f90 -o $@;; \
+	* ) \
+	$(FC) $(FFLAGS) $(PPFLAGS) -c $< -o $@;; \
+	esac
+
+default: $(exec1)
+
+$(exec1): $(obj1) $(LIBDIR)/libhealpix.a
+	$(FC) $(FFLAGS) -o $(exec) $(obj1) $(LDFLAGS)

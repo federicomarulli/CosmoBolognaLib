@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+
+<!--Converted with LaTeX2HTML 2020 (Released January 1, 2020) -->
+<HTML lang="en">
+<HEAD>
+<TITLE>gaussbeam</TITLE>
+<META NAME="description" CONTENT="gaussbeam">
+<META NAME="keywords" CONTENT="idl">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="viewport" CONTENT="width=device-width, initial-scale=1.0">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2020">
+<!--Begin favicon-->
+   <link rel='apple-touch-icon' sizes='180x180' href='images/favicons/apple-touch-icon.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='32x32' href='images/favicons/favicon-32x32.png?v=2017'>
+   <link rel='icon' type='image/png' sizes='16x16' href='images/favicons/favicon-16x16.png?v=2017'>
+   <link rel='manifest' href='images/favicons/manifest.json?v=2017'>
+   <link rel='mask-icon' href='images/favicons/safari-pinned-tab.svg?v=2017' color='#5bbad5'>
+   <link rel='shortcut icon' href='images/favicons/favicon.ico?v=2017'>
+   <meta name='apple-mobile-web-app-title' content='HEALPix'>
+   <meta name='application-name' content='HEALPix'>
+   <meta name='msapplication-config' content='images/favicons/browserconfig.xml?v=2017'>
+   <meta name='theme-color' content='#ffffff'>
+<!--End favicon-->
+
+<LINK REL="STYLESHEET" HREF="idl.css">
+
+<LINK REL="next" HREF="idl_getdisc_ring.htm">
+<LINK REL="previous" HREF="idl_fits2cl.htm">
+<LINK REL="next" HREF="idl_getdisc_ring.htm">
+</HEAD>
+
+<body>
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A
+ HREF="idl_fits2cl.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_getdisc_ring.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html357"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_fits2cl.htm">fits2cl</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_getdisc_ring.htm">getdisc_ring</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A ID="SECTION2400"></A>
+<A ID="idl:gaussbeam"></A>
+<BR>
+ 
+</H1>
+
+<P>
+<div class="facility"><SPAN CLASS="colordoc">gaussbeam</SPAN></div><hr>
+<H3>This IDL facility provides the window function in <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN> space for a
+gaussian axisymmetric beam of given FWHM.
+</H3>
+Location in HEALPix directory tree: <a href="https://healpix.sourceforge.io/src/3.82/src/idl/misc/gaussbeam.pro"><strong>src/idl/misc/gaussbeam.pro</strong></a>&nbsp;  
+
+<P>
+<hr><h2>FORMAT </h2><h3>IDL>
+beam=GAUSSBEAM(<A HREF="#idl:gaussbeam:fwhm">Fwhm</A>, 
+	<A HREF="#idl:gaussbeam:lmax">Lmax</A>
+ [,&nbsp;<A HREF="#idl:gaussbeam:dim">Dim</A>,
+	<A HREF="#idl:gaussbeam:help">HELP=</A>])
+</h3>
+
+<P>
+<hr>
+<H2>QUALIFIERS</H2>
+ 
+  <DL COMPACT><DT>
+<B>Fwhm<A ID="idl:gaussbeam:fwhm"></A></B>
+<DD>Full Width Half Maximum of the gaussian beam, in arcmin (scalar real)
+    <DT>
+<B>Lmax<A ID="idl:gaussbeam:lmax"></A></B>
+<DD>the window function is computed for the multipoles <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN> in {0,...,Lmax}
+    <DT>
+<B>Dim<A ID="idl:gaussbeam:dim"></A></B>
+<DD>scalar integer, optional. 
+<BR>
+If absent or set to 0 or 1,
+          the output has size (Lmax+1) and is the temperature beam;
+<BR>
+if set to <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.41ex; " SRC="idl_img60.png"
+ ALT="$2 \le$"></SPAN> Dim <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.92ex; vertical-align: -0.41ex; " SRC="idl_img61.png"
+ ALT="$\le 4$"></SPAN> ,
+          the output has size (Lmax+1,Dim)
+          and contains in that order : 
+<BR>
+the TEMPERATURE beam,
+<BR>
+the GRAD/ELECTRIC polarization beam
+<BR>
+the CURL/MAGNETIC polarization beam
+<BR>
+the TEMPERATURE*GRAD beam
+    <DT>
+<B>HELP=<A ID="idl:gaussbeam:help"></A></B>
+<DD>if set, prints out the help header and exits
+  </DL>
+
+<P>
+<hr> 
+<H2>DESCRIPTION</H2> 
+<blockquote>
+gaussbeam computes the <SPAN CLASS="MATH"><IMG
+ STYLE="height: 1.69ex; vertical-align: -0.10ex; " SRC="idl_img15.png"
+ ALT="$\ell$"></SPAN> space window function of a gaussian beam of FWHM
+Fwhm. For a sky of underlying power spectrum <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img4.png"
+ ALT="$C(\ell)$"></SPAN> observed with beam of
+given FWHM, the measured power spectrum will be <!-- MATH
+ $C(\ell)_{\mathrm{meas}} = C(\ell)
+B(\ell)^2$
+ -->
+<SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.45ex; vertical-align: -0.68ex; " SRC="idl_img62.png"
+ ALT="$C(\ell)_{\mathrm{meas}} = C(\ell)
+B(\ell)^2$"></SPAN> where <SPAN CLASS="MATH"><IMG
+ STYLE="height: 2.33ex; vertical-align: -0.68ex; " SRC="idl_img2.png"
+ ALT="$B(\ell)$"></SPAN> is given by gaussbeam(Fwhm,Lmax). The
+polarization beam is also provided (when Dim <SPAN CLASS="MATH">&gt;</SPAN> 1) assuming a perfectly
+co-polarized beam (eg, Challinor et al 2000, 
+<A ID="tex2html45"
+  HREF="https://arxiv.org/abs/astro-ph/0008228v2">astro-ph/0008228</A>)
+</blockquote>
+
+<P>
+<hr><H2>RELATED ROUTINES</H2><h3>This section lists the routines related to <b><SPAN CLASS="colordoc">gaussbeam</SPAN></b></h3>
+ 
+  <DL COMPACT><DT>
+<B>idl</B>
+<DD>version 6.4 or more is necessary to run gaussbeam<DT>
+<B><A HREF="idl_healpixwindow.htm#idl:healpixwindow">healpixwindow</A></B>
+<DD>computes the tex2html_wrap_inline$$ space window function associated with
+    a <strong>HEALPix</strong> pixel size
+    <DT>
+<B>synfast</B>
+<DD>f90 code to generate CMB maps of given power spectrum convolved with a gaussian beam
+    <DT>
+<B>smoothing</B>
+<DD>f90 code to smooth existing <strong>HEALPix</strong> maps with a gaussian beam
+    <DT>
+<B>anafast</B>
+<DD>f90 code to compute the power spectrum of a <strong>HEALPix</strong> sky map
+  </DL>
+
+<P>
+<HR><H2>EXAMPLE:</H2> 
+<div class="texttt"><TABLE class="PAD " style="">
+<TR><TD CLASS="LEFT">beam = gaussbeam(5.,1200)</TD>
+<TD CLASS="LEFT">&nbsp;</TD>
+</TR>
+</TABLE></div>
+<blockquote>
+beam contains the window function in {0,...,1200} of a gaussian beam of fwhm 5 arcmin</blockquote>
+
+<P>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A
+ HREF="idl_fits2cl.htm">
+<IMG WIDTH="63" HEIGHT="24" ALT="previous" SRC="prev.png"></A> 
+<A
+ HREF="idl_HEALPix_IDL_subroutines.htm">
+<IMG WIDTH="26" HEIGHT="24" ALT="up" SRC="up.png"></A> 
+<A
+ HREF="idl_getdisc_ring.htm">
+<IMG WIDTH="37" HEIGHT="24" ALT="next" SRC="next.png"></A> 
+<A ID="tex2html357"
+  HREF="idl_TABLE_CONTENTS.htm">
+<IMG WIDTH="65" HEIGHT="24" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<strong> Previous:</strong> <A
+ HREF="idl_fits2cl.htm">fits2cl</A>
+
+<strong>Up:</strong> <A
+ HREF="idl_HEALPix_IDL_subroutines.htm">HEALPix/IDL subroutines</A>
+
+<strong> Next:</strong> <A
+ HREF="idl_getdisc_ring.htm">getdisc_ring</A>
+<strong> Top:</strong> <a href="main.htm">Main Page</a></DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Version 3.82, 2022-07-28
+</ADDRESS>
+</BODY>
+</HTML>

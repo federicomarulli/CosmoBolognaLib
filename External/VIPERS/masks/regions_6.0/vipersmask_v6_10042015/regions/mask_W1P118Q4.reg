@@ -1,0 +1,5 @@
+# Region file format: DS9 version 4.1
+# Filename: tmp_fits/file1LDuTe.fits
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+polygon(35.809844,-5.074116,35.897403,-5.074134,35.907961,-5.066664,35.910252,-5.062116,35.910436,-4.9430297,35.79701,-4.941648,35.793229,-4.944198,35.792632,-5.063056) # color=red dash=1

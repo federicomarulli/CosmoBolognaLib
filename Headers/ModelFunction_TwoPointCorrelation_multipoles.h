@@ -150,6 +150,75 @@ namespace cbl {
        *  @return the multipoles of the two-point correlation function
        */
       std::vector<double> xiMultipoles_sigma8_bias (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+
+      /**
+       *  @brief Model for the two-point correlation function, with damping at the BAO peak.
+       *
+       *  The function computes the multipoles of the two-point
+       *  correlation function:
+       *
+       *  \f[ \xi_l(s) = i^l \int \frac{\mathrm{d} k}{2\pi^2} k^2
+       *  P_l(k) j_l(ks), \f]
+       *
+       *  where \f$j_l(ks)\f$ are the Bessel functions
+       *  and \f$P_l(k)\f$ is given by:
+       *
+       *  \f[ P_l(k)=\frac{2l+1}{2} \int^{+1}_{-1}
+       *  \mathrm{d} \mu P\left(k, \mu\right) L_l\left(\mu\right) , \f]
+       *
+       *  where \f$ L_l\left(\mu\right) \f$ are the Legendre polynomials.
+       *  Redshift space distorsion are modelled in the Kaiser limit, 
+       *  if the user chooses redshift space in set_data_model_bias.
+       *  Otherwise, they are neglected. Photometric errors are modelled
+       *  with a Gaussian damping factor:
+       *
+       *   \f[ P(k, \mu)=P(k)\, b_\mathrm{eff}^2
+       *   \left(1+\frac{f}{b_\mathrm{eff}} \mu^2\right)^2 \mathrm{exp}(-k^2\mu^2\sigma^2) , \f]
+       *
+       *  where \f$\sigma=\frac{c\sigma_z}{H(z)}\f$.
+       *  We account for the nonlinear damping at the BAO peak:
+       *
+       *  \f[ P(k)=[P_\mathrm{lin}(k)-P_\mathrm{nw}(k)]e^{-k^2\Sigma^2_{\mathrm{NL}}/2}+P_\mathrm{nw}(k), \f]
+       *
+       *  where \f$P_\mathrm{lin}\f$ is the linear power spectrum
+       *  and \f$P_\mathrm{nw}\f$ is the de-wiggled power spectrum,
+       *  computed with the parametrisation of Eiseinstein_Hu.
+       *
+       *  The model has N cosmological parameters, plus: 
+       *    - \f$\Sigma_{NL}\f$ damping at BAO scale
+       *
+       *  The linear effective bias is considered a derived parameter,
+       *  from cosmology, and computed from the input cluster masses
+       *  in two ways: 
+       *  using the provided halo masses with cbl::cosmology::bias_eff_mass 
+       *  or with cbl::cosmology::bias_eff_selection_function 
+       *
+       *  @param rad the scale at which the model is computed
+       *
+       *  @param inputs pointer to the structure that contains the
+       *  cosmological paramters used to compute the dark matter
+       *  two-point correlation function
+       *
+       *  @param parameter 1D vector containing the linear bias
+       *
+       *  @return the monopole of the two-point correlation function
+       */
+      std::vector<double> xiMultipoles_linear_theoretical_bias_BAO (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
+
+       /**
+       *  @brief the damped two-point correlation;
+       *
+       *  @param rad the scale at which the model is computed
+       *
+       *  @param inputs pointer to the structure that contains the
+       *  cosmological paramters used to compute the dark matter
+       *  two-point correlation function
+       *
+       *  @param parameter 1D vector containing the linear bias
+       *
+       *  @return the damped two-point correlation.
+       */
+      std::vector<double> xil_damped_scaling_relation_sigmaz_cosmology (const std::vector<double> rad, const std::shared_ptr<void> inputs, std::vector<double> &parameter);
     }
   }
 }

@@ -2,7 +2,11 @@
 // Example code: how to model the projected two-point correlation function to constrain the linear bias
 // ====================================================================================================
 
+#include "LCDM.h"
 #include "Modelling_TwoPointCorrelation_projected.h"
+
+using namespace std;
+
 
 int main () {
 
@@ -12,28 +16,28 @@ int main () {
     // ---------------- use default cosmological parameters and set sigma8 ------------
     // --------------------------------------------------------------------------------
   
-    cbl::cosmology::Cosmology cosmology;
-    cosmology.set_sigma8(0.8);
+    auto cosmology = make_shared<cbl::cosmology::LCDM>("Planck18");
+    cosmology->set_parameter("sigma8",0.8);
 
   
     // --------------------------------------------------------------------
     // ---------------- Input/Output files and directories ----------------
     // --------------------------------------------------------------------
   
-    const std::string file_catalogue = "../input/cat.dat";
+    const string file_catalogue = "../input/cat.dat";
 
-    const std::string dir_output = "../output/";
-    const std::string dir_pairs = dir_output+"pairs/";
-    const std::string dir_covariance = dir_output+"covariance/";
+    const string dir_output = "../output/";
+    const string dir_pairs = dir_output+"pairs/";
+    const string dir_covariance = dir_output+"covariance/";
   
-    const std::string MK = "mkdir -p "+dir_output+" "+dir_pairs+" "+dir_covariance; if (system(MK.c_str())) {}
+    const string MK = "mkdir -p "+dir_output+" "+dir_pairs+" "+dir_covariance; if (system(MK.c_str())) {}
 
   
     // -----------------------------------------------------------------------------------------------------------
     // ---------------- read the input catalogue (with observed coordinates: R.A., Dec, redshift) ----------------
     // -----------------------------------------------------------------------------------------------------------
 
-    std::cout << "I'm reading the input catalogue..." << std::endl;
+    cout << "I'm reading the input catalogue..." << endl;
 
     const cbl::catalogue::Catalogue catalogue {cbl::catalogue::ObjectType::_Galaxy_, cbl::CoordinateType::_observed_, {file_catalogue}, cosmology};
 
@@ -106,11 +110,11 @@ int main () {
     model_twop.show_results(burn_in, thin);
     
     // store the results on file
-    const std::string filename = "model_projected";
+    const string filename = "model_projected";
     model_twop.write_results(dir_output, filename, burn_in, thin);
   }
 
-  catch(cbl::glob::Exception &exc) { std::cerr << exc.what() << std::endl; exit(1); }
+  catch(cbl::glob::Exception &exc) { cerr << exc.what() << endl; exit(1); }
   
   return 0;
 }

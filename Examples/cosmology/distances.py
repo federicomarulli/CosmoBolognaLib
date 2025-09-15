@@ -5,17 +5,17 @@
 # to ensure compatibility in Python versions 2.x and 3.x
 from __future__ import print_function
 
-# import the CosmoBolognaLib
+# import the Cosmology module of the CosmoBolognaLib
 import cblCosmology as cbl
 
 # define a cosmological model, using default parameters
-cosm = cbl.Cosmology(cbl.CosmologicalModel__Planck18_)
+cosmology = cbl.LCDM("Planck18")
 
 # compute the comoving distance at z=1
-dc = cosm.D_C(1)
+dc = cosmology.D_C(1)
 print('the comoving distance at z=1 is', '%.2f' % dc, 'Mpc/h')
 
 # in Mpc units
-cosm.set_unit(False)
-dc = cosm.D_C(1)
+cosmology.set_unit(False)
+dc = cosmology.D_C(1)
 print('the comoving distance at z=1 is', '%.2f' % dc, 'Mpc')

@@ -69,7 +69,7 @@ int main () {
     fin.seekg(std::ios::beg);
   
     while (fin >> X >> Y >> Z) {
-      cbl::comovingCoordinates coord = {X, Y, Z};
+      cbl::glob::comovingCoordinates coord = {X, Y, Z};
       auto galaxy = std::make_shared<cbl::catalogue::Galaxy>(coord);
       object.emplace_back(galaxy);
     }
